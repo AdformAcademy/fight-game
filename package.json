@@ -1,0 +1,27 @@
+{
+  "name": "fight-game",
+  "version": "1.0.0",
+  "description": "Fight game",
+  "main": "index.js",
+  "dependencies": {
+    "socket.io": "^1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdformAcademy/fight-game"
+  },
+  "keywords": [
+    "fight_game",
+    "1vs1"
+  ],
+  "author": "Adform",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdformAcademy/fight-game/issues"
+  },
+  "homepage": "https://github.com/AdformAcademy/fight-game"
+}
