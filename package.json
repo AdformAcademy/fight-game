@@ -4,6 +4,7 @@
   "description": "Fight game",
   "main": "index.js",
   "dependencies": {
+    "express": "^4.10.2",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {},
