@@ -12,6 +12,10 @@ app.get('/public/js/connection.js', function(req, res){
   res.sendfile('public/js/connection.js');
 });
 
+app.get('/public/js/canvas.js', function(req, res){
+  res.sendfile('public/js/canvas.js');
+});
+
 io.on('connection', function(socket){
 
   socket.on('disconnect', function(){
