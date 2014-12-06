@@ -10,7 +10,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "browserify ./public/js/main.js > ./public/js/bundle.js"
+    "compile": "browserify ./public/js/main.js > ./public/js/bundle.js && uglifyjs ./public/js/bundle.js -o ./public/js/bundle.js",
+    "start": "npm run compile && nodemon ."
   },
   "repository": {
     "type": "git",
