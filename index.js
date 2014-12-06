@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 var Session = require('./src/Session');
 var Sessions = require('./src/Sessions');
 
@@ -9,7 +10,7 @@ app.get('/', function(req, res){
   res.sendfile('views/index.html');
 });
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', function(socket){
 
