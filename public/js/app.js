@@ -2,4 +2,4 @@ require.config({
     baseUrl: 'js/lib'
 });
 
-requirejs(['canvas', 'connection']);
+requirejs(['location', 'onClickCollection', 'canvas', 'button', 'connection', 'main']);
