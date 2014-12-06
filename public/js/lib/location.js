@@ -14,3 +14,5 @@ Location.prototype.y = function() {
 Location.prototype.toString = function() {
 	return 'Location {x=' + this.x + ', y=' + this.y + '}';
 }
+
+module.exports = Location;

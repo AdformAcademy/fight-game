@@ -1,3 +1,5 @@
+var Location = require('./location.js');
+
 function Canvas(id) {
 	this.id = id;
 	this.canvasObj = $(this.id)[0];
@@ -68,3 +70,5 @@ Canvas.prototype.toCanvasLocation = function(location) {
 	y -= this.canvasObj.offsetTop;
 	return new Location(x, y);
 }
+
+module.exports = Canvas;
