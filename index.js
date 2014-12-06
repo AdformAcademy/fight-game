@@ -1,41 +1,53 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var session = require('./src/session');
+var Session = require('./src/Session');
+var Sessions = require('./src/Sessions');
 
 app.get('/', function(req, res){
   res.sendfile('views/index.html');
 });
 
+app.get('/public/js/connection.js', function(req, res){
+  res.sendfile('public/js/connection.js');
+});
+
+app.get('/public/js/canvas.js', function(req, res){
+  res.sendfile('public/js/canvas.js');
+});
+
 io.on('connection', function(socket){
-  console.log(socket.id);
-  console.log('a user connected');
 
   socket.on('disconnect', function(){
+    var sesObj = Sessions.getSessionObject(socket.id);
+    if (sesObj != null && sesObj.opponentId != null) {
+      var targetSesObj = Sessions.getSessionObject(sesObj.opponentId);
+      targetSesObj.socket.emit(Session.UNACTIVE);
+      Sessions.deleteSession(sesObj.opponentId);
+    }
     console.log('user disconnected');
+    Sessions.deleteSession(socket.id);
   });
 
-  socket.on('rectangle x', function(msg){
-  	io.emit('rectangle x', msg);
+  socket.on('ready', function() {
+    if (!Sessions.sessionExists(socket.id)) {
+      var targetSesObj = Sessions.getAvailableSession();
+      Sessions.createSession(socket);
+      console.log(socket.id + ' is ready');
+      if (targetSesObj != null) {
+        var sesObj = Sessions.getSessionObject(socket.id);
+        sesObj.opponentId = targetSesObj.sessionId;
+        sesObj.state = Session.PLAYING;
+        targetSesObj.opponentId = sesObj.sessionId;
+        targetSesObj.state = Session.PLAYING;
+        sesObj.socket.emit(Session.PLAYING);
+        targetSesObj.socket.emit(Session.PLAYING);
+      }
+    }
   });
 
-  socket.on('rectangle y', function(msg){
-  	io.emit('rectangle y', msg);
-  });
 });
 
 http.listen(3000, function(){
-  var ses = new session('5', '1', 'unactive');
-  console.log(ses.sessionId);
-  console.log(ses.opponentId);
-  console.log(ses.state);
-
-  ses.setState('active');
-  ses.setOpponentId('2');
-
-  console.log(ses.sessionId);
-  console.log(ses.opponentId);
-  console.log(ses.state);
-
   console.log('listening on *:3000');
 });
