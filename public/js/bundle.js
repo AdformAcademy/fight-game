@@ -5,13 +5,42 @@ function Button(image, canvasObj) {
 	this.src = image;
 	this.image = new Image();
 	this.image.src = this.src;
-	this.width = this.image.width;
-	this.height = this.image.height;
+	this.hoverImage = null;
+	this.activeImage = this.image;
+
 	this.canvasObj = canvasObj;
 	this.location = null;
 	this.onClickEvent = null;
+	this.mouseOverEvent = null;
+	this.mouseLeaveEvent = null;
+	this.mouseEventAdded = false;
+	this.mouseEntered = false;
 	this.isVisible = true;
-	EventCollection.addOnClickObject(this);
+}
+
+Button.prototype.image = function() {
+	return this.image;
+}
+
+Button.prototype.hoverImage = function() {
+	return this.hoverImage;
+}
+
+Button.prototype.activeImage = function() {
+	return this.activeImage;
+}
+
+Button.prototype.buttonWidth = function() {
+	return this.activeImage.width;
+}
+
+Button.prototype.buttonHeight = function() {
+	return this.activeImage.height;
+}
+
+Button.prototype.setHoverImage = function(image) {
+	this.hoverImage = new Image();
+	this.hoverImage.src = image;
 }
 
 Button.prototype.visible = function() {
@@ -24,7 +53,7 @@ Button.prototype.location = function() {
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		this.canvasObj.canvas.drawImage(this.image, this.location.x, this.location.y);
+		this.canvasObj.canvas.drawImage(this.activeImage, this.location.x, this.location.y);
 	}
 }
 
@@ -32,9 +61,9 @@ Button.prototype.locationIntersects = function(location) {
 	if (this.visible) {
 		var canvasLocation = this.canvasObj.toCanvasLocation(location);
 		var xIntersects = canvasLocation.x >= this.location.x && 
-		canvasLocation.x <= this.location.x + this.image.width;
+		canvasLocation.x <= this.location.x + this.activeImage.width;
 		var yIntersects = canvasLocation.y >= this.location.y &&
-		canvasLocation.y <= this.location.y + this.image.height;
+		canvasLocation.y <= this.location.y + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;
@@ -44,8 +73,39 @@ Button.prototype.executeClick = function() {
 	this.onClickEvent();
 }
 
+Button.prototype.executeMouseOver = function() {
+	if (this.mouseOverEvent != null && !this.mouseEntered) {
+		this.mouseOverEvent();
+		this.mouseEntered = true;
+	}
+}
+
+Button.prototype.executeMouseLeave = function() {
+	if (this.mouseLeaveEvent != null && this.mouseEntered) {
+		this.mouseLeaveEvent();
+	}
+	this.mouseEntered = false;
+}
+
 Button.prototype.onClick = function(event) {
 	this.onClickEvent = event;
+	EventCollection.addOnClickObject(this);
+}
+
+Button.prototype.mouseOver = function(event) {
+	this.mouseOverEvent = event;
+	if (!this.mouseEventAdded) {
+		EventCollection.addMouseOverObject(this);
+		this.mouseEventAdded = true;
+	}
+}
+
+Button.prototype.mouseLeave = function(event) {
+	this.mouseLeaveEvent = event;
+	if (!this.mouseEventAdded) {
+		EventCollection.addMouseOverObject(this);
+		this.mouseEventAdded = true;
+	}
 }
 
 module.exports = Button;
@@ -130,16 +190,32 @@ var Location = require('./location.js');
 function EventCollection() {}
 
 EventCollection.clickList = [];
+EventCollection.mouseOverList = [];
 
 EventCollection.addOnClickObject = function(obj) {
 	EventCollection.clickList.push(obj);
 }
 
-$(window).click(function (event) {
+EventCollection.addMouseOverObject = function(obj) {
+	EventCollection.mouseOverList.push(obj);
+}
+
+$(window).click(function(event) {
 	var location = new Location(event.pageX, event.pageY);
 	for (var key in EventCollection.clickList) {
 		if (EventCollection.clickList[key].locationIntersects(location)) {
 			EventCollection.clickList[key].executeClick();
+		}
+	}
+});
+
+$(window).mousemove(function(event) {
+	var location = new Location(event.pageX, event.pageY);
+	for (var key in EventCollection.mouseOverList) {
+		if (EventCollection.mouseOverList[key].locationIntersects(location)) {
+			EventCollection.mouseOverList[key].executeMouseOver();
+		} else {
+			EventCollection.mouseOverList[key].executeMouseLeave();
 		}
 	}
 });
@@ -169,22 +245,40 @@ var Canvas = require('./lib/canvas.js');
 var Button = require('./lib/button.js');
 var Location = require('./lib/location.js');
 
-$(document).ready(function () {
-	var canvasObj = new Canvas('#window');
+var canvasObj = new Canvas('#window');
 var startButton = new Button('./img/start_button.png', canvasObj);
-
-var middle = canvasObj.width() / 2;
-
-startButton.location = new Location(middle, 200);
-
-startButton.onClick(function() {
-	startButton.visible = false;
-	//alert('im click event');
-});
+startButton.setHoverImage('./img/start_button_hover.png');
 
 function graphics() {
 	startButton.drawButton();
 }
+
+//load this chunk of code when all external sources was loaded
+$(window).load(function () {
+
+	startButton.onClick(function() {
+	//startButton.visible = false;
+	//TODO add waiting other player event
+	});
+
+	startButton.mouseOver(function() {
+		startButton.activeImage = startButton.hoverImage;
+		$('body').css('cursor', 'pointer');
+		console.log('mouse over');
+	});
+
+	startButton.mouseLeave(function() {
+		startButton.activeImage = startButton.image;
+		$('body').css('cursor', 'default');
+		console.log('mouse leave');
+	});
+
+	var imageWidth = startButton.activeImage.width / 2;
+	console.log(imageWidth);
+	var middle = canvasObj.width() / 2 - imageWidth;
+	var yloc = canvasObj.height() * 0.4;
+	console.log(middle);
+	startButton.location = new Location(middle, yloc);
 
 	canvasObj.draw(graphics);
 });
