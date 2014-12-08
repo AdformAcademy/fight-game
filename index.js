@@ -1,6 +1,8 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 var Session = require('./src/Session');
 var Sessions = require('./src/Sessions');
 
@@ -8,13 +10,7 @@ app.get('/', function(req, res){
   res.sendfile('views/index.html');
 });
 
-app.get('/public/js/connection.js', function(req, res){
-  res.sendfile('public/js/connection.js');
-});
-
-app.get('/public/js/canvas.js', function(req, res){
-  res.sendfile('public/js/canvas.js');
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', function(socket){
 
