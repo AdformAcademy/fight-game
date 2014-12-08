@@ -15,46 +15,46 @@ function Button(image, canvasObj) {
 	this.mouseEventAdded = false;
 	this.mouseEntered = false;
 	this.isVisible = true;
-}
+};
 
 Button.prototype.image = function() {
 	return this.image;
-}
+};
 
 Button.prototype.hoverImage = function() {
 	return this.hoverImage;
-}
+};
 
 Button.prototype.activeImage = function() {
 	return this.activeImage;
-}
+};
 
 Button.prototype.buttonWidth = function() {
 	return this.activeImage.width;
-}
+};
 
 Button.prototype.buttonHeight = function() {
 	return this.activeImage.height;
-}
+};
 
 Button.prototype.setHoverImage = function(image) {
 	this.hoverImage = new Image();
 	this.hoverImage.src = image;
-}
+};
 
 Button.prototype.visible = function() {
 	return this.visible;
-}
+};
 
 Button.prototype.location = function() {
 	return this.location;
-}
+};
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
 		this.canvasObj.canvas.drawImage(this.activeImage, this.location().x, this.location().y);
 	}
-}
+};
 
 Button.prototype.pointIntersects = function(location) {
 	if (this.visible) {
@@ -66,30 +66,30 @@ Button.prototype.pointIntersects = function(location) {
 		return xIntersects && yIntersects;
 	}
 	return false;
-}
+};
 
 Button.prototype.executeClick = function() {
 	this.onClickEvent();
-}
+};
 
 Button.prototype.executeMouseOver = function() {
 	if (this.mouseOverEvent != null && !this.mouseEntered) {
 		this.mouseOverEvent();
 		this.mouseEntered = true;
 	}
-}
+};
 
 Button.prototype.executeMouseLeave = function() {
 	if (this.mouseLeaveEvent != null && this.mouseEntered) {
 		this.mouseLeaveEvent();
 	}
 	this.mouseEntered = false;
-}
+};
 
 Button.prototype.onClick = function(event) {
 	this.onClickEvent = event;
 	EventCollection.addOnClickObject(this);
-}
+};
 
 Button.prototype.mouseOver = function(event) {
 	this.mouseOverEvent = event;
@@ -97,7 +97,7 @@ Button.prototype.mouseOver = function(event) {
 		EventCollection.addMouseOverObject(this);
 		this.mouseEventAdded = true;
 	}
-}
+};
 
 Button.prototype.mouseLeave = function(event) {
 	this.mouseLeaveEvent = event;
@@ -105,6 +105,20 @@ Button.prototype.mouseLeave = function(event) {
 		EventCollection.addMouseOverObject(this);
 		this.mouseEventAdded = true;
 	}
+};
+
+Button.prototype.hover = function() {
+	$('body').css('cursor', 'pointer');
+}
+
+Button.prototype.hoverLeave = function() {
+	$('body').css('cursor', 'default');
+}
+
+Button.prototype.dispose = function() {
+	EventCollection.removeOnClickObject(this);
+	EventCollection.removeMouseOverObject(this);
+	this.hoverLeave();
 }
 
 module.exports = Button;
