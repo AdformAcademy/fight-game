@@ -1,4 +1,4 @@
-var Location = require('./location.js');
+var Point = require('./canvas/point.js');
 
 function EventCollection() {}
 
@@ -14,18 +14,18 @@ EventCollection.addMouseOverObject = function(obj) {
 }
 
 $(window).click(function(event) {
-	var location = new Location(event.pageX, event.pageY);
+	var location = new Point(event.pageX, event.pageY);
 	for (var key in EventCollection.clickList) {
-		if (EventCollection.clickList[key].locationIntersects(location)) {
+		if (EventCollection.clickList[key].pointIntersects(location)) {
 			EventCollection.clickList[key].executeClick();
 		}
 	}
 });
 
 $(window).mousemove(function(event) {
-	var location = new Location(event.pageX, event.pageY);
+	var location = new Point(event.pageX, event.pageY);
 	for (var key in EventCollection.mouseOverList) {
-		if (EventCollection.mouseOverList[key].locationIntersects(location)) {
+		if (EventCollection.mouseOverList[key].pointIntersects(location)) {
 			EventCollection.mouseOverList[key].executeMouseOver();
 		} else {
 			EventCollection.mouseOverList[key].executeMouseLeave();

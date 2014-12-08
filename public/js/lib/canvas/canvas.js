@@ -1,4 +1,4 @@
-var Location = require('./location.js');
+var Point = require('./point.js');
 
 function Canvas(id) {
 	this.id = id;
@@ -68,7 +68,7 @@ Canvas.prototype.toCanvasLocation = function(location) {
 	var y = location.y;
 	x -= this.canvasObj.offsetLeft;
 	y -= this.canvasObj.offsetTop;
-	return new Location(x, y);
+	return new Point(x, y);
 }
 
 module.exports = Canvas;

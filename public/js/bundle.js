@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var EventCollection = require('./eventCollection.js');
+var EventCollection = require('../eventCollection.js');
 
 function Button(image, canvasObj) {
 	this.src = image;
@@ -53,17 +53,17 @@ Button.prototype.location = function() {
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		this.canvasObj.canvas.drawImage(this.activeImage, this.location.x, this.location.y);
+		this.canvasObj.canvas.drawImage(this.activeImage, this.location().x, this.location().y);
 	}
 }
 
-Button.prototype.locationIntersects = function(location) {
+Button.prototype.pointIntersects = function(location) {
 	if (this.visible) {
 		var canvasLocation = this.canvasObj.toCanvasLocation(location);
-		var xIntersects = canvasLocation.x >= this.location.x && 
-		canvasLocation.x <= this.location.x + this.activeImage.width;
-		var yIntersects = canvasLocation.y >= this.location.y &&
-		canvasLocation.y <= this.location.y + this.activeImage.height;
+		var xIntersects = canvasLocation.x >= this.location().x && 
+		canvasLocation.x <= this.location().x + this.activeImage.width;
+		var yIntersects = canvasLocation.y >= this.location().y &&
+		canvasLocation.y <= this.location().y + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;
@@ -109,8 +109,8 @@ Button.prototype.mouseLeave = function(event) {
 }
 
 module.exports = Button;
-},{"./eventCollection.js":3}],2:[function(require,module,exports){
-var Location = require('./location.js');
+},{"../eventCollection.js":6}],2:[function(require,module,exports){
+var Point = require('./point.js');
 
 function Canvas(id) {
 	this.id = id;
@@ -180,12 +180,89 @@ Canvas.prototype.toCanvasLocation = function(location) {
 	var y = location.y;
 	x -= this.canvasObj.offsetLeft;
 	y -= this.canvasObj.offsetTop;
-	return new Location(x, y);
+	return new Point(x, y);
 }
 
 module.exports = Canvas;
-},{"./location.js":4}],3:[function(require,module,exports){
-var Location = require('./location.js');
+},{"./point.js":3}],3:[function(require,module,exports){
+function Point(x, y) {
+	this.x = x;
+	this.y = y;
+}
+
+Point.prototype.x = function() {
+	return this.x;
+}
+
+Point.prototype.y = function() {
+	return this.y;
+}
+
+Point.prototype.toString = function() {
+	return 'Point {x=' + this.x + ', y=' + this.y + '}';
+}
+
+module.exports = Point;
+},{}],4:[function(require,module,exports){
+function Text(canvasObj, text, size) {
+	this.canvasObj = canvasObj;
+	this.text = text;
+	this.size = size;
+	this.location = location;
+	this.fontType = 'Arial';
+	this.color = '#000000';
+	this.isVisible = true;
+}
+
+Text.prototype.location = function() {
+	return this.location;
+}
+
+Text.prototype.fontType = function() {
+	return this.fontType;
+}
+
+Text.prototype.color = function() {
+	return this.color;
+}
+
+Text.prototype.size = function() {
+	return this.size;
+}
+
+Text.prototype.text = function() {
+	return this.text;
+}
+
+Text.prototype.textWidth = function() {
+	return this.canvasObj.canvas.measureText(this.text).width;
+}
+
+Text.prototype.isVisible = function() {
+	return this.isVisible;
+}
+
+Text.prototype.draw = function() {
+	if (this.isVisible) {
+		this.canvasObj.canvas.fillStyle = this.color;
+		this.canvasObj.canvas.font =  this.size + 'px ' + this.fontType;
+		this.canvasObj.canvas.fillText(this.text, this.location().x, this.location().y);
+	}
+}
+
+module.exports = Text;
+},{}],5:[function(require,module,exports){
+function Utilities() {}
+
+Utilities.centerX = function(canvasObj, objectWidth) {
+	var halfWidth = objectWidth / 2;
+	var middle = canvasObj.width() / 2 - halfWidth;
+	return middle;
+}
+
+module.exports = Utilities;
+},{}],6:[function(require,module,exports){
+var Point = require('./canvas/point.js');
 
 function EventCollection() {}
 
@@ -201,18 +278,18 @@ EventCollection.addMouseOverObject = function(obj) {
 }
 
 $(window).click(function(event) {
-	var location = new Location(event.pageX, event.pageY);
+	var location = new Point(event.pageX, event.pageY);
 	for (var key in EventCollection.clickList) {
-		if (EventCollection.clickList[key].locationIntersects(location)) {
+		if (EventCollection.clickList[key].pointIntersects(location)) {
 			EventCollection.clickList[key].executeClick();
 		}
 	}
 });
 
 $(window).mousemove(function(event) {
-	var location = new Location(event.pageX, event.pageY);
+	var location = new Point(event.pageX, event.pageY);
 	for (var key in EventCollection.mouseOverList) {
-		if (EventCollection.mouseOverList[key].locationIntersects(location)) {
+		if (EventCollection.mouseOverList[key].pointIntersects(location)) {
 			EventCollection.mouseOverList[key].executeMouseOver();
 		} else {
 			EventCollection.mouseOverList[key].executeMouseLeave();
@@ -221,65 +298,59 @@ $(window).mousemove(function(event) {
 });
 
 module.exports = EventCollection;
-},{"./location.js":4}],4:[function(require,module,exports){
-function Location(x, y) {
-	this.x = x;
-	this.y = y;
-}
+},{"./canvas/point.js":3}],7:[function(require,module,exports){
+var Canvas = require('./lib/canvas/canvas.js');
+var Utilities = require('./lib/canvas/utilities.js');
 
-Location.prototype.x = function() {
-	return this.x;
-}
-
-Location.prototype.y = function() {
-	return this.y;
-}
-
-Location.prototype.toString = function() {
-	return 'Location {x=' + this.x + ', y=' + this.y + '}';
-}
-
-module.exports = Location;
-},{}],5:[function(require,module,exports){
-var Canvas = require('./lib/canvas.js');
-var Button = require('./lib/button.js');
-var Location = require('./lib/location.js');
+var Button = require('./lib/canvas/button.js');
+var Point = require('./lib/canvas/point.js');
+var Text = require('./lib/canvas/text.js');
 
 var canvasObj = new Canvas('#window');
 var startButton = new Button('./img/start_button.png', canvasObj);
 startButton.setHoverImage('./img/start_button_hover.png');
+var startText = new Text(canvasObj,
+	'Are you ready to begin a fight?',
+	30);
+
+startText.color = '#cbcbcb';
+startText.fontType = 'Arial';
+
+startButton.location = function() {
+	var x = Utilities.centerX(canvasObj, startButton.activeImage.width);
+	var y = canvasObj.height() * 0.4;
+	return new Point(x, y);
+}
+
+startText.location = function() {
+	var x = Utilities.centerX(canvasObj, startText.textWidth());
+	var y = canvasObj.height() * 0.2;
+	return new Point(x, y);
+}
+
+startButton.onClick(function() {
+	//TODO add waiting other player event
+});
+
+startButton.mouseOver(function() {
+	startButton.activeImage = startButton.hoverImage;
+	$('body').css('cursor', 'pointer');
+	console.log('mouse over');
+});
+
+startButton.mouseLeave(function() {
+	startButton.activeImage = startButton.image;
+	$('body').css('cursor', 'default');
+	console.log('mouse leave');
+});
 
 function graphics() {
 	startButton.drawButton();
+	startText.draw();
 }
 
 //load this chunk of code when all external sources was loaded
 $(window).load(function () {
-
-	startButton.onClick(function() {
-	//startButton.visible = false;
-	//TODO add waiting other player event
-	});
-
-	startButton.mouseOver(function() {
-		startButton.activeImage = startButton.hoverImage;
-		$('body').css('cursor', 'pointer');
-		console.log('mouse over');
-	});
-
-	startButton.mouseLeave(function() {
-		startButton.activeImage = startButton.image;
-		$('body').css('cursor', 'default');
-		console.log('mouse leave');
-	});
-
-	var imageWidth = startButton.activeImage.width / 2;
-	console.log(imageWidth);
-	var middle = canvasObj.width() / 2 - imageWidth;
-	var yloc = canvasObj.height() * 0.4;
-	console.log(middle);
-	startButton.location = new Location(middle, yloc);
-
 	canvasObj.draw(graphics);
 });
-},{"./lib/button.js":1,"./lib/canvas.js":2,"./lib/location.js":4}]},{},[5]);
+},{"./lib/canvas/button.js":1,"./lib/canvas/canvas.js":2,"./lib/canvas/point.js":3,"./lib/canvas/text.js":4,"./lib/canvas/utilities.js":5}]},{},[7]);

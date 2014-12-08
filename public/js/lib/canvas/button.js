@@ -1,4 +1,4 @@
-var EventCollection = require('./eventCollection.js');
+var EventCollection = require('../eventCollection.js');
 
 function Button(image, canvasObj) {
 	this.src = image;
@@ -52,17 +52,17 @@ Button.prototype.location = function() {
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		this.canvasObj.canvas.drawImage(this.activeImage, this.location.x, this.location.y);
+		this.canvasObj.canvas.drawImage(this.activeImage, this.location().x, this.location().y);
 	}
 }
 
-Button.prototype.locationIntersects = function(location) {
+Button.prototype.pointIntersects = function(location) {
 	if (this.visible) {
 		var canvasLocation = this.canvasObj.toCanvasLocation(location);
-		var xIntersects = canvasLocation.x >= this.location.x && 
-		canvasLocation.x <= this.location.x + this.activeImage.width;
-		var yIntersects = canvasLocation.y >= this.location.y &&
-		canvasLocation.y <= this.location.y + this.activeImage.height;
+		var xIntersects = canvasLocation.x >= this.location().x && 
+		canvasLocation.x <= this.location().x + this.activeImage.width;
+		var yIntersects = canvasLocation.y >= this.location().y &&
+		canvasLocation.y <= this.location().y + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;
