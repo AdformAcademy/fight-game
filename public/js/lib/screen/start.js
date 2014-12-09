@@ -4,6 +4,7 @@ var Button = require('../canvas/button.js');
 var Point = require('../canvas/point.js');
 var Text = require('../canvas/text.js');
 var WaitingScreen = require('./waiting.js');
+var Background = require('../canvas/background.js');
 
 var socket = io();
 
@@ -11,6 +12,8 @@ var obj;
 
 function StartScreen(canvasObj) {
 	this.canvasObj = canvasObj;
+	this.backgroundImage = new Background('./img/waiting_screen_background.png', 
+		canvasObj);
 	this.startButton = new Button('./img/start_button.png', canvasObj);
 	this.startButton.setHoverImage('./img/start_button_hover.png');
 	this.startText = new Text(canvasObj, 'Are you ready to begin a fight?', 30);
@@ -49,6 +52,7 @@ function StartScreen(canvasObj) {
 };
 
 StartScreen.prototype.graphics = function() {
+	obj.backgroundImage.draw();
 	obj.startButton.drawButton();
 	obj.startText.draw();
 };
