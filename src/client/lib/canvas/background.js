@@ -9,10 +9,10 @@ function Background(image, canvasObj) {
 	this.location = new Point(0, 0);
 	this.isVisible = true;
 	this.width = function () {
-		return screen.availWidth;
+		return screen.width;
 	};
 	this.height = function () {
-		return screen.availHeight;
+		return screen.height;
 	};
 };
 

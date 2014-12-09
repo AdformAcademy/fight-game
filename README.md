@@ -6,19 +6,14 @@ In order to run the project on your machine you need to install these modules us
 
 - `express`
 - `socket.io`
-- `nodemon`
-- `browserify` *(install globally using `npm install -g`)*
-- `uglify-js` *(install globally using `npm install -g`)*
+- `nodemon` *(install globally using `npm install -g`)*
+- `browserify` 
+- `gulp`
+- `gulp-uglify`
+- `vinyl-transform`
 
 ## Usage ##
-To compile client-side JavaScript run:
+To start the server type:
 
-	npm run compile
+	$ nodemon .
 
-To compile client-side JavaScript and run:
-
-	npm run start
-
-Only run:
-
-	nodemon .

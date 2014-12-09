@@ -1,16 +1,11 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
+var Express = require('./src/server/express');
+Express.loadResources();
+
+var http = require('http').Server(Express.app);
 var io = require('socket.io')(http);
-var path = require('path');
-var Session = require('./src/Session');
-var Sessions = require('./src/Sessions');
-
-app.get('/', function(req, res){
-  res.sendfile('views/index.html');
-});
-
-app.use(express.static(path.join(__dirname, 'public')));
+var Session = require('./src/server/Session');
+var Sessions = require('./src/server/Sessions');
+var Tasks = require('./src/server/tasks').start();
 
 io.on('connection', function(socket){
 
