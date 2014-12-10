@@ -24,6 +24,7 @@ function WaitingScreen(canvasObj) {
 	};
 	
 	socket.on('playing', function() {
+		alert('You are now playing');
 		var stageScreen = new StageScreen(obj.canvasObj);
 		obj.canvasObj.graphics = stageScreen.graphics;
 	});
