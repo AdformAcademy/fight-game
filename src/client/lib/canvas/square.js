@@ -10,7 +10,7 @@ function Square(canvasObj, location) {
 /*
 
 Juda tik vienas
-
+Reikia padaryti, kad judetu abu, ir butu atskiri control'ai
 
 $(window).keydown(function (event) {
             var LEFT = 37;
