@@ -3,30 +3,30 @@ Express.loadResources();
 
 var http = require('http').Server(Express.app);
 var io = require('socket.io')(http);
-var Session = require('./src/server/Session');
-var Sessions = require('./src/server/Sessions');
+var Session = require('./src/server/session');
+var SessionCollection = require('./src/server/session-collection');
 var Tasks = require('./src/server/tasks').start();
 
 io.on('connection', function(socket){
 
   socket.on('disconnect', function(){
-    var sesObj = Sessions.getSessionObject(socket.id);
+    var sesObj = SessionCollection.getSessionObject(socket.id);
     if (sesObj != null && sesObj.opponentId != null) {
-      var targetSesObj = Sessions.getSessionObject(sesObj.opponentId);
+      var targetSesObj = SessionCollection.getSessionObject(sesObj.opponentId);
       targetSesObj.socket.emit(Session.UNACTIVE);
-      Sessions.deleteSession(sesObj.opponentId);
+      SessionCollection.deleteSession(sesObj.opponentId);
     }
     console.log('user disconnected');
-    Sessions.deleteSession(socket.id);
+    SessionCollection.deleteSession(socket.id);
   });
 
   socket.on('ready', function() {
-    if (!Sessions.sessionExists(socket.id)) {
-      var targetSesObj = Sessions.getAvailableSession();
-      Sessions.createSession(socket);
+    if (!SessionCollection.sessionExists(socket.id)) {
+      var targetSesObj = SessionCollection.getAvailableSession();
+      SessionCollection.createSession(socket);
       console.log(socket.id + ' is ready');
       if (targetSesObj != null) {
-        var sesObj = Sessions.getSessionObject(socket.id);
+        var sesObj = SessionCollection.getSessionObject(socket.id);
         sesObj.opponentId = targetSesObj.sessionId;
         sesObj.state = Session.PLAYING;
         targetSesObj.opponentId = sesObj.sessionId;

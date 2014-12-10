@@ -3,6 +3,8 @@ var Point = require('../canvas/point.js');
 var Text = require('../canvas/text.js');
 var Background = require('../canvas/background.js');
 
+var socket = io();
+
 var obj;
 
 function WaitingScreen(canvasObj) {
@@ -21,6 +23,10 @@ function WaitingScreen(canvasObj) {
 		var y = obj.canvasObj.height() * 0.2;
 		return new Point(x, y);
 	};
+	
+	socket.on('playing', function() {
+		alert('You are now playing');
+	});
 };
 
 WaitingScreen.prototype.animate = function() {

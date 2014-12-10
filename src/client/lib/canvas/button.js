@@ -1,4 +1,4 @@
-var EventCollection = require('../eventCollection.js');
+var EventCollection = require('../event-collection.js');
 
 function Button(image, canvasObj) {
 	this.src = image;
