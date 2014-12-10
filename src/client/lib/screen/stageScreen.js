@@ -12,7 +12,7 @@ function StageScreen (canvasObj)
 
 	this.player = new Square(this.canvasObj, new Point(0,0));
 	this.opponent = new Square(this.canvasObj, new Point(50,50));
-
+	
 	socket.on('unactive', function() {
 		alert('Player disconnected');
 	});

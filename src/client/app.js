@@ -1,4 +1,3 @@
-require('./lib/connection.js');
 var Canvas = require('./lib/canvas/canvas.js');
 var canvasObj = new Canvas('#window');
 var StartScreen = require('./lib/screen/start.js');
