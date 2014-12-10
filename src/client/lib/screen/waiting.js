@@ -2,9 +2,8 @@ var Utilities = require('../canvas/utilities.js');
 var Point = require('../canvas/point.js');
 var Text = require('../canvas/text.js');
 var Background = require('../canvas/background.js');
-
+var StageScreen = require('./stageScreen.js');
 var socket = io();
-
 var obj;
 
 function WaitingScreen(canvasObj) {
@@ -26,6 +25,8 @@ function WaitingScreen(canvasObj) {
 	
 	socket.on('playing', function() {
 		alert('You are now playing');
+		var stageScreen = new StageScreen(obj.canvasObj);
+		obj.canvasObj.graphics = stageScreen.graphics;
 	});
 };
 
