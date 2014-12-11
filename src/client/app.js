@@ -1,10 +1,9 @@
 var Canvas = require('./lib/canvas/canvas.js');
-var canvasObj = new Canvas('#window');
 var StartScreen = require('./lib/screen/start.js');
-var startScreen = new StartScreen(canvasObj);
 
-//load this chunk of code when all external sources was loaded
-$(window).load(function () {
-	canvasObj.graphics = startScreen.graphics;
-	canvasObj.draw();
-});
+var App = module.exports = function() {};
+
+App.screen = new StartScreen();
+App.canvasObj = new Canvas('#window');
+
+require('./lib/global-events.js');

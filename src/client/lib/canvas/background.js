@@ -1,10 +1,13 @@
-var Point = require('./point.js');
+var Point;
+var App;
 
-function Background(image, canvasObj) {
+function Background(image) {
+	Point = require('./point.js');
+	App = require('../../app.js');
+
 	this.src = image;
 	this.image = new Image();
 	this.image.src = this.src;
-	this.canvasObj = canvasObj;
 
 	this.location = new Point(0, 0);
 	this.isVisible = true;
@@ -30,7 +33,7 @@ Background.prototype.location = function() {
 
 Background.prototype.draw = function() {
 	if (this.visible) {
-		this.canvasObj.canvas.drawImage(this.image, 
+		App.canvasObj.canvas.drawImage(this.image, 
 			this.location.x, this.location.y, this.width(), this.height());
 	}
 };
