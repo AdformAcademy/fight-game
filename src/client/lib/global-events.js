@@ -5,12 +5,20 @@ var socket = io();
 
 var GlobalEvents = module.exports = function() {};
 
+GlobalEvents.keyBindings = {
+	LEFT: 37,
+	RIGHT: 39,
+	UP: 38,
+	DOWN: 40
+};
+
 socket.on('playing', function() {
 	App.screen = new StageScreen();
 	App.canvasObj.graphics = App.screen.graphics;
 });
 
 socket.on('unactive', function() {
+	App.gameStarted = false;
 	App.screen = new StartScreen();
 	App.canvasObj.graphics = App.screen.graphics;
 });
@@ -20,27 +28,23 @@ $(window).load(function () {
 	App.canvasObj.draw();
 });
 
-/*
-
-Juda tik vienas
-Reikia padaryti, kad judetu abu, ir butu atskiri control'ai
-
 $(window).keydown(function (event) {
-            var LEFT = 37;
-            var RIGHT = 39;
-            var UP = 38;
-            var DOWN = 40;
-            if (event.keyCode == RIGHT) {
-              obj.location.x = obj.location.x + 10;
-            }
-            if (event.keyCode == LEFT) {
-              obj.location.x = obj.location.x - 10;
-            }
-            if (event.keyCode == UP) {
-              obj.location.y = obj.location.y - 10;
-            }
-            if (event.keyCode == DOWN) {
-              obj.location.y = obj.location.y + 10;
-            }
-          });
-*/
+	if (App.gameStarted) {
+	    if (event.keyCode == GlobalEvents.keyBindings.RIGHT) {
+	    	console.log('RIGHT');
+	    	socket.emit('move', GlobalEvents.keyBindings.RIGHT);
+	    }
+	    if (event.keyCode == GlobalEvents.keyBindings.LEFT) {
+	    	console.log('LEFT');
+	    	socket.emit('move', GlobalEvents.keyBindings.LEFT);
+	    }
+	    if (event.keyCode == GlobalEvents.keyBindings.UP) {
+			console.log('UP');
+			socket.emit('move', GlobalEvents.keyBindings.UP);
+	    }
+	    if (event.keyCode == GlobalEvents.keyBindings.DOWN) {
+	    	console.log('DOWN');
+	    	socket.emit('move', GlobalEvents.keyBindings.DOWN);
+	    }
+	}
+});

@@ -12,7 +12,6 @@ function StageScreen(){
 	Utilities = require('../canvas/utilities.js');
 	Point = require('../canvas/point.js');
 	Background = require('../canvas/background.js');
-	Player = require('../player/player.js');
 	Text = require('../canvas/text.js');
 	StartScreen = require('./start.js');
 
@@ -21,8 +20,8 @@ function StageScreen(){
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;
 
-	this.player = new Player(new Point(0,0));
-	this.opponent = new Player(new Point(50,50));
+	App.player.location = new Point(0,0);
+	App.opponent.location = new Point(50, 50);
 
 	this.countAnimation = {
 		numbers: 3,
@@ -41,7 +40,7 @@ function StageScreen(){
 		return new Point(x, y);
 	};
 	
-	this.gameStarted = false;
+	App.gameStarted = false;
 	obj.doCountDown();
 };
 
@@ -55,7 +54,7 @@ StageScreen.prototype.doCountDown = function() {
 	if (oldVal <= 0) {
 		obj.countDownText.text = 'FIGHT!!!';
 		if (oldVal == -1) {
-			obj.gameStarted = true;
+			App.gameStarted = true;
 		}
 	} else {
 		obj.countDownText.text = oldVal;
@@ -81,9 +80,9 @@ StageScreen.prototype.animateCountDown = function() {
 
 StageScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
-	if (obj.gameStarted) {
-		obj.player.draw();
-		obj.opponent.draw();
+	if (App.gameStarted) {
+		App.player.draw();
+		App.opponent.draw();
 	} else {
 		obj.animateCountDown();
 		App.canvasObj.canvas.globalAlpha = obj.countAnimation.opacity;
