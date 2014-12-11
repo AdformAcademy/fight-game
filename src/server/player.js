@@ -1,24 +1,22 @@
 function Player(id, number, x, y){
-   this.ID = id;
-   this.Player_number = number;
-   this.X = x;
-   this.Y = y;
+   this.id = id;
+   this.x = x;
+   this.y = y;
 }
 Player.prototype.getID = function(){
-    alert(this.ID);
+    return this.id;
 }
-Player.prototype.getPlayer_number = function(){
-    alert(this.Player_number);
+Player.prototype.getX = function(){
+    return this.x;
 }
-Player.prototype.setPlayer_number = function(number){
-    this.Player_number = number;
+Player.prototype.getY = function(){
+    return this.y;
 }
-Player.prototype.getDimensions = function(){
-    alert(this.X + this.Y);
+Player.prototype.setX = function(x){
+    this.x = x;
 }
-Player.prototype.setDimensions = function(x, y){
-    this.X = x;
-    this.Y = y;
+Player.prototype.setY = function(y){
+    this.y = y;
 }
 
 module.exports = Player;

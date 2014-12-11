@@ -10,7 +10,7 @@ function Player(location) {
 };
 
 Player.prototype.draw = function() {
-	App.canvasObj.canvas.fillStyle = '#ff0000';
+	App.canvasObj.canvas.fillStyle = '#32FF32';
 	App.canvasObj.canvas.fillRect(this.location.x,this.location.y,30,30);
 };
 
