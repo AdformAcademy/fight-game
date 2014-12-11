@@ -5,12 +5,35 @@ var socket = io();
 
 var GlobalEvents = module.exports = function() {};
 
-GlobalEvents.keyBindings = {
-	LEFT: 37,
-	RIGHT: 39,
-	UP: 38,
-	DOWN: 40
+GlobalEvents.Key = {
+  _pressed: {},
+
+  LEFT: 37,
+  UP: 38,
+  RIGHT: 39,
+  DOWN: 40,
+  
+  isDown: function(keyCode) {
+    return this._pressed[keyCode];
+  },
+  
+  onKeydown: function(event) {
+    this._pressed[event.keyCode] = true;
+  },
+  
+  onKeyup: function(event) {
+    delete this._pressed[event.keyCode];
+  }
 };
+
+$(window).keydown(function (event) {
+	GlobalEvents.Key.onKeydown(event);
+});
+
+$(window).keyup(function (event) {
+	GlobalEvents.Key.onKeyup(event);
+});
+
 
 socket.on('playing', function() {
 	App.screen = new StageScreen();
@@ -26,25 +49,4 @@ socket.on('unactive', function() {
 $(window).load(function () {
 	App.canvasObj.graphics = App.screen.graphics;
 	App.canvasObj.draw();
-});
-
-$(window).keydown(function (event) {
-	if (App.gameStarted) {
-	    if (event.keyCode == GlobalEvents.keyBindings.RIGHT) {
-	    	console.log('RIGHT');
-	    	socket.emit('move', GlobalEvents.keyBindings.RIGHT);
-	    }
-	    if (event.keyCode == GlobalEvents.keyBindings.LEFT) {
-	    	console.log('LEFT');
-	    	socket.emit('move', GlobalEvents.keyBindings.LEFT);
-	    }
-	    if (event.keyCode == GlobalEvents.keyBindings.UP) {
-			console.log('UP');
-			socket.emit('move', GlobalEvents.keyBindings.UP);
-	    }
-	    if (event.keyCode == GlobalEvents.keyBindings.DOWN) {
-	    	console.log('DOWN');
-	    	socket.emit('move', GlobalEvents.keyBindings.DOWN);
-	    }
-	}
 });
