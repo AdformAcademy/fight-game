@@ -1,6 +1,6 @@
 var App = require('../app.js');
 var StartScreen = require('./screen/start.js');
-var StageScreen = require('./screen/stage.js');
+var CountDownScreen = require('./screen/count-down.js');
 var socket = io();
 
 var GlobalEvents = module.exports = function() {};
@@ -36,7 +36,7 @@ $(window).keyup(function (event) {
 
 
 socket.on('playing', function() {
-	App.screen = new StageScreen();
+	App.screen = new CountDownScreen();
 	App.canvasObj.graphics = App.screen.graphics;
 });
 
