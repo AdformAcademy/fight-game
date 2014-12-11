@@ -4,9 +4,9 @@ var path = require('path');
 
 function Express() {};
 
-Express.loadResources = function() {
+Express.loadResources = function(dirname) {
 	app.get('/', function(req, res){
-	  res.sendfile('views/index.html');
+	  res.sendFile(dirname + '/views/index.html');
 	});
 
 	app.use('/', express.static('public/'));
