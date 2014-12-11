@@ -1,4 +1,5 @@
 var App;
+var GlobalEvents;
 var Utilities;
 var Point;
 var Background;
@@ -6,9 +7,11 @@ var Square;
 var Text;
 var StartScreen;
 var obj;
+var socket = io();
 
 function StageScreen(){
 	App = require('../../app.js');
+	GlobalEvents = require('../global-events.js');
 	Utilities = require('../canvas/utilities.js');
 	Point = require('../canvas/point.js');
 	Background = require('../canvas/background.js');
@@ -45,12 +48,13 @@ function StageScreen(){
 };
 
 StageScreen.prototype.doCountDown = function() {
-	var oldVal = obj.countAnimation.numbers;
-	obj.countAnimation.numbers--;
-	obj.countAnimation.size = 50;
-	obj.countAnimation.incrementation = 1;
-	obj.countAnimation.opacity = 1;
-	obj.countAnimation.opacityStep = 0.01;
+	var countAnimation = obj.countAnimation;
+	var oldVal = countAnimation.numbers;
+	countAnimation.numbers--;
+	countAnimation.size = 50;
+	countAnimation.incrementation = 1;
+	countAnimation.opacity = 1;
+	countAnimation.opacityStep = 0.01;
 	if (oldVal <= 0) {
 		obj.countDownText.text = 'FIGHT!!!';
 		if (oldVal == -1) {
@@ -65,22 +69,40 @@ StageScreen.prototype.doCountDown = function() {
 };
 
 StageScreen.prototype.animateCountDown = function() {
-	obj.countAnimation.incrementation += obj.countAnimation.incrementation * 0.095;
-	obj.countAnimation.size += obj.countAnimation.incrementation;
+	var countAnimation = obj.countAnimation;
+	countAnimation.incrementation += countAnimation.incrementation * 0.095;
+	countAnimation.size += countAnimation.incrementation;
 
-	obj.countAnimation.opacityStep += obj.countAnimation.opacityStep * 0.1;
-	if (obj.countAnimation.opacity - obj.countAnimation.opacityStep < 0) {
-		obj.countAnimation.opacity = 0;
+	countAnimation.opacityStep += countAnimation.opacityStep * 0.1;
+	if (countAnimation.opacity - countAnimation.opacityStep < 0) {
+		countAnimation.opacity = 0;
 	} else {
-		obj.countAnimation.opacity -= obj.countAnimation.opacityStep;
+		countAnimation.opacity -= countAnimation.opacityStep;
 	}
 	
 	obj.countDownText.size = obj.countAnimation.size;
-}
+};
+
+StageScreen.prototype.playerMove = function() {
+	var key = GlobalEvents.Key;
+	if (key.isDown(key.RIGHT)) {
+		socket.emit('move', key.RIGHT);
+	}
+	if (key.isDown(key.LEFT)) {
+		socket.emit('move', key.LEFT);
+	}
+	if (key.isDown(key.UP)) {
+		socket.emit('move', key.UP);
+	}
+	if (key.isDown(key.DOWN)) {
+		socket.emit('move', key.DOWN);
+	}
+};
 
 StageScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
 	if (App.gameStarted) {
+		obj.playerMove();
 		App.player.draw();
 		App.opponent.draw();
 	} else {
