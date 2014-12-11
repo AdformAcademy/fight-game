@@ -1,5 +1,8 @@
-function Text(canvasObj, text, size) {
-	this.canvasObj = canvasObj;
+var App;
+
+function Text(text, size) {
+	App = require('../../app.js');
+
 	this.text = text;
 	this.size = size;
 	this.location = location;
@@ -29,7 +32,7 @@ Text.prototype.text = function() {
 };
 
 Text.prototype.textWidth = function() {
-	return this.canvasObj.canvas.measureText(this.text).width;
+	return App.canvasObj.canvas.measureText(this.text).width;
 };
 
 Text.prototype.isVisible = function() {
@@ -38,9 +41,9 @@ Text.prototype.isVisible = function() {
 
 Text.prototype.draw = function() {
 	if (this.isVisible) {
-		this.canvasObj.canvas.fillStyle = this.color;
-		this.canvasObj.canvas.font =  this.size + 'px ' + this.fontType;
-		this.canvasObj.canvas.fillText(this.text, this.location().x, this.location().y);
+		App.canvasObj.canvas.fillStyle = this.color;
+		App.canvasObj.canvas.font =  this.size + 'px ' + this.fontType;
+		App.canvasObj.canvas.fillText(this.text, this.location().x, this.location().y);
 	}
 };
 

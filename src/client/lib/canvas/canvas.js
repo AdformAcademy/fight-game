@@ -1,6 +1,8 @@
-var Point = require('./point.js');
+var Point;
 
 function Canvas(id) {
+	Point = require('./point.js');
+
 	this.id = id;
 	this.canvasObj = $(this.id)[0];
 	this.canvas = this.canvasObj.getContext('2d');

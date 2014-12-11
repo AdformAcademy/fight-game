@@ -1,11 +1,24 @@
-var Point = require('./point.js');
+var App = require('../app.js');
+var StartScreen = require('./screen/start.js');
+var StageScreen = require('./screen/stage.js');
+var socket = io();
 
-function Square(canvasObj, location) {
-	this.location = location;
-	this.canvasObj = canvasObj;
-	obj = this;
+var GlobalEvents = module.exports = function() {};
 
-};
+socket.on('playing', function() {
+	App.screen = new StageScreen();
+	App.canvasObj.graphics = App.screen.graphics;
+});
+
+socket.on('unactive', function() {
+	App.screen = new StartScreen();
+	App.canvasObj.graphics = App.screen.graphics;
+});
+
+$(window).load(function () {
+	App.canvasObj.graphics = App.screen.graphics;
+	App.canvasObj.draw();
+});
 
 /*
 
@@ -31,11 +44,3 @@ $(window).keydown(function (event) {
             }
           });
 */
-Square.prototype.draw = function() {
-	this.canvasObj.canvas.fillStyle = '#ff0000';
-	this.canvasObj.canvas.fillRect(this.location.x,this.location.y,30,30);
-};
-
-
-
-module.exports = Square;

@@ -1,16 +1,23 @@
-var Utilities = require('../canvas/utilities.js');
-var Point = require('../canvas/point.js');
-var Text = require('../canvas/text.js');
-var Background = require('../canvas/background.js');
-var StageScreen = require('./stageScreen.js');
-var socket = io();
+var App;
+var Utilities;
+var Point;
+var Text;
+var Background;
+var StageScreen;
 var obj;
 
-function WaitingScreen(canvasObj) {
-	this.canvasObj = canvasObj;
-	this.backgroundImage = new Background('./img/waiting_screen_background.png', 
-		canvasObj);
-	this.waitingText = new Text(canvasObj, 'Waiting for opponent...', 30);
+function WaitingScreen() {
+	App = require('../../app.js');
+	Utilities = require('../canvas/utilities.js');
+	Point = require('../canvas/point.js');
+	Text = require('../canvas/text.js');
+	Background = require('../canvas/background.js');
+	StageScreen = require('./stage.js');
+
+	console.log('Waiting constructor');
+
+	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.waitingText = new Text('Waiting for opponent...', 30);
 	this.waitingText.color = '#cbcbcb';
 	this.waitingText.fontType = 'Arial';
 	this.globalAlpha = 1;
@@ -18,16 +25,10 @@ function WaitingScreen(canvasObj) {
 	obj = this;
 
 	this.waitingText.location = function() {
-		var x = Utilities.centerX(obj.canvasObj, obj.waitingText.textWidth());
-		var y = obj.canvasObj.height() * 0.2;
+		var x = Utilities.centerX(obj.waitingText.textWidth());
+		var y = App.canvasObj.height() * 0.2;
 		return new Point(x, y);
 	};
-	
-	socket.on('playing', function() {
-		alert('You are now playing');
-		var stageScreen = new StageScreen(obj.canvasObj);
-		obj.canvasObj.graphics = stageScreen.graphics;
-	});
 };
 
 WaitingScreen.prototype.animate = function() {
@@ -35,14 +36,14 @@ WaitingScreen.prototype.animate = function() {
 		obj.globalAlphaStep *= -1;
 	}
 	obj.globalAlpha += obj.globalAlphaStep;
-	obj.canvasObj.canvas.globalAlpha = obj.globalAlpha;
+	App.canvasObj.canvas.globalAlpha = obj.globalAlpha;
 };
 
 WaitingScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
 	obj.animate();
 	obj.waitingText.draw();
-	obj.canvasObj.canvas.globalAlpha = 1;
+	App.canvasObj.canvas.globalAlpha = 1;
 };
 
 module.exports = WaitingScreen;

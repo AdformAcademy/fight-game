@@ -1,8 +1,10 @@
+var App = require('../../app.js');
+
 function Utilities() {}
 
-Utilities.centerX = function(canvasObj, objectWidth) {
+Utilities.centerX = function(objectWidth) {
 	var halfWidth = objectWidth / 2;
-	var middle = canvasObj.width() / 2 - halfWidth;
+	var middle = App.canvasObj.width() / 2 - halfWidth;
 	return middle;
 };
 
