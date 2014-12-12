@@ -1,12 +1,15 @@
+var Config;
 var Point;
 
 function Canvas(id) {
+	Config = require('../config');
 	Point = require('./point');
 
 	this.id = id;
+	this.canvasMaskColor = Config.canvasMaskColor;
+	this.updateInterval = Config.canvasUpdateInterval;
 	this.canvasObj = $(this.id)[0];
 	this.canvas = this.canvasObj.getContext('2d');
-	this.updateInterval = 30;
 	this.updateCanvasDimensions();
 	this.graphics = null;
 };
@@ -50,7 +53,7 @@ Canvas.prototype.drawGraphics = function() {
 };
 
 Canvas.prototype.drawBackground = function() {
-	this.canvas.fillStyle = '#000000';
+	this.canvas.fillStyle = this.canvasMaskColor;
 	this.canvas.fillRect(0, 0, this.canvasObj.width, this.canvasObj.height);
 };
 
