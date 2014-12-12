@@ -6,6 +6,8 @@ var io = require('socket.io')(http);
 var Session = require('./src/server/session');
 var SessionCollection = require('./src/server/session-collection');
 var Tasks = require('./src/server/tasks').start();
+var PlayerCollection = require('./src/server/player-collection');
+var Player = require('./src/server/player');
 
 io.on('connection', function(socket){
 
@@ -20,6 +22,8 @@ io.on('connection', function(socket){
     SessionCollection.deleteSession(socket.id);
   });
 
+
+
   socket.on('ready', function() {
     if (!SessionCollection.sessionExists(socket.id)) {
       var targetSesObj = SessionCollection.getAvailableSession();
@@ -27,6 +31,12 @@ io.on('connection', function(socket){
       console.log(socket.id + ' is ready');
       if (targetSesObj != null) {
         var sesObj = SessionCollection.getSessionObject(socket.id);
+
+        var playerObj = Player(sesObj.sessionId(), targetSesObj.sessionId(), 0, 0);
+        var opponentObj = Player(targetSesObj.sessionId(), sesObj.sessionId(), 100, 0);
+        PlayerCollection.insertPlayer(sesObj.sessionId(), playerObj);
+        PlayerCollection.insertPlayer(targetSesObj.sessionId(), opponentObj);
+
         sesObj.opponentId = targetSesObj.sessionId;
         sesObj.state = Session.PLAYING;
         targetSesObj.opponentId = sesObj.sessionId;
@@ -34,8 +44,46 @@ io.on('connection', function(socket){
         sesObj.socket.emit(Session.PLAYING);
         targetSesObj.socket.emit(Session.PLAYING);
       }
+  });
+
+  socket.on('move', function(data){
+        var playerObj = PlayerCollection.getPlayerObject(socket.id);
+        var key = Player.KeyBindings;
+        var x = playerObj.getX();
+        var y = playerObj.getY();
+        if(data == key.LEFT) {
+          x -= 1;
+          playerObj.setX(x);
+        }
+        if(data == key.RIGHT) {
+          x += 1;
+          playerObj.setX(x);
+        }
+        if(data == key.UP) {
+          y -= 1;
+          playerObj.setY(y);
+        }
+        if(data == key.DOWN) {
+          y += 1;
+          playerObj.setY(y);
+        }
     }
   });
+  socket.on('update', function(){
+    var player = PlayerCollection.getPlayerObject(socket.id);
+    var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+    var data = {
+      player: {
+        x: player.getX(),
+        y: player.getY()
+      },
+      opponent: {
+        x: opponent.getX(),
+        y: opponent.getY()
+      }
+    };
+  socket.emit('update', data);
+});
 
 });
 
