@@ -30,7 +30,11 @@ Player.KeyBindings = {
   LEFT: 37,
   UP: 38,
   RIGHT: 39,
-  DOWN: 40
+  DOWN: 40,
+  UP_LEFT: 41,
+  UP_RIGHT: 42,
+  DOWN_LEFT: 43,
+  DOWN_RIGHT: 44
 };
 
 module.exports = Player;

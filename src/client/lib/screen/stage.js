@@ -18,33 +18,48 @@ function StageScreen() {
 	App.opponent.location = new Point(50, 50);
 };
 
-StageScreen.prototype.playerMove = function() {
-	var key = GlobalEvents.Key;
-	if (key.isDown(key.RIGHT)) {
-		console.log('RIGHT');
-		socket.emit('move', key.RIGHT);
-	}
-	if (key.isDown(key.LEFT)) {
-		console.log('LEFT');
-		socket.emit('move', key.LEFT);
-	}
-	if (key.isDown(key.UP)) {
-		console.log('UP');
-		socket.emit('move', key.UP);
-	}
-	if (key.isDown(key.DOWN)) {
-		console.log('DOWN');
-		socket.emit('move', key.DOWN);
-	}
-};
 
 StageScreen.prototype.updatePlayers = function() {
+	var currentKey = 0;
 	console.log('socket update emit');
-	socket.emit('update', '');
+	var key = GlobalEvents.Key;
+
+	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
+		console.log('UP RIGHT');
+		currentKey = key.UP_RIGHT;
+	}
+	else if (key.isDown(key.LEFT) && key.isDown(key.UP)) {
+		console.log('UP LEFT');
+		currentKey = key.UP_LEFT;
+	}
+	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
+		console.log('DOWN LEFT');
+		currentKey = key.DOWN_LEFT;
+	}
+	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
+		console.log('DOWN RIGHT');
+		currentKey = key.DOWN_RIGHT;
+	}
+	else if (key.isDown(key.RIGHT)) {
+		console.log('RIGHT');
+		currentKey = key.RIGHT;
+	}
+	else if (key.isDown(key.LEFT)) {
+		console.log('LEFT');
+		currentKey = key.LEFT;
+	}
+	else if (key.isDown(key.UP)) {
+		console.log('UP');
+		currentKey = key.UP;
+	}
+	else if (key.isDown(key.DOWN)) {
+		console.log('DOWN');
+		currentKey = key.DOWN;
+	}
+	socket.emit('update', currentKey);
 };
 
 StageScreen.prototype.graphics = function() {
-	obj.playerMove();
 	obj.updatePlayers();
 	obj.backgroundImage.draw();
 	App.player.draw();
