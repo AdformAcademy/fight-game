@@ -1,5 +1,5 @@
 var Express = require('./src/server/express');
-Express.loadResources();
+Express.loadResources(__dirname);
 
 var http = require('http').Server(Express.app);
 var io = require('socket.io')(http);
