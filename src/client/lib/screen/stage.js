@@ -34,9 +34,14 @@ StageScreen.prototype.playerMove = function() {
 	}
 };
 
+StageScreen.prototype.updatePlayers = function() {
+	socket.emit('update', '');
+};
+
 StageScreen.prototype.graphics = function() {
-	obj.backgroundImage.draw();
 	obj.playerMove();
+	obj.updatePlayers();
+	obj.backgroundImage.draw();
 	App.player.draw();
 	App.opponent.draw();
 };
