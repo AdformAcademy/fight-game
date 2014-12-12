@@ -1,6 +1,6 @@
-var App = require('../app.js');
-var StartScreen = require('./screen/start.js');
-var CountDownScreen = require('./screen/count-down.js');
+var App = require('../app');
+var StartScreen = require('./screen/start');
+var CountDownScreen = require('./screen/count-down');
 var socket = io();
 
 var GlobalEvents = module.exports = function() {};
@@ -48,7 +48,7 @@ socket.on('unactive', function() {
 
 socket.on('update', function(data) {
   App.player.location.x = data.player.x;
-  App.player.location.x = data.player.y;
+  App.player.location.y = data.player.y;
   App.opponent.location.x = data.opponent.x;
   App.opponent.location.y = data.opponent.y;
 });

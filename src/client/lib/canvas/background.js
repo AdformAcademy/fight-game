@@ -2,8 +2,8 @@ var Point;
 var App;
 
 function Background(image) {
-	Point = require('./point.js');
-	App = require('../../app.js');
+	Point = require('./point');
+	App = require('../../app');
 
 	this.src = image;
 	this.image = new Image();

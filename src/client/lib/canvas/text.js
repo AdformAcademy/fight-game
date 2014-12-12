@@ -1,7 +1,7 @@
 var App;
 
 function Text(text, size) {
-	App = require('../../app.js');
+	App = require('../../app');
 
 	this.text = text;
 	this.size = size;

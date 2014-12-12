@@ -2,8 +2,8 @@ var App;
 var EventCollection;
 
 function Button(image) {
-	App = require('../../app.js');
-	EventCollection = require('../event-collection.js');
+	App = require('../../app');
+	EventCollection = require('../event-collection');
 
 	this.src = image;
 	this.image = new Image();
@@ -55,7 +55,6 @@ Button.prototype.location = function() {
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		var App = require('../../app.js');
 		App.canvasObj.canvas.drawImage(this.activeImage, this.location().x, this.location().y);
 	}
 };

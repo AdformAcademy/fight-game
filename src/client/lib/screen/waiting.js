@@ -7,12 +7,12 @@ var StageScreen;
 var obj;
 
 function WaitingScreen() {
-	App = require('../../app.js');
-	Utilities = require('../canvas/utilities.js');
-	Point = require('../canvas/point.js');
-	Text = require('../canvas/text.js');
-	Background = require('../canvas/background.js');
-	StageScreen = require('./stage.js');
+	App = require('../../app');
+	Utilities = require('../canvas/utilities');
+	Point = require('../canvas/point');
+	Text = require('../canvas/text');
+	Background = require('../canvas/background');
+	StageScreen = require('./stage');
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.waitingText = new Text('Waiting for opponent...', 30);

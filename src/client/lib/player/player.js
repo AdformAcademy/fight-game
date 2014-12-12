@@ -2,8 +2,8 @@ var App;
 var Point;
 
 function Player(location) {
-  App = require('../../app.js');
-  Point = require('../canvas/point.js');
+  App = require('../../app');
+  Point = require('../canvas/point');
 
 	this.location = location;
 	obj = this;

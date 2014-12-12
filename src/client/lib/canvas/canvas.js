@@ -1,7 +1,7 @@
 var Point;
 
 function Canvas(id) {
-	Point = require('./point.js');
+	Point = require('./point');
 
 	this.id = id;
 	this.canvasObj = $(this.id)[0];

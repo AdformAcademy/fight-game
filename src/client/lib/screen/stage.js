@@ -6,10 +6,10 @@ var obj;
 var socket = io();
 
 function StageScreen() {
-	App = require('../../app.js');
-	GlobalEvents = require('../global-events.js');
-	Point = require('../canvas/point.js');
-	Background = require('../canvas/background.js');
+	App = require('../../app');
+	GlobalEvents = require('../global-events');
+	Point = require('../canvas/point');
+	Background = require('../canvas/background');
 
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;

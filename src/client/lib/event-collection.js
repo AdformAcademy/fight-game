@@ -1,4 +1,4 @@
-var Point = require('./canvas/point.js');
+var Point = require('./canvas/point');
 
 function EventCollection() {};
 

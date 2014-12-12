@@ -9,13 +9,13 @@ var socket = io();
 var obj;
 
 function StartScreen() {
-	App = require('../../app.js');
-	Utilities = require('../canvas/utilities.js');
-	Button = require('../canvas/button.js');
-	Point = require('../canvas/point.js');
-	Text = require('../canvas/text.js');
-	WaitingScreen = require('./waiting.js');
-	Background = require('../canvas/background.js');
+	App = require('../../app');
+	Utilities = require('../canvas/utilities');
+	Button = require('../canvas/button');
+	Point = require('../canvas/point');
+	Text = require('../canvas/text');
+	WaitingScreen = require('./waiting');
+	Background = require('../canvas/background');
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button('./img/start_button.png');

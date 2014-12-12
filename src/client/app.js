@@ -1,6 +1,6 @@
-var Canvas = require('./lib/canvas/canvas.js');
-var StartScreen = require('./lib/screen/start.js');
-var Player = require('./lib/player/player.js');
+var Canvas = require('./lib/canvas/canvas');
+var StartScreen = require('./lib/screen/start');
+var Player = require('./lib/player/player');
 
 var App = module.exports = function() {};
 
@@ -10,4 +10,4 @@ App.gameStarted = false;
 App.player = new Player();
 App.opponent = new Player();
 
-require('./lib/global-events.js');
+require('./lib/global-events');

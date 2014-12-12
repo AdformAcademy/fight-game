@@ -7,12 +7,12 @@ var Text;
 var obj;
 
 function CountDownScreen(){
-	App = require('../../app.js');
-	StageScreen = require('./stage.js');
-	Utilities = require('../canvas/utilities.js');
-	Point = require('../canvas/point.js');
-	Background = require('../canvas/background.js');
-	Text = require('../canvas/text.js');
+	App = require('../../app');
+	StageScreen = require('./stage');
+	Utilities = require('../canvas/utilities');
+	Point = require('../canvas/point');
+	Background = require('../canvas/background');
+	Text = require('../canvas/text');
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;
 

@@ -1,4 +1,4 @@
-var App = require('../../app.js');
+var App = require('../../app');
 
 function Utilities() {}
 
