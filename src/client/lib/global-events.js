@@ -46,6 +46,13 @@ socket.on('unactive', function() {
 	App.canvasObj.graphics = App.screen.graphics;
 });
 
+socket.on('update', function(data) {
+  App.player.location.x = data.player.x;
+  App.player.location.x = data.player.y;
+  App.opponent.location.x = data.opponent.x;
+  App.opponent.location.y = data.opponent.y;
+});
+
 $(window).load(function () {
 	App.canvasObj.graphics = App.screen.graphics;
 	App.canvasObj.draw();
