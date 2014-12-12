@@ -53,20 +53,20 @@ socket.on('move', function(data){
     var x = playerObj.getX();
     var y = playerObj.getY();
     if(data == key.LEFT) {
-      x -= 1;
-      playerObj.setX(x);
+        x -= 3;
+        playerObj.setX(x);
     }
     if(data == key.RIGHT) {
-      x += 1;
-      playerObj.setX(x);
+        x += 3;
+        playerObj.setX(x);
     }
     if(data == key.UP) {
-      y -= 1;
-      playerObj.setY(y);
+        y -= 3;
+        playerObj.setY(y);
     }
     if(data == key.DOWN) {
-      y += 1;
-      playerObj.setY(y);
+        y += 3;
+        playerObj.setY(y);
     }
   }
 });
