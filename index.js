@@ -22,8 +22,6 @@ io.on('connection', function(socket){
     SessionCollection.deleteSession(socket.id);
   });
 
-
-
   socket.on('ready', function() {
     if (!SessionCollection.sessionExists(socket.id)) {
       var targetSesObj = SessionCollection.getAvailableSession();
@@ -32,57 +30,63 @@ io.on('connection', function(socket){
       if (targetSesObj != null) {
         var sesObj = SessionCollection.getSessionObject(socket.id);
 
-        var playerObj = Player(sesObj.sessionId(), targetSesObj.sessionId(), 0, 0);
-        var opponentObj = Player(targetSesObj.sessionId(), sesObj.sessionId(), 100, 0);
-        PlayerCollection.insertPlayer(sesObj.sessionId(), playerObj);
-        PlayerCollection.insertPlayer(targetSesObj.sessionId(), opponentObj);
-
         sesObj.opponentId = targetSesObj.sessionId;
         sesObj.state = Session.PLAYING;
         targetSesObj.opponentId = sesObj.sessionId;
         targetSesObj.state = Session.PLAYING;
+
+        var playerObj = new Player(sesObj.sessionId, sesObj.opponentId, 0, 0);
+        var opponentObj = new Player(targetSesObj.sessionId, targetSesObj.opponentId, 100, 0);
+        PlayerCollection.insertPlayer(sesObj.sessionId, playerObj);
+        PlayerCollection.insertPlayer(targetSesObj.sessionId, opponentObj);
+
         sesObj.socket.emit(Session.PLAYING);
         targetSesObj.socket.emit(Session.PLAYING);
       }
-  });
-
-  socket.on('move', function(data){
-        var playerObj = PlayerCollection.getPlayerObject(socket.id);
-        var key = Player.KeyBindings;
-        var x = playerObj.getX();
-        var y = playerObj.getY();
-        if(data == key.LEFT) {
-          x -= 1;
-          playerObj.setX(x);
-        }
-        if(data == key.RIGHT) {
-          x += 1;
-          playerObj.setX(x);
-        }
-        if(data == key.UP) {
-          y -= 1;
-          playerObj.setY(y);
-        }
-        if(data == key.DOWN) {
-          y += 1;
-          playerObj.setY(y);
-        }
     }
   });
-  socket.on('update', function(){
-    var player = PlayerCollection.getPlayerObject(socket.id);
-    var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+
+socket.on('move', function(data){
+  var playerObj = PlayerCollection.getPlayerObject(socket.id);
+  if (playerObj != null) {
+    var key = Player.KeyBindings;
+    var x = playerObj.getX();
+    var y = playerObj.getY();
+    if(data == key.LEFT) {
+      x -= 1;
+      playerObj.setX(x);
+    }
+    if(data == key.RIGHT) {
+      x += 1;
+      playerObj.setX(x);
+    }
+    if(data == key.UP) {
+      y -= 1;
+      playerObj.setY(y);
+    }
+    if(data == key.DOWN) {
+      y += 1;
+      playerObj.setY(y);
+    }
+  }
+});
+
+socket.on('update', function(){
+  var playerObj = PlayerCollection.getPlayerObject(socket.id);
+  if (playerObj != null) {
+    var opponentObj = PlayerCollection.getPlayerObject(playerObj.getOpponentId());
     var data = {
       player: {
-        x: player.getX(),
-        y: player.getY()
+        x: playerObj.getX(),
+        y: playerObj.getY()
       },
       opponent: {
-        x: opponent.getX(),
-        y: opponent.getY()
+        x: opponentObj.getX(),
+        y: opponentObj.getY()
       }
     };
-  socket.emit('update', data);
+    socket.emit('update', data);
+  }
 });
 
 });
