@@ -8,6 +8,7 @@ var SessionCollection = require('./src/server/session-collection');
 var Tasks = require('./src/server/tasks').start();
 var PlayerCollection = require('./src/server/player-collection');
 var Player = require('./src/server/player');
+var Config = require('./src/server/config');
 
 io.on('connection', function(socket){
 
@@ -55,32 +56,32 @@ io.on('connection', function(socket){
         var x = playerObj.getX();
         var y = playerObj.getY();
         if(data == key.UP_LEFT) {
-          y -= 1;
-          x -= 1;
+          y -= Config.playerMoveSpeed;
+          x -= Config.playerMoveSpeed;
         }
         else if(data == key.UP_RIGHT) {
-          y -= 1;
-          x += 1;
+          y -= Config.playerMoveSpeed;
+          x += Config.playerMoveSpeed;
         }
         else if(data == key.DOWN_LEFT) {
-          x -= 1;
-          y += 1;
+          x -= Config.playerMoveSpeed;
+          y += Config.playerMoveSpeed;
         }
         else if(data == key.DOWN_RIGHT) {
-          x += 1;
-          y += 1;
+          x += Config.playerMoveSpeed;
+          y += Config.playerMoveSpeed;
         }
         else if(data == key.LEFT) {
-          x -= 1;
+          x -= Config.playerMoveSpeed;
         }
         else if(data == key.RIGHT) {
-          x += 1;
+          x += Config.playerMoveSpeed;
         }
         else if(data == key.UP) {
-          y -= 1;
+          y -= Config.playerMoveSpeed;
         }
         else if(data == key.DOWN) {
-          y += 1;
+          y += Config.playerMoveSpeed;
         }
 
         playerObj.setX(x);
@@ -103,6 +104,6 @@ io.on('connection', function(socket){
 
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(Config.port, function(){
+  console.log('listening on *:' + Config.port);
 });
