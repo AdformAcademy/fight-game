@@ -21,20 +21,25 @@ function StageScreen() {
 StageScreen.prototype.playerMove = function() {
 	var key = GlobalEvents.Key;
 	if (key.isDown(key.RIGHT)) {
+		console.log('RIGHT');
 		socket.emit('move', key.RIGHT);
 	}
 	if (key.isDown(key.LEFT)) {
+		console.log('LEFT');
 		socket.emit('move', key.LEFT);
 	}
 	if (key.isDown(key.UP)) {
+		console.log('UP');
 		socket.emit('move', key.UP);
 	}
 	if (key.isDown(key.DOWN)) {
+		console.log('DOWN');
 		socket.emit('move', key.DOWN);
 	}
 };
 
 StageScreen.prototype.updatePlayers = function() {
+	console.log('socket update emit');
 	socket.emit('update', '');
 };
 
