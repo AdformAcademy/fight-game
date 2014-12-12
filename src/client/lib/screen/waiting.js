@@ -14,8 +14,6 @@ function WaitingScreen() {
 	Background = require('../canvas/background.js');
 	StageScreen = require('./stage.js');
 
-	console.log('Waiting constructor');
-
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.waitingText = new Text('Waiting for opponent...', 30);
 	this.waitingText.color = '#cbcbcb';

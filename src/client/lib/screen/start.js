@@ -17,8 +17,6 @@ function StartScreen() {
 	WaitingScreen = require('./waiting.js');
 	Background = require('../canvas/background.js');
 
-	console.log('Start constructor');
-
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button('./img/start_button.png');
 	this.startButton.setHoverImage('./img/start_button_hover.png');
@@ -44,7 +42,6 @@ function StartScreen() {
 		var waitingScreen = new WaitingScreen();
 		App.canvasObj.graphics = waitingScreen.graphics;
 		obj.dispose();
-		console.log('Start clicked');
 	});
 
 	this.startButton.mouseOver(function() {
