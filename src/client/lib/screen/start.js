@@ -21,36 +21,36 @@ function StartScreen() {
 	this.startButton = new Button('./img/start_button.png');
 	this.startButton.setHoverImage('./img/start_button_hover.png');
 	this.startText = new Text('Are you ready to begin a fight?', 30);
-	this.startText.color = '#cbcbcb';
-	this.startText.fontType = 'Arial';
+	this.startText.setColor('#cbcbcb');
+	this.startText.setFontType('Arial');
 	obj = this;
 
-	this.startButton.location = function() {
-		var x = Utilities.centerX(obj.startButton.activeImage.width);
-		var y = App.canvasObj.height() * 0.4;
+	this.startButton.setLocation(function() {
+		var x = Utilities.centerX(obj.startButton.getActiveImage().width);
+		var y = App.canvasObj.getHeight() * 0.4;
 		return new Point(x, y);
-	};
+	});
 
-	this.startText.location = function() {
-		var x = Utilities.centerX(obj.startText.textWidth());
-		var y = App.canvasObj.height() * 0.2;
+	this.startText.setLocation(function() {
+		var x = Utilities.centerX(obj.startText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.2;
 		return new Point(x, y);
-	};
+	});
 
 	this.startButton.onClick(function() {
 		socket.emit('ready', '');
-		var waitingScreen = new WaitingScreen();
-		App.canvasObj.graphics = waitingScreen.graphics;
+		App.screen = new WaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});
 
 	this.startButton.mouseOver(function() {
-		obj.startButton.activeImage = obj.startButton.hoverImage;
+		obj.startButton.setActiveImage(obj.startButton.getHoverImage());
 		obj.startButton.hover();
 	});
 
 	this.startButton.mouseLeave(function() {
-		obj.startButton.activeImage = obj.startButton.image;
+		obj.startButton.setActiveImage(obj.startButton.getImage());
 		obj.startButton.hoverLeave();
 	});
 };

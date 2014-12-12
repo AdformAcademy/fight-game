@@ -14,10 +14,9 @@ function StageScreen() {
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;
 
-	App.player.location = new Point(0,0);
-	App.opponent.location = new Point(50, 50);
+	App.player.setLocation(new Point(0,0));
+	App.opponent.setLocation(new Point(50, 50));
 };
-
 
 StageScreen.prototype.updatePlayers = function() {
 	var currentKey = 0;

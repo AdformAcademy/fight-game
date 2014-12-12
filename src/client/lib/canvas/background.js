@@ -10,7 +10,8 @@ function Background(image) {
 	this.image.src = this.src;
 
 	this.location = new Point(0, 0);
-	this.isVisible = true;
+	this.visible = true;
+
 	this.width = function () {
 		return screen.width;
 	};
@@ -19,22 +20,34 @@ function Background(image) {
 	};
 };
 
-Background.prototype.image = function() {
+Background.prototype.getImage = function() {
 	return this.image;
 };
 
-Background.prototype.visible = function() {
+Background.prototype.setImage = function(image) {
+	this.image = image;
+};
+
+Background.prototype.isVisible = function() {
 	return this.visible;
 };
 
-Background.prototype.location = function() {
+Background.prototype.setVisible = function(visible) {
+	this.visible = visible;
+};
+
+Background.prototype.getLocation = function() {
 	return this.location;
+};
+
+Background.prototype.setLocation = function(location) {
+	this.location = location;
 };
 
 Background.prototype.draw = function() {
 	if (this.visible) {
 		App.canvasObj.canvas.drawImage(this.image, 
-			this.location.x, this.location.y, this.width(), this.height());
+			this.location.getX(), this.location.getY(), this.width(), this.height());
 	}
 };
 

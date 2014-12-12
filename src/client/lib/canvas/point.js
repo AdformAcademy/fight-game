@@ -3,12 +3,20 @@ function Point(x, y) {
 	this.y = y;
 };
 
-Point.prototype.x = function() {
+Point.prototype.getX = function() {
 	return this.x;
 };
 
-Point.prototype.y = function() {
+Point.prototype.setX = function(x) {
+	this.x = x;
+};
+
+Point.prototype.getY = function() {
 	return this.y;
+};
+
+Point.prototype.setY = function(y) {
+	this.y = y;
 };
 
 Point.prototype.toString = function() {
