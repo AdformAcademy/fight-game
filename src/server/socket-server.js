@@ -13,11 +13,13 @@ SocketServer.prepareSocketData = function(player, opponent) {
 	var data = {
 		player: {
 			x: player.getX(),
-			y: player.getY()
+			y: player.getY(),
+			z: player.getZ(),
 		},
 		opponent: {
 			x: opponent.getX(),
-			y: opponent.getY()
+			y: opponent.getY(),
+			z: opponent.getZ(),
 		}
 	};
 	return data;
@@ -36,8 +38,10 @@ SocketServer.prepareClient = function (socket) {
 			targetSesObj.opponentId = sesObj.sessionId;
 			targetSesObj.state = Session.PLAYING;
 
-			var playerObj = new Player(sesObj.sessionId, sesObj.opponentId, 0, 0);
-			var opponentObj = new Player(targetSesObj.sessionId, targetSesObj.opponentId, 100, 0);
+			var playerObj = new Player(sesObj.sessionId, sesObj.opponentId, 0, 600);
+			playerObj.setZ(-400);
+			var opponentObj = new Player(targetSesObj.sessionId, targetSesObj.opponentId, 100, 600);
+			opponentObj.setZ(-300);
 			PlayerCollection.insertPlayer(sesObj.sessionId, playerObj);
 			PlayerCollection.insertPlayer(targetSesObj.sessionId, opponentObj);
 
@@ -64,44 +68,72 @@ SocketServer.updateClient = function(socket, data) {
 		if(data != 0){
 			SocketServer.updateClientCoordinates(playerObj, data);
 		}
-		var opponentObj = PlayerCollection.getPlayerObject(playerObj.getOpponentId());
-		var data = SocketServer.prepareSocketData(playerObj, opponentObj);
-		socket.emit('update', data);
 	}
 };
+
+SocketServer.updateZ = function(player) {
+	var z = player.getZ();
+	var speedZ = player.getSpeedZ();
+
+	if(z < 0){
+		speedZ -= Config.playerAcceleration
+		z -= speedZ;
+		
+		if(z > 0){
+			z = 0;
+			speedZ = 0;
+		}
+
+		player.setZ(z);
+		player.setSpeedZ(speedZ);
+	}	
+}
 
 SocketServer.updateClientCoordinates = function(player, input) {
 	var key = Player.KeyBindings;
 	var x = player.getX();
 	var y = player.getY();
-	if(input == key.UP_LEFT) {
+	var z = player.getZ();
+	var speedZ = player.getSpeedZ();
+	
+	if(input.space && z >= 0) {
+		speedZ = Config.playerJumpSpeed;
+		z -= speedZ;
+		player.setSpeedZ(speedZ);
+
+		player.setZ(z);
+		SocketServer.updateZ(player);
+	}
+
+	if(input.key == key.UP_LEFT) {
 		y -= Config.playerMoveSpeed;
 		x -= Config.playerMoveSpeed;
 	}
-	else if(input == key.UP_RIGHT) {
+	else if(input.key == key.UP_RIGHT) {
 		y -= Config.playerMoveSpeed;
 		x += Config.playerMoveSpeed;
 	}
-	else if(input == key.DOWN_LEFT) {
+	else if(input.key == key.DOWN_LEFT) {
 		x -= Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if(input == key.DOWN_RIGHT) {
+	else if(input.key == key.DOWN_RIGHT) {
 		x += Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if(input == key.LEFT) {
+	else if(input.key == key.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
-	else if(input == key.RIGHT) {
+	else if(input.key == key.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
-	else if(input == key.UP) {
+	else if(input.key == key.UP) {
 		y -= Config.playerMoveSpeed;
 	}
-	else if(input == key.DOWN) {
+	else if(input.key == key.DOWN) {
 		y += Config.playerMoveSpeed;
 	}
+
 	player.setX(x);
 	player.setY(y); 
 };

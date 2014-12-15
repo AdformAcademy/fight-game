@@ -18,6 +18,7 @@ GlobalEvents.Key = {
   UP_RIGHT: 42,
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
+  SPACE: 32,
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
@@ -72,8 +73,11 @@ socket.on('unactive', function() {
 });
 
 socket.on('update', function(data) {
+  console.log('socket update receive');
   App.player.setLocation(new Point(data.player.x, data.player.y));
+  App.player.setZ(data.player.z);
   App.opponent.setLocation(new Point(data.opponent.x, data.opponent.y));
+  App.opponent.setZ(data.opponent.z);
 });
 
 $(window).load(function () {

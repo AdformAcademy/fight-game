@@ -2,10 +2,12 @@ var Express = require('./src/server/express');
 var SocketServer = require('./src/server/socket-server');
 var Tasks = require('./src/server/tasks');
 var io = require('socket.io')(SocketServer.http);
-
+var PlayerUpdate = require('./src/server/player-update');
 Express.loadResources(__dirname);
 Tasks.start();
 SocketServer.listen();
+
+PlayerUpdate.emitData();
 
 io.on('connection', function(socket) {
 
