@@ -48,23 +48,31 @@ io.on('connection', function(socket){
 
 socket.on('move', function(data){
   var playerObj = PlayerCollection.getPlayerObject(socket.id);
+  var opponentObj = PlayerCollection.getPlayerObject(playerObj.getOpponentId());
   if (playerObj != null) {
     var key = Player.KeyBindings;
     var x = playerObj.getX();
     var y = playerObj.getY();
-    if(data == key.LEFT) {
+    var opx = opponentObj.getX();
+    var opy = opponentObj.getY();
+    console.log("X=", x);
+    console.log("Y=", y);
+    console.log("OPX=", opx);
+    console.log("OPY=", opy);
+
+    if(data == key.LEFT && x - opx > 30) {
         x -= 3;
         playerObj.setX(x);
     }
-    if(data == key.RIGHT) {
+    if(data == key.RIGHT && opx - x > 30) {
         x += 3;
         playerObj.setX(x);
     }
-    if(data == key.UP) {
+    if(data == key.UP && y - opy > 30) {
         y -= 3;
         playerObj.setY(y);
     }
-    if(data == key.DOWN) {
+    if(data == key.DOWN && opy - y > 30) {
         y += 3;
         playerObj.setY(y);
     }
