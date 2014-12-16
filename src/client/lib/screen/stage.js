@@ -24,7 +24,7 @@ StageScreen.prototype.playerMove = function() {
 		/*
 			TODO padaryti boundaries pagal background
 		*/
-		if (App.player.getX() <= App.canvasObj.width() - 30) {
+		if (App.player.getX() <= 1365 - 30) {
 			console.log('RIGHT');
 			socket.emit('move', key.RIGHT);
 		}
@@ -42,7 +42,7 @@ StageScreen.prototype.playerMove = function() {
 		}
 	}
 	if (key.isDown(key.DOWN)) {
-		if (App.player.getY() <= App.canvasObj.height() - 30) {
+		if (App.player.getY() <= 765 - 30) {
 			console.log('DOWN');
 			socket.emit('move', key.DOWN);
 		}
