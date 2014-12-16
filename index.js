@@ -55,25 +55,25 @@ socket.on('move', function(data){
     var y = playerObj.getY();
     var opx = opponentObj.getX();
     var opy = opponentObj.getY();
-    console.log("X=", x);
-    console.log("Y=", y);
-    console.log("OPX=", opx);
-    console.log("OPY=", opy);
 
-    if(data == key.LEFT && x - opx > 30) {
-        x -= 3;
+    if(data == key.LEFT)
+      if((opx + 30 < x || x <= opx) || (y - 30 >= opy || y + 30 <= opy)) {
+          x -= 5;
+          playerObj.setX(x);
+    }
+    if(data == key.RIGHT)
+      if((opx - 30 > x || opx <= x) || (y - 30 >= opy || y + 30 <= opy)) {
+        x += 5;
         playerObj.setX(x);
     }
-    if(data == key.RIGHT && opx - x > 30) {
-        x += 3;
-        playerObj.setX(x);
-    }
-    if(data == key.UP && y - opy > 30) {
-        y -= 3;
+    if(data == key.UP)
+      if((y - 30 > opy || y <= opy) || (x - 30 >= opx || x + 30 <= opx)) {
+        y -= 5;
         playerObj.setY(y);
     }
-    if(data == key.DOWN && opy - y > 30) {
-        y += 3;
+    if(data == key.DOWN)
+      if((y + 30 < opy || opy <= y) || (x - 30 >= opx || x + 30 <= opx)) {
+        y += 5;
         playerObj.setY(y);
     }
   }
