@@ -23,14 +23,11 @@ function StageScreen() {
 StageScreen.prototype.updatePlayers = function() {
 	var activeKeys = {
 		key: 0,
-		space: false
+		jumpKey: false
 	};
+
 	var key = GlobalEvents.Key;
 
-	if(key.isDown(key.SPACE)) {
-		console.log('SPACE');
-		activeKeys.space = true;
-	}
 	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
 		console.log('UP RIGHT');
 		activeKeys.key = key.UP_RIGHT;
@@ -63,7 +60,13 @@ StageScreen.prototype.updatePlayers = function() {
 		console.log('DOWN');
 		activeKeys.key = key.DOWN;
 	}
-	if(activeKeys.key != 0 || activeKeys.space){
+
+	if(key.isDown(key.JUMP_KEY)) {
+		console.log('JUMP');
+		activeKeys.jumpKey = true;
+	}
+
+	if(activeKeys.key != 0 || activeKeys.jumpKey){
 		socket.emit('update', activeKeys);
 	}
 };

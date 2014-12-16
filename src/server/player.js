@@ -55,7 +55,7 @@ Player.KeyBindings = {
   UP_RIGHT: 42,
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
-  SPACE: 32
+  SPACE: 88
 };
 
 module.exports = Player;

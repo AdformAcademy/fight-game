@@ -96,7 +96,9 @@ SocketServer.updateClientCoordinates = function(player, input) {
 	var z = player.getZ();
 	var speedZ = player.getSpeedZ();
 	
-	if(input.space && z >= 0) {
+	console.log('key: ' + input.key + ', jump: ' + input.jumpKey);
+
+	if(input.jumpKey && z >= 0) {
 		speedZ = Config.playerJumpSpeed;
 		z -= speedZ;
 		player.setSpeedZ(speedZ);
@@ -135,7 +137,7 @@ SocketServer.updateClientCoordinates = function(player, input) {
 	}
 
 	player.setX(x);
-	player.setY(y); 
+	player.setY(y);
 };
 
 SocketServer.listen = function() {

@@ -18,7 +18,7 @@ GlobalEvents.Key = {
   UP_RIGHT: 42,
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
-  SPACE: 32,
+  JUMP_KEY: 88,
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
