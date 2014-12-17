@@ -25,13 +25,13 @@ function CountDownScreen(){
 	};
 
 	this.countDownText = new Text(3, 50);
-	this.countDownText.color = '#FFFFFF';
+	this.countDownText.setColor('#FFFFFF');
 
-	this.countDownText.location = function() {
-		var x = Utilities.centerX(obj.countDownText.textWidth());
-		var y = App.canvasObj.height() * 0.5;
+	this.countDownText.setLocation(function() {
+		var x = Utilities.centerX(obj.countDownText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.5;
 		return new Point(x, y);
-	};
+	});
 	obj.doCountDown();
 };
 
@@ -44,14 +44,14 @@ CountDownScreen.prototype.doCountDown = function() {
 	countAnimation.opacity = 1;
 	countAnimation.opacityStep = 0.01;
 	if (oldVal <= 0) {
-		obj.countDownText.text = 'FIGHT!!!';
+		obj.countDownText.setText('FIGHT!!!');
 		if (oldVal == -1) {
 			App.gameStarted = true;
 			App.screen = new StageScreen();
-			App.canvasObj.graphics = App.screen.graphics;
+			App.canvasObj.setGraphics(App.screen.graphics);
 		}
 	} else {
-		obj.countDownText.text = oldVal;
+		obj.countDownText.setText(oldVal);
 	}
 	if (oldVal >= 0) {
 		setTimeout(obj.doCountDown, 1500);
@@ -70,7 +70,7 @@ CountDownScreen.prototype.animateCountDown = function() {
 		countAnimation.opacity -= countAnimation.opacityStep;
 	}
 	
-	obj.countDownText.size = obj.countAnimation.size;
+	obj.countDownText.setSize(obj.countAnimation.size);
 };
 
 CountDownScreen.prototype.graphics = function() {

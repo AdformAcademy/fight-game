@@ -1,6 +1,6 @@
 var Canvas = require('./lib/canvas/canvas');
 var StartScreen = require('./lib/screen/start');
-var Player = require('./lib/player/player');
+var Player = require('./lib/player');
 
 var App = module.exports = function() {};
 

@@ -1,8 +1,10 @@
 var App;
+var Utilities;
 var EventCollection;
 
 function Button(image) {
 	App = require('../../app');
+	Utilities = require('./utilities');
 	EventCollection = require('../event-collection');
 
 	this.src = image;
@@ -17,19 +19,31 @@ function Button(image) {
 	this.mouseLeaveEvent = null;
 	this.mouseEventAdded = false;
 	this.mouseEntered = false;
-	this.isVisible = true;
+	this.visible = true;
 };
 
-Button.prototype.image = function() {
+Button.prototype.getImage = function() {
 	return this.image;
 };
 
-Button.prototype.hoverImage = function() {
+Button.prototype.setImage = function(image) {
+	this.image = image;
+};
+
+Button.prototype.getHoverImage = function() {
 	return this.hoverImage;
 };
 
-Button.prototype.activeImage = function() {
+Button.prototype.setHoverImage = function(hoverImage) {
+	this.hoverImage = hoverImage;
+};
+
+Button.prototype.getActiveImage = function() {
 	return this.activeImage;
+};
+
+Button.prototype.setActiveImage = function(activeImage) {
+	this.activeImage = activeImage;
 };
 
 Button.prototype.buttonWidth = function() {
@@ -45,27 +59,35 @@ Button.prototype.setHoverImage = function(image) {
 	this.hoverImage.src = image;
 };
 
-Button.prototype.visible = function() {
+Button.prototype.isVisible = function() {
 	return this.visible;
 };
 
-Button.prototype.location = function() {
+Button.prototype.setVisible = function(visible) {
+	this.visible = visible;
+};
+
+Button.prototype.getLocation = function() {
 	return this.location;
+};
+
+Button.prototype.setLocation = function(location) {
+	this.location = location;
 };
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		App.canvasObj.canvas.drawImage(this.activeImage, this.location().x, this.location().y);
+		App.canvasObj.canvas.drawImage(this.activeImage, this.location().getX(), this.location().getY());
 	}
 };
 
 Button.prototype.pointIntersects = function(location) {
 	if (this.visible) {
-		var canvasLocation = App.canvasObj.toCanvasLocation(location);
-		var xIntersects = canvasLocation.x >= this.location().x && 
-		canvasLocation.x <= this.location().x + this.activeImage.width;
-		var yIntersects = canvasLocation.y >= this.location().y &&
-		canvasLocation.y <= this.location().y + this.activeImage.height;
+		var canvasLocation = Utilities.toCanvasLocation(location);
+		var xIntersects = canvasLocation.getX() >= this.location().getX() && 
+		canvasLocation.getX() <= this.location().getX() + this.activeImage.width;
+		var yIntersects = canvasLocation.getY() >= this.location().getY() &&
+		canvasLocation.getY() <= this.location().getY() + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;

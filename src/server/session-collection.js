@@ -38,4 +38,8 @@ SessionCollection.printSessions = function() {
   }
 };
 
+SessionCollection.getCollection = function() {
+  return SessionCollection.list;
+}
+
 module.exports = SessionCollection;

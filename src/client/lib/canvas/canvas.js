@@ -18,31 +18,39 @@ Canvas.prototype.canvas = function() {
 	return this.canvas;
 };
 
-Canvas.prototype.width = function() {
+Canvas.prototype.getWidth = function() {
 	return this.canvasObj.width;
 };
 
-Canvas.prototype.height = function() {
+Canvas.prototype.getHeight = function() {
 	return this.canvasObj.height;
 };
 
-Canvas.prototype.offsetLeft = function() {
+Canvas.prototype.getOffsetLeft = function() {
 	return this.canvasObj.offsetLeft;
 };
 
-Canvas.prototype.offsetTop = function() {
+Canvas.prototype.getOffsetTop = function() {
 	return this.canvasObj.offsetTop;
 };
 
-Canvas.prototype.updateInterval = function() {
+Canvas.prototype.getUpdateInterval = function() {
 	return this.updateInterval;
+};
+
+Canvas.prototype.setUpdateInterval = function(updateInterval) {
+	this.updateInterval = updateInterval;
 };
 
 Canvas.prototype.clearCanvas = function() {
 	this.canvas.clearRect(0, 0, this.canvasObj.width, this.canvasObj.height);
 };
 
-Canvas.prototype.graphics = function() {
+Canvas.prototype.setGraphics = function(graphics) {
+	this.graphics = graphics;
+};
+
+Canvas.prototype.getGraphics = function() {
 	return this.graphics;
 };
 
@@ -73,14 +81,6 @@ Canvas.prototype.draw = function() {
 	setTimeout(function() {
 		obj.draw()
 	}, 1000 / this.updateInterval);
-};
-
-Canvas.prototype.toCanvasLocation = function(location) {
-	var x = location.x;
-	var y = location.y;
-	x -= this.canvasObj.offsetLeft;
-	y -= this.canvasObj.offsetTop;
-	return new Point(x, y);
 };
 
 module.exports = Canvas;

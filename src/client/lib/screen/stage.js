@@ -16,46 +16,79 @@ function StageScreen() {
 
 	App.player.location = new Point(-100, -100);
 	App.opponent.location = new Point(-100, -100);
-};
-
-StageScreen.prototype.playerMove = function() {
-	var key = GlobalEvents.Key;
-	if (key.isDown(key.RIGHT)) {
-		/*
-			TODO padaryti boundaries pagal background
-		*/
-		if (App.player.getX() < 1365 - 30) {
-			console.log('RIGHT');
-			socket.emit('move', key.RIGHT);
-		}
-	}
-	if (key.isDown(key.LEFT)) {
-		if (App.player.getX() > 0) {
-			console.log('LEFT');
-			socket.emit('move', key.LEFT);
-		}
-	}
-	if (key.isDown(key.UP)) {
-		if (App.player.getY() > 0) {
-			console.log('UP');
-			socket.emit('move', key.UP);
-		}
-	}
-	if (key.isDown(key.DOWN)) {
-		if (App.player.getY() < 645 - 30) {
-			console.log('DOWN');
-			socket.emit('move', key.DOWN);
-		}
-	}
+	App.player.setZ(0);
+	App.opponent.setZ(0);
 };
 
 StageScreen.prototype.updatePlayers = function() {
-	console.log('socket update emit');
-	socket.emit('update', '');
+	var activeKeys = {
+		key: 0,
+		jumpKey: false
+	};
+
+	var key = GlobalEvents.Key;
+
+	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
+		console.log('UP RIGHT');
+		console.log(App.player.getLocation().x + " " + App.player.getLocation().y)
+		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y > 0) {
+			activeKeys.key = key.UP_RIGHT;
+		}
+	}
+	else if (key.isDown(key.LEFT) && key.isDown(key.UP)) {
+		if (App.player.getLocation().x > 0 && App.player.getLocation().y > 0) {
+			console.log('UP LEFT');
+			activeKeys.key = key.UP_LEFT;
+		}
+	}
+	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
+		if (App.player.getLocation().x > 0 && App.player.getLocation().y){
+			console.log('DOWN LEFT');
+			activeKeys.key = key.DOWN_LEFT;
+		}
+	}
+	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
+		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y){
+			console.log('DOWN RIGHT');
+			activeKeys.key = key.DOWN_RIGHT;
+		}
+	}
+	else if (key.isDown(key.RIGHT)) {
+		if (App.player.getLocation().x < 1365 - 30){
+			console.log('RIGHT');
+			activeKeys.key = key.RIGHT;
+		}
+	}
+	else if (key.isDown(key.LEFT)) {
+		if (App.player.getLocation().x > 0){
+			console.log('LEFT');
+			activeKeys.key = key.LEFT;
+		}
+	}
+	else if (key.isDown(key.UP)) {
+		if (App.player.getLocation().y > 0) {
+			console.log('UP');
+			activeKeys.key = key.UP;
+		}
+	}
+	else if (key.isDown(key.DOWN)) {
+		if (App.player.getLocation().y < 645 - 30) {
+			console.log('DOWN');
+			activeKeys.key = key.DOWN;
+		}
+	}
+
+	if(key.isDown(key.JUMP_KEY)) {
+		console.log('JUMP');
+		activeKeys.jumpKey = true;
+	}
+
+	if(activeKeys.key != 0 || activeKeys.jumpKey){
+		socket.emit('update', activeKeys);
+	}
 };
 
 StageScreen.prototype.graphics = function() {
-	obj.playerMove();
 	obj.updatePlayers();
 	obj.backgroundImage.draw();
 	App.player.draw();

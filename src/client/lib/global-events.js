@@ -1,4 +1,6 @@
 var App = require('../app');
+var EventCollection = require('./event-collection');
+var Point = require('./canvas/point');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
 var socket = io();
@@ -12,6 +14,11 @@ GlobalEvents.Key = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
+  UP_LEFT: 41,
+  UP_RIGHT: 42,
+  DOWN_LEFT: 43,
+  DOWN_RIGHT: 44,
+  JUMP_KEY: 88,
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
@@ -34,26 +41,46 @@ $(window).keyup(function (event) {
 	GlobalEvents.Key.onKeyup(event);
 });
 
+$(window).click(function(event) {
+  var location = new Point(event.pageX, event.pageY);
+  for (var key in EventCollection.clickList) {
+    if (EventCollection.clickList[key].pointIntersects(location)) {
+      EventCollection.clickList[key].executeClick();
+    }
+  }
+});
+
+$(window).mousemove(function(event) {
+  var location = new Point(event.pageX, event.pageY);
+  for (var key in EventCollection.mouseOverList) {
+    if (EventCollection.mouseOverList[key].pointIntersects(location)) {
+      EventCollection.mouseOverList[key].executeMouseOver();
+    } else {
+      EventCollection.mouseOverList[key].executeMouseLeave();
+    }
+  }
+});
 
 socket.on('playing', function() {
 	App.screen = new CountDownScreen();
-	App.canvasObj.graphics = App.screen.graphics;
+	App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('unactive', function() {
 	App.gameStarted = false;
 	App.screen = new StartScreen();
-	App.canvasObj.graphics = App.screen.graphics;
+	App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('update', function(data) {
-  App.player.location.x = data.player.x;
-  App.player.location.y = data.player.y;
-  App.opponent.location.x = data.opponent.x;
-  App.opponent.location.y = data.opponent.y;
+  console.log('socket update receive');
+  App.player.setLocation(new Point(data.player.x, data.player.y));
+  App.player.setZ(data.player.z);
+  App.opponent.setLocation(new Point(data.opponent.x, data.opponent.y));
+  App.opponent.setZ(data.opponent.z);
 });
 
 $(window).load(function () {
-	App.canvasObj.graphics = App.screen.graphics;
+	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();
 });

@@ -22,11 +22,11 @@ function WaitingScreen() {
 	this.globalAlphaStep = 0.04;
 	obj = this;
 
-	this.waitingText.location = function() {
-		var x = Utilities.centerX(obj.waitingText.textWidth());
-		var y = App.canvasObj.height() * 0.2;
+	this.waitingText.setLocation(function() {
+		var x = Utilities.centerX(obj.waitingText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.2;
 		return new Point(x, y);
-	};
+	});
 };
 
 WaitingScreen.prototype.animate = function() {
