@@ -72,13 +72,28 @@ SocketServer.updateClient = function(socket, data) {
 };
 
 SocketServer.updateZ = function(player) {
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	var x = player.getX();
+	var y = player.getY();
 	var z = player.getZ();
 	var speedZ = player.getSpeedZ();
+	var opx = opponent.getX();
+    var opy = opponent.getY();
+    var opz = opponent.getZ();
 
 	if(z < 0){
-		speedZ -= Config.playerAcceleration
-		z -= speedZ;
-		
+		if(Math.abs(x - opx) < 30 && Math.abs(y - opy) < 30){
+			console.log(Math.abs(x - opx));
+			speedZ -= Config.playerAcceleration
+			z -= speedZ;
+			if(opz - z < 30){
+				z = -30;
+				speedZ = 0;
+			}
+		}
+		else {
+			speedZ -= Config.playerAcceleration
+			z -= speedZ;}
 		if(z > 0){
 			z = 0;
 			speedZ = 0;
@@ -114,40 +129,49 @@ SocketServer.updateClientCoordinates = function(player, input) {
 	}
 
 	if(input.key == key.UP_LEFT) {
-		y -= Config.playerMoveSpeed;
-		x -= Config.playerMoveSpeed;
+		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+			y -= Config.playerMoveSpeed;
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP_RIGHT) {
-		y -= Config.playerMoveSpeed;
-		x += Config.playerMoveSpeed;
+		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+			y -= Config.playerMoveSpeed;
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_LEFT) {
-		x -= Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
+		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+			y += Config.playerMoveSpeed;
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_RIGHT) {
-		x += Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
+		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+			y += Config.playerMoveSpeed;
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+			x += Config.playerMoveSpeed;
 	}
+
+
+
+
+
 	else if(input.key == key.LEFT) {
-		if((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) {
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
 			x -= Config.playerMoveSpeed;
-		}
 	}
 	else if(input.key == key.RIGHT) {
-		if((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) {
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
 			x += Config.playerMoveSpeed;
-		}
 	}
 	else if(input.key == key.UP) {
-		if((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) {
+		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
 			y -= Config.playerMoveSpeed;
-		}
 	}
 	else if(input.key == key.DOWN) {
-		if((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) {
+		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
 			y += Config.playerMoveSpeed;
-		}
 	}
 
 	player.setX(x);
