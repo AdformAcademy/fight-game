@@ -9,13 +9,13 @@ function Background(image) {
 	this.image = new Image();
 	this.image.src = this.src;
 
-	this.location = new Point(0, 0);
+	this.location = new Point((screen.width - 1366)/2, (screen.height - 768)/2);
 	this.isVisible = true;
 	this.width = function () {
-		return screen.width;
+		return 1366;
 	};
 	this.height = function () {
-		return screen.height;
+		return 768;
 	};
 };
 
