@@ -82,12 +82,12 @@ SocketServer.updateZ = function(player) {
     var opz = opponent.getZ();
 
 	if(z < 0){
-		if(Math.abs(x - opx) < 30 && Math.abs(y - opy) < 30){
+		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			console.log(Math.abs(x - opx));
 			speedZ -= Config.playerAcceleration
 			z -= speedZ;
-			if(opz - z < 30){
-				z = -30;
+			if(opz - z < Config.playerSize){
+				z = Math.abs(y - opy) - Config.playerSize;
 				speedZ = 0;
 			}
 		}
@@ -129,48 +129,43 @@ SocketServer.updateClientCoordinates = function(player, input) {
 	}
 
 	if(input.key == key.UP_LEFT) {
-		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y -= Config.playerMoveSpeed;
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP_RIGHT) {
-		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y -= Config.playerMoveSpeed;
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_LEFT) {
-		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y += Config.playerMoveSpeed;
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_RIGHT) {
-		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y += Config.playerMoveSpeed;
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x += Config.playerMoveSpeed;
 	}
-
-
-
-
-
 	else if(input.key == key.LEFT) {
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.RIGHT) {
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize >= opy || y + Config.playerSize <= opy)) || (opz - Config.playerSize >= z))
+		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP) {
-		if(((y - Config.playerSize > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN) {
-		if(((y + Config.playerSize < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize >= z))
+		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
 			y += Config.playerMoveSpeed;
 	}
 

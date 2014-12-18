@@ -42,13 +42,13 @@ StageScreen.prototype.updatePlayers = function() {
 		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
-		if (App.player.getLocation().x > 0 && App.player.getLocation().y){
+		if (App.player.getLocation().x > 0 && App.player.getLocation().y < 645){
 			console.log('DOWN LEFT');
 			activeKeys.key = key.DOWN_LEFT;
 		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
-		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y){
+		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y < 645){
 			console.log('DOWN RIGHT');
 			activeKeys.key = key.DOWN_RIGHT;
 		}
