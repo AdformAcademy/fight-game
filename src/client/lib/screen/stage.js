@@ -27,11 +27,13 @@ StageScreen.prototype.updatePlayers = function() {
 	};
 
 	var key = GlobalEvents.Key;
+	var screenWidth = App.canvasObj.getWidth();
+	var screenHeight = App.canvasObj.getHeight();
 
 	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
 		console.log('UP RIGHT');
 		console.log(App.player.getLocation().x + " " + App.player.getLocation().y)
-		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y > 0) {
+		if (App.player.getLocation().x < screenWidth - 30 && App.player.getLocation().y > 0) {
 			activeKeys.key = key.UP_RIGHT;
 		}
 	}
@@ -42,19 +44,19 @@ StageScreen.prototype.updatePlayers = function() {
 		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
-		if (App.player.getLocation().x > 0 && App.player.getLocation().y < 645){
+		if (App.player.getLocation().x > 0 && App.player.getLocation().y < screenHeight - 30){
 			console.log('DOWN LEFT');
 			activeKeys.key = key.DOWN_LEFT;
 		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
-		if (App.player.getLocation().x < 1365 - 30 && App.player.getLocation().y < 645){
+		if (App.player.getLocation().x < screenWidth - 30 && App.player.getLocation().y < screenHeight - 30){
 			console.log('DOWN RIGHT');
 			activeKeys.key = key.DOWN_RIGHT;
 		}
 	}
 	else if (key.isDown(key.RIGHT)) {
-		if (App.player.getLocation().x < 1365 - 30){
+		if (App.player.getLocation().x < screenWidth - 30){
 			console.log('RIGHT');
 			activeKeys.key = key.RIGHT;
 		}
@@ -72,7 +74,7 @@ StageScreen.prototype.updatePlayers = function() {
 		}
 	}
 	else if (key.isDown(key.DOWN)) {
-		if (App.player.getLocation().y < 645 - 30) {
+		if (App.player.getLocation().y < screenHeight - 30) {
 			console.log('DOWN');
 			activeKeys.key = key.DOWN;
 		}
