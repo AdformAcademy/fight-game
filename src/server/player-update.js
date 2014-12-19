@@ -24,5 +24,5 @@ PlayerUpdate.emitData = function(){
 			}
 		}
 	}
-	setTimeout(PlayerUpdate.emitData, 1000 / 30);
+	setTimeout(PlayerUpdate.emitData, 1000 / 5);
 };
