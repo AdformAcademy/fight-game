@@ -22,19 +22,24 @@ Player.prototype.getZ = function() {
 
 Player.prototype.setZ = function(z) {
 	this.z = z;
-}
+};
+
 Player.prototype.getSpeedZ = function(){
   return this.speedZ;
-}
+};
+
 Player.prototype.setSpeedZ = function(speedZ){
   this.speedZ = speedZ;
-}
+};
+
 Player.prototype.setJumpState = function(jumpstate){
 	this.jump = jumpstate;
-}
+};
+
 Player.prototype.isJumping = function(){
 	return this.jump == 1;
-}
+};
+
 Player.prototype.draw = function() {
 	App.canvasObj.canvas.fillStyle = '#32FF32';
 	App.canvasObj.canvas.fillRect(this.location.getX(), this.location.getY() + this.getZ(), 30, 30);

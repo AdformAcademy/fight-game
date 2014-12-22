@@ -5,6 +5,7 @@ PlayerCollection.list = [];
 PlayerCollection.getPlayerObject = function(playerId) {
   return PlayerCollection.list[playerId];
 };
+
 PlayerCollection.insertPlayer = function(playerId, player) {
   PlayerCollection.list[playerId] = player;
 };
