@@ -116,14 +116,11 @@ SocketServer.updateClientCoordinates = function(player, input) {
 	var opx = opponent.getX();
     var opy = opponent.getY();
     var opz = opponent.getZ();
-	
-	console.log('key: ' + input.key + ', jump: ' + input.jumpKey);
 
 	if(input.jumpKey && z >= 0) {
 		speedZ = Config.playerJumpSpeed;
 		z -= speedZ;
 		player.setSpeedZ(speedZ);
-
 		player.setZ(z);
 		SocketServer.updateZ(player);
 	}
