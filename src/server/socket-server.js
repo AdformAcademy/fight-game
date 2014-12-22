@@ -81,7 +81,7 @@ SocketServer.storeInput = function(socket, input) {
 	SocketServer.inputs[socket.id].push(input);
 };
 
-SocketServer.checkUpCollisiondateZ = function(player) {
+SocketServer.updateZ = function(player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
 	var y = player.getY();
@@ -147,7 +147,7 @@ SocketServer.executeInput = function(player, input) {
 		player.setSpeedZ(speedZ);
 
 		player.setZ(z);
-		SocketServer.checkUpCollisiondateZ(player);
+		SocketServer.updateZ(player);
 	}
 	if(input.key == key.UP_LEFT) {
 		if(SocketServer.checkUpCollision(data, size))
@@ -228,7 +228,7 @@ SocketServer.processInputs = function(player) {
 };
 
 
-SocketServer.checkUpCollisiondatePhysics = function() {
+SocketServer.updatePhysics = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection){
 		var session = collection[key];
@@ -237,13 +237,13 @@ SocketServer.checkUpCollisiondatePhysics = function() {
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			if (player != null) {
 				SocketServer.processInputs(player);
-				SocketServer.checkUpCollisiondateZ(player);
+				SocketServer.updateZ(player);
 			}
 		}
 	}
 };
 
-SocketServer.checkUpCollisiondateWorld = function() {
+SocketServer.updateWorld = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection){
 		var session = collection[key];
@@ -258,9 +258,9 @@ SocketServer.checkUpCollisiondateWorld = function() {
 	}
 };
 
-SocketServer.checkUpCollisiondate = function() {
-	SocketServer.checkUpCollisiondatePhysics();
-	SocketServer.checkUpCollisiondateWorld();
+SocketServer.update = function() {
+	SocketServer.updatePhysics();
+	SocketServer.updateWorld();
 };
 
 SocketServer.listen = function() {
