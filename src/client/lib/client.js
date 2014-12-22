@@ -7,7 +7,7 @@ var Client = module.exports = function() {};
 Client.inputs = [];
 Client.serverData = [];
 Client.inputCounter = 0;
-Client.checkUpCollisiondateWorldInterval = null;
+Client.updateWorldInterval = null;
 Client.isRunning = false;
 Client.prediction = true;
 Client.reconciliation = true;
@@ -312,27 +312,27 @@ Client.jump = function() {
 	}
 };
 
-Client.checkUpCollisiondatePhysics = function() {
+Client.updatePhysics = function() {
 	if(App.player.isJumping()) {
 		console.log('do jump');
 		Client.jump();
 	}
 };
 
-Client.checkUpCollisiondate = function() {
+Client.update = function() {
 	Client.processServerData();
 	Client.processInputs();
-	Client.checkUpCollisiondatePhysics();
+	Client.updatePhysics();
 };
 
 Client.stop = function() {
 	Client.isRunning = false;
-	clearInterval(Client.checkUpCollisiondateWorldInterval);
+	clearInterval(Client.updateWorldInterval);
 };
 
 Client.start = function() {
 	Client.isRunning = true;
-	Client.checkUpCollisiondateWorldInterval = setInterval(function() {
-		Client.checkUpCollisiondate();
+	Client.updateWorldInterval = setInterval(function() {
+		Client.update();
 	}, 1000 / 30);
 };
