@@ -42,7 +42,9 @@ Client.applyCoordinates = function(player, x, y, z) {
 	var playerLocation = player.getLocation();
 	playerLocation.setX(x);
 	playerLocation.setY(y);
-	player.setZ(z);
+	if(z != null){
+		player.setZ(z);
+	}
 };
 
 Client.applyInput = function(input) {
@@ -186,11 +188,10 @@ Client.processServerData = function() {
 
     	var x = state.player.x;
     	var y = state.player.y;
-    	var z = state.player.z;
     	var ox = state.opponent.x;
     	var oy = state.opponent.y;
     	var oz = state.opponent.z;
-    	Client.applyCoordinates(App.player, x, y, z);
+    	Client.applyCoordinates(App.player, x, y, null);
     	Client.applyCoordinates(App.opponent, ox, oy, oz);
 
     	if (Client.prediction && Client.reconciliation) {
