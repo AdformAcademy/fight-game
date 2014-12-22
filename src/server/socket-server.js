@@ -81,7 +81,7 @@ SocketServer.storeInput = function(socket, input) {
 	SocketServer.inputs[socket.id].push(input);
 };
 
-SocketServer.updateZ = function(player) {
+SocketServer.checkUpCollisiondateZ = function(player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
 	var y = player.getY();
@@ -91,13 +91,11 @@ SocketServer.updateZ = function(player) {
     var opy = opponent.getY();
     var opz = opponent.getZ();
 
-	if(z < 0) {
-		console.log('z');
-		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3) {
-			console.log(Math.abs(x - opx));
+	if(z <= 0){
+		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
-			if(opz - z < Config.playerSize) {
+			if(opz - z < Config.playerSize){
 				z = Math.abs(y - opy) - Config.playerSize;
 				speedZ = 0;
 			}
@@ -110,7 +108,6 @@ SocketServer.updateZ = function(player) {
 			z = 0;
 			speedZ = 0;
 		}
-
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
 	}	
@@ -150,46 +147,46 @@ SocketServer.executeInput = function(player, input) {
 		player.setSpeedZ(speedZ);
 
 		player.setZ(z);
-		SocketServer.updateZ(player);
+		SocketServer.checkUpCollisiondateZ(player);
 	}
 	if(input.key == key.UP_LEFT) {
-		if(SocketServer.UP(data, size))
+		if(SocketServer.checkUpCollision(data, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.LEFT(data, size))
+		if(SocketServer.checkLeftCollision(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP_RIGHT) {
-		if(SocketServer.UP(data, size))
+		if(SocketServer.checkUpCollision(data, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.RIGHT(data, size))
+		if(SocketServer.checkRightCollision(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_LEFT) {
-		if(SocketServer.DOWN(data, size))
+		if(SocketServer.checkDownCollision(data, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.LEFT(data, size))
+		if(SocketServer.checkLeftCollision(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_RIGHT) {
-		if(SocketServer.DOWN(data, size))
+		if(SocketServer.checkDownCollision(data, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.RIGHT(data, size))
+		if(SocketServer.checkRightCollision(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.LEFT) {
-		if(SocketServer.LEFT(data, size))
+		if(SocketServer.checkLeftCollision(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.RIGHT) {
-		if(SocketServer.RIGHT(data, size))
+		if(SocketServer.checkRightCollision(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP) {
-		if(SocketServer.UP(data, size))
+		if(SocketServer.checkUpCollision(data, size))
 			y -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN) {
-		if(SocketServer.DOWN(data, size))
+		if(SocketServer.checkDownCollision(data, size))
 			y += Config.playerMoveSpeed;
 	}
 
@@ -197,17 +194,21 @@ SocketServer.executeInput = function(player, input) {
 	player.setY(y);
 }
 
-SocketServer.LEFT = function(data, size) {
-	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) || (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkLeftCollision = function(data, size) {
+	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) || (data.player.y - size/3 >= data.opponent.y ||
+											data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
 }
-SocketServer.RIGHT = function(data, size) {
-	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) || (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkRightCollision = function(data, size) {
+	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) || (data.player.y - size/3 >= data.opponent.y ||
+											data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
 }
-SocketServer.UP = function(data, size) {
-	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) || (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkUpCollision = function(data, size) {
+	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) || (data.player.x - size >= data.opponent.x ||
+											data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
 }
-SocketServer.DOWN = function(data, size) {
-	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) || (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkDownCollision = function(data, size) {
+	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) || (data.player.x - size >= data.opponent.x ||
+											data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
 }
 
 SocketServer.processInputs = function(player) {
@@ -227,7 +228,7 @@ SocketServer.processInputs = function(player) {
 };
 
 
-SocketServer.updatePhysics = function() {
+SocketServer.checkUpCollisiondatePhysics = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection){
 		var session = collection[key];
@@ -236,13 +237,13 @@ SocketServer.updatePhysics = function() {
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			if (player != null) {
 				SocketServer.processInputs(player);
-				SocketServer.updateZ(player);
+				SocketServer.checkUpCollisiondateZ(player);
 			}
 		}
 	}
 };
 
-SocketServer.updateWorld = function() {
+SocketServer.checkUpCollisiondateWorld = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection){
 		var session = collection[key];
@@ -257,9 +258,9 @@ SocketServer.updateWorld = function() {
 	}
 };
 
-SocketServer.update = function() {
-	SocketServer.updatePhysics();
-	SocketServer.updateWorld();
+SocketServer.checkUpCollisiondate = function() {
+	SocketServer.checkUpCollisiondatePhysics();
+	SocketServer.checkUpCollisiondateWorld();
 };
 
 SocketServer.listen = function() {
