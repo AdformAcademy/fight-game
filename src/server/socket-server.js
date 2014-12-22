@@ -123,11 +123,26 @@ SocketServer.executeInput = function(player, input) {
 	var x = player.getX();
 	var y = player.getY();
 	var z = player.getZ();
-	var speedZ = player.getSpeedZ();
 
 	var opx = opponent.getX();
     var opy = opponent.getY();
     var opz = opponent.getZ();
+
+	var speedZ = player.getSpeedZ();
+    var size = Config.playerSize;
+
+    var data = {
+		player: {
+			x: x,
+			y: y,
+			z: z
+		},
+		opponent: {
+			x: opx,
+			y: opy,
+			z: opz
+		}
+	};
 	
 	if(input.jumpKey && z >= 0) {
 		speedZ = Config.playerJumpSpeed;
@@ -137,50 +152,62 @@ SocketServer.executeInput = function(player, input) {
 		player.setZ(z);
 		SocketServer.updateZ(player);
 	}
-
 	if(input.key == key.UP_LEFT) {
-		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.UP(data, size))
 			y -= Config.playerMoveSpeed;
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.LEFT(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP_RIGHT) {
-		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.UP(data, size))
 			y -= Config.playerMoveSpeed;
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.RIGHT(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_LEFT) {
-		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.DOWN(data, size))
 			y += Config.playerMoveSpeed;
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.LEFT(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN_RIGHT) {
-		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.DOWN(data, size))
 			y += Config.playerMoveSpeed;
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.RIGHT(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.LEFT) {
-		if(((opx + Config.playerSize < x || x <= opx) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.LEFT(data, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.RIGHT) {
-		if(((opx - Config.playerSize > x || opx <= x) || (y - Config.playerSize/3 >= opy || y + Config.playerSize/3 <= opy)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.RIGHT(data, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key == key.UP) {
-		if(((y - Config.playerSize/3 > opy || y <= opy) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.UP(data, size))
 			y -= Config.playerMoveSpeed;
 	}
 	else if(input.key == key.DOWN) {
-		if(((y + Config.playerSize/3 < opy || opy <= y) || (x - Config.playerSize >= opx || x + Config.playerSize <= opx)) || (opz - Config.playerSize/3 >= z))
+		if(SocketServer.DOWN(data, size))
 			y += Config.playerMoveSpeed;
 	}
 
 	player.setX(x);
 	player.setY(y);
+}
+
+SocketServer.LEFT = function(data, size) {
+	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) || (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+}
+SocketServer.RIGHT = function(data, size) {
+	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) || (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+}
+SocketServer.UP = function(data, size) {
+	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) || (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
+}
+SocketServer.DOWN = function(data, size) {
+	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) || (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
 }
 
 SocketServer.processInputs = function(player) {
