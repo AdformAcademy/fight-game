@@ -266,6 +266,8 @@ Client.processInputs = function() {
 			player.setSpeedZ(speedZ);
 			player.setZ(z);
 			player.setJumpState(1);
+			Client.jump();
+			console.log('DO JUMP');
 		}
 	}
 	if(input.key != 0 || input.jumpKey) {
@@ -281,17 +283,21 @@ Client.processInputs = function() {
 };
 
 Client.jump = function() {
+	console.log('start jump');
 	var player = App.player;
-	var opponent = App.opponent;
-	var x = player.getLocation().getX();
-	var y = player.getLocation().getY();
-	var z = player.getZ();
-	var opx = opponent.getLocation().getX();
-	var opy = opponent.getLocation().getY();
-	var opz = opponent.getZ();
-	var speedZ = player.getSpeedZ();
-
-	if(z <= 0){
+    var z = player.getZ();
+	var updateZ = setInterval(function(){
+		console.log('start interval');
+		var player = App.player;
+	    var opponent = App.opponent;
+	    var x = player.getLocation().getX();
+	    var y = player.getLocation().getY();
+	    var z = player.getZ();
+	    var opx = opponent.getLocation().getX();
+	    var opy = opponent.getLocation().getY();
+	    var opz = opponent.getZ();
+	    var speedZ = player.getSpeedZ();
+	    
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
@@ -305,25 +311,19 @@ Client.jump = function() {
 			z -= speedZ;}
 		if(z > 0){
 			player.setJumpState(0);
+			console.log('stop interval');
+			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
-	}
-};
-
-Client.updatePhysics = function() {
-	if(App.player.isJumping()) {
-		console.log('do jump');
-		Client.jump();
-	}
+	}, 1000/30);
 };
 
 Client.update = function() {
 	Client.processServerData();
 	Client.processInputs();
-	Client.updatePhysics();
 };
 
 Client.stop = function() {
