@@ -145,7 +145,6 @@ SocketServer.executeInput = function(player, input) {
 		speedZ = Config.playerJumpSpeed;
 		z -= speedZ;
 		player.setSpeedZ(speedZ);
-
 		player.setZ(z);
 		SocketServer.updateZ(player);
 	}
