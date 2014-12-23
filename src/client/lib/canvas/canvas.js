@@ -10,7 +10,6 @@ function Canvas(id) {
 	this.updateInterval = Config.canvasUpdateInterval;
 	this.canvasObj = $(this.id)[0];
 	this.canvas = this.canvasObj.getContext('2d');
-	this.updateCanvasDimensions();
 	this.graphics = null;
 };
 
@@ -65,16 +64,8 @@ Canvas.prototype.drawBackground = function() {
 	this.canvas.fillRect(0, 0, this.canvasObj.width, this.canvasObj.height);
 };
 
-Canvas.prototype.updateCanvasDimensions = function() {
-	var w = $(window).width();
-	var h = $(window).height();
-	this.canvasObj.width = w;
-	this.canvasObj.height = h;
-};
-
 Canvas.prototype.draw = function() {
 	var obj = this;
-	this.updateCanvasDimensions();
 	this.clearCanvas();
 	this.drawBackground();
 	this.drawGraphics();

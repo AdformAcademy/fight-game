@@ -48,6 +48,7 @@ CountDownScreen.prototype.doCountDown = function() {
 		if (oldVal == -1) {
 			App.gameStarted = true;
 			App.screen = new StageScreen();
+			obj.dispose();
 			App.canvasObj.setGraphics(App.screen.graphics);
 		}
 	} else {
@@ -74,10 +75,16 @@ CountDownScreen.prototype.animateCountDown = function() {
 };
 
 CountDownScreen.prototype.graphics = function() {
+	App.canvasObj.canvas.globalAlpha = 1;
 	obj.backgroundImage.draw();
 	obj.animateCountDown();
 	App.canvasObj.canvas.globalAlpha = obj.countAnimation.opacity;
 	obj.countDownText.draw();
+	App.canvasObj.canvas.restore();
+};
+
+CountDownScreen.prototype.dispose = function() {
+	App.canvasObj.canvas.globalAlpha = 1;
 	App.canvasObj.canvas.restore();
 };
 

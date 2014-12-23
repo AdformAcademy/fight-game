@@ -9,14 +9,14 @@ function Background(image) {
 	this.image = new Image();
 	this.image.src = this.src;
 
-	this.location = new Point((screen.width - 1366)/2, (screen.height - 768)/2);
+	this.location = new Point(0, 0);
 	this.visible = true;
 
 	this.width = function () {
-		return 1366;
+		return App.canvasObj.getWidth();
 	};
 	this.height = function () {
-		return 768;
+		return App.canvasObj.getHeight();
 	};
 };
 
