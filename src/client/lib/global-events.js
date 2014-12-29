@@ -50,12 +50,7 @@ socket.on('unactive', function() {
 
 socket.on('update', function(data) {
   console.log('socket update receive');
-  //Client.processServerData(data);
   Client.storeServerData(data);
-  /*App.player.setLocation(new Point(data.player.x, data.player.y));
-  App.player.setZ(data.player.z);
-  App.opponent.setLocation(new Point(data.opponent.x, data.opponent.y));
-  App.opponent.setZ(data.opponent.z);*/
 });
 
 $(window).load(function () {
