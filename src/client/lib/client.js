@@ -361,6 +361,9 @@ Client.update = function() {
 
 Client.stop = function() {
 	Client.isRunning = false;
+	Client.inputs = [];
+	Client.serverData = [];
+	Client.opponentInputs = [];
 	clearInterval(Client.updateWorldInterval);
 };
 
