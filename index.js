@@ -7,8 +7,12 @@ Tasks.start();
 SocketServer.listen();
 
 setInterval(function() {
-  SocketServer.update();
-}, 1000 / 10);
+  SocketServer.updatePhysics();
+}, 1000 / 100);
+
+setInterval(function() {
+  SocketServer.updateWorld();
+}, 1000 / 30);
 
 io.on('connection', function(socket) {
 

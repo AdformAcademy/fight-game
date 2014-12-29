@@ -11,6 +11,7 @@ SocketServer.http = require('http').Server(Express.app);
 
 SocketServer.inputs = [];
 SocketServer.proccessedInputs = [];
+SocketServer.jumpInputs = [];
 
 SocketServer.prepareSocketData = function(player, opponent) {
 	var data = {
@@ -87,7 +88,15 @@ SocketServer.disconnectClient = function(socket) {
 
 SocketServer.storeInput = function(socket, input) {
 	var session = SessionCollection.getSessionObject(socket.id);
+	var player = PlayerCollection.getPlayerObject(socket.id);
+	if(player != null){
+		var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	}
+
 	if (session != null) {
+		if (opponent.isJumping()) {
+			SocketServer.jumpInputs[socket.id].push(1);
+		}
 		SocketServer.inputs[socket.id].push(input);
 	}	
 };
@@ -123,6 +132,20 @@ SocketServer.updateZ = function(player) {
 		player.setSpeedZ(speedZ);
 	}	
 };
+
+SocketServer.executeJumpInput = function(player, input) {
+	var z = player.getZ();
+	var speedZ = player.getSpeedZ();
+    var size = Config.playerSize;
+
+	if(input.jumpKey === 1 && z >= 0) {
+		speedZ = Config.playerJumpSpeed;
+		z -= speedZ;
+		player.setSpeedZ(speedZ);
+		player.setZ(z);
+		SocketServer.updateZ(player);
+	}
+}
 
 SocketServer.executeInput = function(player, input) {
 	var key = Player.KeyBindings;
@@ -237,6 +260,21 @@ SocketServer.processInputs = function(player) {
 		}
 		SocketServer.clearArray(inputs);
 	}
+
+	inputs = SocketServer.jumpInputs;
+
+	if (inputs != null) {
+		var length = inputs.length;
+		for (var i = 0; i < length; i++) {
+			var input = inputs[i];
+			if (input != null) {
+				SocketServer.executeJumpInput(player, input);
+				player.setLastProcessedInput(input);
+				var location = player.getLocation();
+			}
+		}
+		SocketServer.clearArray(inputs);
+	}
 };
 
 SocketServer.updatePhysics = function() {
@@ -264,6 +302,8 @@ SocketServer.updateWorld = function() {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 				var data = SocketServer.prepareSocketData(player, opponent);		
 				session.socket.emit('update', data);
+				if(data.player.z != 0) console.log('p ' + data.player.z);
+				if(data.opponent.z != 0) console.log('o ' + data.opponent.z);
 				SocketServer.clearArray(SocketServer.proccessedInputs[opponent.getID()]);
 			}
 		}
