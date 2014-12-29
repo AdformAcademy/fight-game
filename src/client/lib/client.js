@@ -175,10 +175,17 @@ Client.storeServerData = function(data) {
 };
 
 Client.interpolate = function() {
-	var input = Client.opponentInputs[0];
-	if (input != null) {
-		Client.applyCoordinates(App.opponent, input.x, input.y, input.z);
-		Client.opponentInputs.splice(0, 1);
+	var bufferSize = Client.opponentInputs.length;
+	if (bufferSize < 10) {
+		var input = Client.opponentInputs[0];
+		if (input != null) {
+			Client.applyCoordinates(App.opponent, input.x, input.y, input.z);
+			Client.opponentInputs.splice(0, 1);
+		}
+	} else {
+		var lastInput = Client.opponentInputs[bufferSize - 1];
+		Client.applyCoordinates(App.opponent, lastInput.x, lastInput.y, lastInput.z);
+		Client.opponentInputs = [];
 	}
 };
 
