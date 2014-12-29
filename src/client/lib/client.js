@@ -285,7 +285,6 @@ Client.processInputs = function() {
 Client.jump = function() {
 	console.log('start jump');
 	var player = App.player;
-    var z = player.getZ();
 	var updateZ = setInterval(function(){
 		console.log('start interval');
 		var player = App.player;

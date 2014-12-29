@@ -43,9 +43,9 @@ SocketServer.prepareClient = function (socket) {
 			targetSesObj.state = Session.PLAYING;
 
 			var playerObj = new Player(sesObj.sessionId, sesObj.opponentId, 0, 500);
-			playerObj.setZ(-400);
+			playerObj.setZ(0);
 			var opponentObj = new Player(targetSesObj.sessionId, targetSesObj.opponentId, 100, 500);
-			opponentObj.setZ(-300);
+			opponentObj.setZ(0);
 			PlayerCollection.insertPlayer(sesObj.sessionId, playerObj);
 			PlayerCollection.insertPlayer(targetSesObj.sessionId, opponentObj);
 
@@ -82,16 +82,17 @@ SocketServer.storeInput = function(socket, input) {
 };
 
 SocketServer.updateZ = function(player) {
-	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-	var x = player.getX();
-	var y = player.getY();
-	var z = player.getZ();
-	var speedZ = player.getSpeedZ();
-	var opx = opponent.getX();
-    var opy = opponent.getY();
-    var opz = opponent.getZ();
-
-	if(z < 0){
+	var jump = setInterval(function(){
+		console.log('start interval');
+	    var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	    var x = player.getX();
+	    var y = player.getY();
+	    var z = player.getZ();
+	    var opx = opponent.getX();
+	    var opy = opponent.getY();
+	    var opz = opponent.getZ();
+	    var speedZ = player.getSpeedZ();
+	    
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
@@ -102,15 +103,16 @@ SocketServer.updateZ = function(player) {
 		}
 		else {
 			speedZ -= Config.playerAcceleration;
-			z -= speedZ;
-		}
+			z -= speedZ;}
 		if(z > 0){
+			console.log('stop interval');
+			clearInterval(jump);
 			z = 0;
 			speedZ = 0;
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
-	}	
+	}, 1000/30);
 };
 
 SocketServer.executeInput = function(player, input) {
@@ -236,7 +238,6 @@ SocketServer.updatePhysics = function() {
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			if (player != null) {
 				SocketServer.processInputs(player);
-				SocketServer.updateZ(player);
 			}
 		}
 	}
