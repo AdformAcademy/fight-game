@@ -80,6 +80,7 @@ SocketServer.disconnectClient = function(socket) {
 		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
 		opponentSession.socket.emit(Session.UNACTIVE);
 	}
+	socket.emit(Session.UNACTIVE);
 	SocketServer.deleteObjects(session);
 	SocketServer.deleteObjects(opponentSession);
 	SessionCollection.printSessions();
@@ -89,7 +90,9 @@ SocketServer.storeInput = function(socket, input) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session != null) {
 		SocketServer.inputs[socket.id].push(input);
-	}	
+	} else {
+		SocketServer.disconnectClient(socket);
+	}
 };
 
 SocketServer.updateZ = function(player) {
