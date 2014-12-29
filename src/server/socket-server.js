@@ -238,6 +238,20 @@ SocketServer.processPlayerInputs = function(player) {
 	return input;
 };
 
+SocketServer.updatePlayer = function(player) {
+	if (player != null) {
+		var sessionId = player.getID();
+		var input = SocketServer.processPlayerInputs(player);
+		if (input != null) {
+			SocketServer.updatePlayerPhysics(player);
+
+			player.setLastProcessedInput(input);
+			var location = player.getLocation();
+			SocketServer.proccessedInputs[sessionId].push(location);
+		}
+	}
+};
+
 SocketServer.updatePlayers = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection){
@@ -245,16 +259,7 @@ SocketServer.updatePlayers = function() {
 		if(session.state == Session.PLAYING){
 			var sessionId = session.socket.id;
 			var player = PlayerCollection.getPlayerObject(sessionId);
-			if (player != null) {
-				var input = SocketServer.processPlayerInputs(player);
-				if (input != null) {
-					SocketServer.updatePlayerPhysics(player);
-
-					player.setLastProcessedInput(input);
-					var location = player.getLocation();
-					SocketServer.proccessedInputs[sessionId].push(location);
-				}
-			}
+			SocketServer.updatePlayer(player);
 		}
 	}
 };
@@ -273,11 +278,6 @@ SocketServer.updateWorld = function() {
 			}
 		}
 	}
-};
-
-SocketServer.update = function() {
-	SocketServer.updatePhysics();
-	SocketServer.updateWorld();
 };
 
 SocketServer.listen = function() {
