@@ -1,4 +1,5 @@
 var App = require('../app');
+var Client = require('./client');
 var EventCollection = require('./event-collection');
 var Point = require('./canvas/point');
 var StartScreen = require('./screen/start');
@@ -7,38 +8,12 @@ var socket = io();
 
 var GlobalEvents = module.exports = function() {};
 
-GlobalEvents.Key = {
-  _pressed: {},
-
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  UP_LEFT: 41,
-  UP_RIGHT: 42,
-  DOWN_LEFT: 43,
-  DOWN_RIGHT: 44,
-  JUMP_KEY: 88,
-  
-  isDown: function(keyCode) {
-    return this._pressed[keyCode];
-  },
-  
-  onKeydown: function(event) {
-    this._pressed[event.keyCode] = true;
-  },
-  
-  onKeyup: function(event) {
-    delete this._pressed[event.keyCode];
-  }
-};
-
 $(window).keydown(function (event) {
-	GlobalEvents.Key.onKeydown(event);
+	Client.Key.onKeydown(event);
 });
 
 $(window).keyup(function (event) {
-	GlobalEvents.Key.onKeyup(event);
+	Client.Key.onKeyup(event);
 });
 
 $(window).click(function(event) {
@@ -68,16 +43,19 @@ socket.on('playing', function() {
 
 socket.on('unactive', function() {
 	App.gameStarted = false;
+  Client.stop();
 	App.screen = new StartScreen();
 	App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('update', function(data) {
   console.log('socket update receive');
-  App.player.setLocation(new Point(data.player.x, data.player.y));
+  //Client.processServerData(data);
+  Client.storeServerData(data);
+  /*App.player.setLocation(new Point(data.player.x, data.player.y));
   App.player.setZ(data.player.z);
   App.opponent.setLocation(new Point(data.opponent.x, data.opponent.y));
-  App.opponent.setZ(data.opponent.z);
+  App.opponent.setZ(data.opponent.z);*/
 });
 
 $(window).load(function () {

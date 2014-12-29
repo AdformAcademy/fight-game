@@ -2,12 +2,13 @@ var Express = require('./src/server/express');
 var SocketServer = require('./src/server/socket-server');
 var Tasks = require('./src/server/tasks');
 var io = require('socket.io')(SocketServer.http);
-var PlayerUpdate = require('./src/server/player-update');
 Express.loadResources(__dirname);
 Tasks.start();
 SocketServer.listen();
 
-PlayerUpdate.emitData();
+setInterval(function() {
+  SocketServer.update();
+}, 1000 / 30);
 
 io.on('connection', function(socket) {
 
@@ -19,7 +20,7 @@ io.on('connection', function(socket) {
     SocketServer.prepareClient(socket);
   });
 
-  socket.on('update', function(data) {
-    SocketServer.updateClient(socket, data);
+  socket.on('update', function(input) {
+    SocketServer.storeInput(socket, input);
   });
 });
