@@ -101,22 +101,23 @@ SocketServer.updateZ = function(player) {
     var opy = opponent.getY();
     var opz = opponent.getZ();
     var speedZ = player.getSpeedZ();
-    
-	if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
-		speedZ -= Config.playerAcceleration;
-		z -= speedZ;
-		if(opz - z < Config.playerSize){
-			z = Math.abs(y - opy) - Config.playerSize;
+    if(z < 0){
+		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
+			speedZ -= Config.playerAcceleration;
+			z -= speedZ;
+			if(opz - z < Config.playerSize){
+				z = Math.abs(y - opy) - Config.playerSize;
+				speedZ = 0;
+			}
+		}
+		else {
+			speedZ -= Config.playerAcceleration;
+			z -= speedZ;}
+		if(z > 0){
+			z = 0;
 			speedZ = 0;
 		}
-	}
-	else {
-		speedZ -= Config.playerAcceleration;
-		z -= speedZ;}
-	if(z > 0){
-		z = 0;
-		speedZ = 0;
-	}
+	};
 	player.setZ(z);
 	player.setSpeedZ(speedZ);
 };
