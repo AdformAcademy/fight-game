@@ -8,7 +8,7 @@ SocketServer.listen();
 
 setInterval(function() {
   SocketServer.update();
-}, 1000 / 30);
+}, 1000 / 10);
 
 io.on('connection', function(socket) {
 

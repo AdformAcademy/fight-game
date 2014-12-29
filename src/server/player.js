@@ -69,6 +69,14 @@ Player.prototype.getLastProcessedInput = function() {
   return this.lastProcessedInput;
 }
 
+Player.prototype.getLocation = function() {
+  return {
+    x: this.x,
+    y: this.y,
+    z: this.z
+  };
+};
+
 Player.KeyBindings = {
   LEFT: 37,
   UP: 38,
