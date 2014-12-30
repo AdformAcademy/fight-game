@@ -51,7 +51,7 @@ Client.applyCoordinates = function(player, x, y, z) {
 
 Client.applyInput = function(player, input) {
 
-	if (input === undefined) {
+	if (!input) {
 		return;
 	}
 
