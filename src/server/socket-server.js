@@ -157,19 +157,6 @@ SocketServer.executeInput = function(player, input) {
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
-    var data = {
-		player: {
-			x: x,
-			y: y,
-			z: z
-		},
-		opponent: {
-			x: opx,
-			y: opy,
-			z: opz
-		}
-	};
-	
 	if(input.jumpKey && !player.isJumping()) {
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
@@ -183,43 +170,43 @@ SocketServer.executeInput = function(player, input) {
 	}
 
 	if(input.key === key.UP_LEFT) {
-		if(SocketServer.checkUpCollision(data, size))
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(data, size))
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key === key.UP_RIGHT) {
-		if(SocketServer.checkUpCollision(data, size))
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(data, size))
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key === key.DOWN_LEFT) {
-		if(SocketServer.checkDownCollision(data, size))
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(data, size))
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key === key.DOWN_RIGHT) {
-		if(SocketServer.checkDownCollision(data, size))
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(data, size))
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key === key.LEFT) {
-		if(SocketServer.checkLeftCollision(data, size))
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
 	else if(input.key === key.RIGHT) {
-		if(SocketServer.checkRightCollision(data, size))
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
 	else if(input.key === key.UP) {
-		if(SocketServer.checkUpCollision(data, size))
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
 	}
 	else if(input.key === key.DOWN) {
-		if(SocketServer.checkDownCollision(data, size))
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
 	}
 
@@ -227,25 +214,25 @@ SocketServer.executeInput = function(player, input) {
 	player.setY(y);
 }
 
-SocketServer.checkLeftCollision = function(data, size) {
-	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) 
-		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkLeftCollision = function(player, opponent, size) {
+	return (((opponent.getX() + size < player.getX() || player.getX() <= opponent.getX()) 
+		|| (player.getY() - size/3 >= opponent.getY() || player.getY() + size/3 <= opponent.getY())) 
+		|| (opponent.getZ() - size/3 >= player.getZ()));
 }
-SocketServer.checkRightCollision = function(data, size) {
-	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) 
-		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkRightCollision = function(player, opponent, size) {
+	return (((opponent.getX() - size > player.getX() || opponent.getX() <= player.getX()) 
+		|| (player.getY() - size/3 >= opponent.getY() || player.getY() + size/3 <= opponent.getY())) 
+		|| (opponent.getZ() - size/3 >= player.getZ()));
 }
-SocketServer.checkUpCollision = function(data, size) {
-	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) 
-		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
-	 	|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkUpCollision = function(player, opponent, size) {
+	return (((player.getY() - size/3 > opponent.getY() || player.getY() <= opponent.getY()) 
+		|| (player.getX() - size >= opponent.getX() || player.getX() + size <= opponent.getX())) 
+	 	|| (opponent.getZ() - size/3 >= player.getZ()));
 }
-SocketServer.checkDownCollision = function(data, size) {
-	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) 
-		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkDownCollision = function(player, opponent, size) {
+	return (((player.getY() + size/3 < opponent.getY() || opponent.getY() <= player.getY()) 
+		|| (player.getX() - size >= opponent.getX() || player.getX() + size <= opponent.getX())) 
+		|| (opponent.getZ() - size/3 >= player.getZ()));
 }
 
 SocketServer.updatePlayerPhysics = function(player) {
