@@ -62,7 +62,9 @@ SocketServer.prepareClient = function (socket) {
 };
 
 SocketServer.clearArray = function(array) {
-	array.splice(0, array.length);
+	if(array != null){
+		array.splice(0, array.length);
+	}
 };
 
 SocketServer.deleteObjects = function(session) {
@@ -88,7 +90,7 @@ SocketServer.disconnectClient = function(socket) {
 
 SocketServer.storeInput = function(socket, input) {
 	var session = SessionCollection.getSessionObject(socket.id);
-	if (session != null) {
+	if (session != null && SocketServer.inputs != null) {
 		SocketServer.inputs[socket.id].push(input);
 	} else {
 		SocketServer.disconnectClient(socket);
