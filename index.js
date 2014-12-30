@@ -8,7 +8,7 @@ SocketServer.listen();
 
 setInterval(function() {
   SocketServer.updatePhysics();
-}, 1000 / 100);
+}, 1000 / 30);
 
 setInterval(function() {
   SocketServer.updateWorld();
