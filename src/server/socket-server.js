@@ -25,7 +25,7 @@ SocketServer.prepareSocketData = function(player, opponent) {
 			x: opponent.getX(),
 			y: opponent.getY(),
 			z: opponent.getZ(), 
-			sequence: SocketServer.proccessedInputs[opponent.getID()]
+			sequence: SocketServer.proccessedInputs[opponent.getID()] || []
 		}
 	};
 	return data;
@@ -94,7 +94,7 @@ SocketServer.disconnectClient = function(socket) {
 
 SocketServer.storeInput = function(socket, input) {
 	var session = SessionCollection.getSessionObject(socket.id);
-	if (session != null && SocketServer.inputs != null) {
+	if (session != null && SocketServer.inputs[socket.id] != null) {
 		SocketServer.inputs[socket.id].push(input);
 	} else {
 		SocketServer.disconnectClient(socket);
