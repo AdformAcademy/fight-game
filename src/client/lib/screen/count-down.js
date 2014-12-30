@@ -16,8 +16,10 @@ function CountDownScreen(){
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;
 
+	this.countDownInterval = null;
+
 	this.countAnimation = {
-		numbers: 3,
+		numbers: 2,
 		size: 50,
 		incrementation: 1,
 		opacity: 1,
@@ -32,31 +34,34 @@ function CountDownScreen(){
 		var y = App.canvasObj.getHeight() * 0.5;
 		return new Point(x, y);
 	});
-	obj.doCountDown();
+	this.doCountDown();
 };
 
 CountDownScreen.prototype.doCountDown = function() {
-	var countAnimation = obj.countAnimation;
-	var oldVal = countAnimation.numbers;
-	countAnimation.numbers--;
-	countAnimation.size = 50;
-	countAnimation.incrementation = 1;
-	countAnimation.opacity = 1;
-	countAnimation.opacityStep = 0.01;
-	if (oldVal <= 0) {
-		obj.countDownText.setText('FIGHT!!!');
-		if (oldVal == -1) {
-			App.gameStarted = true;
-			App.screen = new StageScreen();
-			obj.dispose();
-			App.canvasObj.setGraphics(App.screen.graphics);
+	this.countDownInterval = setInterval(function () {
+		var countAnimation = obj.countAnimation;
+		var oldVal = countAnimation.numbers;
+		console.log(countAnimation.numbers);
+		countAnimation.numbers--;
+		countAnimation.size = 50;
+		countAnimation.incrementation = 1;
+		countAnimation.opacity = 1;
+		countAnimation.opacityStep = 0.01;
+		if (oldVal <= 0) {
+			obj.countDownText.setText('FIGHT!!!');
+			if (oldVal == -1) {
+				App.gameStarted = true;
+				App.screen = new StageScreen();
+				obj.dispose();
+				App.canvasObj.setGraphics(App.screen.graphics);
+			}
+		} else {
+			obj.countDownText.setText(oldVal);
 		}
-	} else {
-		obj.countDownText.setText(oldVal);
-	}
-	if (oldVal >= 0) {
-		setTimeout(obj.doCountDown, 1500);
-	}
+		if (oldVal >= 0) {
+			clearInterval(this.countDownInterval);
+		}
+	}, 1500);
 };
 
 CountDownScreen.prototype.animateCountDown = function() {
@@ -84,6 +89,7 @@ CountDownScreen.prototype.graphics = function() {
 };
 
 CountDownScreen.prototype.dispose = function() {
+	clearInterval(this.countDownInterval);
 	App.canvasObj.canvas.globalAlpha = 1;
 	App.canvasObj.canvas.restore();
 };
