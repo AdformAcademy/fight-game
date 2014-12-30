@@ -150,20 +150,24 @@ Client.applyInput = function(player, input) {
 };
 
 Client.checkLeftCollision = function(data, size) {
-	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) || (data.player.y - size/3 >= data.opponent.y ||
-		data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) 
+		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
+		|| (data.opponent.z - size/3 >= data.player.z));
 }
 Client.checkRightCollision = function(data, size) {
-	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) || (data.player.y - size/3 >= data.opponent.y ||
-		data.player.y + size/3 <= data.opponent.y)) || (data.opponent.z - size/3 >= data.player.z));
+	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) 
+		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
+		|| (data.opponent.z - size/3 >= data.player.z));
 }
 Client.checkUpCollision = function(data, size) {
-	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) || (data.player.x - size >= data.opponent.x ||
-		data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
+	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) 
+		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
+		|| (data.opponent.z - size/3 >= data.player.z));
 }
 Client.checkDownCollision = function(data, size) {
-	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) || (data.player.x - size >= data.opponent.x ||
-		data.player.x + size <= data.opponent.x)) || (data.opponent.z - size/3 >= data.player.z));
+	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) 
+		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
+		|| (data.opponent.z - size/3 >= data.player.z));
 }
 
 Client.storeInput = function(input) {
@@ -180,7 +184,7 @@ Client.interpolate = function() {
 		var input = Client.opponentInputs[0];
 		if (input != null) {
 			Client.applyCoordinates(App.opponent, input.x, input.y, input.z);
-			Client.opponentInputs.splice(0, 1);
+			Client.opponentInputs.shift();
 		}
 	} else {
 		var lastInput = Client.opponentInputs[bufferSize - 1];
@@ -223,7 +227,7 @@ Client.processServerData = function() {
     		Client.reconciliate(state);
     	}
     }
-    Client.serverData.splice(0, Client.serverData.length);
+    Client.serverData = [];
 };
 
 Client.appendOpponentInputs = function(inputs) {
@@ -296,26 +300,22 @@ Client.processInputs = function() {
 			player.setSpeedZ(speedZ);
 			player.setJumpState(1);
 			Client.jump();
-			console.log('DO JUMP');
 		}
 	}
-	//if(input.key != 0 || input.jumpKey) {
-		if (Client.prediction) {
-			Client.applyInput(player, input);
-			if (Client.reconciliation) {
-				Client.storeInput(input);
-			}
+	if (Client.prediction) {
+		Client.applyInput(player, input);
+		if (Client.reconciliation) {
+			Client.storeInput(input);
 		}
-		Client.inputCounter++;
-		socket.emit('update', input);
-	//}
+	}
+	Client.inputCounter++;
+	socket.emit('update', input);
 };
 
 Client.jump = function() {
 	console.log('start jump');
 	var player = App.player;
 	var updateZ = setInterval(function(){
-		console.log('start interval');
 		var player = App.player;
 	    var opponent = App.opponent;
 	    var x = player.getLocation().getX();
@@ -342,7 +342,6 @@ Client.jump = function() {
 			z -= speedZ;}
 		if(z > 0){
 			player.setJumpState(0);
-			console.log('stop interval');
 			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;

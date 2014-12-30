@@ -74,12 +74,6 @@ SocketServer.prepareClient = function (socket) {
 	}
 };
 
-SocketServer.clearArray = function(array) {
-	if(array != null) {
-		array.splice(0, array.length);
-	}
-};
-
 SocketServer.deleteObjects = function(session) {
 	if (session != null) {
 		SessionCollection.deleteSession(session.sessionId);
@@ -264,7 +258,7 @@ SocketServer.processPlayerInputs = function(player) {
 	var input = inputs[0];
 	if (inputs != null && input != null) {
 		SocketServer.executeInput(player, input);
-		inputs.splice(0, 1);
+		inputs.shift();
 	}
 	return input;
 };
@@ -314,7 +308,7 @@ SocketServer.updateWorld = function() {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 				var data = SocketServer.prepareSocketData(player, opponent);		
 				session.socket.emit('update', data);
-				SocketServer.clearArray(SocketServer.proccessedInputs[opponent.getID()]);
+				SocketServer.proccessedInputs[opponent.getID()] = [];
 			}
 		}
 	}
