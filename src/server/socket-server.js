@@ -106,6 +106,10 @@ SocketServer.updateZ = function(player) {
     var speedZ = player.getSpeedZ();
        
     if(z < 0 || player.isJumping()){
+    	if(y + z <= 0){
+    		z = -y;
+    		speedZ = 0;
+    	}
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;

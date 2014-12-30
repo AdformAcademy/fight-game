@@ -290,12 +290,10 @@ Client.processInputs = function() {
 		}
 	}
 	if(key.isDown(key.JUMP_KEY)) {
-		if(!App.player.isJumping()) {
+		if(!App.player.isJumping() && y + z > 0) {
 			input.jumpKey = true;
 			speedZ = Config.playerJumpSpeed;
-			z -= speedZ;
 			player.setSpeedZ(speedZ);
-			player.setZ(z);
 			player.setJumpState(1);
 			Client.jump();
 			console.log('DO JUMP');
@@ -327,7 +325,10 @@ Client.jump = function() {
 	    var opy = opponent.getLocation().getY();
 	    var opz = opponent.getZ();
 	    var speedZ = player.getSpeedZ();
-	    
+	    if(y + z <= 0){
+    		z = -y;
+    		speedZ = 0;
+    	}
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
