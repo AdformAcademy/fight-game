@@ -275,7 +275,6 @@ SocketServer.updatePlayer = function(player) {
 		if (!player.isJumping()) {
 			var input = jumpInputs[0];
 		    if (input !== undefined) {
-		    	console.log('yra inputu');
 		        SocketServer.executeInput(player, input);
 		        jumpInputs.shift();
 		    }

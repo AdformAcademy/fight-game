@@ -41,7 +41,7 @@ CountDownScreen.prototype.doCountDown = function() {
 	this.countDownInterval = setInterval(function () {
 		var countAnimation = obj.countAnimation;
 		var oldVal = countAnimation.numbers;
-		console.log(countAnimation.numbers);
+		
 		countAnimation.numbers--;
 		countAnimation.size = 50;
 		countAnimation.incrementation = 1;
