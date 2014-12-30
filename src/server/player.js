@@ -37,10 +37,6 @@ Player.prototype.getSpeedZ = function(){
   return this.speedZ;
 }
 
-Player.prototype.getJumping = function(){
-  return this.jumping;
-}
-
 Player.prototype.setX = function(x){
   this.x = x;
 }
@@ -60,6 +56,10 @@ Player.prototype.setSpeedZ = function(speedZ){
 Player.prototype.setJumping = function(jumping){
   this.jumping = jumping;
 }
+
+Player.prototype.isJumping = function(){
+  return this.jumping == 1;
+};
 
 Player.prototype.setLastProcessedInput = function(input) {
   this.lastProcessedInput = input;

@@ -96,7 +96,7 @@ SocketServer.storeInput = function(socket, input) {
 };
 
 SocketServer.updateZ = function(player) {
-    var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
     var x = player.getX();
     var y = player.getY();
     var z = player.getZ();
@@ -104,6 +104,13 @@ SocketServer.updateZ = function(player) {
     var opy = opponent.getY();
     var opz = opponent.getZ();
     var speedZ = player.getSpeedZ();
+	if(player.isJumping()){
+		speedZ = Config.playerJumpSpeed;
+		z -= speedZ;
+		player.setSpeedZ(speedZ);
+		player.setZ(z);
+		player.setJumping(0);
+	}
     if(z < 0){
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
@@ -154,10 +161,7 @@ SocketServer.executeInput = function(player, input) {
 	};
 	
 	if(input.jumpKey && z >= 0) {
-		speedZ = Config.playerJumpSpeed;
-		z -= speedZ;
-		player.setSpeedZ(speedZ);
-		player.setZ(z);
+		player.setJumping(1);
 	}
 
 	if(input.key == key.UP_LEFT) {
