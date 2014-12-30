@@ -15,7 +15,7 @@ EventCollection.addMouseOverObject = function(obj) {
 
 EventCollection.removeOnClickObject = function(obj) {
 	for (var key in EventCollection.clickList) {
-		if (EventCollection.clickList[key] == obj) {
+		if (EventCollection.clickList[key] === obj) {
 			delete EventCollection.clickList[key];
 			return;
 		}
@@ -24,7 +24,7 @@ EventCollection.removeOnClickObject = function(obj) {
 
 EventCollection.removeMouseOverObject = function(obj) {
 	for (var key in EventCollection.mouseOverList) {
-		if (EventCollection.mouseOverList[key] == obj) {
+		if (EventCollection.mouseOverList[key] === obj) {
 			delete EventCollection.mouseOverList[key];
 			return;
 		}

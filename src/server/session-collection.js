@@ -11,15 +11,15 @@ SessionCollection.getSessionObject = function(sessionId) {
 SessionCollection.getAvailableSession = function() {
   for (var key in SessionCollection.list) {
     var sesObj = SessionCollection.list[key];
-    if (sesObj.state == Session.READY) {
+    if (sesObj.state === Session.READY) {
       return sesObj;
     }
   }
-  return null;
+  return undefined;
 };
 
 SessionCollection.sessionExists = function(sessionId) {
-  return SessionCollection.list[sessionId] != null;
+  return SessionCollection.list[sessionId] !== undefined;
 };
 
 SessionCollection.createSession = function(socket) {

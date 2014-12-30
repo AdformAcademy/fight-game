@@ -54,7 +54,7 @@ Canvas.prototype.getGraphics = function() {
 };
 
 Canvas.prototype.drawGraphics = function() {
-	if (this.graphics != null) {
+	if (this.graphics !== null) {
 		this.graphics();
 	}
 };

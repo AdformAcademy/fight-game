@@ -44,19 +44,19 @@ Client.applyCoordinates = function(player, x, y, z) {
 	var playerLocation = player.getLocation();
 	playerLocation.setX(x);
 	playerLocation.setY(y);
-	if(z != null){
+	if(z !== null){
 		player.setZ(z);
 	}
 };
 
 Client.applyInput = function(player, input) {
 
-	if (input == null) {
+	if (input === undefined) {
 		return;
 	}
 
 	var opponent;
-	if (player == App.player) {
+	if (player === App.player) {
 		opponent = App.opponent;
 	} else {
 		opponent = App.player;
@@ -89,7 +89,7 @@ Client.applyInput = function(player, input) {
 		}
 	};
 
-	if (input.key == key.UP_RIGHT) {
+	if (input.key === key.UP_RIGHT) {
 		if (x < screenWidth - 30 && y > 0) {
 			if(Client.checkRightCollision(data, size))
 				x += Config.playerMoveSpeed;
@@ -97,7 +97,7 @@ Client.applyInput = function(player, input) {
 				y -= Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.UP_LEFT) {
+	else if (input.key === key.UP_LEFT) {
 		if (x > 0 && y > 0) {
 			if(Client.checkLeftCollision(data, size))
 				x -= Config.playerMoveSpeed;
@@ -105,7 +105,7 @@ Client.applyInput = function(player, input) {
 				y -= Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.DOWN_LEFT) {
+	else if (input.key === key.DOWN_LEFT) {
 		if (x > 0 && y < screenHeight - 30){
 			if(Client.checkLeftCollision(data, size))
 				x -= Config.playerMoveSpeed;
@@ -113,7 +113,7 @@ Client.applyInput = function(player, input) {
 				y += Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.DOWN_RIGHT) {
+	else if (input.key === key.DOWN_RIGHT) {
 		if (x < screenWidth - 30 && y < screenHeight - 30){
 			if(Client.checkRightCollision(data, size))
 				x += Config.playerMoveSpeed;
@@ -121,25 +121,25 @@ Client.applyInput = function(player, input) {
 				y += Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.RIGHT) {
+	else if (input.key === key.RIGHT) {
 		if (x < screenWidth - 30){
 			if(Client.checkRightCollision(data, size))
 				x += Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.LEFT) {
+	else if (input.key === key.LEFT) {
 		if (x > 0){
 			if(Client.checkLeftCollision(data, size))
 				x -= Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.UP) {
+	else if (input.key === key.UP) {
 		if (y > 0) {
 			if(Client.checkUpCollision(data, size))
 				y -= Config.playerMoveSpeed;
 		}
 	}
-	else if (input.key == key.DOWN) {
+	else if (input.key === key.DOWN) {
 		if (y < screenHeight - 30) {
 			if(Client.checkDownCollision(data, size))
 				y += Config.playerMoveSpeed;
@@ -182,7 +182,7 @@ Client.interpolate = function() {
 	var bufferSize = Client.opponentInputs.length;
 	if (bufferSize < 10) {
 		var input = Client.opponentInputs[0];
-		if (input != null) {
+		if (input !== undefined) {
 			Client.applyCoordinates(App.opponent, input.x, input.y, input.z);
 			Client.opponentInputs.shift();
 		}
@@ -313,7 +313,6 @@ Client.processInputs = function() {
 };
 
 Client.jump = function() {
-	console.log('start jump');
 	var player = App.player;
 	var updateZ = setInterval(function(){
 		var player = App.player;

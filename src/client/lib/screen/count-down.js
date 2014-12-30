@@ -49,7 +49,7 @@ CountDownScreen.prototype.doCountDown = function() {
 		countAnimation.opacityStep = 0.01;
 		if (oldVal <= 0) {
 			obj.countDownText.setText('FIGHT!!!');
-			if (oldVal == -1) {
+			if (oldVal === -1) {
 				App.gameStarted = true;
 				App.screen = new StageScreen();
 				obj.dispose();
