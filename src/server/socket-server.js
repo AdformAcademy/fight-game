@@ -44,10 +44,20 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.opponentId = session.sessionId;
 			targetSession.state = Session.PLAYING;
 
-			var player = new Player(session.sessionId, session.opponentId, 0, 500);
-			player.setZ(0);
-			var opponent = new Player(targetSession.sessionId, targetSession.opponentId, 100, 500);
-			opponent.setZ(0);
+			var player = Player({
+				id: session.sessionId,
+				opponentId: session.opponentId,
+				x: 0,
+				y: 500,
+				z: 0
+			});
+			var opponent = Player({
+				id: targetSession.sessionId,
+				opponentId: targetSession.opponentId,
+				x: 100,
+				y: 500,
+				z: 0
+			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
 

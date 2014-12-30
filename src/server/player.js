@@ -1,80 +1,85 @@
-function Player(id, opponentId, x, y){
-  this.id = id;
-  this.opponentId = opponentId;
-  this.x = x;
-  this.y = y;
-  this.z = 0;
-  this.speedZ = 0;
-  this.jumping = false;
-  this.lastProcessedInput = 0;
-}
-
-Player.prototype.getID = function(){
-  return this.id;
-}
-
-Player.prototype.getOpponentId = function(){
-  return this.opponentId;
-}
-
-Player.prototype.setOpponentId = function(opponentId){
-  this.opponentId = opponentId;
-}
-
-Player.prototype.getX = function(){
-  return this.x;
-}
-
-Player.prototype.getY = function(){
-  return this.y;
-}
-
-Player.prototype.getZ = function(){
-  return this.z;
-}
-
-Player.prototype.getSpeedZ = function(){
-  return this.speedZ;
-}
-
-Player.prototype.isJumping = function(){
-  return this.jumping;
-}
-
-Player.prototype.setX = function(x){
-  this.x = x;
-}
-
-Player.prototype.setY = function(y){
-  this.y = y;
-}
-
-Player.prototype.setZ = function(z){
-  this.z = z;
-}
-
-Player.prototype.setSpeedZ = function(speedZ){
-  this.speedZ = speedZ;
-}
-
-Player.prototype.setJumping = function(jumping){
-  this.jumping = jumping;
-}
-
-Player.prototype.setLastProcessedInput = function(input) {
-  this.lastProcessedInput = input;
-}
-
-Player.prototype.getLastProcessedInput = function() {
-  return this.lastProcessedInput;
-}
-
-Player.prototype.getLocation = function() {
-  return {
-    x: this.x,
-    y: this.y,
-    z: this.z
+var Player = function(params) {
+  var obj = {};
+  var _id = params.id;
+  var _opponentId = params.opponentId;
+  var _location = {
+    x: params.x || 0,
+    y: params.y || 0,
+    z: params.z || 0
   };
+  var _speedZ = 0;
+  var _jumping = false;
+  var _lastProcessedInput = 0;
+
+  obj.getID = function() {
+    return _id;
+  };
+
+  obj.getOpponentId = function() {
+    return _opponentId;
+  };
+
+  obj.setOpponentId = function(opponentId) {
+    _opponentId = opponentId;
+  };
+
+  obj.getX = function() {
+    return _location.x;
+  };
+
+  obj.getY = function() {
+    return _location.y;
+  };
+
+  obj.getZ = function() {
+    return _location.z;
+  };
+
+  obj.getSpeedZ = function() {
+    return _speedZ;
+  };
+
+  obj.isJumping = function() {
+    return _jumping;
+  };
+
+  obj.setX = function(x) {
+    _location.x = x;
+  };
+
+  obj.setY = function(y) {
+    _location.y = y;
+  };
+
+  obj.setZ = function(z) {
+    _location.z = z;
+  };
+
+  obj.setSpeedZ = function(speedZ) {
+    _speedZ = speedZ;
+  };
+
+  obj.setJumping = function(jumping) {
+    _jumping = jumping;
+  };
+
+  obj.setLastProcessedInput = function(input) {
+    _lastProcessedInput = input;
+  };
+
+  obj.getLastProcessedInput = function() {
+    return _lastProcessedInput;
+  };
+
+  obj.getLocation = function() {
+    return {
+      x: _location.x,
+      y: _location.y,
+      z: _location.z
+    };
+  };
+
+  return obj;
 };
 
 Player.KeyBindings = {
