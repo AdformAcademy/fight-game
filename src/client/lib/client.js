@@ -50,11 +50,9 @@ Client.applyCoordinates = function(player, x, y, z) {
 };
 
 Client.applyInput = function(player, input) {
-
 	if (!input) {
 		return;
 	}
-
 	var opponent;
 	if (player === App.player) {
 		opponent = App.opponent;

@@ -47,16 +47,16 @@ SocketServer.prepareClient = function (socket) {
 			var player = Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
-				x: 0,
-				y: 500,
-				z: 0
+				x: Config.firstSpawnLocation.x,
+				y: Config.firstSpawnLocation.y,
+				z: Config.firstSpawnLocation.z
 			});
 			var opponent = Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
-				x: 100,
-				y: 500,
-				z: 0
+				x: Config.secondSpawnLocation.x,
+				y: Config.secondSpawnLocation.y,
+				z: Config.secondSpawnLocation.z
 			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
@@ -149,10 +149,6 @@ SocketServer.executeInput = function(player, input) {
 	var x = player.getX();
 	var y = player.getY();
 	var z = player.getZ();
-
-	var opx = opponent.getX();
-    var opy = opponent.getY();
-    var opz = opponent.getZ();
 
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
