@@ -241,25 +241,53 @@ Client.processInputs = function() {
 	var x = player.getLocation().getX();
 	var y = player.getLocation().getY();
 	var z = player.getZ();
+	var opponent = App.opponent;
+	var opy = opponent.getLocation().getY();
+	var opz = opponent.getZ();
+	var size = Config.playerSize;
 
 	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
-		if (x < screenWidth - 30 && y > 0) {
+		if (x < screenWidth - size && y > 0) {
 			input.key = key.UP_RIGHT;
+		}
+		else if (x < screenWidth - size) {
+			input.key = key.RIGHT;
+		}
+		else if (y > 0){
+			input.key = key.UP;
 		}
 	}
 	else if (key.isDown(key.LEFT) && key.isDown(key.UP)) {
 		if (x > 0 && y > 0) {
 			input.key = key.UP_LEFT;
 		}
+		else if (x > 0) {
+			input.key = key.LEFT;
+		}
+		else if (y > 0){
+			input.key = key.UP;
+		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
-		if (x > 0 && y < screenHeight - 30){
+		if (x > 0 && y < screenHeight - size){
 			input.key = key.DOWN_LEFT;
+		}
+		else if (x > 0) {
+			input.key = key.LEFT;
+		}
+		else if (y < screenHeight - size){
+			input.key = key.DOWN;
 		}
 	}
 	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
-		if (x < screenWidth - 30 && y < screenHeight - 30){
+		if (x < screenWidth - size && y < screenHeight - size){
 			input.key = key.DOWN_RIGHT;
+		}
+		else if (x < screenWidth - size) {
+			input.key = key.RIGHT;
+		}
+		else if (y < screenHeight - size){
+			input.key = key.DOWN;
 		}
 	}
 	else if (key.isDown(key.RIGHT)) {
@@ -283,7 +311,7 @@ Client.processInputs = function() {
 		}
 	}
 	if(key.isDown(key.JUMP_KEY)) {
-		if(!App.player.isJumping() && y + z > 0) {
+		if(!App.player.isJumping() && y + z > 0 && y - opz - opy != Config.playerSize) {
 			input.jumpKey = true;
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
@@ -302,7 +330,6 @@ Client.processInputs = function() {
 };
 
 Client.jump = function() {
-	var player = App.player;
 	var updateZ = setInterval(function(){
 		var player = App.player;
 	    var opponent = App.opponent;
@@ -320,10 +347,11 @@ Client.jump = function() {
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
-			if(opz - z < Config.playerSize){
-				z = Math.abs(y - opy) - Config.playerSize;
+			if(z >= -(y + Config.playerSize - opy)){
+				z = -(y + Config.playerSize - opy);
 				speedZ = 0;
 			}
+			
 		}
 		else {
 			speedZ -= Config.playerAcceleration;

@@ -123,8 +123,8 @@ SocketServer.updateZ = function(player) {
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3) {
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
-			if(opz - z < Config.playerSize) {
-				z = Math.abs(y - opy) - Config.playerSize;
+			if(z >= -(y + Config.playerSize - opy)){
+				z = -(y + Config.playerSize - opy);
 				speedZ = 0;
 			}
 		}
@@ -149,11 +149,16 @@ SocketServer.executeInput = function(player, input) {
 	var x = player.getX();
 	var y = player.getY();
 	var z = player.getZ();
+	var opy = opponent.getY();
+	var opz = opponent.getZ();
 
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
-	if(input.jumpKey && !player.isJumping()) {
+	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize) {
+		console.log('OPY ' + opy);
+		console.log('Y ' + y);
+		console.log('OPZ ' + opz);
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
