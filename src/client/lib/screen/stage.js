@@ -27,4 +27,7 @@ StageScreen.prototype.graphics = function() {
 	App.opponent.draw();
 };
 
+StageScreen.prototype.dispose = function() {
+};
+
 module.exports = StageScreen;

@@ -44,4 +44,9 @@ WaitingScreen.prototype.graphics = function() {
 	App.canvasObj.canvas.globalAlpha = 1;
 };
 
+WaitingScreen.prototype.dispose = function() {
+	App.canvasObj.canvas.globalAlpha = 1;
+	App.canvasObj.canvas.restore();
+};
+
 module.exports = WaitingScreen;

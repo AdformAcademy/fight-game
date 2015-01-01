@@ -37,7 +37,7 @@ Player.prototype.getSpeedZ = function(){
   return this.speedZ;
 }
 
-Player.prototype.getJumping = function(){
+Player.prototype.isJumping = function(){
   return this.jumping;
 }
 
@@ -68,6 +68,14 @@ Player.prototype.setLastProcessedInput = function(input) {
 Player.prototype.getLastProcessedInput = function() {
   return this.lastProcessedInput;
 }
+
+Player.prototype.getLocation = function() {
+  return {
+    x: this.x,
+    y: this.y,
+    z: this.z
+  };
+};
 
 Player.KeyBindings = {
   LEFT: 37,
