@@ -312,6 +312,7 @@ Client.processInputs = function() {
 	}
 	if(key.isDown(key.JUMP_KEY)) {
 		if(!App.player.isJumping() && y + z > 0 && y - opz - opy != size) {
+			player.getSpriteSheet().setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
@@ -359,6 +360,7 @@ Client.jump = function() {
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;}
 		if(z > 0){
+			player.getSpriteSheet().setActiveAnimation('leftStandAnimation');
 			player.setJumpState(0);
 			clearInterval(updateZ);
 			z = 0;
@@ -375,6 +377,8 @@ Client.update = function() {
 	if (Client.interpolation) {
 		Client.interpolate();
 	}
+	App.player.update();
+	App.opponent.update();
 };
 
 Client.stop = function() {
