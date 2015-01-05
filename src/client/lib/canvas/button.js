@@ -98,14 +98,14 @@ Button.prototype.executeClick = function() {
 };
 
 Button.prototype.executeMouseOver = function() {
-	if (this.mouseOverEvent != null && !this.mouseEntered) {
+	if (this.mouseOverEvent !== null && !this.mouseEntered) {
 		this.mouseOverEvent();
 		this.mouseEntered = true;
 	}
 };
 
 Button.prototype.executeMouseLeave = function() {
-	if (this.mouseLeaveEvent != null && this.mouseEntered) {
+	if (this.mouseLeaveEvent !== null && this.mouseEntered) {
 		this.mouseLeaveEvent();
 	}
 	this.mouseEntered = false;

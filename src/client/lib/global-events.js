@@ -38,16 +38,16 @@ $(window).mousemove(function(event) {
 
 socket.on('playing', function() {
   App.screen.dispose();
-	App.screen = new CountDownScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);
+  App.screen = new CountDownScreen();
+  App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('unactive', function() {
-	App.gameStarted = false;
+  App.gameStarted = false;
   Client.stop();
   App.screen.dispose();
-	App.screen = new StartScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);
+  App.screen = new StartScreen();
+  App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('update', function(data) {

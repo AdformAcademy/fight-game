@@ -36,7 +36,7 @@ SocketServer.prepareClient = function (socket) {
 		var targetSession = SessionCollection.getAvailableSession();
 		SessionCollection.createSession(socket);
 		console.log(socket.id + ' is ready');
-		if (targetSession != null) {
+		if (targetSession !== undefined) {
 			var session = SessionCollection.getSessionObject(socket.id);
 
 			session.opponentId = targetSession.sessionId;
@@ -44,10 +44,20 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.opponentId = session.sessionId;
 			targetSession.state = Session.PLAYING;
 
-			var player = new Player(session.sessionId, session.opponentId, 0, 500);
-			player.setZ(0);
-			var opponent = new Player(targetSession.sessionId, targetSession.opponentId, 100, 500);
-			opponent.setZ(0);
+			var player = Player({
+				id: session.sessionId,
+				opponentId: session.opponentId,
+				x: Config.firstSpawnLocation.x,
+				y: Config.firstSpawnLocation.y,
+				z: Config.firstSpawnLocation.z
+			});
+			var opponent = Player({
+				id: targetSession.sessionId,
+				opponentId: targetSession.opponentId,
+				x: Config.secondSpawnLocation.x,
+				y: Config.secondSpawnLocation.y,
+				z: Config.secondSpawnLocation.z
+			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
 
@@ -64,14 +74,8 @@ SocketServer.prepareClient = function (socket) {
 	}
 };
 
-SocketServer.clearArray = function(array) {
-	if(array != null) {
-		array.splice(0, array.length);
-	}
-};
-
 SocketServer.deleteObjects = function(session) {
-	if (session != null) {
+	if (session !== undefined) {
 		SessionCollection.deleteSession(session.sessionId);
 		PlayerCollection.deletePlayer(session.sessionId);
 		delete SocketServer.inputs[session.sessionId];
@@ -82,7 +86,7 @@ SocketServer.deleteObjects = function(session) {
 
 SocketServer.disconnectClient = function(socket) {
 	var session = SessionCollection.getSessionObject(socket.id);
-	if (session != null && session.opponentId != null) {
+	if (session !== undefined && session.opponentId !== null) {
 		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
 		opponentSession.socket.emit(Session.UNACTIVE);
 	}
@@ -94,7 +98,7 @@ SocketServer.disconnectClient = function(socket) {
 
 SocketServer.storeInput = function(socket, input) {
 	var session = SessionCollection.getSessionObject(socket.id);
-	if (session != null && SocketServer.inputs[socket.id] != null) {
+	if (session !== undefined && SocketServer.inputs[socket.id] !== undefined) {
 		SocketServer.inputs[socket.id].push(input);
 	} else {
 		SocketServer.disconnectClient(socket);
@@ -110,21 +114,20 @@ SocketServer.updateZ = function(player) {
     var opy = opponent.getY();
     var opz = opponent.getZ();
     var speedZ = player.getSpeedZ();
-       
+
     if(z < 0 || player.isJumping()) {
     	if(y + z <= 0) {
     		z = -y;
     		speedZ = 0;
     	}
-		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3) {
+		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
-			if(opz - z < Config.playerSize) {
-				z = Math.abs(y - opy) - Config.playerSize;
+			if(z >= -(y + Config.playerSize - opy)){
+				z = -(y + Config.playerSize - opy);
 				speedZ = 0;
 			}
-		}
-		else {
+		} else {
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
 		}
@@ -145,77 +148,65 @@ SocketServer.executeInput = function(player, input) {
 	var x = player.getX();
 	var y = player.getY();
 	var z = player.getZ();
-
-	var opx = opponent.getX();
-    var opy = opponent.getY();
-    var opz = opponent.getZ();
+	var opy = opponent.getY();
+	var opz = opponent.getZ();
 
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
-    var data = {
-		player: {
-			x: x,
-			y: y,
-			z: z
-		},
-		opponent: {
-			x: opx,
-			y: opy,
-			z: opz
-		}
-	};
-	
-	if(input.jumpKey && !player.isJumping()) {
+	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize) {
+		console.log('OPY ' + opy);
+		console.log('Y ' + y);
+		console.log('OPZ ' + opz);
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
 	}
 	else if(input.jumpKey && player.isJumping()) {
 		var inputs = SocketServer.jumpInputs[player.getID()];
-		if(inputs != undefined) {
+		if(inputs !== undefined) {
 			inputs.push(input);
 		}
 	}
 
-	if(input.key == key.UP_LEFT) {
-		if(SocketServer.checkUpCollision(data, size))
+	if(input.key === key.UP_LEFT) {
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(data, size))
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key == key.UP_RIGHT) {
-		if(SocketServer.checkUpCollision(data, size))
+	else if(input.key === key.UP_RIGHT) {
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(data, size))
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key == key.DOWN_LEFT) {
-		if(SocketServer.checkDownCollision(data, size))
+	else if(input.key === key.DOWN_LEFT) {
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(data, size))
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key == key.DOWN_RIGHT) {
-		if(SocketServer.checkDownCollision(data, size))
+	else if(input.key === key.DOWN_RIGHT) {
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(data, size))
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key == key.LEFT) {
-		if(SocketServer.checkLeftCollision(data, size))
+	else if(input.key === key.LEFT) {
+		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key == key.RIGHT) {
-		if(SocketServer.checkRightCollision(data, size))
+	else if(input.key === key.RIGHT) {
+		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key == key.UP) {
-		if(SocketServer.checkUpCollision(data, size))
+	else if(input.key === key.UP) {
+		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
 	}
-	else if(input.key == key.DOWN) {
-		if(SocketServer.checkDownCollision(data, size))
+	else if(input.key === key.DOWN) {
+		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
 	}
 
@@ -223,25 +214,25 @@ SocketServer.executeInput = function(player, input) {
 	player.setY(y);
 }
 
-SocketServer.checkLeftCollision = function(data, size) {
-	return (((data.opponent.x + size < data.player.x || data.player.x <= data.opponent.x) 
-		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkLeftCollision = function(player, opponent, size) {
+	return (opponent.getX() + size < player.getX() || player.getX() <= opponent.getX())
+		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
-SocketServer.checkRightCollision = function(data, size) {
-	return (((data.opponent.x - size > data.player.x || data.opponent.x <= data.player.x) 
-		|| (data.player.y - size/3 >= data.opponent.y || data.player.y + size/3 <= data.opponent.y)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkRightCollision = function(player, opponent, size) {
+	return (opponent.getX() - size > player.getX() || opponent.getX() <= player.getX())
+		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
-SocketServer.checkUpCollision = function(data, size) {
-	return (((data.player.y - size/3 > data.opponent.y || data.player.y <= data.opponent.y) 
-		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
-	 	|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkUpCollision = function(player, opponent, size) {
+	return (player.getY() - size/3 > opponent.getY() || player.getY() <= opponent.getY())
+		|| (Math.abs(player.getX() - opponent.getX()) >= size)
+	 	|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
-SocketServer.checkDownCollision = function(data, size) {
-	return (((data.player.y + size/3 < data.opponent.y || data.opponent.y <= data.player.y) 
-		|| (data.player.x - size >= data.opponent.x || data.player.x + size <= data.opponent.x)) 
-		|| (data.opponent.z - size/3 >= data.player.z));
+SocketServer.checkDownCollision = function(player, opponent, size) {
+	return (player.getY() + size/3 < opponent.getY() || opponent.getY() <= player.getY())
+		|| (Math.abs(player.getX() - opponent.getX()) >= size)
+		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 
 SocketServer.updatePlayerPhysics = function(player) {
@@ -252,20 +243,20 @@ SocketServer.processPlayerInputs = function(player) {
 	var sessionId = player.getID();
 	var inputs = SocketServer.inputs[sessionId];
 	var input = inputs[0];
-	if (inputs != null && input != null) {
+	if (inputs !== undefined && input !== undefined) {
 		SocketServer.executeInput(player, input);
-		inputs.splice(0, 1);
+		inputs.shift();
 	}
 	return input;
 };
 
 SocketServer.updatePlayer = function(player) {
-	if (player != null) {
+	if (player !== undefined) {
 		var sessionId = player.getID();
 		var jumpInputs = SocketServer.jumpInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
 
-		if (input != null) {
+		if (input !== undefined) {
 			SocketServer.updatePlayerPhysics(player);
 			player.setLastProcessedInput(input);
 			var location = player.getLocation();
@@ -275,7 +266,6 @@ SocketServer.updatePlayer = function(player) {
 		if (!player.isJumping()) {
 			var input = jumpInputs[0];
 		    if (input !== undefined) {
-		    	console.log('yra inputu');
 		        SocketServer.executeInput(player, input);
 		        jumpInputs.shift();
 		    }
@@ -287,7 +277,7 @@ SocketServer.updatePlayers = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state == Session.PLAYING) {
+		if(session.state === Session.PLAYING) {
 			var sessionId = session.socket.id;
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			SocketServer.updatePlayer(player);
@@ -299,13 +289,13 @@ SocketServer.updateWorld = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state == Session.PLAYING) {
+		if(session.state === Session.PLAYING) {
 			var player = PlayerCollection.getPlayerObject(session.socket.id);
-			if (player != null) {
+			if (player !== undefined) {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 				var data = SocketServer.prepareSocketData(player, opponent);		
 				session.socket.emit('update', data);
-				SocketServer.clearArray(SocketServer.proccessedInputs[opponent.getID()]);
+				SocketServer.proccessedInputs[opponent.getID()] = [];
 			}
 		}
 	}

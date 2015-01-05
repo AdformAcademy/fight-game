@@ -41,7 +41,7 @@ CountDownScreen.prototype.doCountDown = function() {
 	this.countDownInterval = setInterval(function () {
 		var countAnimation = obj.countAnimation;
 		var oldVal = countAnimation.numbers;
-		console.log(countAnimation.numbers);
+		
 		countAnimation.numbers--;
 		countAnimation.size = 50;
 		countAnimation.incrementation = 1;
@@ -49,7 +49,7 @@ CountDownScreen.prototype.doCountDown = function() {
 		countAnimation.opacityStep = 0.01;
 		if (oldVal <= 0) {
 			obj.countDownText.setText('FIGHT!!!');
-			if (oldVal == -1) {
+			if (oldVal === -1) {
 				App.gameStarted = true;
 				App.screen = new StageScreen();
 				obj.dispose();

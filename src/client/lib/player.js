@@ -37,7 +37,7 @@ Player.prototype.setJumpState = function(jumpstate){
 };
 
 Player.prototype.isJumping = function(){
-	return this.jump == 1;
+	return this.jump === 1;
 };
 
 Player.prototype.draw = function() {
