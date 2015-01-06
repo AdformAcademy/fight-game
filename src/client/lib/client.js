@@ -174,13 +174,13 @@ Client.interpolate = function() {
 		var input = Client.opponentInputs[0];
 		if (input !== undefined) {
 			Client.applyCoordinates(opponent, input.x, input.y, input.z);
-			opponent.getSpriteSheet().setCurrentFrame(input.currentFrame);
+			opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
 			Client.opponentInputs.shift();
 		}
 	} else {
 		var lastInput = Client.opponentInputs[bufferSize - 1];
 		Client.applyCoordinates(opponent, lastInput.x, lastInput.y, lastInput.z);
-		opponent.getSpriteSheet().setCurrentFrame(lastInput.currentFrame);
+		opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
 		Client.opponentInputs = [];
 	}
 };
@@ -335,8 +335,8 @@ Client.processInputs = function() {
 
 Client.sendServerUpdate = function () {
 	var updatePacket = Client.processInputs();
-	var currentFrame = App.player.getSpriteSheet().getCurrentFrame();
-	updatePacket.currentFrame = currentFrame;
+	var animationName = App.player.getSpriteSheet().getCurrentAnimation();
+	updatePacket.animationName = animationName;
 	socket.emit('update', updatePacket);
 };
 
@@ -389,8 +389,11 @@ Client.flip = function() {
 
 	if(x < opx) {
 		playerSpriteSheet.setDirection('right');
-	} else {
+		opponentSpriteSheet.setDirection('left');
+	}
+	else {
 		playerSpriteSheet.setDirection('left');
+		opponentSpriteSheet.setDirection('right');
 	}
 
 	App.player.setSpriteSheet(playerSpriteSheet);
@@ -404,6 +407,7 @@ Client.update = function() {
 		Client.interpolate();
 	}
 	App.player.update();
+	App.opponent.update();
 	Client.flip();
 };
 

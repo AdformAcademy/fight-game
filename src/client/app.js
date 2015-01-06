@@ -27,6 +27,7 @@ var playerSprite = SpriteSheet({
 	},
 	animations: {
 		standAnimation: {
+			name: 'standAnimation',
 			left: {
 				name: 'left',
 				startFrame: 28,
@@ -41,6 +42,7 @@ var playerSprite = SpriteSheet({
 			}
 		},
 		jumpAnimation: {
+			name: 'jumpAnimation',
 			left: {
 				name: 'left',
 				startFrame: 28,
@@ -70,6 +72,7 @@ var opponentSprite = SpriteSheet({
 	},
 	animations: {
 		standAnimation: {
+			name: 'standAnimation',
 			left: {
 				name: 'left',
 				startFrame: 28,
@@ -84,6 +87,7 @@ var opponentSprite = SpriteSheet({
 			}
 		},
 		jumpAnimation: {
+			name: 'jumpAnimation',
 			left: {
 				name: 'left',
 				startFrame: 28,

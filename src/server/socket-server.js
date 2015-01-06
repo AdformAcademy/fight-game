@@ -212,7 +212,7 @@ SocketServer.executeInput = function(player, input) {
 
 	player.setX(x);
 	player.setY(y);
-	player.setCurrentFrame(input.currentFrame);
+	player.setCurrentAnimation(input.animationName);
 }
 
 SocketServer.checkLeftCollision = function(player, opponent, size) {

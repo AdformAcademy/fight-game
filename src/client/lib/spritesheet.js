@@ -27,12 +27,22 @@ var SpriteSheet = function(params) {
 		_currentFrame = currentFrame;
 	};
 
+	obj.getCurrentAnimation = function () {
+		return _fullAnimation.name;
+	};
+
+	obj.getCurrentAnimationDirection = function () {
+		return _activeAnimation.name;
+	};
+
 	obj.setActiveAnimation = function (animationName) {
-		_fullAnimation = _animations[animationName];
-		_activeAnimation = _fullAnimation[_activeAnimation.name];
-		_activeFrameIndex = _activeAnimation.startFrame;
-		_currentFrame = _activeAnimation.startFrame;
-		_speed = _activeAnimation.speed;
+		if (_fullAnimation.name !== animationName) {
+			_fullAnimation = _animations[animationName];
+			_activeAnimation = _fullAnimation[_activeAnimation.name];
+			_activeFrameIndex = _activeAnimation.startFrame;
+			_currentFrame = _activeAnimation.startFrame;
+			_speed = _activeAnimation.speed;
+		}
 	};
 
 	obj.setDirection = function(direction) {

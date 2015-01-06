@@ -10,7 +10,7 @@ var Player = function(params) {
   var _speedZ = 0;
   var _jumping = false;
   var _lastProcessedInput = 0;
-  var _currentFrame = 0;
+  var _currentAnimation = 0;
 
   obj.getID = function() {
     return _id;
@@ -72,12 +72,12 @@ var Player = function(params) {
     return _lastProcessedInput;
   };
 
-  obj.setCurrentFrame = function (frame) {
-    _currentFrame = frame;
+  obj.setCurrentAnimation = function (animation) {
+    _currentAnimation = animation;
   };
 
-  obj.getCurrentFrame = function () {
-    return _currentFrame;
+  obj.getCurrentAnimation = function () {
+    return _currentAnimation;
   };
 
   obj.toPacket = function() {
@@ -85,7 +85,7 @@ var Player = function(params) {
       x: _location.x,
       y: _location.y,
       z: _location.z,
-      currentFrame: _currentFrame
+      currentAnimation: _currentAnimation
     };
   };
 
