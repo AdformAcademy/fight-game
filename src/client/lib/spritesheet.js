@@ -5,13 +5,27 @@ var SpriteSheet = function(params) {
 	var _canvas = App.canvasObj.canvas;
 	var _image = params.image;
 	var _animations = params.animations;
+	var _dimensions = params.spriteDimensions;
 
 	var _fullAnimation = _animations[params.defaultAnimation.animation];
 	var _activeAnimation = _fullAnimation[params.defaultAnimation.direction];
 	var _activeFrameIndex = _activeAnimation.startFrame;
 	var _speed = _activeAnimation.speed;
-	var _dimensions = params.spriteDimensions;
+	
 	var _currentFrame = _activeAnimation.startFrame;
+	var _currentDirection = _activeAnimation.name;
+
+	var countCurrentFrame = function (n, w, fw) {
+		return (w - (n * fw + fw)) / fw;
+	};
+
+	obj.getCurrentFrame = function () {
+		return _currentFrame;
+	};
+
+	obj.setCurrentFrame = function(currentFrame) {
+		_currentFrame = currentFrame;
+	};
 
 	obj.setActiveAnimation = function (animationName) {
 		_fullAnimation = _animations[animationName];
@@ -22,9 +36,13 @@ var SpriteSheet = function(params) {
 	};
 
 	obj.setDirection = function(direction) {
-		//_activeAnimation = _fullAnimation[direction];
-		//_currentFrame = _dimensions.width - ((_currentFrame * _dimensions.frameWidth) + _dimensions.frameWidth);
-		//_activeFrameIndex = _activeAnimation.startFrame;
+		if (_currentDirection !== direction) {
+			_activeAnimation = _fullAnimation[direction];
+			_currentFrame = countCurrentFrame(_currentFrame, 
+				_dimensions.width, _dimensions.frameWidth);
+			_activeFrameIndex = _currentFrame;
+			_currentDirection = _activeAnimation.name;
+		}
 	}
 
 	obj.getAnimation = function (animationObj) {
@@ -37,8 +55,6 @@ var SpriteSheet = function(params) {
 			_activeFrameIndex = _activeAnimation.startFrame;
 		}
 		_currentFrame = Math.floor(_activeFrameIndex);
-
-		console.log(_activeFrameIndex + ' ' + _currentFrame);
 	};
 
 	obj.draw = function(x, y) {

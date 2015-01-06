@@ -169,15 +169,18 @@ Client.storeServerData = function(data) {
 
 Client.interpolate = function() {
 	var bufferSize = Client.opponentInputs.length;
+	var opponent = App.opponent;
 	if (bufferSize < 10) {
 		var input = Client.opponentInputs[0];
 		if (input !== undefined) {
-			Client.applyCoordinates(App.opponent, input.x, input.y, input.z);
+			Client.applyCoordinates(opponent, input.x, input.y, input.z);
+			opponent.getSpriteSheet().setCurrentFrame(input.currentFrame);
 			Client.opponentInputs.shift();
 		}
 	} else {
 		var lastInput = Client.opponentInputs[bufferSize - 1];
-		Client.applyCoordinates(App.opponent, lastInput.x, lastInput.y, lastInput.z);
+		Client.applyCoordinates(opponent, lastInput.x, lastInput.y, lastInput.z);
+		opponent.getSpriteSheet().setCurrentFrame(lastInput.currentFrame);
 		Client.opponentInputs = [];
 	}
 };
@@ -327,7 +330,14 @@ Client.processInputs = function() {
 		}
 	}
 	Client.inputCounter++;
-	socket.emit('update', input);
+	return input;
+};
+
+Client.sendServerUpdate = function () {
+	var updatePacket = Client.processInputs();
+	var currentFrame = App.player.getSpriteSheet().getCurrentFrame();
+	updatePacket.currentFrame = currentFrame;
+	socket.emit('update', updatePacket);
 };
 
 Client.jump = function() {
@@ -379,12 +389,8 @@ Client.flip = function() {
 
 	if(x < opx) {
 		playerSpriteSheet.setDirection('right');
-		opponentSpriteSheet.setDirection('left');
-	}
-	else
-	{
+	} else {
 		playerSpriteSheet.setDirection('left');
-		opponentSpriteSheet.setDirection('right');
 	}
 
 	App.player.setSpriteSheet(playerSpriteSheet);
@@ -393,12 +399,11 @@ Client.flip = function() {
 
 Client.update = function() {
 	Client.processServerData();
-	Client.processInputs();
+	Client.sendServerUpdate();
 	if (Client.interpolation) {
 		Client.interpolate();
 	}
 	App.player.update();
-	App.opponent.update();
 	Client.flip();
 };
 

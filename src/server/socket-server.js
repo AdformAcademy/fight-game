@@ -96,10 +96,10 @@ SocketServer.disconnectClient = function(socket) {
 	SessionCollection.printSessions();
 };
 
-SocketServer.storeInput = function(socket, input) {
+SocketServer.storeInput = function(socket, packet) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && SocketServer.inputs[socket.id] !== undefined) {
-		SocketServer.inputs[socket.id].push(input);
+		SocketServer.inputs[socket.id].push(packet);
 	} else {
 		SocketServer.disconnectClient(socket);
 	}
@@ -212,6 +212,7 @@ SocketServer.executeInput = function(player, input) {
 
 	player.setX(x);
 	player.setY(y);
+	player.setCurrentFrame(input.currentFrame);
 }
 
 SocketServer.checkLeftCollision = function(player, opponent, size) {
@@ -259,8 +260,8 @@ SocketServer.updatePlayer = function(player) {
 		if (input !== undefined) {
 			SocketServer.updatePlayerPhysics(player);
 			player.setLastProcessedInput(input);
-			var location = player.getLocation();
-			SocketServer.proccessedInputs[sessionId].push(location);
+			var packet = player.toPacket();
+			SocketServer.proccessedInputs[sessionId].push(packet);
 		}
 
 		if (!player.isJumping()) {

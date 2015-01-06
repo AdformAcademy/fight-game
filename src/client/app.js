@@ -12,10 +12,10 @@ App.gameStarted = false;
 
 
 var playerSpriteImage = new Image();
-playerSpriteImage.src = './img/player.png';
+playerSpriteImage.src = './img/player1.png';
 
 var opponentSpriteImage = new Image();
-opponentSpriteImage.src = './img/player.png';
+opponentSpriteImage.src = './img/player2.png';
 
 
 var playerSprite = SpriteSheet({
@@ -35,7 +35,7 @@ var playerSprite = SpriteSheet({
 			},
 			right: {
 				name: 'right',
-				startFrame: 33,
+				startFrame: 32,
 				frames: 4,
 				speed: 0.2
 			}
@@ -57,12 +57,12 @@ var playerSprite = SpriteSheet({
 	},
 	defaultAnimation: {
 		animation: 'standAnimation',
-		direction: 'left'
+		direction: 'right'
 	}
 });
 
 var opponentSprite = SpriteSheet({
-	image: playerSpriteImage,
+	image: opponentSpriteImage,
 	spriteDimensions: {
 		width: 20480,
 		height: 224,
@@ -78,7 +78,7 @@ var opponentSprite = SpriteSheet({
 			},
 			right: {
 				name: 'right',
-				startFrame: 33,
+				startFrame: 32,
 				frames: 4,
 				speed: 0.2
 			}
