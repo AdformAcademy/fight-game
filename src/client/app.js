@@ -41,6 +41,21 @@ var playerSprite = SpriteSheet({
 				speed: 0.2
 			}
 		},
+		moveAnimation: {
+			name: 'moveAnimation',
+			left: {
+				name: 'left',
+				startFrame: 8,
+				frames: 6,
+				speed: 0.2
+			},
+			right: {
+				name: 'right',
+				startFrame: 50,
+				frames: 6,
+				speed: 0.2
+			}
+		},
 		jumpAnimation: {
 			name: 'jumpAnimation',
 			left: {
@@ -83,6 +98,21 @@ var opponentSprite = SpriteSheet({
 				name: 'right',
 				startFrame: 32,
 				frames: 4,
+				speed: 0.2
+			}
+		},
+		moveAnimation: {
+			name: 'moveAnimation',
+			left: {
+				name: 'left',
+				startFrame: 8,
+				frames: 6,
+				speed: 0.2
+			},
+			right: {
+				name: 'right',
+				startFrame: 50,
+				frames: 6,
 				speed: 0.2
 			}
 		},

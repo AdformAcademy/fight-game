@@ -240,6 +240,7 @@ Client.processInputs = function() {
 	var screenWidth = App.canvasObj.getWidth();
 	var screenHeight = App.canvasObj.getHeight();
 	var player = App.player;
+	var playerSprite = player.getSpriteSheet();
 	var playerLocation = player.getLocation();
 	var x = player.getLocation().getX();
 	var y = player.getLocation().getY();
@@ -313,9 +314,16 @@ Client.processInputs = function() {
 			input.key = key.DOWN;
 		}
 	}
+
+	if (input.key !== 0 && !player.isJumping()) {
+		playerSprite.setActiveAnimation('moveAnimation');
+	} else if (input.key === 0 && !player.isJumping()) {
+		playerSprite.setActiveAnimation('standAnimation');
+	}
+
 	if(key.isDown(key.JUMP_KEY)) {
-		if(!App.player.isJumping() && y + z > 0 && y - opz - opy != size) {
-			player.getSpriteSheet().setActiveAnimation('jumpAnimation');
+		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
+			playerSprite.setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
