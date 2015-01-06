@@ -116,10 +116,6 @@ SocketServer.updateZ = function(player) {
     var speedZ = player.getSpeedZ();
 
     if(z < 0 || player.isJumping()) {
-    	if(y + z <= 0) {
-    		z = -y;
-    		speedZ = 0;
-    	}
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
@@ -217,21 +213,21 @@ SocketServer.executeInput = function(player, input) {
 
 SocketServer.checkLeftCollision = function(player, opponent, size) {
 	return (opponent.getX() + size < player.getX() || player.getX() <= opponent.getX())
-		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getY() - opponent.getY()) >= size*2/3)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkRightCollision = function(player, opponent, size) {
 	return (opponent.getX() - size > player.getX() || opponent.getX() <= player.getX())
-		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getY() - opponent.getY()) >= size*2/3)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkUpCollision = function(player, opponent, size) {
-	return (player.getY() - size/3 > opponent.getY() || player.getY() <= opponent.getY())
+	return (player.getY() - size*2/3 > opponent.getY() || player.getY() <= opponent.getY())
 		|| (Math.abs(player.getX() - opponent.getX()) >= size)
 	 	|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkDownCollision = function(player, opponent, size) {
-	return (player.getY() + size/3 < opponent.getY() || opponent.getY() <= player.getY())
+	return (player.getY() + size*2/3 < opponent.getY() || opponent.getY() <= player.getY())
 		|| (Math.abs(player.getX() - opponent.getX()) >= size)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }

@@ -138,7 +138,7 @@ var opponentSprite = SpriteSheet({
 	}
 });
 
-App.player = new Player(new Point(-100, -100), playerSprite);
-App.opponent = new Player(new Point(-100, -100), opponentSprite);
+App.player = new Player(new Point(-5000, -5000), playerSprite);
+App.opponent = new Player(new Point(-5000, -5000), opponentSprite);
 
 require('./lib/global-events');
