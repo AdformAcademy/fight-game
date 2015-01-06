@@ -8,21 +8,23 @@ var SpriteSheet = function(params) {
 
 	var _fullAnimation = _animations[params.defaultAnimation.animation];
 	var _activeAnimation = _fullAnimation[params.defaultAnimation.direction];
-	var _activeFrameIndex = 0;
+	var _activeFrameIndex = _activeAnimation.startFrame;
 	var _speed = _activeAnimation.speed;
-	var _currentDim = _activeAnimation.frameDimensions[0];
+	var _dimensions = params.spriteDimensions;
+	var _currentFrame = _activeAnimation.startFrame;
 
 	obj.setActiveAnimation = function (animationName) {
 		_fullAnimation = _animations[animationName];
 		_activeAnimation = _fullAnimation[_activeAnimation.name];
-		_activeFrameIndex = 0;
-		_currentDim = _activeAnimation.frameDimensions[0];
+		_activeFrameIndex = _activeAnimation.startFrame;
+		_currentFrame = _activeAnimation.startFrame;
 		_speed = _activeAnimation.speed;
 	};
 
 	obj.setDirection = function(direction) {
-		_activeAnimation = _fullAnimation[direction];
-		_currentDim = _activeAnimation.frameDimensions[Math.floor(_activeFrameIndex)];
+		//_activeAnimation = _fullAnimation[direction];
+		//_currentFrame = _dimensions.width - ((_currentFrame * _dimensions.frameWidth) + _dimensions.frameWidth);
+		//_activeFrameIndex = _activeAnimation.startFrame;
 	}
 
 	obj.getAnimation = function (animationObj) {
@@ -30,19 +32,19 @@ var SpriteSheet = function(params) {
 	};
 
 	obj.update = function() {
-		var frameDimensionIndex;
 		_activeFrameIndex += _speed;
-		if (_activeFrameIndex > _activeAnimation.frames) {
-			_activeFrameIndex = 0;
+		if (_activeFrameIndex > _activeAnimation.startFrame + _activeAnimation.frames) {
+			_activeFrameIndex = _activeAnimation.startFrame;
 		}
-		var ind = Math.floor(_activeFrameIndex);
-		_currentDim = _activeAnimation.frameDimensions[ind];
+		_currentFrame = Math.floor(_activeFrameIndex);
+
+		console.log(_activeFrameIndex + ' ' + _currentFrame);
 	};
 
 	obj.draw = function(x, y) {
-		_canvas.drawImage(_image, _currentDim.x, 
-		_activeAnimation.rowY, _currentDim.width, _activeAnimation.frameHeight, 
-		x, y, _currentDim.width, _activeAnimation.frameHeight);
+		_canvas.drawImage(_image, _currentFrame * _dimensions.frameWidth, 
+		0, _dimensions.frameWidth, _dimensions.height, 
+		x, y, _dimensions.frameWidth, _dimensions.height);
 	};
 
 	return obj;
