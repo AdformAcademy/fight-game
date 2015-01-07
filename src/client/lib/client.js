@@ -364,12 +364,12 @@ Client.flip = function() {
 	var opx = App.opponent.getLocation().getX();
 
 	if(x < opx) {
-		playerSpriteSheet.setDirection('right');
-		opponentSpriteSheet.setDirection('left');
+		playerSpriteSheet.flipAnimation(true);
+		opponentSpriteSheet.flipAnimation(false);
 	}
 	else {
-		playerSpriteSheet.setDirection('left');
-		opponentSpriteSheet.setDirection('right');
+		playerSpriteSheet.flipAnimation(false);
+		opponentSpriteSheet.flipAnimation(true);
 	}
 
 	App.player.setSpriteSheet(playerSpriteSheet);
