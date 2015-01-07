@@ -26,6 +26,7 @@ Client.Key = {
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
   JUMP_KEY: 88,
+  PUNCH_KEY: 90,
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
@@ -287,9 +288,9 @@ Client.processInputs = function() {
 		}
 	}
 
-	if (input.key !== 0 && !player.isJumping()) {
+	if (input.key !== 0 && !player.isJumping() && !player.isPunching()) {
 		playerSprite.setActiveAnimation('moveAnimation');
-	} else if (input.key === 0 && !player.isJumping()) {
+	} else if (input.key === 0 && !player.isJumping() && !player.isPunching()) {
 		playerSprite.setActiveAnimation('standAnimation');
 	}
 
@@ -303,6 +304,15 @@ Client.processInputs = function() {
 			Client.jump();
 		}
 	}
+
+	if(key.isDown(key.PUNCH_KEY)) {
+		if(!player.isPunching()) {
+			playerSprite.setActiveAnimation('punchAnimation');
+			player.setPunchState(1);
+			Client.punch();
+		}
+	}
+
 	if (Client.prediction) {
 		Client.applyInput(player, input);
 		if (Client.reconciliation) {
@@ -354,6 +364,19 @@ Client.jump = function() {
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
+	}, 1000/30);
+};
+
+Client.punch = function() {
+	var t = 0;
+	var updateP = setInterval(function(){
+		var player = App.player;
+		t += 30;
+		if(t >= 400){
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			player.setPunchState(0);
+			clearInterval(updateP);
+		}
 	}, 1000/30);
 };
 

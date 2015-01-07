@@ -70,6 +70,21 @@ var playerSprite = SpriteSheet({
 				frames: 6,
 				speed: 0.2
 			}
+		},
+		punchAnimation: {
+			name: 'punchAnimation',
+			left: {
+				name: 'left',
+				startFrame: 25,
+				frames: 2,
+				speed: 0.2
+			},
+			right: {
+				name: 'right',
+				startFrame: 36,
+				frames: 2,
+				speed:  0.2
+			}
 		}
 	},
 	defaultAnimation: {
@@ -128,6 +143,21 @@ var opponentSprite = SpriteSheet({
 				name: 'right',
 				startFrame: 56,
 				frames: 6,
+				speed: 0.2
+			}
+		},
+		punchAnimation: {
+			name: 'punchAnimation',
+			left: {
+				name: 'left',
+				startFrame: 25,
+				frames: 2,
+				speed: 0.2
+			},
+			right: {
+				name: 'right',
+				startFrame: 36,
+				frames: 2,
 				speed: 0.2
 			}
 		}

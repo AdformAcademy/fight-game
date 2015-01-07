@@ -5,6 +5,7 @@ function Player(location, spritesheet) {
 	this.location = location;
 	this.spritesheet = spritesheet;
 	this.jump = 0;
+	this.punch = 0;
 	this.z = 0;
 	this.speedZ = 0;
 };
@@ -39,6 +40,14 @@ Player.prototype.setJumpState = function(jumpstate){
 
 Player.prototype.isJumping = function(){
 	return this.jump === 1;
+};
+
+Player.prototype.setPunchState = function(punchState){
+	this.punch = punchState;
+};
+
+Player.prototype.isPunching = function(){
+	return this.punch === 1;
 };
 
 Player.prototype.getSpriteSheet = function() {
