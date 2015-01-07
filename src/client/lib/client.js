@@ -219,7 +219,7 @@ Client.processInputs = function() {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (key.isDown(key.RIGHT) && key.isDown(key.UP)) {
+	if (key.isDown(key.RIGHT) && key.isDown(key.UP) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
 			input.key = key.UP_RIGHT;
 		}
@@ -230,7 +230,7 @@ Client.processInputs = function() {
 			input.key = key.UP;
 		}
 	}
-	else if (key.isDown(key.LEFT) && key.isDown(key.UP)) {
+	else if (key.isDown(key.LEFT) && key.isDown(key.UP) && !player.isPunching()) {
 		if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
 			input.key = key.UP_LEFT;
 		}
@@ -241,7 +241,7 @@ Client.processInputs = function() {
 			input.key = key.UP;
 		}
 	}
-	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT)) {
+	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT) && !player.isPunching()) {
 		if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
 			input.key = key.DOWN_LEFT;
 		}
@@ -252,7 +252,7 @@ Client.processInputs = function() {
 			input.key = key.DOWN;
 		}
 	}
-	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT)) {
+	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
 			input.key = key.DOWN_RIGHT;
 		}
@@ -263,25 +263,25 @@ Client.processInputs = function() {
 			input.key = key.DOWN;
 		}
 	}
-	else if (key.isDown(key.RIGHT)) {
+	else if (key.isDown(key.RIGHT) && !player.isPunching()) {
 		if (x < screenWidth - 185){
 			if(Client.checkRightCollision(player, opponent, size))
 				input.key = key.RIGHT;
 		}
 	}
-	else if (key.isDown(key.LEFT)) {
+	else if (key.isDown(key.LEFT) && !player.isPunching()) {
 		if (x > -135){
 			if(Client.checkLeftCollision(player, opponent, size))
 				input.key = key.LEFT;
 		}
 	}
-	else if (key.isDown(key.UP)) {
+	else if (key.isDown(key.UP) && !player.isPunching()) {
 		if (y > 150) {
 			if(Client.checkUpCollision(player, opponent, size))
 				input.key = key.UP;
 		}
 	}
-	else if (key.isDown(key.DOWN)) {
+	else if (key.isDown(key.DOWN) && !player.isPunching()) {
 		if (y < screenHeight - 200) {
 			if(Client.checkDownCollision(player, opponent, size))
 				input.key = key.DOWN;
