@@ -71,6 +71,12 @@ socket.on('playing', function(data) {
           startFrame: 2,
           frames: 6,
           speed: 0.2
+        },
+        punchAnimation: {
+          name: 'punchAnimation',
+          startFrame: 25,
+          frames: 2,
+          speed: 0.2
         }
       },
       defaultAnimation: 'standAnimation'
