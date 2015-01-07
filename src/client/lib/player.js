@@ -7,6 +7,7 @@ function Player(location, spritesheet) {
 	this.jump = 0;
 	this.z = 0;
 	this.speedZ = 0;
+	this.depth = 0;
 };
 
 Player.prototype.getLocation = function() {
@@ -47,6 +48,14 @@ Player.prototype.getSpriteSheet = function() {
 
 Player.prototype.setSpriteSheet = function(spritesheet) {
 	this.spritesheet = spritesheet;
+};
+
+Player.prototype.setDepth = function (depth) {
+	this.depth = depth;
+};
+
+Player.prototype.getDepth = function () {
+	return this.depth;
 };
 
 Player.prototype.update = function() {

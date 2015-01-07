@@ -374,7 +374,24 @@ Client.flip = function() {
 
 	App.player.setSpriteSheet(playerSpriteSheet);
 	App.opponent.setSpriteSheet(opponentSpriteSheet);
-}
+};
+
+Client.updatePlayersDepth = function () {
+	var player = App.player;
+	var opponent = App.opponent;
+	var y = player.getLocation().getY();
+	var z = player.getZ();
+	var oy = opponent.getLocation().getY();
+	var oz = opponent.getZ();
+
+	if (y > oy) {
+		player.setDepth(0);
+		opponent.setDepth(1);
+	} else {
+		player.setDepth(1);
+		opponent.setDepth(0);
+	}
+};
 
 Client.update = function() {
 	Client.processServerData();
@@ -385,6 +402,7 @@ Client.update = function() {
 	App.player.update();
 	App.opponent.update();
 	Client.flip();
+	Client.updatePlayersDepth();
 };
 
 Client.stop = function() {

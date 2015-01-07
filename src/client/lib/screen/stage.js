@@ -10,14 +10,21 @@ function StageScreen() {
 	Point = require('../canvas/point');
 	Background = require('../canvas/background');
 	this.backgroundImage = new Background('./img/stage_background.png');
+	this.player = App.player;
+	this.opponent = App.opponent;
 	obj = this;
 	Client.start();
 };
 
 StageScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
-	App.player.draw();
-	App.opponent.draw();
+	if (obj.player.getDepth() > obj.opponent.getDepth()) {
+		obj.player.draw();
+		obj.opponent.draw();
+	} else {
+		obj.opponent.draw();
+		obj.player.draw();
+	}
 };
 
 StageScreen.prototype.dispose = function() {
