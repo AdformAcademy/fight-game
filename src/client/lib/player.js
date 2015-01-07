@@ -1,8 +1,9 @@
 var App;
 
-function Player(location) {
+function Player(location, spritesheet) {
 	App = require('../app');
 	this.location = location;
+	this.spritesheet = spritesheet;
 	this.jump = 0;
 	this.z = 0;
 	this.speedZ = 0;
@@ -40,9 +41,20 @@ Player.prototype.isJumping = function(){
 	return this.jump === 1;
 };
 
+Player.prototype.getSpriteSheet = function() {
+	return this.spritesheet;
+};
+
+Player.prototype.setSpriteSheet = function(spritesheet) {
+	this.spritesheet = spritesheet;
+};
+
+Player.prototype.update = function() {
+	this.spritesheet.update();
+};
+
 Player.prototype.draw = function() {
-	App.canvasObj.canvas.fillStyle = '#32FF32';
-	App.canvasObj.canvas.fillRect(this.location.getX(), this.location.getY() + this.getZ(), 30, 30);
+	this.spritesheet.draw(this.location.getX(), this.location.getY() + this.getZ());
 };
 
 module.exports = Player;

@@ -312,6 +312,7 @@ Client.processInputs = function() {
 	}
 	if(key.isDown(key.JUMP_KEY)) {
 		if(!App.player.isJumping() && y + z > 0 && y - opz - opy != size) {
+			player.getSpriteSheet().setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
@@ -352,13 +353,14 @@ Client.jump = function() {
 			if(z >= -(y + size - opy)){
 				z = -(y + size - opy);
 				speedZ = 0;
+				player.getSpriteSheet().setActiveAnimation('standAnimation');
 			}
-			
 		}
 		else {
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;}
 		if(z > 0){
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumpState(0);
 			clearInterval(updateZ);
 			z = 0;
@@ -369,12 +371,35 @@ Client.jump = function() {
 	}, 1000/30);
 };
 
+Client.flip = function() {
+	var playerSpriteSheet = App.player.getSpriteSheet();
+	var opponentSpriteSheet = App.opponent.getSpriteSheet();
+	var x = App.player.getLocation().getX();
+	var opx = App.opponent.getLocation().getX();
+
+	if(x < opx) {
+		playerSpriteSheet.setDirection('right');
+		opponentSpriteSheet.setDirection('left');
+	}
+	else
+	{
+		playerSpriteSheet.setDirection('left');
+		opponentSpriteSheet.setDirection('right');
+	}
+
+	App.player.setSpriteSheet(playerSpriteSheet);
+	App.opponent.setSpriteSheet(opponentSpriteSheet);
+}
+
 Client.update = function() {
 	Client.processServerData();
 	Client.processInputs();
 	if (Client.interpolation) {
 		Client.interpolate();
 	}
+	App.player.update();
+	App.opponent.update();
+	Client.flip();
 };
 
 Client.stop = function() {
