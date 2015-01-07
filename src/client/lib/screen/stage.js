@@ -9,15 +9,8 @@ function StageScreen() {
 	Client = require('../client');
 	Point = require('../canvas/point');
 	Background = require('../canvas/background');
-
 	this.backgroundImage = new Background('./img/stage_background.png');
 	obj = this;
-
-	App.player.location = new Point(-5000, -5000);
-	App.opponent.location = new Point(-5000, -5000);
-	App.player.setZ(0);
-	App.opponent.setZ(0);
-
 	Client.start();
 };
 

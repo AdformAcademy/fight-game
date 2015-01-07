@@ -68,8 +68,30 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.jumpInputs[session.sessionId] = [];
 			SocketServer.jumpInputs[targetSession.sessionId] = [];
 
-			session.socket.emit(Session.PLAYING);
-			targetSession.socket.emit(Session.PLAYING);
+			session.socket.emit(Session.PLAYING, {
+				player: {
+					x: player.getX(),
+					y: player.getY(),
+					image: 'player1.png'
+				},
+				opponent: {
+					x: opponent.getX(),
+					y: opponent.getY(),
+					image: 'player2.png'
+				}
+			});
+			targetSession.socket.emit(Session.PLAYING, {
+				player: {
+					x: opponent.getX(),
+					y: opponent.getY(),
+					image: 'player2.png'
+				},
+				opponent: {
+					x: player.getX(),
+					y: player.getY(),
+					image: 'player1.png'
+				}
+			});
 		}
 	}
 };

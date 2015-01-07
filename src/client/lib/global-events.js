@@ -2,8 +2,10 @@ var App = require('../app');
 var Client = require('./client');
 var EventCollection = require('./event-collection');
 var Point = require('./canvas/point');
+var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
+var SpriteSheet = require('./spritesheet');
 var socket = io();
 
 var GlobalEvents = module.exports = function() {};
@@ -36,7 +38,51 @@ $(window).mousemove(function(event) {
   }
 });
 
-socket.on('playing', function() {
+socket.on('playing', function(data) {
+  var playerSpriteImage = new Image();
+  playerSpriteImage.src = './img/' + data.player.image;
+
+  var opponentSpriteImage = new Image();
+  opponentSpriteImage.src = './img/' + data.opponent.image;
+
+  var getSprite = function(image) {
+    return SpriteSheet({
+      image: image,
+      spriteDimensions: {
+        width: 10240,
+        height: 224,
+        frameWidth: 320
+      },
+      animations: {
+        standAnimation: {
+          name: 'standAnimation',
+          startFrame: 28,
+          frames: 4,
+          speed: 0.2
+        },
+        moveAnimation: {
+          name: 'moveAnimation',
+          startFrame: 8,
+          frames: 6,
+          speed: 0.2
+        },
+        jumpAnimation: {
+          name: 'jumpAnimation',
+          startFrame: 2,
+          frames: 6,
+          speed: 0.2
+        }
+      },
+      defaultAnimation: 'standAnimation'
+    });
+  };
+
+  var playerSprite = getSprite(playerSpriteImage);
+  var opponentSprite = getSprite(opponentSpriteImage);
+
+  App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
+  App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+
   App.screen.dispose();
   App.screen = new CountDownScreen();
   App.canvasObj.setGraphics(App.screen.graphics);
