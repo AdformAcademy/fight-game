@@ -218,7 +218,7 @@ SocketServer.checkPunchCollisionRight = function(player, opponent, size) {
 }
 
 SocketServer.executeInput = function(player, input) {
-	var key = Player.KeyBindings;
+	var key = Config.keyBindings;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 	var x = player.getX();
@@ -294,6 +294,11 @@ SocketServer.executeInput = function(player, input) {
 	else if(input.key === key.DOWN) {
 		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
+	}
+	else if (input.key === key.DEFEND) {
+		player.setDefending(true);
+	} else {
+		player.setDefending(false);
 	}
 
 	player.setX(x);

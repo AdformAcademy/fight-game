@@ -77,6 +77,12 @@ socket.on('playing', function(data) {
           startFrame: 25,
           frames: 2,
           speed: 0.2
+        },
+        defendAnimation: {
+          name: 'defendAnimation',
+          startFrame: 0,
+          frames: 2,
+          speed: 0.2
         }
       },
       defaultAnimation: 'standAnimation'

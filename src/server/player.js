@@ -10,6 +10,7 @@ var Player = function(params) {
   var _speedZ = 0;
   var _jumping = false;
   var _punching = false;
+  var _defending = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
 
@@ -44,6 +45,7 @@ var Player = function(params) {
   obj.isJumping = function() {
     return _jumping;
   };
+
   obj.isPunching = function() {
     return _punching;
   };
@@ -72,6 +74,14 @@ var Player = function(params) {
     _punching = punching;
   };
 
+  obj.setDefending = function (defending) {
+    _defending = defending;
+  };
+
+  obj.isDefending = function () {
+    return _defending;
+  };
+
   obj.setLastProcessedInput = function(input) {
     _lastProcessedInput = input;
   };
@@ -98,19 +108,6 @@ var Player = function(params) {
   };
 
   return obj;
-};
-
-Player.KeyBindings = {
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  UP_LEFT: 41,
-  UP_RIGHT: 42,
-  DOWN_LEFT: 43,
-  DOWN_RIGHT: 44,
-  SPACE: 88,
-  PUNCH: 90
 };
 
 module.exports = Player;
