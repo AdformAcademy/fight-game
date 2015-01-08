@@ -173,9 +173,6 @@ SocketServer.executeInput = function(player, input) {
     var size = Config.playerSize;
 
 	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize) {
-		console.log('OPY ' + opy);
-		console.log('Y ' + y);
-		console.log('OPZ ' + opz);
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
@@ -226,6 +223,11 @@ SocketServer.executeInput = function(player, input) {
 	else if(input.key === key.DOWN) {
 		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
+	}
+	else if (input.key === key.DEFEND) {
+		player.setDefending(true);
+	} else {
+		player.setDefending(false);
 	}
 
 	player.setX(x);

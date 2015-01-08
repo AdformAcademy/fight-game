@@ -278,13 +278,15 @@ Client.processInputs = function() {
 		}
 	}
 
-	if (input.key !== 0 && !player.isJumping() && !player.isPunching()) {
-		playerSprite.setActiveAnimation('moveAnimation');
-	} else if (input.key === 0 && !player.isJumping() && !player.isPunching()) {
-		playerSprite.setActiveAnimation('standAnimation');
+	if (player.isStanding()) {
+		if (input.key !== 0) {
+			playerSprite.setActiveAnimation('moveAnimation');
+		} else {
+			playerSprite.setActiveAnimation('standAnimation');
+		}
 	}
 
-	if(control.isDown(keys.JUMP)) {
+	if (control.isDown(keys.JUMP)) {
 		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
 			playerSprite.setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
@@ -295,12 +297,20 @@ Client.processInputs = function() {
 		}
 	}
 
-	if(control.isDown(keys.PUNCH)) {
+	if (control.isDown(keys.PUNCH)) {
 		if(!player.isPunching()) {
 			playerSprite.setActiveAnimation('punchAnimation');
 			player.setPunchState(1);
 			Client.punch();
 		}
+	} else if (control.isDown(keys.DEFEND)) {
+		if (!player.isDefending()) {
+			playerSprite.setActiveAnimation('defendAnimation');
+			player.setDefending(true);
+		}
+		input.key = keys.DEFEND;
+	} else {
+		player.setDefending(false);
 	}
 
 	if (Client.prediction) {

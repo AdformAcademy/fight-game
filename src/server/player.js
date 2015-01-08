@@ -9,6 +9,7 @@ var Player = function(params) {
   };
   var _speedZ = 0;
   var _jumping = false;
+  var _defending = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
 
@@ -62,6 +63,14 @@ var Player = function(params) {
 
   obj.setJumping = function(jumping) {
     _jumping = jumping;
+  };
+
+  obj.setDefending = function (defending) {
+    _defending = defending;
+  };
+
+  obj.isDefending = function () {
+    return _defending;
   };
 
   obj.setLastProcessedInput = function(input) {
