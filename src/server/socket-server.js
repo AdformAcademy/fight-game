@@ -160,7 +160,7 @@ SocketServer.updateZ = function(player) {
 };
 
 SocketServer.executeInput = function(player, input) {
-	var key = Player.KeyBindings;
+	var key = Config.keyBindings;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 	var x = player.getX();
