@@ -10,6 +10,7 @@ var Player = function(params) {
   var _speedZ = 0;
   var _jumping = false;
   var _lastProcessedInput = 0;
+  var _currentAnimation = 0;
 
   obj.getID = function() {
     return _id;
@@ -71,11 +72,20 @@ var Player = function(params) {
     return _lastProcessedInput;
   };
 
-  obj.getLocation = function() {
+  obj.setCurrentAnimation = function (animation) {
+    _currentAnimation = animation;
+  };
+
+  obj.getCurrentAnimation = function () {
+    return _currentAnimation;
+  };
+
+  obj.toPacket = function() {
     return {
       x: _location.x,
       y: _location.y,
-      z: _location.z
+      z: _location.z,
+      currentAnimation: _currentAnimation
     };
   };
 
@@ -91,7 +101,8 @@ Player.KeyBindings = {
   UP_RIGHT: 42,
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
-  SPACE: 88
+  SPACE: 88,
+  PUNCH: 90
 };
 
 module.exports = Player;

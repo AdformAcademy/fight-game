@@ -9,12 +9,12 @@ Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.firstSpawnLocation = {
 	x: 0,
-	y: 500,
+	y: 300,
 	z: 0
 };
 Config.secondSpawnLocation = {
-	x: 100,
-	y: 500,
+	x: 500,
+	y: 300,
 	z: 0
 };
 

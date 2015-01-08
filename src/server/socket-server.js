@@ -68,8 +68,30 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.jumpInputs[session.sessionId] = [];
 			SocketServer.jumpInputs[targetSession.sessionId] = [];
 
-			session.socket.emit(Session.PLAYING);
-			targetSession.socket.emit(Session.PLAYING);
+			session.socket.emit(Session.PLAYING, {
+				player: {
+					x: player.getX(),
+					y: player.getY(),
+					image: 'player1.png'
+				},
+				opponent: {
+					x: opponent.getX(),
+					y: opponent.getY(),
+					image: 'player2.png'
+				}
+			});
+			targetSession.socket.emit(Session.PLAYING, {
+				player: {
+					x: opponent.getX(),
+					y: opponent.getY(),
+					image: 'player2.png'
+				},
+				opponent: {
+					x: player.getX(),
+					y: player.getY(),
+					image: 'player1.png'
+				}
+			});
 		}
 	}
 };
@@ -96,10 +118,10 @@ SocketServer.disconnectClient = function(socket) {
 	SessionCollection.printSessions();
 };
 
-SocketServer.storeInput = function(socket, input) {
+SocketServer.storeInput = function(socket, packet) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && SocketServer.inputs[socket.id] !== undefined) {
-		SocketServer.inputs[socket.id].push(input);
+		SocketServer.inputs[socket.id].push(packet);
 	} else {
 		SocketServer.disconnectClient(socket);
 	}
@@ -116,10 +138,6 @@ SocketServer.updateZ = function(player) {
     var speedZ = player.getSpeedZ();
 
     if(z < 0 || player.isJumping()) {
-    	if(y + z <= 0) {
-    		z = -y;
-    		speedZ = 0;
-    	}
 		if(Math.abs(x - opx) < Config.playerSize && Math.abs(y - opy) < Config.playerSize / 3){
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
@@ -212,25 +230,26 @@ SocketServer.executeInput = function(player, input) {
 
 	player.setX(x);
 	player.setY(y);
+	player.setCurrentAnimation(input.animationName);
 }
 
 SocketServer.checkLeftCollision = function(player, opponent, size) {
 	return (opponent.getX() + size < player.getX() || player.getX() <= opponent.getX())
-		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getY() - opponent.getY()) >= size*2/3)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkRightCollision = function(player, opponent, size) {
 	return (opponent.getX() - size > player.getX() || opponent.getX() <= player.getX())
-		|| (Math.abs(player.getY() - opponent.getY()) >= size/3)
+		|| (Math.abs(player.getY() - opponent.getY()) >= size*2/3)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkUpCollision = function(player, opponent, size) {
-	return (player.getY() - size/3 > opponent.getY() || player.getY() <= opponent.getY())
+	return (player.getY() - size*2/3 > opponent.getY() || player.getY() <= opponent.getY())
 		|| (Math.abs(player.getX() - opponent.getX()) >= size)
 	 	|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
 SocketServer.checkDownCollision = function(player, opponent, size) {
-	return (player.getY() + size/3 < opponent.getY() || opponent.getY() <= player.getY())
+	return (player.getY() + size*2/3 < opponent.getY() || opponent.getY() <= player.getY())
 		|| (Math.abs(player.getX() - opponent.getX()) >= size)
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 }
@@ -259,8 +278,8 @@ SocketServer.updatePlayer = function(player) {
 		if (input !== undefined) {
 			SocketServer.updatePlayerPhysics(player);
 			player.setLastProcessedInput(input);
-			var location = player.getLocation();
-			SocketServer.proccessedInputs[sessionId].push(location);
+			var packet = player.toPacket();
+			SocketServer.proccessedInputs[sessionId].push(packet);
 		}
 
 		if (!player.isJumping()) {

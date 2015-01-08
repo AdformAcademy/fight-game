@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
     SocketServer.prepareClient(socket);
   });
 
-  socket.on('update', function(input) {
-    SocketServer.storeInput(socket, input);
+  socket.on('update', function(packet) {
+    SocketServer.storeInput(socket, packet);
   });
 });
