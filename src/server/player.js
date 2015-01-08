@@ -9,6 +9,7 @@ var Player = function(params) {
   };
   var _speedZ = 0;
   var _jumping = false;
+  var _punching = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
 
@@ -43,6 +44,9 @@ var Player = function(params) {
   obj.isJumping = function() {
     return _jumping;
   };
+  obj.isPunching = function() {
+    return _punching;
+  };
 
   obj.setX = function(x) {
     _location.x = x;
@@ -62,6 +66,10 @@ var Player = function(params) {
 
   obj.setJumping = function(jumping) {
     _jumping = jumping;
+  };
+
+  obj.setPunching = function(punching) {
+    _punching = punching;
   };
 
   obj.setLastProcessedInput = function(input) {

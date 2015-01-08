@@ -12,6 +12,7 @@ SocketServer.http = require('http').Server(Express.app);
 SocketServer.inputs = [];
 SocketServer.proccessedInputs = [];
 SocketServer.jumpInputs = [];
+SocketServer.punchInputs = [];
 
 SocketServer.prepareSocketData = function(player, opponent) {
 	var data = {
@@ -63,10 +64,15 @@ SocketServer.prepareClient = function (socket) {
 
 			SocketServer.inputs[session.sessionId] = [];
 			SocketServer.inputs[targetSession.sessionId] = [];
+
 			SocketServer.proccessedInputs[session.sessionId] = [];
 			SocketServer.proccessedInputs[targetSession.sessionId] = [];
+
 			SocketServer.jumpInputs[session.sessionId] = [];
 			SocketServer.jumpInputs[targetSession.sessionId] = [];
+
+			SocketServer.punchInputs[session.sessionId] = [];
+			SocketServer.punchInputs[targetSession.sessionId] = [];
 
 			session.socket.emit(Session.PLAYING, {
 				player: {
@@ -103,6 +109,7 @@ SocketServer.deleteObjects = function(session) {
 		delete SocketServer.inputs[session.sessionId];
 		delete SocketServer.proccessedInputs[session.sessionId];
 		delete SocketServer.jumpInputs[session.sessionId];
+		delete SocketServer.punchInputs[session.sessionId];
 	}
 };
 
@@ -159,6 +166,57 @@ SocketServer.updateZ = function(player) {
 	player.setSpeedZ(speedZ);
 };
 
+SocketServer.punch = function(player) {
+	var t = 0;
+	var punched = 0;
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	var x = player.getX();
+    var y = player.getY();
+    var z = player.getZ();
+    var opx = opponent.getX();
+    var opy = opponent.getY();
+    var opz = opponent.getZ();
+    console.log('start function');
+	var updateP = setInterval(function(){
+		t += 30;
+		if(SocketServer.checkPunchCollisionLeft(player, opponent, 60)){
+			console.log('You punched something');
+			punched = 1;
+		}
+		if(SocketServer.checkPunchCollisionRight(player, opponent, 60)){
+			console.log('You punched something');
+			punched = 2;
+		}
+		if(t >= 400){
+			if(punched == 1){
+				opx +=10;
+				player.setX(x);
+				opponent.setX(opx);
+			}
+			else if(punched == 2){
+				opx -=10;
+				player.setX(x);
+				opponent.setX(opx);
+			}
+			console.log('You done your punching');
+			player.setPunching(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
+SocketServer.checkPunchCollisionLeft = function(player, opponent, size) {
+	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
+		&& (Math.abs(player.getY() - opponent.getY()) <= 50*2/3)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= size));
+}
+
+SocketServer.checkPunchCollisionRight = function(player, opponent, size) {
+	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
+		&& (Math.abs(player.getY() - opponent.getY()) <= 50*2/3)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= size));
+}
+
 SocketServer.executeInput = function(player, input) {
 	var key = Player.KeyBindings;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
@@ -173,15 +231,25 @@ SocketServer.executeInput = function(player, input) {
     var size = Config.playerSize;
 
 	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize) {
-		console.log('OPY ' + opy);
-		console.log('Y ' + y);
-		console.log('OPZ ' + opz);
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
 	}
 	else if(input.jumpKey && player.isJumping()) {
 		var inputs = SocketServer.jumpInputs[player.getID()];
+		if(inputs !== undefined) {
+			inputs.push(input);
+		}
+	}
+
+	if(input.punchKey && !player.isPunching()) {
+		player.setPunching(true);
+		console.log('received input');
+		SocketServer.punch(player);
+	}
+	else if(input.punchKey && player.isPunching()) {
+		console.log('input -> inputs[]');
+		var inputs = SocketServer.punchInputs[player.getID()];
 		if(inputs !== undefined) {
 			inputs.push(input);
 		}
@@ -273,6 +341,7 @@ SocketServer.updatePlayer = function(player) {
 	if (player !== undefined) {
 		var sessionId = player.getID();
 		var jumpInputs = SocketServer.jumpInputs[sessionId];
+		var punchInputs = SocketServer.punchInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
 
 		if (input !== undefined) {
@@ -287,6 +356,14 @@ SocketServer.updatePlayer = function(player) {
 		    if (input !== undefined) {
 		        SocketServer.executeInput(player, input);
 		        jumpInputs.shift();
+		    }
+		}
+
+		if (!player.isPunching()) {
+			var input = punchInputs[0];
+		    if (input !== undefined) {
+		        SocketServer.executeInput(player, input);
+		        punchInputs.shift();
 		    }
 		}
 	}

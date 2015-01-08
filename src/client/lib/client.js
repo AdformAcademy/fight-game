@@ -307,6 +307,7 @@ Client.processInputs = function() {
 
 	if(key.isDown(key.PUNCH_KEY)) {
 		if(!player.isPunching()) {
+			input.punchKey = true;
 			playerSprite.setActiveAnimation('punchAnimation');
 			player.setPunchState(1);
 			Client.punch();
@@ -369,10 +370,37 @@ Client.jump = function() {
 
 Client.punch = function() {
 	var t = 0;
+	var punched = 0;
 	var updateP = setInterval(function(){
 		var player = App.player;
+		var opponent = App.opponent;
+		var x = player.getLocation().getX();
+	    var y = player.getLocation().getY();
+	    var z = player.getZ();
+	    var opx = opponent.getLocation().getX();
+	    var opy = opponent.getLocation().getY();
+	    var opz = opponent.getZ();
 		t += 30;
+		if(x < opx && opx - x < 60){
+			console.log('You punched something');
+			punched = 1;
+		}
+		if(x > opx && x - opx < 60){
+			console.log('You punched something');
+			punched = 2;
+		}
 		if(t >= 400){
+			if(punched == 1){
+				opx +=10;
+				Client.applyCoordinates(player, x, y, z);
+				Client.applyCoordinates(opponent, opx, opy, opz);
+			}
+			else if(punched == 2){
+				opx -=10;
+				Client.applyCoordinates(player, x, y, z);
+				Client.applyCoordinates(opponent, opx, opy, opz);
+			}
+			console.log('You done your punching');
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setPunchState(0);
 			clearInterval(updateP);
