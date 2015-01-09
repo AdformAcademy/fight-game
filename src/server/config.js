@@ -8,6 +8,7 @@ Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
+Config.screenWidth = 900;
 Config.firstSpawnLocation = {
 	x: 0,
 	y: 300,

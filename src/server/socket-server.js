@@ -176,45 +176,43 @@ SocketServer.punch = function(player) {
     var opx = opponent.getX();
     var opy = opponent.getY();
     var opz = opponent.getZ();
-    console.log('start function');
 	var updateP = setInterval(function(){
 		t += 30;
-		if(SocketServer.checkPunchCollisionLeft(player, opponent, 60)){
-			console.log('You punched something');
+		if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
 			punched = 1;
 		}
-		if(SocketServer.checkPunchCollisionRight(player, opponent, 60)){
-			console.log('You punched something');
+		if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
 		}
-		if(t >= 400){
+		if(t >= 300){
 			if(punched == 1){
-				opx +=10;
-				player.setX(x);
-				opponent.setX(opx);
+				if(opx < Config.screenWidth - 185){
+					opx +=10;
+					opponent.setX(opx);
+				}
 			}
 			else if(punched == 2){
-				opx -=10;
-				player.setX(x);
-				opponent.setX(opx);
+				if(opx > -135){
+					opx -=10;
+					opponent.setX(opx);
+				}
 			}
-			console.log('You done your punching');
-			player.setPunching(false);
 			clearInterval(updateP);
 		}
 	}, 1000/30);
+	player.setPunching(false);
 };
 
-SocketServer.checkPunchCollisionLeft = function(player, opponent, size) {
+SocketServer.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
 	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
-		&& (Math.abs(player.getY() - opponent.getY()) <= 50*2/3)
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= size));
+		&& (Math.abs(player.getY() - opponent.getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
 }
 
-SocketServer.checkPunchCollisionRight = function(player, opponent, size) {
+SocketServer.checkPunchCollisionRight = function(player, opponent, size, heightDifference, yDifference) {
 	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
-		&& (Math.abs(player.getY() - opponent.getY()) <= 50*2/3)
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= size));
+		&& (Math.abs(player.getY() - opponent.getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
 }
 
 SocketServer.executeInput = function(player, input) {
@@ -244,54 +242,52 @@ SocketServer.executeInput = function(player, input) {
 
 	if(input.punchKey && !player.isPunching()) {
 		player.setPunching(true);
-		console.log('received input');
 		SocketServer.punch(player);
 	}
 	else if(input.punchKey && player.isPunching()) {
-		console.log('input -> inputs[]');
 		var inputs = SocketServer.punchInputs[player.getID()];
 		if(inputs !== undefined) {
 			inputs.push(input);
 		}
 	}
 
-	if(input.key === key.UP_LEFT) {
+	if(input.key === key.UP_LEFT && !player.isPunching()) {
 		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
 		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key === key.UP_RIGHT) {
+	else if(input.key === key.UP_RIGHT && !player.isPunching()) {
 		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
 		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key === key.DOWN_LEFT) {
+	else if(input.key === key.DOWN_LEFT && !player.isPunching()) {
 		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
 		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key === key.DOWN_RIGHT) {
+	else if(input.key === key.DOWN_RIGHT && !player.isPunching()) {
 		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
 		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key === key.LEFT) {
+	else if(input.key === key.LEFT && !player.isPunching()) {
 		if(SocketServer.checkLeftCollision(player, opponent, size))
 			x -= Config.playerMoveSpeed;
 	}
-	else if(input.key === key.RIGHT) {
+	else if(input.key === key.RIGHT && !player.isPunching()) {
 		if(SocketServer.checkRightCollision(player, opponent, size))
 			x += Config.playerMoveSpeed;
 	}
-	else if(input.key === key.UP) {
+	else if(input.key === key.UP && !player.isPunching()) {
 		if(SocketServer.checkUpCollision(player, opponent, size))
 			y -= Config.playerMoveSpeed;
 	}
-	else if(input.key === key.DOWN) {
+	else if(input.key === key.DOWN && !player.isPunching()) {
 		if(SocketServer.checkDownCollision(player, opponent, size))
 			y += Config.playerMoveSpeed;
 	}

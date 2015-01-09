@@ -83,6 +83,12 @@ socket.on('playing', function(data) {
           startFrame: 0,
           frames: 2,
           speed: 0.2
+        },
+        damageAnimation: {
+          name: 'damageAnimation',
+          startFrame: 0,
+          frames: 2,
+          speed: 0.2
         }
       },
       defaultAnimation: 'standAnimation'

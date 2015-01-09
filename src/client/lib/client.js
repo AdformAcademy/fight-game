@@ -56,32 +56,32 @@ Client.applyInput = function(player, input) {
 	var y = player.getLocation().getY();
 	var z = player.getZ();
 
-	if (input.key === keys.UP_RIGHT) {
+	if (input.key === keys.UP_RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.UP_LEFT) {
+	else if (input.key === keys.UP_LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN_LEFT) {
+	else if (input.key === keys.DOWN_LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN_RIGHT) {
+	else if (input.key === keys.DOWN_RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.RIGHT) {
+	else if (input.key === keys.RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.LEFT) {
+	else if (input.key === keys.LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.UP) {
+	else if (input.key === keys.UP && !player.isPunching()) {
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN) {
+	else if (input.key === keys.DOWN && !player.isPunching()) {
 		y += Config.playerMoveSpeed;
 	}
 
@@ -371,9 +371,10 @@ Client.jump = function() {
 Client.punch = function() {
 	var t = 0;
 	var punched = 0;
+	var screenWidth = App.canvasObj.getWidth();
+	var player = App.player;
+	var opponent = App.opponent;
 	var updateP = setInterval(function(){
-		var player = App.player;
-		var opponent = App.opponent;
 		var x = player.getLocation().getX();
 	    var y = player.getLocation().getY();
 	    var z = player.getZ();
@@ -381,32 +382,44 @@ Client.punch = function() {
 	    var opy = opponent.getLocation().getY();
 	    var opz = opponent.getZ();
 		t += 30;
-		if(x < opx && opx - x < 60){
-			console.log('You punched something');
+		if(Client.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
 			punched = 1;
 		}
-		if(x > opx && x - opx < 60){
-			console.log('You punched something');
+		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
 		}
-		if(t >= 400){
+		if(t >= 300){
 			if(punched == 1){
-				opx +=10;
-				Client.applyCoordinates(player, x, y, z);
-				Client.applyCoordinates(opponent, opx, opy, opz);
+				if(opx < screenWidth - 185){
+					opx +=10;
+					Client.applyCoordinates(opponent, opx, opy, opz);
+				}
 			}
 			else if(punched == 2){
-				opx -=10;
-				Client.applyCoordinates(player, x, y, z);
-				Client.applyCoordinates(opponent, opx, opy, opz);
+				if(opx > -135){
+					opx -=10;
+					Client.applyCoordinates(opponent, opx, opy, opz);
+				}
 			}
-			console.log('You done your punching');
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setPunchState(0);
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
 			clearInterval(updateP);
 		}
 	}, 1000/30);
 };
+
+Client.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getLocation().getX() < opponent.getLocation().getX() && opponent.getLocation().getX() - player.getLocation().getX() < size
+		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
+
+Client.checkPunchCollisionRight = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getLocation().getX() > opponent.getLocation().getX() && player.getLocation().getX() - opponent.getLocation().getX() < size
+		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
 
 Client.flip = function() {
 	var playerSpriteSheet = App.player.getSpriteSheet();
