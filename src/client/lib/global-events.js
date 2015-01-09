@@ -64,20 +64,44 @@ socket.on('playing', function(data) {
           name: 'moveAnimation',
           startFrame: 8,
           frames: 6,
-          speed: 0.2
+          speed: 0.35
         },
         jumpAnimation: {
           name: 'jumpAnimation',
           startFrame: 2,
           frames: 6,
-          speed: 0.2
+          speed: 0.25
         },
         punchAnimation: {
           name: 'punchAnimation',
           startFrame: 25,
           frames: 2,
           speed: 0.2
-        }
+        },
+        kickAnimation: {
+          name: 'kickAnimation',
+          startFrame: 44,
+          frames: 5,
+          speed: 0.2
+        },
+        jumpKickAnimation: {
+          name: 'jumpKickAnimation',
+          startFrame: 32,
+          frames: 4,
+          speed: 0.3
+        },
+        jumpPunchAnimation: {
+          name: 'jumpPunchAnimation',
+          startFrame: 42,
+          frames: 2,
+          speed: 0.2
+        },
+        runningAnimation: {
+          name: 'runningAnimation',
+          startFrame: 36,
+          frames: 6,
+          speed: 0.35
+        },
       },
       defaultAnimation: 'standAnimation'
     });
