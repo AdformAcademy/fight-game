@@ -13,6 +13,7 @@ var Player = function(params) {
   var _defending = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
+  var _characterData = params.characterData;
 
   obj.getID = function() {
     return _id;
@@ -96,6 +97,10 @@ var Player = function(params) {
 
   obj.getCurrentAnimation = function () {
     return _currentAnimation;
+  };
+
+  obj.getCharacterData = function () {
+    return _characterData;
   };
 
   obj.toPacket = function() {

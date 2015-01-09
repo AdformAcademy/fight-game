@@ -46,19 +46,26 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.opponentId = session.sessionId;
 			targetSession.state = Session.PLAYING;
 
+			var playerData = JSON.parse(
+				fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
+			var opponentData = JSON.parse(
+				fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
+
 			var player = Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
 				x: Config.firstSpawnLocation.x,
 				y: Config.firstSpawnLocation.y,
-				z: Config.firstSpawnLocation.z
+				z: Config.firstSpawnLocation.z,
+				characterData: playerData
 			});
 			var opponent = Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
 				x: Config.secondSpawnLocation.x,
 				y: Config.secondSpawnLocation.y,
-				z: Config.secondSpawnLocation.z
+				z: Config.secondSpawnLocation.z,
+				characterData: opponentData
 			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
@@ -75,35 +82,28 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.punchInputs[session.sessionId] = [];
 			SocketServer.punchInputs[targetSession.sessionId] = [];
 
-			var char1 = JSON.parse(fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
-			var char2 = JSON.parse(fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
-
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png',
-					data: char1
+					data: playerData.spriteSheetData
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png',
-					data: char2
+					data: opponentData.spriteSheetData
 				}
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png',
-					data: char2
+					data: opponentData.spriteSheetData
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png',
-					data: char1
+					data: playerData.spriteSheetData
 				}
 			});
 		}

@@ -40,13 +40,13 @@ $(window).mousemove(function(event) {
 
 socket.on('playing', function(data) {
 
-  var playerData = data.player.data;
-  var opponentData = data.opponent.data;
+  var playerSpriteData = data.player.data;
+  var opponentSpriteData = data.opponent.data;
   var playerSpriteImage = new Image();
-  playerSpriteImage.src = './img/' + data.player.image;
+  playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
   var opponentSpriteImage = new Image();
-  opponentSpriteImage.src = './img/' + data.opponent.image;
+  opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
   console.log(data.player.data);
 
@@ -57,8 +57,8 @@ socket.on('playing', function(data) {
     });
   };
 
-  var playerSprite = buildSprite(playerSpriteImage, playerData);
-  var opponentSprite = buildSprite(opponentSpriteImage, opponentData);
+  var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
+  var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
