@@ -56,7 +56,7 @@ socket.on('playing', function(data) {
       animations: {
         standAnimation: {
           name: 'standAnimation',
-          startFrame: 28,
+          startFrame: 29,
           frames: 4,
           speed: 0.2
         },
@@ -72,9 +72,15 @@ socket.on('playing', function(data) {
           frames: 6,
           speed: 0.25
         },
-        punchAnimation: {
-          name: 'punchAnimation',
-          startFrame: 25,
+        punchAnimation1: {
+          name: 'punchAnimation1',
+          startFrame: 24,
+          frames: 2,
+          speed: 0.2
+        },
+        punchAnimation2: {
+          name: 'punchAnimation2',
+          startFrame: 26,
           frames: 2,
           speed: 0.2
         },
@@ -107,6 +113,12 @@ socket.on('playing', function(data) {
           startFrame: 49,
           frames: 6,
           speed: 0.3
+        },
+        defeneAnimation: {
+          name: 'defenceAnimation',
+          startFrame: 55,
+          frames: 1,
+          speed: 0
         },
       },
       defaultAnimation: 'standAnimation'
