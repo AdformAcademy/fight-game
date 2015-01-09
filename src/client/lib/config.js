@@ -10,3 +10,4 @@ Config.keyBindings = BaseConfig.keyBindings;
 
 Config.canvasUpdateInterval = 30;
 Config.canvasMaskColor = '#000000';
+Config.quickTapDuration = 300;

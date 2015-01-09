@@ -32,19 +32,19 @@ Client.Key = {
   },
   
   onKeydown: function(event) {
+    this._pressed[event.keyCode] = true;
+  },
+  
+  onKeyup: function(event) {
   	var pastPressTime = this._pressTimes[event.keyCode];
   	var currentPressTime = Date.now();
   	if (pastPressTime !== undefined) {
   		var interval = currentPressTime - pastPressTime;
-  		if (interval < 500) {
+  		if (interval < Config.quickTapDuration) {
   			this._quickTaps[event.keyCode] = true;
   		}
   	}
-    this._pressed[event.keyCode] = true;
-    this._pressTimes[event.keyCode] = currentPressTime;
-  },
-  
-  onKeyup: function(event) {
+  	this._pressTimes[event.keyCode] = currentPressTime;
     delete this._pressed[event.keyCode];
   }
 };
