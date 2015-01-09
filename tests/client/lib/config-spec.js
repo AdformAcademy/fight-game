@@ -1,8 +1,8 @@
 'use strict';
 
- var Config = require('../../../src/client/lib/config.js');
+var Config = require('../../../src/client/lib/config.js');
 
-describe('Config test suit ', function () {
+describe('Config', function () {
 
 	beforeEach(function() {
 	});
