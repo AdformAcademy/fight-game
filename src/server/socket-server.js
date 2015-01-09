@@ -4,6 +4,7 @@ var SessionCollection = require('./session-collection');
 var PlayerCollection = require('./player-collection');
 var Player = require('./player');
 var Config = require('./config');
+var fs = require('fs');
 
 var SocketServer = function() {};
 
@@ -74,28 +75,35 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.punchInputs[session.sessionId] = [];
 			SocketServer.punchInputs[targetSession.sessionId] = [];
 
+			var char1 = JSON.parse(fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
+			var char2 = JSON.parse(fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
+
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png'
+					image: 'player1.png',
+					data: char1
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png'
+					image: 'player2.png',
+					data: char2
 				}
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png'
+					image: 'player2.png',
+					data: char2
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png'
+					image: 'player1.png',
+					data: char1
 				}
 			});
 		}
