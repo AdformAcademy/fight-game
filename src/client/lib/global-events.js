@@ -105,7 +105,7 @@ socket.on('playing', function(data) {
         punchComboAnimation: {
           name: 'punchComboAnimation',
           startFrame: 49,
-          frame: 6,
+          frames: 6,
           speed: 0.3
         },
       },
