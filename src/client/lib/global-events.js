@@ -102,6 +102,12 @@ socket.on('playing', function(data) {
           frames: 6,
           speed: 0.35
         },
+        punchComboAnimation: {
+          name: 'punchComboAnimation',
+          startFrame: 49,
+          frame: 6,
+          speed: 0.3
+        },
       },
       defaultAnimation: 'standAnimation'
     });
