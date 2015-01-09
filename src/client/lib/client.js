@@ -307,7 +307,8 @@ Client.processInputs = function() {
 
 	if(key.isDown(key.PUNCH_KEY)) {
 		if(!player.isPunching()) {
-			playerSprite.setActiveAnimation('punchAnimation');
+			var punchNumber = Math.ceil(Math.random() * 2);
+			playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
 			player.setPunchState(1);
 			Client.punch();
 		}

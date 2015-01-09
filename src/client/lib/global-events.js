@@ -57,7 +57,7 @@ socket.on('playing', function(data) {
         standAnimation: {
           name: 'standAnimation',
           startFrame: 29,
-          frames: 4,
+          frames: 3,
           speed: 0.2
         },
         moveAnimation: {
@@ -114,7 +114,7 @@ socket.on('playing', function(data) {
           frames: 6,
           speed: 0.3
         },
-        defeneAnimation: {
+        defenceAnimation: {
           name: 'defenceAnimation',
           startFrame: 55,
           frames: 1,
