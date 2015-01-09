@@ -7,8 +7,8 @@
 	"animations": {
 		"standAnimation": {
 			"name": "standAnimation",
-			"startFrame": 28,
-			"frames": 4,
+			"startFrame": 29,
+			"frames": 3,
 			"speed": 0.2,
 			"order": "asc"
 		},
@@ -26,16 +26,23 @@
 			"speed": 0.25,
 			"order": "asc"
 		},
-		"punchAnimation": {
-			"name": "punchAnimation",
-			"startFrame": 25,
+		"punchAnimation1": {
+			"name": "punchAnimation1",
+			"startFrame": 24,
+			"frames": 2,
+			"speed": 0.2,
+			"order": "asc"
+		},
+		"punchAnimation2": {
+			"name": "punchAnimation2",
+			"startFrame": 26,
 			"frames": 2,
 			"speed": 0.2,
 			"order": "asc"
 		},
 		"defendAnimation": {
 			"name": "defendAnimation",
-			"startFrame": 48,
+			"startFrame": 55,
 			"frames": 1,
 			"speed": 0.2,
 			"order": "asc"
