@@ -16,13 +16,32 @@ Client.opponentInputs = [];
 
 Client.Key = {
   _pressed: {},
+  _pressTimes: {},
+  _quickTaps: {},
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
   },
+
+  quickTapped: function (keyCode) {
+  	var quickTapped = this._quickTaps[keyCode];
+  	if (quickTapped) {
+  		this._quickTaps[keyCode] = false;
+  	}
+  	return quickTapped;
+  },
   
   onKeydown: function(event) {
+  	var pastPressTime = this._pressTimes[event.keyCode];
+  	var currentPressTime = Date.now();
+  	if (pastPressTime !== undefined) {
+  		var interval = currentPressTime - pastPressTime;
+  		if (interval < 500) {
+  			this._quickTaps[event.keyCode] = true;
+  		}
+  	}
     this._pressed[event.keyCode] = true;
+    this._pressTimes[event.keyCode] = currentPressTime;
   },
   
   onKeyup: function(event) {
@@ -208,6 +227,10 @@ Client.processInputs = function() {
 	var opy = opponent.getLocation().getY();
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
+
+	if (control.quickTapped(keys.PUNCH)) {
+		console.log('quick tap');
+	}
 
 	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
