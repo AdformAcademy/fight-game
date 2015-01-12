@@ -6,7 +6,7 @@ var mockPlayer = {};
 var mockPlayerId = 'mockId';
 
 vows.describe('Player collection').addBatch({
-	'methods': {
+	'properties': {
 		'list': {
 			'is defined': function () {
 				assert.isTrue(PlayerCollection.list !== undefined);
