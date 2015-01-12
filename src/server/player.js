@@ -101,6 +101,7 @@ Player.KeyBindings = {
   UP_RIGHT: 42,
   DOWN_LEFT: 43,
   DOWN_RIGHT: 44,
+  KICK: 86,
   SPACE: 88,
   PUNCH: 90
 };
