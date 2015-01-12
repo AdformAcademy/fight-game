@@ -22,6 +22,10 @@ describe('Config', function () {
 	it('should be defined \'playerSize\'', function() {
 		expect(Config.playerSize).toBeDefined();
 	});
+
+	it('should be defined \'keyBindings\'', function() {
+		expect(Config.keyBindings).toBeDefined();
+	});
 	
 	it('should be defined \'canvasUpdateInterval\'', function() {
 		expect(Config.canvasUpdateInterval).toBeDefined();

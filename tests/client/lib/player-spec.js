@@ -54,8 +54,52 @@ describe('Player', function () {
 		expect(player.getDepth()).toBe(0);
 	});
 
+	it('should get default usingCombo value', function () {
+		expect(player.usingCombo()).toBe(false);
+	});
+
 	it('should set player z value to 3', function() {
 		player.setZ(3);
 		expect(player.getZ()).toBe(3);
+	});
+
+	it('should set player speedZ value to 5', function() {
+		player.setSpeedZ(5);
+		expect(player.getSpeedZ()).toBe(5);
+	});
+
+	it('should set player jumpstate to 1', function() {
+		player.setJumpState(1);
+		expect(player.isJumping()).toBe(true);
+	});
+
+	it('should set player punchstate to 1', function() {
+		player.setPunchState(1);
+		expect(player.isPunching()).toBe(true);
+	});
+
+	it('should set player depth to 0', function() {
+		player.setDepth(0);
+		expect(player.getDepth()).toBe(0);
+	});
+
+	it('should not set player\'s depth higher than 1', function() {
+		player.setDepth(2);
+		expect(player.getDepth()).toBe(0);
+	});
+
+	it('should not set player\'s depth less than 0', function() {
+		player.setDepth(-5);
+		expect(player.getDepth()).toBe(0);
+	});
+
+	it('should set player defending state to true', function() {
+		player.setDefending(true);
+		expect(player.isDefending()).toBe(true);
+	});
+
+	it('should set player using combo state to 1', function() {
+		player.setUsingCombo(1)
+		expect(player.usingCombo()).toBe(true);
 	});
 });

@@ -62,7 +62,9 @@ Player.prototype.setSpriteSheet = function(spritesheet) {
 };
 
 Player.prototype.setDepth = function (depth) {
-	this.depth = depth;
+	if (depth <= 1 && depth >= 0) {
+		this.depth = depth;
+	}
 };
 
 Player.prototype.getDepth = function () {
