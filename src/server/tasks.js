@@ -26,6 +26,7 @@ gulp.task('tests', function () {
 	require('../../tests/server/test/config-spec.js');
 	require('../../tests/server/test/player-collection-spec.js');
 	require('../../tests/server/test/player-spec.js');
+	require('../../tests/server/test/session-collection-spec.js');
 	require('../../tests/server/test/session-spec.js');
 });
 

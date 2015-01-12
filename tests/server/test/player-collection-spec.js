@@ -38,6 +38,7 @@ vows.describe('Player collection').addBatch({
 	},
 	'player insert': {
 		'get inserted player': function () {
+			PlayerCollection.list = [];
 			PlayerCollection.insertPlayer(mockPlayerId, mockPlayer);
 			var player = PlayerCollection.getPlayerObject(mockPlayerId);
 			assert.strictEqual(player, mockPlayer);
@@ -45,6 +46,8 @@ vows.describe('Player collection').addBatch({
 	},
 	'player delete': {
 		'delete inserted player': function () {
+			PlayerCollection.list = [];
+			PlayerCollection.insertPlayer(mockPlayerId, mockPlayer);
 			PlayerCollection.deletePlayer(mockPlayerId);
 			var player = PlayerCollection.getPlayerObject(mockPlayerId);
 			assert.isUndefined(player);
