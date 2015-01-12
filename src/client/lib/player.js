@@ -6,9 +6,11 @@ function Player(location, spritesheet) {
 	this.spritesheet = spritesheet;
 	this.jump = 0;
 	this.punch = 0;
+	this.combo = 0;
 	this.z = 0;
 	this.speedZ = 0;
 	this.depth = 0;
+	this.defending = false;
 };
 
 Player.prototype.getLocation = function() {
@@ -60,11 +62,34 @@ Player.prototype.setSpriteSheet = function(spritesheet) {
 };
 
 Player.prototype.setDepth = function (depth) {
-	this.depth = depth;
+	if (depth <= 1 && depth >= 0) {
+		this.depth = depth;
+	}
 };
 
 Player.prototype.getDepth = function () {
 	return this.depth;
+};
+
+Player.prototype.isDefending = function () {
+	return this.defending;
+};
+
+Player.prototype.setDefending = function (defending) {
+	this.defending = defending;
+};
+
+Player.prototype.usingCombo = function () {
+	return this.combo === 1;
+};
+
+Player.prototype.setUsingCombo = function (combo) {
+	this.combo = combo;
+};
+
+Player.prototype.isStanding = function () {
+	return !this.isJumping() && !this.isPunching()
+	 && !this.isDefending() && !this.usingCombo();
 };
 
 Player.prototype.update = function() {

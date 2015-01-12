@@ -16,20 +16,19 @@ Client.opponentInputs = [];
 
 Client.Key = {
   _pressed: {},
-
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  UP_LEFT: 41,
-  UP_RIGHT: 42,
-  DOWN_LEFT: 43,
-  DOWN_RIGHT: 44,
-  JUMP_KEY: 88,
-  PUNCH_KEY: 90,
+  _pressTimes: {},
+  _quickTaps: {},
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
+  },
+
+  quickTapped: function (keyCode) {
+  	var quickTapped = this._quickTaps[keyCode];
+  	if (quickTapped) {
+  		this._quickTaps[keyCode] = false;
+  	}
+  	return quickTapped;
   },
   
   onKeydown: function(event) {
@@ -37,6 +36,15 @@ Client.Key = {
   },
   
   onKeyup: function(event) {
+  	var pastPressTime = this._pressTimes[event.keyCode];
+  	var currentPressTime = Date.now();
+  	if (pastPressTime !== undefined) {
+  		var interval = currentPressTime - pastPressTime;
+  		if (interval < Config.quickTapDuration) {
+  			this._quickTaps[event.keyCode] = true;
+  		}
+  	}
+  	this._pressTimes[event.keyCode] = currentPressTime;
     delete this._pressed[event.keyCode];
   }
 };
@@ -61,38 +69,38 @@ Client.applyInput = function(player, input) {
 		opponent = App.player;
 	}
 
-	var key = Client.Key;
+	var keys = Config.keyBindings;
 
 	var x = player.getLocation().getX();
 	var y = player.getLocation().getY();
 	var z = player.getZ();
 
-	if (input.key === key.UP_RIGHT) {
+	if (input.key === keys.UP_RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === key.UP_LEFT) {
+	else if (input.key === keys.UP_LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === key.DOWN_LEFT) {
+	else if (input.key === keys.DOWN_LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === key.DOWN_RIGHT) {
+	else if (input.key === keys.DOWN_RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === key.RIGHT) {
+	else if (input.key === keys.RIGHT && !player.isPunching()) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === key.LEFT) {
+	else if (input.key === keys.LEFT && !player.isPunching()) {
 		x -= Config.playerMoveSpeed;
 	}
-	else if (input.key === key.UP) {
+	else if (input.key === keys.UP && !player.isPunching()) {
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === key.DOWN) {
+	else if (input.key === keys.DOWN && !player.isPunching()) {
 		y += Config.playerMoveSpeed;
 	}
 
@@ -201,10 +209,13 @@ Client.processInputs = function() {
 	var input = {
 		id: Client.inputCounter,
 		key: 0,
-		jumpKey: false
+		jumpKey: false,
+		punchKey: false,
+		punchCombo: false
 	};
 
-	var key = Client.Key;
+	var keys = Config.keyBindings;
+	var control = Client.Key;
 	var test = Config.playerMoveSpeed;
 	var screenWidth = App.canvasObj.getWidth();
 	var screenHeight = App.canvasObj.getHeight();
@@ -219,82 +230,84 @@ Client.processInputs = function() {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (key.isDown(key.RIGHT) && key.isDown(key.UP) && !player.isPunching()) {
+	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
-			input.key = key.UP_RIGHT;
+			input.key = keys.UP_RIGHT;
 		}
 		else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-			input.key = key.RIGHT;
+			input.key = keys.RIGHT;
 		}
 		else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-			input.key = key.UP;
+			input.key = keys.UP;
 		}
 	}
-	else if (key.isDown(key.LEFT) && key.isDown(key.UP) && !player.isPunching()) {
+	else if (control.isDown(keys.LEFT) && control.isDown(keys.UP) && !player.isPunching()) {
 		if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
-			input.key = key.UP_LEFT;
+			input.key = keys.UP_LEFT;
 		}
 		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-			input.key = key.LEFT;
+			input.key = keys.LEFT;
 		}
 		else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-			input.key = key.UP;
+			input.key = keys.UP;
 		}
 	}
-	else if (key.isDown(key.DOWN) && key.isDown(key.LEFT) && !player.isPunching()) {
+	else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT) && !player.isPunching()) {
 		if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
-			input.key = key.DOWN_LEFT;
+			input.key = keys.DOWN_LEFT;
 		}
 		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-			input.key = key.LEFT;
+			input.key = keys.LEFT;
 		}
 		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-			input.key = key.DOWN;
+			input.key = keys.DOWN;
 		}
 	}
-	else if (key.isDown(key.DOWN) && key.isDown(key.RIGHT) && !player.isPunching()) {
+	else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
-			input.key = key.DOWN_RIGHT;
+			input.key = keys.DOWN_RIGHT;
 		}
 		else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-			input.key = key.RIGHT;
+			input.key = keys.RIGHT;
 		}
 		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-			input.key = key.DOWN;
+			input.key = keys.DOWN;
 		}
 	}
-	else if (key.isDown(key.RIGHT) && !player.isPunching()) {
+	else if (control.isDown(keys.RIGHT) && !player.isPunching()) {
 		if (x < screenWidth - 185){
 			if(Client.checkRightCollision(player, opponent, size))
-				input.key = key.RIGHT;
+				input.key = keys.RIGHT;
 		}
 	}
-	else if (key.isDown(key.LEFT) && !player.isPunching()) {
+	else if (control.isDown(keys.LEFT) && !player.isPunching()) {
 		if (x > -135){
 			if(Client.checkLeftCollision(player, opponent, size))
-				input.key = key.LEFT;
+				input.key = keys.LEFT;
 		}
 	}
-	else if (key.isDown(key.UP) && !player.isPunching()) {
+	else if (control.isDown(keys.UP) && !player.isPunching()) {
 		if (y > 150) {
 			if(Client.checkUpCollision(player, opponent, size))
-				input.key = key.UP;
+				input.key = keys.UP;
 		}
 	}
-	else if (key.isDown(key.DOWN) && !player.isPunching()) {
+	else if (control.isDown(keys.DOWN) && !player.isPunching()) {
 		if (y < screenHeight - 200) {
 			if(Client.checkDownCollision(player, opponent, size))
-				input.key = key.DOWN;
+				input.key = keys.DOWN;
 		}
 	}
 
-	if (input.key !== 0 && !player.isJumping() && !player.isPunching()) {
-		playerSprite.setActiveAnimation('moveAnimation');
-	} else if (input.key === 0 && !player.isJumping() && !player.isPunching()) {
-		playerSprite.setActiveAnimation('standAnimation');
+	if (player.isStanding()) {
+		if (input.key !== 0) {
+			playerSprite.setActiveAnimation('moveAnimation');
+		} else {
+			playerSprite.setActiveAnimation('standAnimation');
+		}
 	}
 
-	if(key.isDown(key.JUMP_KEY)) {
+	if (control.isDown(keys.JUMP)) {
 		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
 			playerSprite.setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
@@ -305,12 +318,31 @@ Client.processInputs = function() {
 		}
 	}
 
-	if(key.isDown(key.PUNCH_KEY)) {
-		if(!player.isPunching()) {
-			playerSprite.setActiveAnimation('punchAnimation');
+	if (control.quickTapped(keys.PUNCH)) {
+		if (!player.usingCombo()) {
+			playerSprite.setActiveAnimation('punchComboAnimation');
+			player.setUsingCombo(1);
+			Client.comboPunch();
+			input.punchCombo = true;
+			console.log('combo punch');
+		}
+	} else if (control.isDown(keys.PUNCH)) {
+		if(!player.isPunching() && !player.usingCombo()) {
+			var punchNumber = Math.ceil(Math.random() * 2);
+			input.punchKey = true;
+			playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
 			player.setPunchState(1);
 			Client.punch();
+			console.log('simple punch');
 		}
+	} else if (control.isDown(keys.DEFEND)) {
+		if (!player.isDefending()) {
+			playerSprite.setActiveAnimation('defendAnimation');
+			player.setDefending(true);
+		}
+		input.key = keys.DEFEND;
+	} else {
+		player.setDefending(false);
 	}
 
 	if (Client.prediction) {
@@ -367,18 +399,75 @@ Client.jump = function() {
 	}, 1000/30);
 };
 
-Client.punch = function() {
+Client.comboPunch = function () {
 	var t = 0;
+	var player = App.player;
 	var updateP = setInterval(function(){
-		var player = App.player;
-		t += 30;
-		if(t >= 400){
+		t += 8;
+		if(t >= 300){
+			player.setUsingCombo(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setPunchState(0);
 			clearInterval(updateP);
 		}
 	}, 1000/30);
 };
+
+Client.punch = function() {
+	var t = 0;
+	var punched = 0;
+	var screenWidth = App.canvasObj.getWidth();
+	var player = App.player;
+	var opponent = App.opponent;
+	var updateP = setInterval(function(){
+		var x = player.getLocation().getX();
+	    var y = player.getLocation().getY();
+	    var z = player.getZ();
+	    var opx = opponent.getLocation().getX();
+	    var opy = opponent.getLocation().getY();
+	    var opz = opponent.getZ();
+		t += 30;
+		if(Client.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
+			punched = 1;
+		}
+		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
+			punched = 2;
+		}
+		if (player.usingCombo()) {
+			player.setPunchState(0);
+			clearInterval(updateP);
+		}
+		if(t >= 300){
+			if(punched == 1){
+				if(opx < screenWidth - 185){
+					opx +=10;
+					Client.applyCoordinates(opponent, opx, opy, opz);
+				}
+			}
+			else if(punched == 2){
+				if(opx > -135){
+					opx -=10;
+					Client.applyCoordinates(opponent, opx, opy, opz);
+				}
+			}
+			player.setPunchState(0);
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
+Client.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getLocation().getX() < opponent.getLocation().getX() && opponent.getLocation().getX() - player.getLocation().getX() < size
+		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
+
+Client.checkPunchCollisionRight = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getLocation().getX() > opponent.getLocation().getX() && player.getLocation().getX() - opponent.getLocation().getX() < size
+		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
 
 Client.flip = function() {
 	var playerSpriteSheet = App.player.getSpriteSheet();
