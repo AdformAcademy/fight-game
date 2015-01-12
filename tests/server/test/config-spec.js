@@ -84,4 +84,4 @@ vows.describe('Config').addBatch({
 			assert.isTrue(Config.charactersPath !== undefined);
 		}
 	},
-}).export(module);
+}).run();

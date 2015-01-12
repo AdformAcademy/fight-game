@@ -50,4 +50,4 @@ vows.describe('Player collection').addBatch({
 			assert.isUndefined(player);
 		}
 	},
-}).export(module);
+}).run();

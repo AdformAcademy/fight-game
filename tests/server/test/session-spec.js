@@ -96,4 +96,4 @@ vows.describe('Session').addBatch({
 				'Session { sessionid=mockId, opponentId=mockOpponentId, state=unactive }');
 		}
 	}
-}).export(module);
+}).run();

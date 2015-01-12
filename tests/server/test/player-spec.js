@@ -217,4 +217,4 @@ vows.describe('Player').addBatch({
 			},
 		}
 	},
-}).export(module);
+}).run();
