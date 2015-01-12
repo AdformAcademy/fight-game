@@ -204,7 +204,7 @@ SocketServer.punch = function(player) {
 			punched = 2;
 		}
 		if (player.usingCombo()) {
-			player.setPunchState(false);
+			player.setPunching(false);
 			clearInterval(updateP);
 		}
 		if(t >= 300){
