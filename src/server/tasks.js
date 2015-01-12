@@ -10,11 +10,16 @@ gulp.task('browserify', function () {
     	var b = browserify(filename);
     	return b.bundle();
   	});
-  
+
+  	if (global.env === 'prod') {
+	  	return gulp.src(['./src/client/*.js'])
+		    .pipe(browserified)
+		    .pipe(uglify())
+		    .pipe(gulp.dest('./public/js/'));
+  	}
   	return gulp.src(['./src/client/*.js'])
-    .pipe(browserified)
-    //.pipe(uglify())
-    .pipe(gulp.dest('./public/js/'));
+	    .pipe(browserified)
+	    .pipe(gulp.dest('./public/js/'));
 });
 
 gulp.task('tests', function () {
@@ -26,7 +31,9 @@ gulp.task('tests', function () {
 
 Tasks.start = function() {
 	gulp.start('browserify');
-	gulp.start('tests');
+	if (global.env === 'dev') {
+		gulp.start('tests');
+	}
 }
 
 module.exports = Tasks;
