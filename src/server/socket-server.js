@@ -203,6 +203,10 @@ SocketServer.punch = function(player) {
 		if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
 		}
+		if (player.usingCombo()) {
+			player.setPunchState(false);
+			clearInterval(updateP);
+		}
 		if(t >= 300){
 			if(punched == 1){
 				if(opx < Config.screenWidth - 185){
