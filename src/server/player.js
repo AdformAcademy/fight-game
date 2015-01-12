@@ -11,6 +11,7 @@ var Player = function(params) {
   var _jumping = false;
   var _punching = false;
   var _defending = false;
+  var _usingCombo = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
   var _characterData = params.characterData;
@@ -81,6 +82,14 @@ var Player = function(params) {
 
   obj.isDefending = function () {
     return _defending;
+  };
+
+  obj.setUsingCombo = function (combo) {
+    _usingCombo = combo;
+  };
+
+  obj.usingCombo = function () {
+    return _usingCombo;
   };
 
   obj.setLastProcessedInput = function(input) {

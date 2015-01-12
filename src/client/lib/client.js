@@ -209,7 +209,9 @@ Client.processInputs = function() {
 	var input = {
 		id: Client.inputCounter,
 		key: 0,
-		jumpKey: false
+		jumpKey: false,
+		punchKey: false,
+		punchCombo: false
 	};
 
 	var keys = Config.keyBindings;
@@ -227,10 +229,6 @@ Client.processInputs = function() {
 	var opy = opponent.getLocation().getY();
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
-
-	if (control.quickTapped(keys.PUNCH)) {
-		console.log('quick tap');
-	}
 
 	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP) && !player.isPunching()) {
 		if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
@@ -320,13 +318,22 @@ Client.processInputs = function() {
 		}
 	}
 
-	if (control.isDown(keys.PUNCH)) {
-		if(!player.isPunching()) {
+	if (control.quickTapped(keys.PUNCH)) {
+		if (!player.usingCombo()) {
+			playerSprite.setActiveAnimation('punchComboAnimation');
+			player.setUsingCombo(1);
+			Client.comboPunch();
+			input.punchCombo = true;
+			console.log('combo punch');
+		}
+	} else if (control.isDown(keys.PUNCH)) {
+		if(!player.isPunching() && !player.usingCombo()) {
 			var punchNumber = Math.ceil(Math.random() * 2);
 			input.punchKey = true;
 			playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
 			player.setPunchState(1);
 			Client.punch();
+			console.log('simple punch');
 		}
 	} else if (control.isDown(keys.DEFEND)) {
 		if (!player.isDefending()) {
@@ -392,6 +399,19 @@ Client.jump = function() {
 	}, 1000/30);
 };
 
+Client.comboPunch = function () {
+	var t = 0;
+	var player = App.player;
+	var updateP = setInterval(function(){
+		t += 8;
+		if(t >= 300){
+			player.setUsingCombo(0);
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
 Client.punch = function() {
 	var t = 0;
 	var punched = 0;
@@ -411,6 +431,10 @@ Client.punch = function() {
 		}
 		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
+		}
+		if (player.usingCombo()) {
+			player.setPunchState(0);
+			clearInterval(updateP);
 		}
 		if(t >= 300){
 			if(punched == 1){

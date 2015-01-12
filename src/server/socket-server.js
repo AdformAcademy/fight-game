@@ -174,6 +174,17 @@ SocketServer.updateZ = function(player) {
 	player.setSpeedZ(speedZ);
 };
 
+SocketServer.comboPunch = function (player) {
+	var t = 0;
+	var updateP = setInterval(function(){
+		t += 8;
+		if(t >= 300){
+			player.setUsingCombo(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
 SocketServer.punch = function(player) {
 	var t = 0;
 	var punched = 0;
@@ -248,9 +259,15 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 
-	if(input.punchKey && !player.isPunching()) {
+	if (input.punchCombo && !player.usingCombo()) {
+		player.setUsingCombo(true);
+		SocketServer.comboPunch(player);
+		console.log('combo puch');
+	}
+	if(input.punchKey && !player.usingCombo() && !player.isPunching()) {
 		player.setPunching(true);
 		SocketServer.punch(player);
+		console.log('simple punch');
 	}
 	else if(input.punchKey && player.isPunching()) {
 		var inputs = SocketServer.punchInputs[player.getID()];
