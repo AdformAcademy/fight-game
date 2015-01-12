@@ -15,6 +15,7 @@ BaseConfig.keyBindings = {
 	DOWN_LEFT: 43,
 	DOWN_RIGHT: 44,
 	JUMP: 88,
+	KICK: 86,
 	PUNCH: 90,
 	DEFEND: 67
 };

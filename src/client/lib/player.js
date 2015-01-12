@@ -7,6 +7,7 @@ function Player(location, spritesheet) {
 	this.jump = 0;
 	this.punch = 0;
 	this.combo = 0;
+	this.kick = 0;
 	this.z = 0;
 	this.speedZ = 0;
 	this.depth = 0;
@@ -53,6 +54,14 @@ Player.prototype.isPunching = function(){
 	return this.punch === 1;
 };
 
+Player.prototype.setKickState = function(kickState) {
+	this.kick = kickState;
+}
+
+Player.prototype.isKicking = function() {
+	return this.kick === 1;
+}
+
 Player.prototype.getSpriteSheet = function() {
 	return this.spritesheet;
 };
@@ -67,7 +76,7 @@ Player.prototype.setDepth = function (depth) {
 	}
 };
 
-Player.prototype.getDepth = function () {
+Player.prototype.getDepth = function() {
 	return this.depth;
 };
 
@@ -89,7 +98,7 @@ Player.prototype.setUsingCombo = function (combo) {
 
 Player.prototype.isStanding = function () {
 	return !this.isJumping() && !this.isPunching()
-	 && !this.isDefending() && !this.usingCombo();
+	 && !this.isDefending() && !this.isKicking() && !this.usingCombo();
 };
 
 Player.prototype.update = function() {
