@@ -211,7 +211,8 @@ Client.processInputs = function() {
 		key: 0,
 		jumpKey: false,
 		punchKey: false,
-		punchCombo: false
+		punchCombo: false,
+		kickCombo: false
 	};
 
 	var keys = Config.keyBindings;
@@ -307,7 +308,15 @@ Client.processInputs = function() {
 		}
 	}
 
-	if (control.isDown(keys.JUMP)) {
+	if (control.quickTapped(keys.KICK)) {
+		if(!player.usingCombo()) {
+			playerSprite.setActiveAnimation('kickComboAnimation');
+			player.setUsingCombo(1);
+			Client.comboKick();
+			input.kickCombo = true;
+			console.log('kick combo');
+		}
+	} else if (control.isDown(keys.JUMP)) {
 		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
 			playerSprite.setActiveAnimation('jumpAnimation');
 			input.jumpKey = true;
@@ -316,9 +325,7 @@ Client.processInputs = function() {
 			player.setJumpState(1);
 			Client.jump();
 		}
-	}
-
-	if (control.quickTapped(keys.PUNCH)) {
+	} else if (control.quickTapped(keys.PUNCH)) {
 		if (!player.usingCombo()) {
 			playerSprite.setActiveAnimation('punchComboAnimation');
 			player.setUsingCombo(1);
@@ -335,6 +342,12 @@ Client.processInputs = function() {
 			Client.punch();
 			console.log('simple punch');
 		}
+	} else if(control.isDown(keys.KICK)) {
+		if(!player.isKicking()) {
+			playerSprite.setActiveAnimation('kickAnimation');
+			player.setKickState(1);
+			Client.kick();
+		}
 	} else if (control.isDown(keys.DEFEND)) {
 		if (!player.isDefending()) {
 			playerSprite.setActiveAnimation('defendAnimation');
@@ -343,14 +356,6 @@ Client.processInputs = function() {
 		input.key = keys.DEFEND;
 	} else {
 		player.setDefending(false);
-	}
-
-	if(control.isDown(keys.KICK)) {
-		if(!player.isKicking()) {
-			playerSprite.setActiveAnimation('kickAnimation');
-			player.setKickState(1);
-			Client.kick();
-		}
 	}
 
 	if (Client.prediction) {
@@ -420,6 +425,19 @@ Client.comboPunch = function () {
 	}, 1000/30);
 };
 
+Client.comboKick = function () {
+	var t = 0;
+	var player = App.player;
+	var updateP = setInterval(function() {
+		t += 16;
+		if(t >= 300) {
+			player.setUsingCombo(0);
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			clearInterval(updateP);
+		}
+	}, 1000 / 30);
+}
+
 Client.punch = function() {
 	var t = 0;
 	var punched = 0;
@@ -484,6 +502,10 @@ Client.kick = function() {
 		t += 30;
 		if(t >= 400){
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			player.setKickState(0);
+			clearInterval(updateP);
+		}
+		if(player.usingCombo()){
 			player.setKickState(0);
 			clearInterval(updateP);
 		}

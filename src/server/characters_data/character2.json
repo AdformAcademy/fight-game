@@ -1,8 +1,8 @@
 {
 	"spriteSheetData": {
-		"spriteSheetImage": "character1.png",
+		"spriteSheetImage": "character2.png",
 		"spriteDimensions": {
-			"width": 10240,
+			"width": 19840,
 			"height": 224,
 			"frameWidth": 320
 		},
@@ -60,7 +60,7 @@
 				"name": "kickAnimation",
 				"startFrame": 44,
 				"frames": 5,
-				"speed": 0.2,
+				"speed": 0.4,
 				"order": "asc"
 			},
 			"jumpKickAnimation": {
@@ -87,6 +87,13 @@
 			"punchComboAnimation": {
 				"name": "punchComboAnimation",
 				"startFrame": 49,
+				"frames": 6,
+				"speed": 0.5,
+				"order": "desc"
+			},
+			"kickComboAnimation": {
+				"name": "kickComboAnimation",
+				"startFrame": 56,
 				"frames": 6,
 				"speed": 0.3,
 				"order": "asc"

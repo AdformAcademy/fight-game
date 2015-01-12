@@ -10,6 +10,7 @@ var Player = function(params) {
   var _speedZ = 0;
   var _jumping = false;
   var _punching = false;
+  var _kicking = false;
   var _defending = false;
   var _usingCombo = false;
   var _lastProcessedInput = 0;
@@ -52,6 +53,10 @@ var Player = function(params) {
     return _punching;
   };
 
+  obj.isKicking = function() {
+    return _kicking;
+  }
+
   obj.setX = function(x) {
     _location.x = x;
   };
@@ -75,6 +80,10 @@ var Player = function(params) {
   obj.setPunching = function(punching) {
     _punching = punching;
   };
+
+  obj.setKicking = function (kicking) {
+    _kicking = kicking;
+  }
 
   obj.setDefending = function (defending) {
     _defending = defending;

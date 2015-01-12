@@ -14,6 +14,7 @@ SocketServer.inputs = [];
 SocketServer.proccessedInputs = [];
 SocketServer.jumpInputs = [];
 SocketServer.punchInputs = [];
+SocketServer.kickInputs = [];
 
 SocketServer.prepareSocketData = function(player, opponent) {
 	var data = {
@@ -82,6 +83,9 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.punchInputs[session.sessionId] = [];
 			SocketServer.punchInputs[targetSession.sessionId] = [];
 
+			SocketServer.kickInputs[session.sessionId] = [];
+			SocketServer.kickInputs[targetSession.sessionId] = [];
+
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
@@ -118,6 +122,7 @@ SocketServer.deleteObjects = function(session) {
 		delete SocketServer.proccessedInputs[session.sessionId];
 		delete SocketServer.jumpInputs[session.sessionId];
 		delete SocketServer.punchInputs[session.sessionId];
+		delete SocketServer.kickInputs[session.sessionId];
 	}
 };
 
@@ -185,6 +190,17 @@ SocketServer.comboPunch = function (player) {
 	}, 1000/30);
 };
 
+SocketServer.comboKick = function (player) {
+	var t = 0;
+	var updateP = setInterval(function(){
+		t += 16;
+		if(t >= 300){
+			player.setUsingCombo(false);
+			clearInterval(updateP);
+		}
+	}, 1000 / 30);
+}
+
 SocketServer.punch = function(player) {
 	var t = 0;
 	var punched = 0;
@@ -222,9 +238,24 @@ SocketServer.punch = function(player) {
 			}
 			clearInterval(updateP);
 		}
-	}, 1000/30);
+	}, 1000 / 30);
 	player.setPunching(false);
 };
+
+SocketServer.kick = function (player) {
+	var t = 0;
+	var updateP = setIntervel(function() {
+		t += 30;
+		if(t >= 300) {
+			player.setKicking(false);
+			clearInterval(updateP);
+		}
+		if(player.usingCombo()){
+			player.setKickState(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+}
 
 SocketServer.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
 	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
@@ -263,10 +294,20 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 
+	if (input.kickCombo && !player.usingCombo()) {
+		player.setUsingCombo(true);
+		SocketServer.comboKick(player);
+		console.log('combo kick');
+	} 
 	if (input.punchCombo && !player.usingCombo()) {
 		player.setUsingCombo(true);
 		SocketServer.comboPunch(player);
 		console.log('combo puch');
+	}
+	if(input.kickKey && !player.usingCombo() && !player.isKicking()) {
+		player.setKicking(true);
+		SocketServer.kick(player);
+		console.log('simple kick');
 	}
 	if(input.punchKey && !player.usingCombo() && !player.isPunching()) {
 		player.setPunching(true);
@@ -372,6 +413,7 @@ SocketServer.updatePlayer = function(player) {
 		var sessionId = player.getID();
 		var jumpInputs = SocketServer.jumpInputs[sessionId];
 		var punchInputs = SocketServer.punchInputs[sessionId];
+		var kickInputs = SocketServer.kickInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
 
 		if (input !== undefined) {
@@ -395,6 +437,14 @@ SocketServer.updatePlayer = function(player) {
 		        SocketServer.executeInput(player, input);
 		        punchInputs.shift();
 		    }
+		}
+
+		if (!player.isKicking()) {
+			var input = kickInputs[0];
+			if (input !== undefined) {
+				SocketServer.executeInput(player, input);
+				kickInputs.shift();
+			}
 		}
 	}
 };
