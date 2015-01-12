@@ -1,7 +1,7 @@
 var vows = require('vows');
 var assert = require('assert');
 
-var Config = require('../../src/server/config.js');
+var Config = require('../../../src/server/config.js');
 
 vows.describe('Config').addBatch({
 	'port': {
