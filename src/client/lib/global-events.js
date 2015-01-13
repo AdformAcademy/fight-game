@@ -53,8 +53,8 @@ socket.on('playing', function(data) {
   var buildSprite = function(image, spriteSheetData) {
     return SpriteSheet({
       image: image,
-      data: spriteSheetData
-          frames: 1,
+      data: spriteSheetData,
+      frames: 1,
     });
   };
 
