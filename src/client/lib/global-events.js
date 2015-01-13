@@ -92,7 +92,7 @@ socket.on('playing', function(data) {
         damageAnimation: {
           name: 'damageAnimation',
           startFrame: 0,
-          frames: 2,
+          frames: 1,
           speed: 0.2,
           order: 'asc'
         }

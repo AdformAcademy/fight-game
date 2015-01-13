@@ -56,32 +56,32 @@ Client.applyInput = function(player, input) {
 	var y = player.getLocation().getY();
 	var z = player.getZ();
 
-	if (input.key === keys.UP_RIGHT && !player.isPunching()) {
+	if (input.key === keys.UP_RIGHT) {
 		x += Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.UP_LEFT && !player.isPunching()) {
+	else if (input.key === keys.UP_LEFT) {
 		x -= Config.playerMoveSpeed;
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN_LEFT && !player.isPunching()) {
+	else if (input.key === keys.DOWN_LEFT) {
 		x -= Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN_RIGHT && !player.isPunching()) {
+	else if (input.key === keys.DOWN_RIGHT) {
 		x += Config.playerMoveSpeed;
 		y += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.RIGHT && !player.isPunching()) {
+	else if (input.key === keys.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.LEFT && !player.isPunching()) {
+	else if (input.key === keys.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.UP && !player.isPunching()) {
+	else if (input.key === keys.UP) {
 		y -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.DOWN && !player.isPunching()) {
+	else if (input.key === keys.DOWN) {
 		y += Config.playerMoveSpeed;
 	}
 
@@ -161,11 +161,16 @@ Client.processServerData = function() {
     	var state = Client.serverData[i];
     	var x = state.player.x;
     	var y = state.player.y;
+    	var ppunched = state.player.punched;
     	var ox = state.opponent.x;
     	var oy = state.opponent.y;
+    	var opunched = state.opponent.punched;
     	var oz = state.opponent.z;
 
     	Client.applyCoordinates(App.player, x, y, null);
+
+    	App.player.setPunched(ppunched);
+    	App.opponent.setPunched(opunched);
 
     	if (Client.interpolation) {
     		Client.appendOpponentInputs(state.opponent.sequence);
@@ -195,7 +200,6 @@ Client.processInputs = function() {
 
 	var keys = Config.keyBindings;
 	var control = Client.Key;
-	var test = Config.playerMoveSpeed;
 	var screenWidth = App.canvasObj.getWidth();
 	var screenHeight = App.canvasObj.getHeight();
 	var player = App.player;
@@ -209,103 +213,109 @@ Client.processInputs = function() {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP) && !player.isPunching()) {
-		if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_RIGHT;
-		}
-		else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.LEFT) && control.isDown(keys.UP) && !player.isPunching()) {
-		if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_LEFT;
-		}
-		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT) && !player.isPunching()) {
-		if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
-			input.key = keys.DOWN_LEFT;
-		}
-		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT) && !player.isPunching()) {
-		if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
-			input.key = keys.DOWN_RIGHT;
-		}
-		else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.RIGHT) && !player.isPunching()) {
-		if (x < screenWidth - 185){
-			if(Client.checkRightCollision(player, opponent, size))
+	if(!player.isPunching()/* && !player.isPunched()*/){
+
+		if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
+			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
+				input.key = keys.UP_RIGHT;
+			}
+			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
 				input.key = keys.RIGHT;
-		}
-	}
-	else if (control.isDown(keys.LEFT) && !player.isPunching()) {
-		if (x > -135){
-			if(Client.checkLeftCollision(player, opponent, size))
-				input.key = keys.LEFT;
-		}
-	}
-	else if (control.isDown(keys.UP) && !player.isPunching()) {
-		if (y > 150) {
-			if(Client.checkUpCollision(player, opponent, size))
+			}
+			else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
 				input.key = keys.UP;
+			}
 		}
-	}
-	else if (control.isDown(keys.DOWN) && !player.isPunching()) {
-		if (y < screenHeight - 200) {
-			if(Client.checkDownCollision(player, opponent, size))
+		else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
+			if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
+				input.key = keys.UP_LEFT;
+			}
+			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
+				input.key = keys.LEFT;
+			}
+			else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
+				input.key = keys.UP;
+			}
+		}
+		else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
+			if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
+				input.key = keys.DOWN_LEFT;
+			}
+			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
+				input.key = keys.LEFT;
+			}
+			else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
 				input.key = keys.DOWN;
+			}
+		}
+		else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
+			if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
+				input.key = keys.DOWN_RIGHT;
+			}
+			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
+				input.key = keys.RIGHT;
+			}
+			else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
+				input.key = keys.DOWN;
+			}
+		}
+		else if (control.isDown(keys.RIGHT)) {
+			if (x < screenWidth - 185){
+				if(Client.checkRightCollision(player, opponent, size))
+					input.key = keys.RIGHT;
+			}
+		}
+		else if (control.isDown(keys.LEFT)) {
+			if (x > -135){
+				if(Client.checkLeftCollision(player, opponent, size))
+					input.key = keys.LEFT;
+			}
+		}
+		else if (control.isDown(keys.UP)) {
+			if (y > 150) {
+				if(Client.checkUpCollision(player, opponent, size))
+					input.key = keys.UP;
+			}
+		}
+		else if (control.isDown(keys.DOWN)) {
+			if (y < screenHeight - 200) {
+				if(Client.checkDownCollision(player, opponent, size))
+					input.key = keys.DOWN;
+			}
+		}
+		if (control.isDown(keys.JUMP)) {
+			if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
+				playerSprite.setActiveAnimation('jumpAnimation');
+				input.jumpKey = true;
+				speedZ = Config.playerJumpSpeed;
+				player.setSpeedZ(speedZ);
+				player.setJumpState(1);
+				Client.jump();
+			}
 		}
 	}
 
 	if (player.isStanding()) {
 		if (input.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
-		} else {
+		}
+		else if(player.isPunched()){
+			playerSprite.setActiveAnimation('damageAnimation');
+		}
+		else {
 			playerSprite.setActiveAnimation('standAnimation');
 		}
 	}
 
-	if (control.isDown(keys.JUMP)) {
-		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
-			playerSprite.setActiveAnimation('jumpAnimation');
-			input.jumpKey = true;
-			speedZ = Config.playerJumpSpeed;
-			player.setSpeedZ(speedZ);
-			player.setJumpState(1);
-			Client.jump();
-		}
-	}
-
 	if (control.isDown(keys.PUNCH)) {
-		if(!player.isPunching()) {
+		if(!player.isPunching() && !player.isPunched()) {
 			input.punchKey = true;
 			playerSprite.setActiveAnimation('punchAnimation');
 			player.setPunchState(1);
 			Client.punch();
 		}
 	} else if (control.isDown(keys.DEFEND)) {
-		if (!player.isDefending()) {
+		if (!player.isDefending() && !player.isPunched()) {
 			playerSprite.setActiveAnimation('defendAnimation');
 			player.setDefending(true);
 		}
@@ -382,28 +392,33 @@ Client.punch = function() {
 	    var opy = opponent.getLocation().getY();
 	    var opz = opponent.getZ();
 		t += 30;
-		if(Client.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
+		if(Client.checkPunchCollisionLeft(player, opponent, 65, 60, 40) && !opponent.isDefending()){
 			punched = 1;
+			opponent.setPunched(true);
+			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
 		}
-		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
+		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40) && !opponent.isDefending()){
 			punched = 2;
+			opponent.setPunched(true);
+			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
 		}
 		if(t >= 300){
 			if(punched == 1){
 				if(opx < screenWidth - 185){
-					opx +=10;
-					Client.applyCoordinates(opponent, opx, opy, opz);
+					//opx += 5;
+					//Client.applyCoordinates(opponent, opx, opy, opz);
+					opponent.setPunched(false);
 				}
 			}
 			else if(punched == 2){
 				if(opx > -135){
-					opx -=10;
-					Client.applyCoordinates(opponent, opx, opy, opz);
+					//opx -= 5;
+					//Client.applyCoordinates(opponent, opx, opy, opz);
+					opponent.setPunched(false);
 				}
 			}
 			player.setPunchState(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
 			clearInterval(updateP);
 		}
 	}, 1000/30);

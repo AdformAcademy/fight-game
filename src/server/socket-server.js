@@ -20,12 +20,14 @@ SocketServer.prepareSocketData = function(player, opponent) {
 			x: player.getX(),
 			y: player.getY(),
 			z: player.getZ(),
+			punched: player.isPunched(),
 			input: player.getLastProcessedInput()
 		},
 		opponent: {
 			x: opponent.getX(),
 			y: opponent.getY(),
-			z: opponent.getZ(), 
+			z: opponent.getZ(),
+			punched: opponent.isPunched(), 
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || []
 		}
 	};
@@ -180,21 +182,25 @@ SocketServer.punch = function(player) {
 		t += 30;
 		if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
 			punched = 1;
+			opponent.setPunched(true);
 		}
 		if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
+			opponent.setPunched(true);
 		}
 		if(t >= 300){
 			if(punched == 1){
 				if(opx < Config.screenWidth - 185){
-					opx +=10;
+					opx += 5;
 					opponent.setX(opx);
+					opponent.setPunched(false);
 				}
 			}
 			else if(punched == 2){
 				if(opx > -135){
-					opx -=10;
+					opx -= 5;
 					opponent.setX(opx);
+					opponent.setPunched(false);
 				}
 			}
 			clearInterval(updateP);
@@ -228,75 +234,76 @@ SocketServer.executeInput = function(player, input) {
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
-	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize) {
+	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize && !player.isPunched()) {
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
 	}
-	else if(input.jumpKey && player.isJumping()) {
+	else if(input.jumpKey && player.isJumping() && !player.isPunched()) {
 		var inputs = SocketServer.jumpInputs[player.getID()];
 		if(inputs !== undefined) {
 			inputs.push(input);
 		}
 	}
 
-	if(input.punchKey && !player.isPunching()) {
+	if(input.punchKey && !player.isPunching() && !player.isPunched()) {
 		player.setPunching(true);
 		SocketServer.punch(player);
 	}
-	else if(input.punchKey && player.isPunching()) {
+	else if(input.punchKey && player.isPunching() && !player.isPunched()) {
 		var inputs = SocketServer.punchInputs[player.getID()];
 		if(inputs !== undefined) {
 			inputs.push(input);
 		}
 	}
+	if(!player.isPunching() /*&& !player.isPunched()*/){
 
-	if(input.key === key.UP_LEFT && !player.isPunching()) {
-		if(SocketServer.checkUpCollision(player, opponent, size))
-			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(player, opponent, size))
-			x -= Config.playerMoveSpeed;
+		if(input.key === key.UP_LEFT) {
+			if(SocketServer.checkUpCollision(player, opponent, size))
+				y -= Config.playerMoveSpeed;
+			if(SocketServer.checkLeftCollision(player, opponent, size))
+				x -= Config.playerMoveSpeed;
+		}
+		else if(input.key === key.UP_RIGHT) {
+			if(SocketServer.checkUpCollision(player, opponent, size))
+				y -= Config.playerMoveSpeed;
+			if(SocketServer.checkRightCollision(player, opponent, size))
+				x += Config.playerMoveSpeed;
+		}
+		else if(input.key === key.DOWN_LEFT) {
+			if(SocketServer.checkDownCollision(player, opponent, size))
+				y += Config.playerMoveSpeed;
+			if(SocketServer.checkLeftCollision(player, opponent, size))
+				x -= Config.playerMoveSpeed;
+		}
+		else if(input.key === key.DOWN_RIGHT) {
+			if(SocketServer.checkDownCollision(player, opponent, size))
+				y += Config.playerMoveSpeed;
+			if(SocketServer.checkRightCollision(player, opponent, size))
+				x += Config.playerMoveSpeed;
+		}
+		else if(input.key === key.LEFT) {
+			if(SocketServer.checkLeftCollision(player, opponent, size))
+				x -= Config.playerMoveSpeed;
+		}
+		else if(input.key === key.RIGHT) {
+			if(SocketServer.checkRightCollision(player, opponent, size))
+				x += Config.playerMoveSpeed;
+		}
+		else if(input.key === key.UP) {
+			if(SocketServer.checkUpCollision(player, opponent, size))
+				y -= Config.playerMoveSpeed;
+		}
+		else if(input.key === key.DOWN) {
+			if(SocketServer.checkDownCollision(player, opponent, size))
+				y += Config.playerMoveSpeed;
+		}
+		else if (input.key === key.DEFEND) {
+			player.setDefending(true);
+		} else {
+			player.setDefending(false);
+		}
 	}
-	else if(input.key === key.UP_RIGHT && !player.isPunching()) {
-		if(SocketServer.checkUpCollision(player, opponent, size))
-			y -= Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(player, opponent, size))
-			x += Config.playerMoveSpeed;
-	}
-	else if(input.key === key.DOWN_LEFT && !player.isPunching()) {
-		if(SocketServer.checkDownCollision(player, opponent, size))
-			y += Config.playerMoveSpeed;
-		if(SocketServer.checkLeftCollision(player, opponent, size))
-			x -= Config.playerMoveSpeed;
-	}
-	else if(input.key === key.DOWN_RIGHT && !player.isPunching()) {
-		if(SocketServer.checkDownCollision(player, opponent, size))
-			y += Config.playerMoveSpeed;
-		if(SocketServer.checkRightCollision(player, opponent, size))
-			x += Config.playerMoveSpeed;
-	}
-	else if(input.key === key.LEFT && !player.isPunching()) {
-		if(SocketServer.checkLeftCollision(player, opponent, size))
-			x -= Config.playerMoveSpeed;
-	}
-	else if(input.key === key.RIGHT && !player.isPunching()) {
-		if(SocketServer.checkRightCollision(player, opponent, size))
-			x += Config.playerMoveSpeed;
-	}
-	else if(input.key === key.UP && !player.isPunching()) {
-		if(SocketServer.checkUpCollision(player, opponent, size))
-			y -= Config.playerMoveSpeed;
-	}
-	else if(input.key === key.DOWN && !player.isPunching()) {
-		if(SocketServer.checkDownCollision(player, opponent, size))
-			y += Config.playerMoveSpeed;
-	}
-	else if (input.key === key.DEFEND) {
-		player.setDefending(true);
-	} else {
-		player.setDefending(false);
-	}
-
 	player.setX(x);
 	player.setY(y);
 	player.setCurrentAnimation(input.animationName);

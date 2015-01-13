@@ -10,6 +10,7 @@ function Player(location, spritesheet) {
 	this.speedZ = 0;
 	this.depth = 0;
 	this.defending = false;
+	this.punched = false;
 };
 
 Player.prototype.getLocation = function() {
@@ -74,6 +75,14 @@ Player.prototype.isDefending = function () {
 
 Player.prototype.setDefending = function (defending) {
 	this.defending = defending;
+};
+
+Player.prototype.isPunched = function () {
+	return this.punched;
+};
+
+Player.prototype.setPunched = function (punched) {
+	this.punched = punched;
 };
 
 Player.prototype.isStanding = function () {
