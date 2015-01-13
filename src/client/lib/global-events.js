@@ -39,70 +39,27 @@ $(window).mousemove(function(event) {
 });
 
 socket.on('playing', function(data) {
+
+  var playerSpriteData = data.player.data;
+  var opponentSpriteData = data.opponent.data;
   var playerSpriteImage = new Image();
-  playerSpriteImage.src = './img/' + data.player.image;
+  playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
   var opponentSpriteImage = new Image();
-  opponentSpriteImage.src = './img/' + data.opponent.image;
+  opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
-  var getSprite = function(image) {
+  console.log(data.player.data);
+
+  var buildSprite = function(image, spriteSheetData) {
     return SpriteSheet({
       image: image,
-      spriteDimensions: {
-        width: 10240,
-        height: 224,
-        frameWidth: 320
-      },
-      animations: {
-        standAnimation: {
-          name: 'standAnimation',
-          startFrame: 28,
-          frames: 4,
-          speed: 0.2,
-          order: 'asc'
-        },
-        moveAnimation: {
-          name: 'moveAnimation',
-          startFrame: 8,
-          frames: 6,
-          speed: 0.2,
-          order: 'desc'
-        },
-        jumpAnimation: {
-          name: 'jumpAnimation',
-          startFrame: 2,
-          frames: 6,
-          speed: 0.2,
-          order: 'asc'
-        },
-        punchAnimation: {
-          name: 'punchAnimation',
-          startFrame: 25,
-          frames: 2,
-          speed: 0.2,
-          order: 'asc'
-        },
-        defendAnimation: {
-          name: 'defendAnimation',
-          startFrame: 0,
-          frames: 2,
-          speed: 0.2,
-          order: 'asc'
-        },
-        damageAnimation: {
-          name: 'damageAnimation',
-          startFrame: 0,
+      data: spriteSheetData
           frames: 1,
-          speed: 0.2,
-          order: 'asc'
-        }
-      },
-      defaultAnimation: 'standAnimation'
     });
   };
 
-  var playerSprite = getSprite(playerSpriteImage);
-  var opponentSprite = getSprite(opponentSpriteImage);
+  var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
+  var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);

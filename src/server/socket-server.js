@@ -4,6 +4,7 @@ var SessionCollection = require('./session-collection');
 var PlayerCollection = require('./player-collection');
 var Player = require('./player');
 var Config = require('./config');
+var fs = require('fs');
 
 var SocketServer = function() {};
 
@@ -13,6 +14,7 @@ SocketServer.inputs = [];
 SocketServer.proccessedInputs = [];
 SocketServer.jumpInputs = [];
 SocketServer.punchInputs = [];
+SocketServer.kickInputs = [];
 
 SocketServer.prepareSocketData = function(player, opponent) {
 	var data = {
@@ -47,19 +49,26 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.opponentId = session.sessionId;
 			targetSession.state = Session.PLAYING;
 
+			var playerData = JSON.parse(
+				fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
+			var opponentData = JSON.parse(
+				fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
+
 			var player = Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
 				x: Config.firstSpawnLocation.x,
 				y: Config.firstSpawnLocation.y,
-				z: Config.firstSpawnLocation.z
+				z: Config.firstSpawnLocation.z,
+				characterData: playerData
 			});
 			var opponent = Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
 				x: Config.secondSpawnLocation.x,
 				y: Config.secondSpawnLocation.y,
-				z: Config.secondSpawnLocation.z
+				z: Config.secondSpawnLocation.z,
+				characterData: opponentData
 			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
@@ -76,28 +85,31 @@ SocketServer.prepareClient = function (socket) {
 			SocketServer.punchInputs[session.sessionId] = [];
 			SocketServer.punchInputs[targetSession.sessionId] = [];
 
+			SocketServer.kickInputs[session.sessionId] = [];
+			SocketServer.kickInputs[targetSession.sessionId] = [];
+
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png'
+					data: playerData.spriteSheetData
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png'
+					data: opponentData.spriteSheetData
 				}
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					image: 'player2.png'
+					data: opponentData.spriteSheetData
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
-					image: 'player1.png'
+					data: playerData.spriteSheetData
 				}
 			});
 		}
@@ -112,6 +124,7 @@ SocketServer.deleteObjects = function(session) {
 		delete SocketServer.proccessedInputs[session.sessionId];
 		delete SocketServer.jumpInputs[session.sessionId];
 		delete SocketServer.punchInputs[session.sessionId];
+		delete SocketServer.kickInputs[session.sessionId];
 	}
 };
 
@@ -168,6 +181,28 @@ SocketServer.updateZ = function(player) {
 	player.setSpeedZ(speedZ);
 };
 
+SocketServer.comboPunch = function (player) {
+	var t = 0;
+	var updateP = setInterval(function(){
+		t += 8;
+		if(t >= 300){
+			player.setUsingCombo(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
+SocketServer.comboKick = function (player) {
+	var t = 0;
+	var updateP = setInterval(function(){
+		t += 16;
+		if(t >= 300){
+			player.setUsingCombo(false);
+			clearInterval(updateP);
+		}
+	}, 1000 / 30);
+}
+
 SocketServer.punch = function(player) {
 	var t = 0;
 	var punched = 0;
@@ -188,6 +223,10 @@ SocketServer.punch = function(player) {
 			punched = 2;
 			opponent.setPunched(true);
 		}
+		if (player.usingCombo()) {
+			player.setPunching(false);
+			clearInterval(updateP);
+		}
 		if(t >= 300){
 			if(punched == 1){
 				if(opx < Config.screenWidth - 185){
@@ -205,9 +244,24 @@ SocketServer.punch = function(player) {
 			}
 			clearInterval(updateP);
 		}
-	}, 1000/30);
+	}, 1000 / 30);
 	player.setPunching(false);
 };
+
+SocketServer.kick = function (player) {
+	var t = 0;
+	var updateP = setIntervel(function() {
+		t += 30;
+		if(t >= 300) {
+			player.setKicking(false);
+			clearInterval(updateP);
+		}
+		if(player.usingCombo()){
+			player.setKickState(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+}
 
 SocketServer.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
 	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
@@ -246,9 +300,25 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 
-	if(input.punchKey && !player.isPunching() && !player.isPunched()) {
+	if (input.kickCombo && !player.usingCombo()) {
+		player.setUsingCombo(true);
+		SocketServer.comboKick(player);
+		console.log('combo kick');
+	} 
+	if (input.punchCombo && !player.usingCombo()) {
+		player.setUsingCombo(true);
+		SocketServer.comboPunch(player);
+		console.log('combo puch');
+	}
+	if(input.kickKey && !player.usingCombo() && !player.isKicking()) {
+		player.setKicking(true);
+		SocketServer.kick(player);
+		console.log('simple kick');
+	}
+	if(input.punchKey && !player.usingCombo() && !player.isPunching()) {
 		player.setPunching(true);
 		SocketServer.punch(player);
+		console.log('simple punch');
 	}
 	else if(input.punchKey && player.isPunching() && !player.isPunched()) {
 		var inputs = SocketServer.punchInputs[player.getID()];
@@ -350,6 +420,7 @@ SocketServer.updatePlayer = function(player) {
 		var sessionId = player.getID();
 		var jumpInputs = SocketServer.jumpInputs[sessionId];
 		var punchInputs = SocketServer.punchInputs[sessionId];
+		var kickInputs = SocketServer.kickInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
 
 		if (input !== undefined) {
@@ -373,6 +444,14 @@ SocketServer.updatePlayer = function(player) {
 		        SocketServer.executeInput(player, input);
 		        punchInputs.shift();
 		    }
+		}
+
+		if (!player.isKicking()) {
+			var input = kickInputs[0];
+			if (input !== undefined) {
+				SocketServer.executeInput(player, input);
+				kickInputs.shift();
+			}
 		}
 	}
 };

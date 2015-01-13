@@ -11,9 +11,12 @@ var Player = function(params) {
   var _jumping = false;
   var _punching = false;
   var _punched = false;
+  var _kicking = false;
   var _defending = false;
+  var _usingCombo = false;
   var _lastProcessedInput = 0;
   var _currentAnimation = 0;
+  var _characterData = params.characterData;
 
   obj.getID = function() {
     return _id;
@@ -54,6 +57,9 @@ var Player = function(params) {
   obj.isPunched = function() {
     return _punched;
   };
+  obj.isKicking = function() {
+    return _kicking;
+  }
 
   obj.setX = function(x) {
     _location.x = x;
@@ -83,12 +89,24 @@ var Player = function(params) {
     _punched = punched;
   };
 
+  obj.setKicking = function (kicking) {
+    _kicking = kicking;
+  }
+
   obj.setDefending = function (defending) {
     _defending = defending;
   };
 
   obj.isDefending = function () {
     return _defending;
+  };
+
+  obj.setUsingCombo = function (combo) {
+    _usingCombo = combo;
+  };
+
+  obj.usingCombo = function () {
+    return _usingCombo;
   };
 
   obj.setLastProcessedInput = function(input) {
@@ -105,6 +123,10 @@ var Player = function(params) {
 
   obj.getCurrentAnimation = function () {
     return _currentAnimation;
+  };
+
+  obj.getCharacterData = function () {
+    return _characterData;
   };
 
   obj.toPacket = function() {

@@ -6,6 +6,8 @@ function Player(location, spritesheet) {
 	this.spritesheet = spritesheet;
 	this.jump = 0;
 	this.punch = 0;
+	this.combo = 0;
+	this.kick = 0;
 	this.z = 0;
 	this.speedZ = 0;
 	this.depth = 0;
@@ -53,6 +55,14 @@ Player.prototype.isPunching = function(){
 	return this.punch === 1;
 };
 
+Player.prototype.setKickState = function(kickState) {
+	this.kick = kickState;
+}
+
+Player.prototype.isKicking = function() {
+	return this.kick === 1;
+}
+
 Player.prototype.getSpriteSheet = function() {
 	return this.spritesheet;
 };
@@ -62,10 +72,12 @@ Player.prototype.setSpriteSheet = function(spritesheet) {
 };
 
 Player.prototype.setDepth = function (depth) {
-	this.depth = depth;
+	if (depth <= 1 && depth >= 0) {
+		this.depth = depth;
+	}
 };
 
-Player.prototype.getDepth = function () {
+Player.prototype.getDepth = function() {
 	return this.depth;
 };
 
@@ -85,8 +97,17 @@ Player.prototype.setPunched = function (punched) {
 	this.punched = punched;
 };
 
+Player.prototype.usingCombo = function () {
+	return this.combo === 1;
+};
+
+Player.prototype.setUsingCombo = function (combo) {
+	this.combo = combo;
+};
+
 Player.prototype.isStanding = function () {
-	return !this.isJumping() && !this.isPunching() && !this.isDefending();
+	return !this.isJumping() && !this.isPunching()
+	 && !this.isDefending() && !this.isKicking() && !this.usingCombo();
 };
 
 Player.prototype.update = function() {

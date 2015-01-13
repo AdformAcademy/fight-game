@@ -19,5 +19,6 @@ Config.secondSpawnLocation = {
 	y: 300,
 	z: 0
 };
+Config.charactersPath = 'src/server/characters_data/';
 
 module.exports = Config

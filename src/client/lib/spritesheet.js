@@ -4,10 +4,11 @@ var SpriteSheet = function(params) {
 
 	var _canvas = App.canvasObj.canvas;
 	var _image = params.image;
-	var _animations = params.animations;
-	var _dimensions = params.spriteDimensions;
+	var _data = params.data;
+	var _animations = _data.animations;
+	var _dimensions = _data.spriteDimensions;
 
-	var _activeAnimation = _animations[params.defaultAnimation];
+	var _activeAnimation = _animations[_data.defaultAnimation];
 	var _order = _activeAnimation.order;
 
 	var _speed = _order === 'asc' ? Math.abs(_activeAnimation.speed)
