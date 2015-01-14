@@ -183,9 +183,12 @@ SocketServer.updateZ = function(player) {
 
 SocketServer.comboPunch = function (player) {
 	var t = 0;
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	opponent.setPunched(3);
 	var updateP = setInterval(function(){
-		t += 8;
-		if(t >= 300){
+		t += 30;
+		if(t >= 1000){
+			opponent.setPunched(0);
 			player.setUsingCombo(false);
 			clearInterval(updateP);
 		}
@@ -194,9 +197,12 @@ SocketServer.comboPunch = function (player) {
 
 SocketServer.comboKick = function (player) {
 	var t = 0;
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	opponent.setPunched(4);
 	var updateP = setInterval(function(){
-		t += 16;
-		if(t >= 300){
+		t += 30;
+		if(t >= 600){
+			opponent.setPunched(0);
 			player.setUsingCombo(false);
 			clearInterval(updateP);
 		}
@@ -208,20 +214,16 @@ SocketServer.punch = function(player) {
 	var punched = 0;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
-    var y = player.getY();
-    var z = player.getZ();
     var opx = opponent.getX();
-    var opy = opponent.getY();
-    var opz = opponent.getZ();
 	var updateP = setInterval(function(){
 		t += 30;
 		if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
 			punched = 1;
-			opponent.setPunched(true);
+			opponent.setPunched(1);
 		}
 		if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
 			punched = 2;
-			opponent.setPunched(true);
+			opponent.setPunched(1);
 		}
 		if (player.usingCombo()) {
 			player.setPunching(false);
@@ -232,14 +234,14 @@ SocketServer.punch = function(player) {
 				if(opx < Config.screenWidth - 185){
 					opx += 5;
 					opponent.setX(opx);
-					opponent.setPunched(false);
+					opponent.setPunched(0);
 				}
 			}
 			else if(punched == 2){
 				if(opx > -135){
 					opx -= 5;
 					opponent.setX(opx);
-					opponent.setPunched(false);
+					opponent.setPunched(0);
 				}
 			}
 			clearInterval(updateP);
@@ -250,17 +252,44 @@ SocketServer.punch = function(player) {
 
 SocketServer.kick = function (player) {
 	var t = 0;
-	var updateP = setIntervel(function() {
+	var kicked = 0;
+	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
+	var x = player.getX();
+    var opx = opponent.getX();
+	var updateK = setInterval(function() {
 		t += 30;
-		if(t >= 300) {
-			player.setKicking(false);
-			clearInterval(updateP);
+		if(SocketServer.checkPunchCollisionLeft(player, opponent, 80, 60, 40)){
+			kicked = 1;
+			opponent.setPunched(2);
+		}
+		if(SocketServer.checkPunchCollisionRight(player, opponent, 80, 60, 40)){
+			kicked = 2;
+			opponent.setPunched(2);
 		}
 		if(player.usingCombo()){
-			player.setKickState(false);
-			clearInterval(updateP);
+			player.setKicking(false);
+			clearInterval(updateK);
+		}
+		if(t >= 400) {
+			if(kicked == 1){
+				if(opx < Config.screenWidth - 185){
+					opx += 10;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			else if(kicked == 2){
+				if(opx > -135){
+					opx -= 10;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			clearInterval(updateK);
+			player.setKicking(false);
 		}
 	}, 1000/30);
+	player.setKicking(false);
 }
 
 SocketServer.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
@@ -315,12 +344,18 @@ SocketServer.executeInput = function(player, input) {
 		SocketServer.kick(player);
 		console.log('simple kick');
 	}
+	else if(input.punchKey && player.isKicking() && player.isPunched() == 0) {
+		var inputs = SocketServer.punchInputs[player.getID()];
+		if(inputs !== undefined) {
+			inputs.push(input);
+		}
+	}
 	if(input.punchKey && !player.usingCombo() && !player.isPunching()) {
 		player.setPunching(true);
 		SocketServer.punch(player);
 		console.log('simple punch');
 	}
-	else if(input.punchKey && player.isPunching() && !player.isPunched()) {
+	else if(input.punchKey && player.isPunching() && player.isPunched() == 0) {
 		var inputs = SocketServer.punchInputs[player.getID()];
 		if(inputs !== undefined) {
 			inputs.push(input);

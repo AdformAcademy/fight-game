@@ -216,6 +216,7 @@ Client.processInputs = function() {
 		key: 0,
 		jumpKey: false,
 		punchKey: false,
+		kickKey: false,
 		punchCombo: false,
 		kickCombo: false
 	};
@@ -231,11 +232,12 @@ Client.processInputs = function() {
 	var y = player.getLocation().getY();
 	var z = player.getZ();
 	var opponent = App.opponent;
+	var opponentSprite = App.opponent.getSpriteSheet();
 	var opy = opponent.getLocation().getY();
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if(!player.isPunching() && !player.isPunched()){
+	if(!player.isPunching() && player.isPunched() == 0){
 
 		if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
 			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
@@ -345,9 +347,11 @@ Client.processInputs = function() {
 		}
 		else if(control.isDown(keys.KICK)) {
 			if(!player.isKicking()) {
+				input.kickKey = true;
 				playerSprite.setActiveAnimation('kickAnimation');
 				player.setKickState(1);
 				Client.kick();
+				console.log('simple kick');
 			}
 		}
 		else if (control.isDown(keys.DEFEND)) {
@@ -364,10 +368,10 @@ Client.processInputs = function() {
 		if (input.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}
-		else if(player.isPunched()){
+		else if(player.isPunched() == 1 || player.isPunched() == 2 || player.isPunched() == 3){
 			playerSprite.setActiveAnimation('damageAnimation');
 		}
-		else {
+		else if(player.isPunched() == 0){
 			playerSprite.setActiveAnimation('standAnimation');
 		}
 	}
@@ -430,8 +434,8 @@ Client.comboPunch = function () {
 	var t = 0;
 	var player = App.player;
 	var updateP = setInterval(function(){
-		t += 8;
-		if(t >= 300){
+		t += 30;
+		if(t >= 1000){
 			player.setUsingCombo(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
@@ -443,8 +447,8 @@ Client.comboKick = function () {
 	var t = 0;
 	var player = App.player;
 	var updateP = setInterval(function() {
-		t += 16;
-		if(t >= 300) {
+		t += 30;
+		if(t >= 600) {
 			player.setUsingCombo(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
@@ -454,47 +458,14 @@ Client.comboKick = function () {
 
 Client.punch = function() {
 	var t = 0;
-	var punched = 0;
-	var screenWidth = App.canvasObj.getWidth();
-	var player = App.player;
-	var opponent = App.opponent;
 	var updateP = setInterval(function(){
-		var x = player.getLocation().getX();
-	    var y = player.getLocation().getY();
-	    var z = player.getZ();
-	    var opx = opponent.getLocation().getX();
-	    var opy = opponent.getLocation().getY();
-	    var opz = opponent.getZ();
+		var player = App.player;
 		t += 30;
-		if(Client.checkPunchCollisionLeft(player, opponent, 65, 60, 40) && !opponent.isDefending()){
-			punched = 1;
-			opponent.setPunched(true);
-			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
-		}
-		if(Client.checkPunchCollisionRight(player, opponent, 65, 60, 40) && !opponent.isDefending()){
-			punched = 2;
-			opponent.setPunched(true);
-			opponent.getSpriteSheet().setActiveAnimation('damageAnimation');
-		}
 		if (player.usingCombo()) {
 			player.setPunchState(0);
 			clearInterval(updateP);
 		}
 		if(t >= 300){
-			if(punched == 1){
-				if(opx < screenWidth - 185){
-					//opx += 5;
-					//Client.applyCoordinates(opponent, opx, opy, opz);
-					opponent.setPunched(false);
-				}
-			}
-			else if(punched == 2){
-				if(opx > -135){
-					//opx -= 5;
-					//Client.applyCoordinates(opponent, opx, opy, opz);
-					opponent.setPunched(false);
-				}
-			}
 			player.setPunchState(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
@@ -502,29 +473,17 @@ Client.punch = function() {
 	}, 1000/30);
 };
 
-Client.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
-	return (player.getLocation().getX() < opponent.getLocation().getX() && opponent.getLocation().getX() - player.getLocation().getX() < size
-		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
-
-Client.checkPunchCollisionRight = function(player, opponent, size, heightDifference, yDifference) {
-	return (player.getLocation().getX() > opponent.getLocation().getX() && player.getLocation().getX() - opponent.getLocation().getX() < size
-		&& (Math.abs(player.getLocation().getY() - opponent.getLocation().getY()) <= yDifference)
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
-
 Client.kick = function() {
 	var t = 0;
 	var updateP = setInterval(function(){
 		var player = App.player;
 		t += 30;
-		if(t >= 400){
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
+		if(player.usingCombo()){
 			player.setKickState(0);
 			clearInterval(updateP);
 		}
-		if(player.usingCombo()){
+		if(t >= 400){
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setKickState(0);
 			clearInterval(updateP);
 		}
@@ -591,5 +550,6 @@ Client.start = function() {
 	Client.isRunning = true;
 	Client.updateWorldInterval = setInterval(function() {
 		Client.update();
+		console.log(App.player.isPunched());
 	}, 1000 / 30);
 };

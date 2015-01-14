@@ -52,8 +52,8 @@
 			"damageAnimation": {
 				"name": "damageAnimation",
 				"startFrame": 0,
-				"frames": 2,
-				"speed": 0.2,
+				"frames": 1,
+				"speed": 10.0,
 				"order": "asc"
 			},
 			"kickAnimation": {

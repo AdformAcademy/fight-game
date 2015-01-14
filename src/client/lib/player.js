@@ -12,7 +12,7 @@ function Player(location, spritesheet) {
 	this.speedZ = 0;
 	this.depth = 0;
 	this.defending = false;
-	this.punched = false;
+	this.punched = 0;
 };
 
 Player.prototype.getLocation = function() {
