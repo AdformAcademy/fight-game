@@ -237,10 +237,11 @@ Client.processInputs = function() {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if(!player.isPunching() && player.isPunched() == 0){
+	if(!player.isPunching()&& !player.isKicking() && player.isPunched() == 0){
 
 		if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
-			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
+			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size)
+				&& Client.checkUpCollision(player, opponent, size)) {
 				input.key = keys.UP_RIGHT;
 			}
 			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
@@ -251,7 +252,8 @@ Client.processInputs = function() {
 			}
 		}
 		else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
-			if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size) && Client.checkUpCollision(player, opponent, size)) {
+			if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size)
+				&& Client.checkUpCollision(player, opponent, size)) {
 				input.key = keys.UP_LEFT;
 			}
 			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
@@ -262,7 +264,8 @@ Client.processInputs = function() {
 			}
 		}
 		else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
-			if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
+			if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size)
+				&& Client.checkDownCollision(player, opponent, size)){
 				input.key = keys.DOWN_LEFT;
 			}
 			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
@@ -273,7 +276,8 @@ Client.processInputs = function() {
 			}
 		}
 		else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
-			if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size) && Client.checkDownCollision(player, opponent, size)){
+			if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size)
+				&& Client.checkDownCollision(player, opponent, size)){
 				input.key = keys.DOWN_RIGHT;
 			}
 			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
@@ -307,16 +311,38 @@ Client.processInputs = function() {
 					input.key = keys.DOWN;
 			}
 		}
-		if (control.quickTapped(keys.KICK)) {
-			if(!player.usingCombo()) {
-				playerSprite.setActiveAnimation('kickComboAnimation');
-				player.setUsingCombo(1);
-				Client.comboKick();
-				input.kickCombo = true;
-				console.log('kick combo');
+		if(!player.usingCombo()){
+			if (control.quickTapped(keys.KICK)) {
+					playerSprite.setActiveAnimation('kickComboAnimation');
+					player.setUsingCombo(1);
+					Client.comboKick();
+					input.kickCombo = true;
+					console.log('kick combo');
+			}
+			else if (control.quickTapped(keys.PUNCH)) {
+					playerSprite.setActiveAnimation('punchComboAnimation');
+					player.setUsingCombo(1);
+					Client.comboPunch();
+					input.punchCombo = true;
+					console.log('combo punch');
+			}
+			else if (control.isDown(keys.PUNCH)) {
+					var punchNumber = Math.ceil(Math.random() * 2);
+					input.punchKey = true;
+					playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
+					player.setPunchState(1);
+					Client.punch();
+					console.log('simple punch');
+			}
+			else if(control.isDown(keys.KICK)) {
+					input.kickKey = true;
+					playerSprite.setActiveAnimation('kickAnimation');
+					player.setKickState(1);
+					Client.kick();
+					console.log('simple kick');
 			}
 		}
-		else if (control.isDown(keys.JUMP)) {
+		if (control.isDown(keys.JUMP)) {
 				if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
 					playerSprite.setActiveAnimation('jumpAnimation');
 					input.jumpKey = true;
@@ -325,34 +351,6 @@ Client.processInputs = function() {
 					player.setJumpState(1);
 					Client.jump();
 				}
-		}
-		else if (control.quickTapped(keys.PUNCH)) {
-			if (!player.usingCombo()) {
-				playerSprite.setActiveAnimation('punchComboAnimation');
-				player.setUsingCombo(1);
-				Client.comboPunch();
-				input.punchCombo = true;
-				console.log('combo punch');
-			}
-		}
-		else if (control.isDown(keys.PUNCH)) {
-			if(!player.usingCombo()) {
-				var punchNumber = Math.ceil(Math.random() * 2);
-				input.punchKey = true;
-				playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
-				player.setPunchState(1);
-				Client.punch();
-				console.log('simple punch');
-			}
-		}
-		else if(control.isDown(keys.KICK)) {
-			if(!player.isKicking()) {
-				input.kickKey = true;
-				playerSprite.setActiveAnimation('kickAnimation');
-				player.setKickState(1);
-				Client.kick();
-				console.log('simple kick');
-			}
 		}
 		else if (control.isDown(keys.DEFEND)) {
 			if (!player.isDefending()) {
@@ -368,7 +366,7 @@ Client.processInputs = function() {
 		if (input.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}
-		else if(player.isPunched() == 1 || player.isPunched() == 2 || player.isPunched() == 3){
+		else if(player.isPunched() == 1 || player.isPunched() == 2 || player.isPunched() == 3  || player.isPunched() == 4){
 			playerSprite.setActiveAnimation('damageAnimation');
 		}
 		else if(player.isPunched() == 0){
@@ -435,7 +433,7 @@ Client.comboPunch = function () {
 	var player = App.player;
 	var updateP = setInterval(function(){
 		t += 30;
-		if(t >= 1000){
+		if(t >= 800){
 			player.setUsingCombo(0);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);

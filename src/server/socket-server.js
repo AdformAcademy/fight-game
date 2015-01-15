@@ -183,11 +183,21 @@ SocketServer.updateZ = function(player) {
 
 SocketServer.comboPunch = function (player) {
 	var t = 0;
+	var punched = 0;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-	opponent.setPunched(3);
+	var x = player.getX();
+    var opx = opponent.getX();
+    if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
+		punched = 1;
+		opponent.setPunched(3);
+	}
+	if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
+		punched = 2;
+		opponent.setPunched(3);
+	}
 	var updateP = setInterval(function(){
 		t += 30;
-		if(t >= 1000){
+		if(t >= 800){
 			opponent.setPunched(0);
 			player.setUsingCombo(false);
 			clearInterval(updateP);
@@ -197,11 +207,35 @@ SocketServer.comboPunch = function (player) {
 
 SocketServer.comboKick = function (player) {
 	var t = 0;
+	var punched = 0;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-	opponent.setPunched(4);
+	var x = player.getX();
+    var opx = opponent.getX();
+	if(SocketServer.checkPunchCollisionLeft(player, opponent, 80, 60, 40)){
+		punched = 1;
+		opponent.setPunched(4);
+	}
+	if(SocketServer.checkPunchCollisionRight(player, opponent, 80, 60, 40)){
+		punched = 2;
+		opponent.setPunched(4);
+	}
 	var updateP = setInterval(function(){
 		t += 30;
 		if(t >= 600){
+			if(punched == 1){
+				if(opx < Config.screenWidth - 185){
+					opx += 15;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			else if(punched == 2){
+				if(opx > -135){
+					opx -= 15;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
 			opponent.setPunched(0);
 			player.setUsingCombo(false);
 			clearInterval(updateP);
@@ -329,39 +363,40 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 
-	if (input.kickCombo && !player.usingCombo()) {
-		player.setUsingCombo(true);
-		SocketServer.comboKick(player);
-		console.log('combo kick');
-	} 
-	if (input.punchCombo && !player.usingCombo()) {
-		player.setUsingCombo(true);
-		SocketServer.comboPunch(player);
-		console.log('combo puch');
-	}
-	if(input.kickKey && !player.usingCombo() && !player.isKicking()) {
-		player.setKicking(true);
-		SocketServer.kick(player);
-		console.log('simple kick');
-	}
-	else if(input.punchKey && player.isKicking() && player.isPunched() == 0) {
-		var inputs = SocketServer.punchInputs[player.getID()];
-		if(inputs !== undefined) {
-			inputs.push(input);
+	if(!player.isKicking() && !player.isPunching() && !player.usingCombo() && player.isPunched() == 0){
+
+		if (input.kickCombo) {
+			player.setUsingCombo(true);
+			SocketServer.comboKick(player);
+			console.log('combo kick');
+		} 
+		if (input.punchCombo) {
+			player.setUsingCombo(true);
+			SocketServer.comboPunch(player);
+			console.log('combo puch');
 		}
-	}
-	if(input.punchKey && !player.usingCombo() && !player.isPunching()) {
-		player.setPunching(true);
-		SocketServer.punch(player);
-		console.log('simple punch');
-	}
-	else if(input.punchKey && player.isPunching() && player.isPunched() == 0) {
-		var inputs = SocketServer.punchInputs[player.getID()];
-		if(inputs !== undefined) {
-			inputs.push(input);
+		if(input.kickKey) {
+			player.setKicking(true);
+			SocketServer.kick(player);
+			console.log('simple kick');
 		}
-	}
-	if(!player.isPunching() /*&& !player.isPunched()*/){
+		else if(input.kickKey) {
+			var inputs = SocketServer.kickInputs[player.getID()];
+			if(inputs !== undefined) {
+				inputs.push(input);
+			}
+		}
+		if(input.punchKey) {
+			player.setPunching(true);
+			SocketServer.punch(player);
+			console.log('simple punch');
+		}
+		else if(input.punchKey) {
+			var inputs = SocketServer.punchInputs[player.getID()];
+			if(inputs !== undefined) {
+				inputs.push(input);
+			}
+		}
 
 		if(input.key === key.UP_LEFT) {
 			if(SocketServer.checkUpCollision(player, opponent, size))
