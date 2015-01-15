@@ -1,7 +1,21 @@
+var env = process.argv[2] || 'dev';
+
+switch (env) {
+  case 'prod':
+    global.env = 'prod';
+    break;
+  case 'dev':
+    global.env = 'dev';
+    break;
+  default:
+    global.env = 'dev';
+}
+
 var Express = require('./src/server/express');
 var SocketServer = require('./src/server/socket-server');
 var Tasks = require('./src/server/tasks');
 var io = require('socket.io')(SocketServer.http);
+
 Express.loadResources(__dirname);
 Tasks.start();
 SocketServer.listen();

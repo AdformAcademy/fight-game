@@ -15,7 +15,7 @@ var Player = function(params) {
   var _defending = false;
   var _usingCombo = false;
   var _lastProcessedInput = 0;
-  var _currentAnimation = 0;
+  var _currentAnimation = null;
   var _characterData = params.characterData;
 
   obj.getID = function() {
