@@ -65,15 +65,21 @@ describe('Button', function () {
 	});
 
 	it('should intersect with point (3, 3) and not intersect with point (6, 7)', function() {
-		button.setActiveImage({width: 5, heigth: 10 });
-		button.setLocation(new Point(0, 0));
+		button.setActiveImage({width: 5, height: 10 });
+		button.setLocation(function () {
+			return new Point(0, 0);
+		});
 		button.setVisible(true);
-		expect(button.pointIntersects(function(){
-			return new Point(3, 3);
-		})).toBe(true);
-		expect(button.pointIntersects(function() {
-			return new Point(6, 7);
-		})).toBe(false);
+		expect(button.pointIntersects(new Point(3, 3))).toBe(true);
+	});
+	
+	it('should not intersect with point (6, 7)', function() {
+		button.setActiveImage({width: 5, height: 10 });
+		button.setLocation(function () {
+			return new Point(0, 0);
+		});
+		button.setVisible(true);
+		expect(button.pointIntersects(new Point(6, 7))).toBe(false);
 	});
 })
 
