@@ -60,6 +60,7 @@ vows.describe('Session collection').addBatch({
 			SessionCollection.createSession(mockSocket);
 			var session = SessionCollection.getSessionObject(mockSessionId);
 			assert.strictEqual(session.sessionId, mockSessionId);
+			SessionCollection.list = [];
 		}
 	},
 	'session delete': {
@@ -69,6 +70,7 @@ vows.describe('Session collection').addBatch({
 			SessionCollection.deleteSession(mockSessionId);
 			var session = SessionCollection.getSessionObject(mockSessionId);
 			assert.isUndefined(session);
+			SessionCollection.list = [];
 		}
 	},
 	'available session': {
@@ -77,6 +79,7 @@ vows.describe('Session collection').addBatch({
 			SessionCollection.createSession(mockSocket);
 			var session = SessionCollection.getAvailableSession();
 			assert.instanceOf(session, Session);
+			SessionCollection.list = [];
 		}
 	},
 	'session existence': {
@@ -85,12 +88,14 @@ vows.describe('Session collection').addBatch({
 			SessionCollection.createSession(mockSocket);
 			var exists = SessionCollection.sessionExists(mockSessionId);
 			assert.isTrue(exists);
+			SessionCollection.list = [];
 		}
 	},
 	'session collection': {
 		'is array': function () {
 			var collection = SessionCollection.getCollection();
 			assert.isArray(collection);
+			SessionCollection.list = [];
 		}
 	}
 }).run();
