@@ -64,7 +64,7 @@ describe('Button', function () {
 		expect(button.getLocation().getY()).toBe(1);
 	});
 
-	it('should intersect with point (3, 3) and not intersect with point (6, 7)', function() {
+	it('should intersect with point (3, 3)', function() {
 		button.setActiveImage({width: 5, height: 10 });
 		button.setLocation(function () {
 			return new Point(0, 0);
