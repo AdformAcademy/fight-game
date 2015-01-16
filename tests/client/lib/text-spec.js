@@ -1,6 +1,6 @@
 'use strict';
 
-var Text require('../../../src/client/lib/canvas/text.js');
+var Text = require('../../../src/client/lib/canvas/text.js');
 
 describe('Text', function () {
 
@@ -12,10 +12,10 @@ describe('Text', function () {
 		color,
 		isVisable;
 
+		var text;
+
 	sizeMock = {};
 	textMock = {};
-
-	var text = Text(sizeMock, textMock);
 
 	beforeEach(function() {
 		text = new Text(textMock, sizeMock);
@@ -30,47 +30,44 @@ describe('Text', function () {
 	});
 
 	it('should be defined \'location\'', function() {
-		expect(location).toBeDefined();
+		expect(text.location).toBeDefined();
 	});
 
-	it('should be difined \'font type\'', function()) {
-		expect(fontType).toBeDefined();
-	};
+	it('should be difined \'font type\'', function() {
+		expect(text.fontType).toBeDefined();
+	});
 
-	it('should be difined \'color\'', function()) {
-		expect(color).toBeDefined();
-	};
+	it('should be difined \'color\'', function() {
+		expect(text.color).toBeDefined();
+	});
 
-	it('should be difined \'is visable\'', function()) {
-		expect(isVisable).toBeDefined();
-	};
+	it('should be difined \'is visable\'', function() {
+		expect(text.isVisible()).toBeDefined();
+	});
 
 	it('should get default location', function() {
-		expect(text.getLocation()).toBe(0);
+		expect(text.getLocation().getX()).toBe(0);
+		expect(text.getLocation().getY()).toBe(0);
 	});
 
 	it('should get default font type', function() {
-		expect(text.getLocation()).toBe('Arial');
+		expect(text.getFontType()).toBe('Arial');
 	});
 
 	it('should get default color', function() {
-		expect(text.getLocation()).toBe('#000000');
+		expect(text.getColor()).toBe('#000000');
 	});
 
 	it('should get default size', function() {
-		expect(text.getLocation()).toBe(sizeMock);
+		expect(text.getSize()).toBe(sizeMock);
 	});
 
 	it('should get default text', function() {
-		expect(text.getLocation()).toBe(textMock);
-	});
-
-	it('should get default text width', function() {
-		expect(text.getLocation()).toBe(textMock.width);
+		expect(text.getText()).toBe(textMock);
 	});
 
 	it('should get default is visable', function() {
-		expect(text.isVisable).toBe(true);
+		expect(text.isVisible()).toBe(true);
 	});
 
     it('should set text to textMock', function() {
