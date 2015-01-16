@@ -1,5 +1,6 @@
 var App = require('../app');
 var Config = require('./config');
+var InputCollection = require('./input-collection');
 var socket = io();
 
 var Client = module.exports = function() {};
@@ -13,41 +14,6 @@ Client.prediction = true;
 Client.reconciliation = true;
 Client.interpolation = true;
 Client.opponentInputs = [];
-
-Client.Key = {
-  _pressed: {},
-  _pressTimes: {},
-  _quickTaps: {},
-  
-  isDown: function(keyCode) {
-    return this._pressed[keyCode];
-  },
-
-  quickTapped: function (keyCode) {
-  	var quickTapped = this._quickTaps[keyCode];
-  	if (quickTapped) {
-  		this._quickTaps[keyCode] = false;
-  	}
-  	return quickTapped;
-  },
-  
-  onKeydown: function(event) {
-    this._pressed[event.keyCode] = true;
-  },
-  
-  onKeyup: function(event) {
-  	var pastPressTime = this._pressTimes[event.keyCode];
-  	var currentPressTime = Date.now();
-  	if (pastPressTime !== undefined) {
-  		var interval = currentPressTime - pastPressTime;
-  		if (interval < Config.quickTapDuration) {
-  			this._quickTaps[event.keyCode] = true;
-  		}
-  	}
-  	this._pressTimes[event.keyCode] = currentPressTime;
-    delete this._pressed[event.keyCode];
-  }
-};
 
 Client.applyCoordinates = function(player, x, y, z) {
 	var playerLocation = player.getLocation();
@@ -222,7 +188,7 @@ Client.processInputs = function() {
 	};
 
 	var keys = Config.keyBindings;
-	var control = Client.Key;
+	var control = InputCollection;
 	var screenWidth = App.canvasObj.getWidth();
 	var screenHeight = App.canvasObj.getHeight();
 	var player = App.player;

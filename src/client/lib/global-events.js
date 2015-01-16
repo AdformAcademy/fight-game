@@ -1,4 +1,5 @@
 var App = require('../app');
+var InputCollection = require('./input-collection');
 var Client = require('./client');
 var EventCollection = require('./event-collection');
 var Point = require('./canvas/point');
@@ -11,11 +12,11 @@ var socket = io();
 var GlobalEvents = module.exports = function() {};
 
 $(window).keydown(function (event) {
-	Client.Key.onKeydown(event);
+	InputCollection.onKeydown(event);
 });
 
 $(window).keyup(function (event) {
-	Client.Key.onKeyup(event);
+	InputCollection.onKeyup(event);
 });
 
 $(window).click(function(event) {
