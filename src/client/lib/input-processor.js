@@ -1,6 +1,6 @@
 var App = require('../app');
 var Client = require('./client');
-var Collisions = require('./collisions');
+var Collisions = require('../../common/collisions');
 var InputCollection = require('./input-collection');
 var Config = require('./config');
 
