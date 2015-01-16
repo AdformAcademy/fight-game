@@ -1,21 +1,24 @@
 var App = require('../app');
+var InputCollection = require('./input-collection');
+var InputProcessor = require('./input-processor');
 var Client = require('./client');
 var EventCollection = require('./event-collection');
-var Point = require('./canvas/point');
+var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./spritesheet');
+var WorldPhysics = require('./world-physics');
 var socket = io();
 
-var GlobalEvents = module.exports = function() {};
+var GlobalEvents = {};
 
 $(window).keydown(function (event) {
-	Client.Key.onKeydown(event);
+	InputCollection.onKeydown(event);
 });
 
 $(window).keyup(function (event) {
-	Client.Key.onKeyup(event);
+	InputCollection.onKeyup(event);
 });
 
 $(window).click(function(event) {
@@ -48,10 +51,8 @@ socket.on('playing', function(data) {
   var opponentSpriteImage = new Image();
   opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
-  console.log(data.player.data);
-
   var buildSprite = function(image, spriteSheetData) {
-    return SpriteSheet({
+    return new SpriteSheet({
       image: image,
       data: spriteSheetData,
       frames: 1,
@@ -63,6 +64,16 @@ socket.on('playing', function(data) {
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+
+  Client.physics = new WorldPhysics({
+    player: App.player,
+    opponent: App.opponent
+  });
+
+  Client.inputProcessor = new InputProcessor({
+    player: App.player,
+    opponent: App.opponent
+  });
 
   App.screen.dispose();
   App.screen = new CountDownScreen();
@@ -85,3 +96,5 @@ $(window).load(function () {
 	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();
 });
+
+module.exports = GlobalEvents;

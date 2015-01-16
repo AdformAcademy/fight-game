@@ -1,6 +1,6 @@
 var BaseConfig = require('../common/base-config');
 
-var Config = function() {};
+var Config = {};
 
 Config.port = 3000;
 Config.playerMoveSpeed = BaseConfig.playerMoveSpeed;
