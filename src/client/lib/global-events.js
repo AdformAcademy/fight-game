@@ -52,7 +52,7 @@ socket.on('playing', function(data) {
   opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
   var buildSprite = function(image, spriteSheetData) {
-    return SpriteSheet({
+    return new SpriteSheet({
       image: image,
       data: spriteSheetData,
       frames: 1,
