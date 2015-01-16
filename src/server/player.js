@@ -1,144 +1,142 @@
-var Player = function(params) {
-  var obj = {};
-  var _id = params.id;
-  var _opponentId = params.opponentId;
-  var _location = {
+var Player = function (params) {
+  this.id = params.id;
+  this.opponentId = params.opponentId;
+  this.location = {
     x: params.x || 0,
     y: params.y || 0,
     z: params.z || 0
   };
-  var _speedZ = 0;
-  var _jumping = false;
-  var _punching = false;
-  var _punched = 0;
-  var _kicking = false;
-  var _defending = false;
-  var _usingCombo = false;
-  var _lastProcessedInput = 0;
-  var _currentAnimation = null;
-  var _characterData = params.characterData;
+  this.speedZ = 0;
+  this.jumping = false;
+  this.punching = false;
+  this.punched = 0;
+  this.kicking = false;
+  this.defending = false;
+  this.combo = false;
+  this.lastProcessedInput = 0;
+  this.currentAnimation = null;
+  this.characterData = params.characterData;
+};
 
-  obj.getID = function() {
-    return _id;
+Player.prototype.getID = function() {
+  return this.id;
+};
+
+Player.prototype.getOpponentId = function() {
+  return this.opponentId;
+};
+
+Player.prototype.setOpponentId = function(opponentId) {
+  this.opponentId = opponentId;
+};
+
+Player.prototype.getX = function() {
+  return this.location.x;
+};
+
+Player.prototype.getY = function() {
+  return this.location.y;
+};
+
+Player.prototype.getZ = function() {
+  return this.location.z;
+};
+
+Player.prototype.getSpeedZ = function() {
+  return this.speedZ;
+};
+
+Player.prototype.isJumping = function() {
+  return this.jumping;
+};
+
+Player.prototype.isPunching = function() {
+  return this.punching;
+};
+
+Player.prototype.isPunched = function() {
+  return this.punched;
+};
+
+Player.prototype.isKicking = function() {
+  return this.kicking;
+};
+
+Player.prototype.setX = function(x) {
+  this.location.x = x;
+};
+
+Player.prototype.setY = function(y) {
+  this.location.y = y;
+};
+
+Player.prototype.setZ = function(z) {
+  this.location.z = z;
+};
+
+Player.prototype.setSpeedZ = function(speedZ) {
+  this.speedZ = speedZ;
+};
+
+Player.prototype.setJumping = function(jumping) {
+  this.jumping = jumping;
+};
+
+Player.prototype.setPunching = function(punching) {
+  this.punching = punching;
+};
+
+Player.prototype.setPunched = function(punched) {
+  this.punched = punched;
+};
+
+Player.prototype.setKicking = function (kicking) {
+  this.kicking = kicking;
+}
+
+Player.prototype.setDefending = function (defending) {
+  this.defending = defending;
+};
+
+Player.prototype.isDefending = function () {
+  return this.defending;
+};
+
+Player.prototype.setUsingCombo = function (combo) {
+  this.combo = combo;
+};
+
+Player.prototype.usingCombo = function () {
+  return this.combo;
+};
+
+Player.prototype.setLastProcessedInput = function(input) {
+  this.lastProcessedInput = input;
+};
+
+Player.prototype.getLastProcessedInput = function() {
+  return this.lastProcessedInput;
+};
+
+Player.prototype.setCurrentAnimation = function (animation) {
+  this.currentAnimation = animation;
+};
+
+Player.prototype.getCurrentAnimation = function () {
+  return this.currentAnimation;
+};
+
+Player.prototype.getCharacterData = function () {
+  return this.characterData;
+};
+
+Player.prototype.toPacket = function() {
+  return {
+    x: this.location.x,
+    y: this.location.y,
+    z: this.location.z,
+    currentAnimation: this.currentAnimation
   };
-
-  obj.getOpponentId = function() {
-    return _opponentId;
-  };
-
-  obj.setOpponentId = function(opponentId) {
-    _opponentId = opponentId;
-  };
-
-  obj.getX = function() {
-    return _location.x;
-  };
-
-  obj.getY = function() {
-    return _location.y;
-  };
-
-  obj.getZ = function() {
-    return _location.z;
-  };
-
-  obj.getSpeedZ = function() {
-    return _speedZ;
-  };
-
-  obj.isJumping = function() {
-    return _jumping;
-  };
-
-  obj.isPunching = function() {
-    return _punching;
-  };
-
-  obj.isPunched = function() {
-    return _punched;
-  };
-  obj.isKicking = function() {
-    return _kicking;
-  }
-
-  obj.setX = function(x) {
-    _location.x = x;
-  };
-
-  obj.setY = function(y) {
-    _location.y = y;
-  };
-
-  obj.setZ = function(z) {
-    _location.z = z;
-  };
-
-  obj.setSpeedZ = function(speedZ) {
-    _speedZ = speedZ;
-  };
-
-  obj.setJumping = function(jumping) {
-    _jumping = jumping;
-  };
-
-  obj.setPunching = function(punching) {
-    _punching = punching;
-  };
-
-  obj.setPunched = function(punched) {
-    _punched = punched;
-  };
-
-  obj.setKicking = function (kicking) {
-    _kicking = kicking;
-  }
-
-  obj.setDefending = function (defending) {
-    _defending = defending;
-  };
-
-  obj.isDefending = function () {
-    return _defending;
-  };
-
-  obj.setUsingCombo = function (combo) {
-    _usingCombo = combo;
-  };
-
-  obj.usingCombo = function () {
-    return _usingCombo;
-  };
-
-  obj.setLastProcessedInput = function(input) {
-    _lastProcessedInput = input;
-  };
-
-  obj.getLastProcessedInput = function() {
-    return _lastProcessedInput;
-  };
-
-  obj.setCurrentAnimation = function (animation) {
-    _currentAnimation = animation;
-  };
-
-  obj.getCurrentAnimation = function () {
-    return _currentAnimation;
-  };
-
-  obj.getCharacterData = function () {
-    return _characterData;
-  };
-
-  obj.toPacket = function() {
-    return {
-      x: _location.x,
-      y: _location.y,
-      z: _location.z,
-      currentAnimation: _currentAnimation
-    };
-  };
-
-  return obj;
 };
 
 module.exports = Player;

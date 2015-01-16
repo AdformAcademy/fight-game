@@ -4,7 +4,7 @@ var Player = require('../../../src/server/player.js');
 
 var mockPlayerData = {};
 
-var player = Player({
+var player = new Player({
 	id: 'mockId',
 	opponentId: 'opponentMockId',
 	x: 0,
@@ -191,7 +191,7 @@ vows.describe('Player').addBatch({
 		}
 	},
 	'packet': {
-		topic: Player({
+		topic: new Player({
 			id: 'mockId',
 			opponentId: 'opponentMockId',
 			x: 0,

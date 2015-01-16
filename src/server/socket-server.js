@@ -54,7 +54,7 @@ SocketServer.prepareClient = function (socket) {
 			var opponentData = JSON.parse(
 				fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
 
-			var player = Player({
+			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
 				x: Config.firstSpawnLocation.x,
@@ -62,7 +62,7 @@ SocketServer.prepareClient = function (socket) {
 				z: Config.firstSpawnLocation.z,
 				characterData: playerData
 			});
-			var opponent = Player({
+			var opponent = new Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
 				x: Config.secondSpawnLocation.x,
