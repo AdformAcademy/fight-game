@@ -347,6 +347,7 @@ SocketServer.executeInput = function(player, input) {
 	var z = player.getZ();
 	var opy = opponent.getY();
 	var opz = opponent.getZ();
+	
 
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
@@ -363,7 +364,7 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 
-	if(!player.isKicking() && !player.isPunching() && !player.usingCombo() && player.isPunched() == 0){
+	if(!player.isKicking() && !player.isPunching() && !player.usingCombo() && player.isPunched() == 0 || player.isJumping()){
 
 		if (input.kickCombo) {
 			player.setUsingCombo(true);
@@ -374,6 +375,17 @@ SocketServer.executeInput = function(player, input) {
 			player.setUsingCombo(true);
 			SocketServer.comboPunch(player);
 			console.log('combo puch');
+		}
+		if (player.isJumping() && input.punchKey) {
+			console.log("Jumping and punching");
+			player.setPunching(true);
+			SocketServer.punch(player);
+		}
+		else if (input.punchKey && player.isPunching()) {
+			var inputs = SocketServer.punchInputs[player.getID()];
+			if(inputs !== undefined) {
+				inputs.push(input);
+			}
 		}
 		if(input.kickKey) {
 			player.setKicking(true);
@@ -397,7 +409,6 @@ SocketServer.executeInput = function(player, input) {
 				inputs.push(input);
 			}
 		}
-
 		if(input.key === key.UP_LEFT) {
 			if(SocketServer.checkUpCollision(player, opponent, size))
 				y -= Config.playerMoveSpeed;

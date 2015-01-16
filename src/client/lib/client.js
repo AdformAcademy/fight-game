@@ -23,6 +23,10 @@ Client.Key = {
     return this._pressed[keyCode];
   },
 
+  isPress: function(keyCode) {
+    return this._pressed[keyCode];
+  },
+
   quickTapped: function (keyCode) {
   	var quickTapped = this._quickTaps[keyCode];
   	if (quickTapped) {
@@ -237,7 +241,7 @@ Client.processInputs = function() {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if(!player.isPunching()&& !player.isKicking() && player.isPunched() == 0){
+	if(!player.isPunching()&& !player.isKicking() && player.isPunched() == 0 && !player.usingCombo() || player.isJumping()){
 
 		if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
 			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size)
@@ -311,36 +315,41 @@ Client.processInputs = function() {
 					input.key = keys.DOWN;
 			}
 		}
-		if(!player.usingCombo()){
-			if (control.quickTapped(keys.KICK)) {
-					playerSprite.setActiveAnimation('kickComboAnimation');
-					player.setUsingCombo(1);
-					Client.comboKick();
-					input.kickCombo = true;
-					console.log('kick combo');
-			}
-			else if (control.quickTapped(keys.PUNCH)) {
-					playerSprite.setActiveAnimation('punchComboAnimation');
-					player.setUsingCombo(1);
-					Client.comboPunch();
-					input.punchCombo = true;
-					console.log('combo punch');
-			}
-			else if (control.isDown(keys.PUNCH)) {
-					var punchNumber = Math.ceil(Math.random() * 2);
-					input.punchKey = true;
-					playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
-					player.setPunchState(1);
-					Client.punch();
-					console.log('simple punch');
-			}
-			else if(control.isDown(keys.KICK)) {
-					input.kickKey = true;
-					playerSprite.setActiveAnimation('kickAnimation');
-					player.setKickState(1);
-					Client.kick();
-					console.log('simple kick');
-			}
+		if (control.quickTapped(keys.KICK) && !player.isJumping()) {
+				playerSprite.setActiveAnimation('kickComboAnimation');
+				player.setUsingCombo(1);
+				Client.comboKick();
+				input.kickCombo = true;
+				console.log('kick combo');
+		}
+		if (player.isJumping() && control.isDown(keys.PUNCH)) {
+			console.log("jumping and punching");
+			playerSprite.setActiveAnimation('jumpPunchAnimation');
+			player.setPunchState(1);
+			Client.punch();
+			input.keys = keys.PUNCH;
+		}
+		else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
+				playerSprite.setActiveAnimation('punchComboAnimation');
+				player.setUsingCombo(1);
+				Client.comboPunch();
+				input.punchCombo = true;
+				console.log('combo punch');
+		}
+		else if (control.isDown(keys.PUNCH)) {
+				var punchNumber = Math.ceil(Math.random() * 2);
+				input.punchKey = true;
+				playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
+				player.setPunchState(1);
+				Client.punch();
+				console.log('simple punch');
+		}
+		else if(control.isDown(keys.KICK)) {
+				input.kickKey = true;
+				playerSprite.setActiveAnimation('kickAnimation');
+				player.setKickState(1);
+				Client.kick();
+				console.log('simple kick');
 		}
 		if (control.isDown(keys.JUMP)) {
 				if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
@@ -352,16 +361,15 @@ Client.processInputs = function() {
 					Client.jump();
 				}
 		}
-		else if (control.isDown(keys.DEFEND)) {
+	}
+	if (control.isDown(keys.DEFEND)) {
 			if (!player.isDefending()) {
 				playerSprite.setActiveAnimation('defendAnimation');
 				player.setDefending(true);
 			}
 			input.key = keys.DEFEND;
-		} else {
-			player.setDefending(false);
-		}
 	}
+	else player.setDefending(false);
 	if (player.isStanding()) {
 		if (input.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');

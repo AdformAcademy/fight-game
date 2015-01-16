@@ -97,9 +97,13 @@ var Player = function(params) {
     _defending = defending;
   };
 
-  obj.isDefending = function () {
+  obj.isDefending = function() {
     return _defending;
   };
+
+  obj.isJumpingAndPunching = function () {
+    return _jumping && _punching;
+  }
 
   obj.setUsingCombo = function (combo) {
     _usingCombo = combo;

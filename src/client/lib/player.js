@@ -110,6 +110,10 @@ Player.prototype.isStanding = function () {
 	 && !this.isDefending() && !this.isKicking() && !this.usingCombo();
 };
 
+Player.prototype.isJumpingAndPunching = function() {
+	return this.isJumping() && this.isPunching();
+};
+
 Player.prototype.update = function() {
 	this.spritesheet.update();
 };
