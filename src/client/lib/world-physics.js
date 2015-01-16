@@ -84,7 +84,7 @@ WorldPhysics.prototype.jump = function () {
 		}
 		if (z > 0) {
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setJumpState(0);
+			player.setJumping(false);
 			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;
@@ -100,7 +100,7 @@ WorldPhysics.prototype.comboPunch = function () {
 	var updateP = setInterval(function () {
 		t += 30;
 		if (t >= 800) {
-			player.setUsingCombo(0);
+			player.setUsingCombo(false);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
 		}
@@ -113,7 +113,7 @@ WorldPhysics.prototype.comboKick = function () {
 	var updateP = setInterval(function () {
 		t += 30;
 		if (t >= 600) {
-			player.setUsingCombo(0);
+			player.setUsingCombo(false);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
 		}
@@ -126,11 +126,11 @@ WorldPhysics.prototype.punch = function () {
 	var updateP = setInterval(function () {
 		t += 30;
 		if (player.usingCombo()) {
-			player.setPunchState(0);
+			player.setPunching(false);
 			clearInterval(updateP);
 		}
 		if (t >= 300) {
-			player.setPunchState(0);
+			player.setPunching(false);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			clearInterval(updateP);
 		}
@@ -143,12 +143,12 @@ WorldPhysics.prototype.kick = function () {
 	var updateP = setInterval(function () {
 		t += 30;
 		if (player.usingCombo()) {
-			player.setKickState(0);
+			player.setKicking(false);
 			clearInterval(updateP);
 		}
 		if (t >= 400) {
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setKickState(0);
+			player.setKicking(false);
 			clearInterval(updateP);
 		}
 	}, 1000/30);

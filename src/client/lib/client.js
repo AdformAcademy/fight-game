@@ -143,6 +143,5 @@ Client.start = function() {
 	Client.isRunning = true;
 	Client.updateWorldInterval = setInterval(function() {
 		Client.update();
-		console.log(App.player.isPunched());
 	}, 1000 / 30);
 };

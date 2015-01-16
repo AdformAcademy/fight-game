@@ -88,12 +88,12 @@ describe('Player', function () {
 	});
 
 	it('should set player jumpstate to 1', function() {
-		player.setJumpState(1);
+		player.setJumping(true);
 		expect(player.isJumping()).toBe(true);
 	});
 
 	it('should set player punchstate to 1', function() {
-		player.setPunchState(1);
+		player.setPunching(true);
 		expect(player.isPunching()).toBe(true);
 	});
 
@@ -118,7 +118,7 @@ describe('Player', function () {
 	});
 
 	it('should set player using combo state to 1', function() {
-		player.setUsingCombo(1)
+		player.setUsingCombo(true);
 		expect(player.usingCombo()).toBe(true);
 	});
 });

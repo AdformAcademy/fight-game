@@ -120,26 +120,26 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var player = this.player;
 
 	if (control.quickTapped(keys.KICK)) {
-			player.setUsingCombo(1);
+			player.setUsingCombo(true);
 			physics.comboKick();
 			input.kickCombo = true;
 			console.log('kick combo');
 	}
 	else if (control.quickTapped(keys.PUNCH)) {
-			player.setUsingCombo(1);
+			player.setUsingCombo(true);
 			physics.comboPunch();
 			input.punchCombo = true;
 			console.log('combo punch');
 	}
 	else if (control.isDown(keys.PUNCH)) {
 			input.punchKey = true;
-			player.setPunchState(1);
+			player.setPunching(true);
 			physics.punch();
 			console.log('simple punch');
 	}
 	else if(control.isDown(keys.KICK)) {
 			input.kickKey = true;
-			player.setKickState(1);
+			player.setKicking(true);
 			physics.kick();
 			console.log('simple kick');
 	}
@@ -162,7 +162,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
 			player.setSpeedZ(speedZ);
-			player.setJumpState(1);
+			player.setJumping(true);
 			physics.jump();
 		}
 	}
