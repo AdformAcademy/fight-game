@@ -1,5 +1,6 @@
 var App = require('../app');
 var Client = require('./client');
+var Collisions = require('./collisions');
 var InputCollection = require('./input-collection');
 var Config = require('./config');
 
@@ -36,78 +37,77 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 
 	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
 		if (x < screenWidth - 185 && y > 150 
-			&& Client.checkRightCollision(player, opponent, size)
-			&& Client.checkUpCollision(player, opponent, size)) {
+			&& Collisions.checkRightCollision(player, opponent, size)
+			&& Collisions.checkUpCollision(player, opponent, size)) {
 			input.key = keys.UP_RIGHT;
 		}
 		else if (x < screenWidth - 185 
-			&& Client.checkRightCollision(player, opponent, size)) {
+			&& Collisions.checkRightCollision(player, opponent, size)) {
 			input.key = keys.RIGHT;
 		}
-		else if (y > 150 && Client.checkUpCollision(player, opponent, size)) {
+		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
 			input.key = keys.UP;
 		}
 	}
 	else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
-		if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size)
-			&& Client.checkUpCollision(player, opponent, size)) {
+		if (x > -135 && y > 150 && Collisions.checkLeftCollision(player, opponent, size)
+			&& Collisions.checkUpCollision(player, opponent, size)) {
 			input.key = keys.UP_LEFT;
 		}
-		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
+		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
 			input.key = keys.LEFT;
 		}
-		else if (y > 150 && Client.checkUpCollision(player, opponent, size)) {
+		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
 			input.key = keys.UP;
 		}
 	}
 	else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
 		if (x > -135 && y < screenHeight - 200 
-			&& Client.checkLeftCollision(player, opponent, size)
-			&& Client.checkDownCollision(player, opponent, size)) {
+				&& Collisions.checkLeftCollision(player, opponent, size)
+				&& Collisions.checkDownCollision(player, opponent, size)) {
 			input.key = keys.DOWN_LEFT;
 		}
-		else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
+		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
 			input.key = keys.LEFT;
 		}
-		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)) {
+		else if (y < screenHeight - 200 
+				&& Collisions.checkDownCollision(player, opponent, size)) {
 			input.key = keys.DOWN;
 		}
 	}
 	else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
 		if (x < screenWidth - 185 && y < screenHeight - 200 
-			&& Client.checkRightCollision(player, opponent, size)
-			&& Client.checkDownCollision(player, opponent, size)) {
+				&& Collisions.checkRightCollision(player, opponent, size)
+				&& Collisions.checkDownCollision(player, opponent, size)) {
 			input.key = keys.DOWN_RIGHT;
 		}
-		else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
+		else if (x < screenWidth - 185 
+				&& Collisions.checkRightCollision(player, opponent, size)) {
 			input.key = keys.RIGHT;
 		}
-		else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)) {
+		else if (y < screenHeight - 200 
+				&& Collisions.checkDownCollision(player, opponent, size)) {
 			input.key = keys.DOWN;
 		}
 	}
 	else if (control.isDown(keys.RIGHT)) {
-		if (x < screenWidth - 185) {
-			if(Client.checkRightCollision(player, opponent, size))
-				input.key = keys.RIGHT;
+		if (x < screenWidth - 185 && Collisions.checkRightCollision(player, opponent, size)) {
+			input.key = keys.RIGHT;
 		}
 	}
 	else if (control.isDown(keys.LEFT)) {
-		if (x > -135) {
-			if(Client.checkLeftCollision(player, opponent, size))
-				input.key = keys.LEFT;
+		if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
+			input.key = keys.LEFT;
 		}
 	}
 	else if (control.isDown(keys.UP)) {
-		if (y > 150) {
-			if(Client.checkUpCollision(player, opponent, size))
-				input.key = keys.UP;
+		if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
+			input.key = keys.UP;
 		}
 	}
 	else if (control.isDown(keys.DOWN)) {
-		if (y < screenHeight - 200) {
-			if(Client.checkDownCollision(player, opponent, size))
-				input.key = keys.DOWN;
+		if (y < screenHeight - 200 && Collisions.checkDownCollision(player, opponent, size)) {
+			input.key = keys.DOWN;
 		}
 	}
 };

@@ -31,7 +31,7 @@ Client.applyInput = function(player, input) {
 	if (!input) {
 		return;
 	}
-	
+
 	var opponent = player === App.player ? App.opponent : App.player;
 	var keys = Config.keyBindings;
 
@@ -70,35 +70,6 @@ Client.applyInput = function(player, input) {
 
 	Client.applyCoordinates(player, x, y, z);
 };
-
-Client.checkLeftCollision = function(player, opponent, size) {
-	var loc = player.getLocation();
-	var oloc = opponent.getLocation();
-	return (oloc.getX() + size < loc.getX() || loc.getX() <= oloc.getX())
-		|| (Math.abs(loc.getY() - oloc.getY()) >= size*2/3)
-		|| (Math.abs(opponent.getZ() - player.getZ()) >= size);
-}
-Client.checkRightCollision = function(player, opponent, size) {
-	var loc = player.getLocation();
-	var oloc = opponent.getLocation();
-	return (oloc.getX() - size > loc.getX() || oloc.getX() <= loc.getX())
-		|| (Math.abs(loc.getY() - oloc.getY()) >= size*2/3)
-		|| (Math.abs(opponent.getZ() - player.getZ()) >= size);
-}
-Client.checkUpCollision = function(player, opponent, size) {
-	var loc = player.getLocation();
-	var oloc = opponent.getLocation();
-	return (loc.getY() - size*2/3 > oloc.getY() || loc.getY() <= oloc.getY())
-		|| (Math.abs(loc.getX() - oloc.getX()) >= size)
-		|| (Math.abs(opponent.getZ() - player.getZ()) >= size);
-}
-Client.checkDownCollision = function(player, opponent, size) {
-	var loc = player.getLocation();
-	var oloc = opponent.getLocation();
-	return (loc.getY() + size*2/3 < oloc.getY() || oloc.getY() <= loc.getY())
-		|| (Math.abs(loc.getX() - oloc.getX()) >= size)
-		|| (Math.abs(opponent.getZ() - player.getZ()) >= size);
-}
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -174,7 +145,7 @@ Client.appendOpponentInputs = function(inputs) {
 	}
 };
 
-Client.sendServerUpdate = function () {
+Client.processLocalInputs = function () {
 	var player = App.player;
 	var packet = Client.inputProcessor.processInputs();
 
@@ -184,35 +155,39 @@ Client.sendServerUpdate = function () {
 			Client.storeInput(packet);
 		}
 	}
-
 	Client.updatePlayerAnimation(packet);
+	return packet;
+};
+
+Client.sendServerUpdate = function (packet) {
+	var player = App.player;
 	var animationName = player.getSpriteSheet().getCurrentAnimation();
 	packet.animationName = animationName;
 	socket.emit('update', packet);
 };
 
-Client.updatePlayerAnimation = function (input) {
+Client.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
 	var player = App.player;
 	var playerSprite = player.getSpriteSheet();
 
-	if (input.kickCombo) {
+	if (packet.kickCombo) {
 		playerSprite.setActiveAnimation('kickComboAnimation');
-	} else if (input.punchCombo) {
+	} else if (packet.punchCombo) {
 		playerSprite.setActiveAnimation('punchComboAnimation');
-	} else if (input.punchKey) {
+	} else if (packet.punchKey) {
 		var punchNumber = Math.ceil(Math.random() * 2);
 		playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
-	} else if (input.kickKey) {
+	} else if (packet.kickKey) {
 		playerSprite.setActiveAnimation('kickAnimation');
-	} else if (input.jumpKey) {
+	} else if (packet.jumpKey) {
 		playerSprite.setActiveAnimation('jumpAnimation');
-	} else if (input.key === keys.DEFEND) {
+	} else if (packet.key === keys.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 
 	if (player.isStanding()) {
-		if (input.key !== 0) {
+		if (packet.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}
 		else if (player.isPunched()) {
@@ -321,7 +296,7 @@ Client.kick = function() {
 	}, 1000/30);
 };
 
-Client.flip = function() {
+Client.flipPlayerSpritesheets = function() {
 	var playerSpriteSheet = App.player.getSpriteSheet();
 	var opponentSpriteSheet = App.opponent.getSpriteSheet();
 	var x = App.player.getLocation().getX();
@@ -359,13 +334,14 @@ Client.updatePlayersDepth = function () {
 
 Client.update = function() {
 	Client.processServerData();
-	Client.sendServerUpdate();
+	var packet = Client.processLocalInputs();
+	Client.sendServerUpdate(packet);
 	if (Client.interpolation) {
 		Client.interpolate();
 	}
 	App.player.update();
 	App.opponent.update();
-	Client.flip();
+	Client.flipPlayerSpritesheets();
 	Client.updatePlayersDepth();
 };
 
