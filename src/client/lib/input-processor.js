@@ -114,37 +114,39 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 
 InputProcessor.prototype.processComboInputs = function (input) {
 
+	var physics = Client.physics;
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
 
 	if (control.quickTapped(keys.KICK)) {
 			player.setUsingCombo(1);
-			Client.comboKick();
+			physics.comboKick();
 			input.kickCombo = true;
 			console.log('kick combo');
 	}
 	else if (control.quickTapped(keys.PUNCH)) {
 			player.setUsingCombo(1);
-			Client.comboPunch();
+			physics.comboPunch();
 			input.punchCombo = true;
 			console.log('combo punch');
 	}
 	else if (control.isDown(keys.PUNCH)) {
 			input.punchKey = true;
 			player.setPunchState(1);
-			Client.punch();
+			physics.punch();
 			console.log('simple punch');
 	}
 	else if(control.isDown(keys.KICK)) {
 			input.kickKey = true;
 			player.setKickState(1);
-			Client.kick();
+			physics.kick();
 			console.log('simple kick');
 	}
 };
 
 InputProcessor.prototype.processActionInputs = function (input) {
+	var physics = Client.physics;
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
@@ -161,7 +163,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 			input.jumpKey = true;
 			player.setSpeedZ(speedZ);
 			player.setJumpState(1);
-			Client.jump();
+			physics.jump();
 		}
 	}
 	else if (control.isDown(keys.DEFEND)) {

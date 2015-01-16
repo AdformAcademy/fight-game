@@ -8,6 +8,7 @@ var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./spritesheet');
+var WorldPhysics = require('./world-physics');
 var socket = io();
 
 var GlobalEvents = module.exports = function() {};
@@ -63,6 +64,11 @@ socket.on('playing', function(data) {
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+
+  Client.physics = new WorldPhysics({
+    player: App.player,
+    opponent: App.opponent
+  });
 
   Client.inputProcessor = new InputProcessor({
     player: App.player,
