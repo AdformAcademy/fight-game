@@ -1,6 +1,6 @@
 var Config = require('./config');
 
-var InputCollection = function () {};
+var InputCollection = {};
 
 InputCollection.pressed = {};
 InputCollection.pressTimes = {};

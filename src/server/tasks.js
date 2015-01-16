@@ -3,7 +3,7 @@ var browserify = require('browserify');
 var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
 
-var Tasks = function () {};
+var Tasks = {};
 
 gulp.task('browserify', function () {
   	var browserified = transform(function(filename) {

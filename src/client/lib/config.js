@@ -1,6 +1,6 @@
 var BaseConfig = require('../../common/base-config');
 
-var Config = module.exports = function() {};
+var Config = {};
 
 Config.playerMoveSpeed = BaseConfig.playerMoveSpeed;
 Config.playerAcceleration = BaseConfig.playerAcceleration;
@@ -11,3 +11,5 @@ Config.keyBindings = BaseConfig.keyBindings;
 Config.canvasUpdateInterval = 30;
 Config.canvasMaskColor = '#000000';
 Config.quickTapDuration = 300;
+
+module.exports = Config;

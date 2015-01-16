@@ -4,7 +4,7 @@ var StartScreen = require('./lib/screen/start');
 var Player = require('./lib/player');
 var SpriteSheet = require('./lib/spritesheet');
 
-var App = module.exports = function() {};
+var App = module.exports = {};
 
 App.screen = new StartScreen();
 App.canvasObj = new Canvas('#window');

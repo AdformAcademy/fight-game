@@ -1,6 +1,6 @@
 var Session = require('./session');
 
-function SessionCollection() {};
+var SessionCollection = {};
 
 SessionCollection.list = [];
 

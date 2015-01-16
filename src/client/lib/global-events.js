@@ -11,7 +11,7 @@ var SpriteSheet = require('./spritesheet');
 var WorldPhysics = require('./world-physics');
 var socket = io();
 
-var GlobalEvents = module.exports = function() {};
+var GlobalEvents = {};
 
 $(window).keydown(function (event) {
 	InputCollection.onKeydown(event);
@@ -96,3 +96,5 @@ $(window).load(function () {
 	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();
 });
+
+module.exports = GlobalEvents;

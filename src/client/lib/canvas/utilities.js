@@ -1,7 +1,7 @@
 var App = require('../../app');
 var Point = require('./point');
 
-function Utilities() {}
+var Utilities = {};
 
 Utilities.centerX = function(objectWidth) {
 	var halfWidth = objectWidth / 2;

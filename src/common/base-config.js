@@ -1,4 +1,4 @@
-var BaseConfig = function() {};
+var BaseConfig = {};
 
 BaseConfig.playerMoveSpeed = 5;
 BaseConfig.playerAcceleration = 2;

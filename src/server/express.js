@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 
-function Express() {};
+var Express = {};
 
 Express.loadResources = function(dirname) {
 	app.get('/', function(req, res){

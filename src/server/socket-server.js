@@ -6,7 +6,7 @@ var Player = require('./player');
 var Config = require('./config');
 var fs = require('fs');
 
-var SocketServer = function() {};
+var SocketServer = {};
 
 SocketServer.http = require('http').Server(Express.app);
 
