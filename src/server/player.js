@@ -1,11 +1,8 @@
 var Player = function (params) {
   this.id = params.id;
   this.opponentId = params.opponentId;
-  this.location = {
-    x: params.x || 0,
-    y: params.y || 0,
-    z: params.z || 0
-  };
+  this.location = params.location;
+  this.z = params.z || 0;
   this.speedZ = 0;
   this.jumping = false;
   this.punching = false;
@@ -30,16 +27,24 @@ Player.prototype.setOpponentId = function(opponentId) {
   this.opponentId = opponentId;
 };
 
+Player.prototype.getLocation = function () {
+  return this.location;
+};
+
+Player.prototype.setLocation = function (location) {
+  this.location = location;
+};
+
 Player.prototype.getX = function() {
-  return this.location.x;
+  return this.location.getX();
 };
 
 Player.prototype.getY = function() {
-  return this.location.y;
+  return this.location.getY();
 };
 
 Player.prototype.getZ = function() {
-  return this.location.z;
+  return this.z;
 };
 
 Player.prototype.getSpeedZ = function() {
@@ -63,15 +68,15 @@ Player.prototype.isKicking = function() {
 };
 
 Player.prototype.setX = function(x) {
-  this.location.x = x;
+  this.location.setX(x);
 };
 
 Player.prototype.setY = function(y) {
-  this.location.y = y;
+  this.location.setY(y);
 };
 
 Player.prototype.setZ = function(z) {
-  this.location.z = z;
+  this.z = z;
 };
 
 Player.prototype.setSpeedZ = function(speedZ) {
@@ -132,9 +137,9 @@ Player.prototype.getCharacterData = function () {
 
 Player.prototype.toPacket = function() {
   return {
-    x: this.location.x,
-    y: this.location.y,
-    z: this.location.z,
+    x: this.location.getX(),
+    y: this.location.getY(),
+    z: this.z,
     currentAnimation: this.currentAnimation
   };
 };

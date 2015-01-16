@@ -10,7 +10,7 @@ function CountDownScreen(){
 	App = require('../../app');
 	StageScreen = require('./stage');
 	Utilities = require('../canvas/utilities');
-	Point = require('../canvas/point');
+	Point = require('../../../common/point');
 	Background = require('../canvas/background');
 	Text = require('../canvas/text');
 	this.backgroundImage = new Background('./img/stage_background.png');

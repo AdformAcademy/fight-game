@@ -1,7 +1,7 @@
 'use strict';
 
 var Background = require('../../../src/client/lib/canvas/background.js');
-var Point = require('../../../src/client/lib/canvas/point.js');
+var Point = require('../../../src/common/point.js');
 
 describe('Background', function () {
 	var body = $(document.body),

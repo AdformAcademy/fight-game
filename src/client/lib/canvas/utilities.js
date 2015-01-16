@@ -1,5 +1,5 @@
 var App = require('../../app');
-var Point = require('./point');
+var Point = require('../../../common/point');
 
 var Utilities = {};
 

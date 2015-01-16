@@ -1,6 +1,7 @@
 'use strict';
 
-var Player = require('../../../src/client/lib/player.js');
+var Player = require('../../../src/client/lib/player');
+var Point = require('../../../src/common/point');
 
 describe('Player', function () {
 
@@ -17,13 +18,31 @@ describe('Player', function () {
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
 
-		locationMock = {};
+		locationMock = new Point(0, 1);
 		spritesheetMock = {};
 		player = new Player(locationMock, spritesheetMock);
 	});
 
 	afterEach(function() {
 		body.empty();
+	});
+
+	it('should get default X coordinate', function() {
+		expect(player.getX()).toBe(0);
+	});
+
+	it('should set X coordinate to 5', function() {
+		player.setX(5);
+		expect(player.getX()).toBe(5);
+	});
+
+	it('should get default Y coordinate', function() {
+		expect(player.getY()).toBe(1);
+	});
+
+	it('should set Y coordinate to 5', function() {
+		player.setY(5);
+		expect(player.getY()).toBe(5);
 	});
 
 	it('should get default location', function() {

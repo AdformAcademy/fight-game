@@ -3,6 +3,7 @@ var Session = require('./session');
 var SessionCollection = require('./session-collection');
 var PlayerCollection = require('./player-collection');
 var Player = require('./player');
+var Point = require('../common/point');
 var Config = require('./config');
 var fs = require('fs');
 
@@ -57,16 +58,14 @@ SocketServer.prepareClient = function (socket) {
 			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
-				x: Config.firstSpawnLocation.x,
-				y: Config.firstSpawnLocation.y,
+				location: new Point(Config.firstSpawnLocation.x, Config.firstSpawnLocation.y),
 				z: Config.firstSpawnLocation.z,
 				characterData: playerData
 			});
 			var opponent = new Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
-				x: Config.secondSpawnLocation.x,
-				y: Config.secondSpawnLocation.y,
+				location: new Point(Config.secondSpawnLocation.x, Config.secondSpawnLocation.y),
 				z: Config.secondSpawnLocation.z,
 				characterData: opponentData
 			});

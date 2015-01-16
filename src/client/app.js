@@ -1,5 +1,5 @@
 var Canvas = require('./lib/canvas/canvas');
-var Point = require('./lib/canvas/point');
+var Point = require('../common/point');
 var StartScreen = require('./lib/screen/start');
 var Player = require('./lib/player');
 var SpriteSheet = require('./lib/spritesheet');

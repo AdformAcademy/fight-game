@@ -9,7 +9,7 @@ var obj;
 function WaitingScreen() {
 	App = require('../../app');
 	Utilities = require('../canvas/utilities');
-	Point = require('../canvas/point');
+	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	Background = require('../canvas/background');
 	StageScreen = require('./stage');

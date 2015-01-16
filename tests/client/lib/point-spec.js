@@ -1,6 +1,6 @@
 'use strict';
 
-var Point = require('../../../src/client/lib/canvas/point.js');
+var Point = require('../../../src/common/point.js');
 
 describe('Point', function () {
 

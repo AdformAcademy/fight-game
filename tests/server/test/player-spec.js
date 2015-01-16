@@ -1,14 +1,15 @@
 var vows = require('vows');
 var assert = require('assert');
-var Player = require('../../../src/server/player.js');
+var Player = require('../../../src/server/player');
+var Point = require('../../../src/common/point');
 
 var mockPlayerData = {};
+var mockLocation = new Point(0, 1);
 
 var player = new Player({
 	id: 'mockId',
 	opponentId: 'opponentMockId',
-	x: 0,
-	y: 1,
+	location: mockLocation,
 	z: 2,
 	characterData: mockPlayerData
 });
@@ -30,32 +31,62 @@ vows.describe('Player').addBatch({
 			assert.strictEqual(player.getOpponentId(), 'opponentMockId');
 		}
 	},
-	'x coordinate': {
+	'location': {
 		'getter is defined': function () {
-			assert.isTrue(player.getX() !== undefined);
+			assert.isTrue(player.getLocation() !== undefined);
 		},
 		'setter is defined': function () {
+			assert.isTrue(player.setLocation !== undefined);
+		},
+		'returns default location': function () {
+			assert.strictEqual(player.getLocation(), mockLocation);
+		},
+		'sets new location to {4, 10}': function () {
+			var newPoint = new Point(4, 10);
+			player.setLocation(newPoint);
+			assert.strictEqual(player.getLocation(), newPoint);
+		}
+	},
+	'x coordinate': {
+		topic: new Player({
+			id: 'mockId',
+			opponentId: 'opponentMockId',
+			location: mockLocation,
+			z: 2,
+			characterData: mockPlayerData
+		}),
+		'getter is defined': function (player) {
+			assert.isTrue(player.getX() !== undefined);
+		},
+		'setter is defined': function (player) {
 			assert.isTrue(player.setX !== undefined);
 		},
-		'returns default x coordinate': function () {
+		'returns default x coordinate': function (player) {
 			assert.strictEqual(player.getX(), 0);
 		},
-		'sets x coordinate to 5': function () {
+		'sets x coordinate to 5': function (player) {
 			player.setX(5);
 			assert.strictEqual(player.getX(), 5);
 		}
 	},
 	'y coordinate': {
-		'getter is defined': function () {
+		topic: new Player({
+			id: 'mockId',
+			opponentId: 'opponentMockId',
+			location: mockLocation,
+			z: 2,
+			characterData: mockPlayerData
+		}),
+		'getter is defined': function (player) {
 			assert.isTrue(player.getY() !== undefined);
 		},
-		'setter is defined': function () {
+		'setter is defined': function (player) {
 			assert.isTrue(player.setY !== undefined);
 		},
-		'returns default y coordinate': function () {
+		'returns default y coordinate': function (player) {
 			assert.strictEqual(player.getY(), 1);
 		},
-		'sets y coordinate to 5': function () {
+		'sets y coordinate to 5': function (player) {
 			player.setY(5);
 			assert.strictEqual(player.getY(), 5);
 		}
@@ -194,8 +225,7 @@ vows.describe('Player').addBatch({
 		topic: new Player({
 			id: 'mockId',
 			opponentId: 'opponentMockId',
-			x: 0,
-			y: 1,
+			location: new Point(0, 1),
 			z: 2,
 			characterData: mockPlayerData
 		}),

@@ -31,6 +31,22 @@ Player.prototype.setZ = function(z) {
 	this.z = z;
 };
 
+Player.prototype.getX = function() {
+	return this.location.getX();
+};
+
+Player.prototype.getY = function() {
+	return this.location.getY();
+};
+
+Player.prototype.setX = function(x) {
+	this.location.setX(x);
+};
+
+Player.prototype.setY = function(y) {
+	this.location.setY(y);
+};
+
 Player.prototype.getSpeedZ = function(){
   return this.speedZ;
 };

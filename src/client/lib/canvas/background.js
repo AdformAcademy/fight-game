@@ -2,7 +2,7 @@ var Point;
 var App;
 
 function Background(image) {
-	Point = require('./point');
+	Point = require('../../../common/point');
 	App = require('../../app');
 
 	this.src = image;

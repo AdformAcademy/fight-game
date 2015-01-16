@@ -1,7 +1,7 @@
 'use strict';
 
 var Button = require('../../../src/client/lib/canvas/button.js');
-var Point = require('../../../src/client/lib/canvas/point.js');
+var Point = require('../../../src/common/point.js');
 
 describe('Button', function () {
 
