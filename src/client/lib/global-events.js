@@ -1,5 +1,6 @@
 var App = require('../app');
 var InputCollection = require('./input-collection');
+var InputProcessor = require('./input-processor');
 var Client = require('./client');
 var EventCollection = require('./event-collection');
 var Point = require('./canvas/point');
@@ -49,8 +50,6 @@ socket.on('playing', function(data) {
   var opponentSpriteImage = new Image();
   opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
-  console.log(data.player.data);
-
   var buildSprite = function(image, spriteSheetData) {
     return SpriteSheet({
       image: image,
@@ -64,6 +63,11 @@ socket.on('playing', function(data) {
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+
+  Client.inputProcessor = new InputProcessor({
+    player: App.player,
+    opponent: App.opponent
+  });
 
   App.screen.dispose();
   App.screen = new CountDownScreen();

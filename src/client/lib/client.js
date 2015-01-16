@@ -1,9 +1,10 @@
 var App = require('../app');
 var Config = require('./config');
 var InputCollection = require('./input-collection');
+var InputProcessor = require('./input-processor');
 var socket = io();
 
-var Client = module.exports = function() {};
+var Client = module.exports = {};
 
 Client.inputs = [];
 Client.serverData = [];
@@ -14,6 +15,7 @@ Client.prediction = true;
 Client.reconciliation = true;
 Client.interpolation = true;
 Client.opponentInputs = [];
+Client.inputProcessor = null;
 
 Client.applyCoordinates = function(player, x, y, z) {
 	var playerLocation = player.getLocation();
@@ -25,16 +27,12 @@ Client.applyCoordinates = function(player, x, y, z) {
 };
 
 Client.applyInput = function(player, input) {
+
 	if (!input) {
 		return;
 	}
-	var opponent;
-	if (player === App.player) {
-		opponent = App.opponent;
-	} else {
-		opponent = App.player;
-	}
-
+	
+	var opponent = player === App.player ? App.opponent : App.player;
 	var keys = Config.keyBindings;
 
 	var x = player.getLocation().getX();
@@ -176,185 +174,54 @@ Client.appendOpponentInputs = function(inputs) {
 	}
 };
 
-Client.processInputs = function() {
-	var input = {
-		id: Client.inputCounter,
-		key: 0,
-		jumpKey: false,
-		punchKey: false,
-		kickKey: false,
-		punchCombo: false,
-		kickCombo: false
-	};
-
-	var keys = Config.keyBindings;
-	var control = InputCollection;
-	var screenWidth = App.canvasObj.getWidth();
-	var screenHeight = App.canvasObj.getHeight();
+Client.sendServerUpdate = function () {
 	var player = App.player;
-	var playerSprite = player.getSpriteSheet();
-	var playerLocation = player.getLocation();
-	var x = player.getLocation().getX();
-	var y = player.getLocation().getY();
-	var z = player.getZ();
-	var opponent = App.opponent;
-	var opponentSprite = App.opponent.getSpriteSheet();
-	var opy = opponent.getLocation().getY();
-	var opz = opponent.getZ();
-	var size = Config.playerSize;
+	var packet = Client.inputProcessor.processInputs();
 
-	if(!player.isPunching()&& !player.isKicking() && player.isPunched() == 0){
-
-		if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
-			if (x < screenWidth - 185 && y > 150 && Client.checkRightCollision(player, opponent, size)
-				&& Client.checkUpCollision(player, opponent, size)) {
-				input.key = keys.UP_RIGHT;
-			}
-			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-				input.key = keys.RIGHT;
-			}
-			else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-				input.key = keys.UP;
-			}
-		}
-		else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
-			if (x > -135 && y > 150 && Client.checkLeftCollision(player, opponent, size)
-				&& Client.checkUpCollision(player, opponent, size)) {
-				input.key = keys.UP_LEFT;
-			}
-			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-				input.key = keys.LEFT;
-			}
-			else if (y > 150 && Client.checkUpCollision(player, opponent, size)){
-				input.key = keys.UP;
-			}
-		}
-		else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
-			if (x > -135 && y < screenHeight - 200 && Client.checkLeftCollision(player, opponent, size)
-				&& Client.checkDownCollision(player, opponent, size)){
-				input.key = keys.DOWN_LEFT;
-			}
-			else if (x > -135 && Client.checkLeftCollision(player, opponent, size)) {
-				input.key = keys.LEFT;
-			}
-			else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-				input.key = keys.DOWN;
-			}
-		}
-		else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
-			if (x < screenWidth - 185 && y < screenHeight - 200 && Client.checkRightCollision(player, opponent, size)
-				&& Client.checkDownCollision(player, opponent, size)){
-				input.key = keys.DOWN_RIGHT;
-			}
-			else if (x < screenWidth - 185 && Client.checkRightCollision(player, opponent, size)) {
-				input.key = keys.RIGHT;
-			}
-			else if (y < screenHeight - 200 && Client.checkDownCollision(player, opponent, size)){
-				input.key = keys.DOWN;
-			}
-		}
-		else if (control.isDown(keys.RIGHT)) {
-			if (x < screenWidth - 185){
-				if(Client.checkRightCollision(player, opponent, size))
-					input.key = keys.RIGHT;
-			}
-		}
-		else if (control.isDown(keys.LEFT)) {
-			if (x > -135){
-				if(Client.checkLeftCollision(player, opponent, size))
-					input.key = keys.LEFT;
-			}
-		}
-		else if (control.isDown(keys.UP)) {
-			if (y > 150) {
-				if(Client.checkUpCollision(player, opponent, size))
-					input.key = keys.UP;
-			}
-		}
-		else if (control.isDown(keys.DOWN)) {
-			if (y < screenHeight - 200) {
-				if(Client.checkDownCollision(player, opponent, size))
-					input.key = keys.DOWN;
-			}
-		}
-		if(!player.usingCombo()){
-			if (control.quickTapped(keys.KICK)) {
-					playerSprite.setActiveAnimation('kickComboAnimation');
-					player.setUsingCombo(1);
-					Client.comboKick();
-					input.kickCombo = true;
-					console.log('kick combo');
-			}
-			else if (control.quickTapped(keys.PUNCH)) {
-					playerSprite.setActiveAnimation('punchComboAnimation');
-					player.setUsingCombo(1);
-					Client.comboPunch();
-					input.punchCombo = true;
-					console.log('combo punch');
-			}
-			else if (control.isDown(keys.PUNCH)) {
-					var punchNumber = Math.ceil(Math.random() * 2);
-					input.punchKey = true;
-					playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
-					player.setPunchState(1);
-					Client.punch();
-					console.log('simple punch');
-			}
-			else if(control.isDown(keys.KICK)) {
-					input.kickKey = true;
-					playerSprite.setActiveAnimation('kickAnimation');
-					player.setKickState(1);
-					Client.kick();
-					console.log('simple kick');
-			}
-		}
-		if (control.isDown(keys.JUMP)) {
-				if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
-					playerSprite.setActiveAnimation('jumpAnimation');
-					input.jumpKey = true;
-					speedZ = Config.playerJumpSpeed;
-					player.setSpeedZ(speedZ);
-					player.setJumpState(1);
-					Client.jump();
-				}
-		}
-		else if (control.isDown(keys.DEFEND)) {
-			if (!player.isDefending()) {
-				playerSprite.setActiveAnimation('defendAnimation');
-				player.setDefending(true);
-			}
-			input.key = keys.DEFEND;
-		} else {
-			player.setDefending(false);
+	if (Client.prediction) {
+		Client.applyInput(player, packet);
+		if (Client.reconciliation) {
+			Client.storeInput(packet);
 		}
 	}
+
+	Client.updatePlayerAnimation(packet);
+	var animationName = player.getSpriteSheet().getCurrentAnimation();
+	packet.animationName = animationName;
+	socket.emit('update', packet);
+};
+
+Client.updatePlayerAnimation = function (input) {
+	var keys = Config.keyBindings;
+	var player = App.player;
+	var playerSprite = player.getSpriteSheet();
+
+	if (input.kickCombo) {
+		playerSprite.setActiveAnimation('kickComboAnimation');
+	} else if (input.punchCombo) {
+		playerSprite.setActiveAnimation('punchComboAnimation');
+	} else if (input.punchKey) {
+		var punchNumber = Math.ceil(Math.random() * 2);
+		playerSprite.setActiveAnimation('punchAnimation' + punchNumber);
+	} else if (input.kickKey) {
+		playerSprite.setActiveAnimation('kickAnimation');
+	} else if (input.jumpKey) {
+		playerSprite.setActiveAnimation('jumpAnimation');
+	} else if (input.key === keys.DEFEND) {
+		playerSprite.setActiveAnimation('defendAnimation');
+	}
+
 	if (player.isStanding()) {
 		if (input.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}
-		else if(player.isPunched() == 1 || player.isPunched() == 2 || player.isPunched() == 3  || player.isPunched() == 4){
+		else if (player.isPunched()) {
 			playerSprite.setActiveAnimation('damageAnimation');
 		}
-		else if(player.isPunched() == 0){
+		else if (!player.isPunched()) {
 			playerSprite.setActiveAnimation('standAnimation');
 		}
 	}
-
-	if (Client.prediction) {
-		Client.applyInput(player, input);
-		if (Client.reconciliation) {
-			Client.storeInput(input);
-		}
-	}
-	Client.inputCounter++;
-	return input;
-};
-
-Client.sendServerUpdate = function () {
-	var updatePacket = Client.processInputs();
-	var animationName = App.player.getSpriteSheet().getCurrentAnimation();
-	updatePacket.animationName = animationName;
-	socket.emit('update', updatePacket);
 };
 
 Client.jump = function() {
