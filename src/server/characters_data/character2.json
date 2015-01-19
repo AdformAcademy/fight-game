@@ -1,4 +1,11 @@
 {
+	"lives": 100,
+	"damage": {
+		"punch": 5,
+		"kick": 7,
+		"punchCombo": 15,
+		"kickCombo": 20
+	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character2.png",
 		"spriteDimensions": {

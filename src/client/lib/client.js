@@ -70,8 +70,12 @@ Client.processServerData = function() {
     	var oy = state.opponent.y;
     	var opunched = state.opponent.punched;
     	var oz = state.opponent.z;
+    	var lives = state.player.lives;
+    	var olives = state.opponent.lives;
 
     	physics.applyCoordinates(App.player, x, y, null);
+    	console.log('player lives: ' + lives + ', opponent lives' + olives);
+    	//update livebars
 
     	App.player.setPunched(ppunched);
     	App.opponent.setPunched(opunched);
