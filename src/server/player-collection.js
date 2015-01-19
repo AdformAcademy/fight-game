@@ -1,4 +1,4 @@
-function PlayerCollection() {};
+var PlayerCollection = {};
 
 PlayerCollection.list = [];
 

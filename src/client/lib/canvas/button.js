@@ -34,10 +34,6 @@ Button.prototype.getHoverImage = function() {
 	return this.hoverImage;
 };
 
-Button.prototype.setHoverImage = function(hoverImage) {
-	this.hoverImage = hoverImage;
-};
-
 Button.prototype.getActiveImage = function() {
 	return this.activeImage;
 };

@@ -3,7 +3,7 @@ var Point;
 
 function Canvas(id) {
 	Config = require('../config');
-	Point = require('./point');
+	Point = require('../../../common/point');
 
 	this.id = id;
 	this.canvasMaskColor = Config.canvasMaskColor;

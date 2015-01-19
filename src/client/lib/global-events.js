@@ -1,21 +1,24 @@
 var App = require('../app');
+var InputCollection = require('./input-collection');
+var InputProcessor = require('./input-processor');
 var Client = require('./client');
 var EventCollection = require('./event-collection');
-var Point = require('./canvas/point');
+var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./spritesheet');
+var WorldPhysics = require('./world-physics');
 var socket = io();
 
-var GlobalEvents = module.exports = function() {};
+var GlobalEvents = {};
 
 $(window).keydown(function (event) {
-	Client.Key.onKeydown(event);
+	InputCollection.onKeydown(event);
 });
 
 $(window).keyup(function (event) {
-	Client.Key.onKeyup(event);
+	InputCollection.onKeyup(event);
 });
 
 $(window).click(function(event) {
@@ -39,55 +42,38 @@ $(window).mousemove(function(event) {
 });
 
 socket.on('playing', function(data) {
+
+  var playerSpriteData = data.player.data;
+  var opponentSpriteData = data.opponent.data;
   var playerSpriteImage = new Image();
-  playerSpriteImage.src = './img/' + data.player.image;
+  playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
   var opponentSpriteImage = new Image();
-  opponentSpriteImage.src = './img/' + data.opponent.image;
+  opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
 
-  var getSprite = function(image) {
-    return SpriteSheet({
+  var buildSprite = function(image, spriteSheetData) {
+    return new SpriteSheet({
       image: image,
-      spriteDimensions: {
-        width: 10240,
-        height: 224,
-        frameWidth: 320
-      },
-      animations: {
-        standAnimation: {
-          name: 'standAnimation',
-          startFrame: 28,
-          frames: 4,
-          speed: 0.2
-        },
-        moveAnimation: {
-          name: 'moveAnimation',
-          startFrame: 8,
-          frames: 6,
-          speed: 0.2
-        },
-        jumpAnimation: {
-          name: 'jumpAnimation',
-          startFrame: 2,
-          frames: 6,
-          speed: 0.2
-        },
-        punchAnimation: {
-          name: 'punchAnimation',
-          startFrame: 25,
-          frames: 2,
-          speed: 0.2
-        }
-      },
-      defaultAnimation: 'standAnimation'
+      data: spriteSheetData,
+      frames: 1,
     });
   };
 
-  var playerSprite = getSprite(playerSpriteImage);
-  var opponentSprite = getSprite(opponentSpriteImage);
+  var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
+  var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 
   App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
   App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+
+  Client.physics = new WorldPhysics({
+    player: App.player,
+    opponent: App.opponent
+  });
+
+  Client.inputProcessor = new InputProcessor({
+    player: App.player,
+    opponent: App.opponent
+  });
 
   App.screen.dispose();
   App.screen = new CountDownScreen();
@@ -110,3 +96,5 @@ $(window).load(function () {
 	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();
 });
+
+module.exports = GlobalEvents;

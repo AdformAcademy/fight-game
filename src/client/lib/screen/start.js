@@ -12,7 +12,7 @@ function StartScreen() {
 	App = require('../../app');
 	Utilities = require('../canvas/utilities');
 	Button = require('../canvas/button');
-	Point = require('../canvas/point');
+	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	WaitingScreen = require('./waiting');
 	Background = require('../canvas/background');

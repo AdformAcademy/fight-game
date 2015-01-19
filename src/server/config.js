@@ -1,12 +1,14 @@
 var BaseConfig = require('../common/base-config');
 
-var Config = function() {};
+var Config = {};
 
 Config.port = 3000;
 Config.playerMoveSpeed = BaseConfig.playerMoveSpeed;
 Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
+Config.keyBindings = BaseConfig.keyBindings;
+Config.screenWidth = 900;
 Config.firstSpawnLocation = {
 	x: 0,
 	y: 300,
@@ -17,5 +19,6 @@ Config.secondSpawnLocation = {
 	y: 300,
 	z: 0
 };
+Config.charactersPath = 'src/server/characters_data/';
 
 module.exports = Config

@@ -1,0 +1,104 @@
+{
+	"spriteSheetData": {
+		"spriteSheetImage": "character1.png",
+		"spriteDimensions": {
+			"width": 19840,
+			"height": 224,
+			"frameWidth": 320
+		},
+		"animations": {
+			"standAnimation": {
+				"name": "standAnimation",
+				"startFrame": 29,
+				"frames": 3,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"moveAnimation": {
+				"name": "moveAnimation",
+				"startFrame": 8,
+				"frames": 6,
+				"speed": 0.35,
+				"order": "desc"
+			},
+			"jumpAnimation": {
+				"name": "jumpAnimation",
+				"startFrame": 2,
+				"frames": 6,
+				"speed": 0.25,
+				"order": "asc"
+			},
+			"punchAnimation1": {
+				"name": "punchAnimation1",
+				"startFrame": 24,
+				"frames": 2,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"punchAnimation2": {
+				"name": "punchAnimation2",
+				"startFrame": 26,
+				"frames": 2,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"defendAnimation": {
+				"name": "defendAnimation",
+				"startFrame": 55,
+				"frames": 1,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"damageAnimation": {
+				"name": "damageAnimation",
+				"startFrame": 0,
+				"frames": 1,
+				"speed": 10.0,
+				"order": "asc"
+			},
+			"kickAnimation": {
+				"name": "kickAnimation",
+				"startFrame": 44,
+				"frames": 5,
+				"speed": 0.4,
+				"order": "desc"
+			},
+			"jumpKickAnimation": {
+				"name": "jumpKickAnimation",
+				"startFrame": 32,
+				"frames": 4,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"jumpPunchAnimation": {
+				"name": "jumpPunchAnimation",
+				"startFrame": 42,
+				"frames": 2,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"runningAnimation": {
+				"name": "runningAnimation",
+				"startFrame": 36,
+				"frames": 6,
+				"speed": 0.35,
+				"order": "asc"
+			},
+			"punchComboAnimation": {
+				"name": "punchComboAnimation",
+				"startFrame": 49,
+				"frames": 6,
+				"speed": 0.5,
+				"order": "asc"
+			},
+			"kickComboAnimation": {
+				"name": "kickComboAnimation",
+				"startFrame": 56,
+				"frames": 6,
+				"speed": 0.3,
+				"order": "asc"
+			}
+		},
+		"defaultAnimation": "standAnimation"
+	}
+}

@@ -1,14 +1,16 @@
 var App;
+var Point;
 
 function Text(text, size) {
 	App = require('../../app');
+	Point = require('../../../common/point');
 
 	this.text = text;
 	this.size = size;
-	this.location = location;
+	this.location = new Point(0, 0);
 	this.fontType = 'Arial';
 	this.color = '#000000';
-	this.isVisible = true;
+	this.visible = true;
 };
 
 Text.prototype.getLocation = function() {
@@ -56,7 +58,7 @@ Text.prototype.getTextWidth = function() {
 };
 
 Text.prototype.isVisible = function() {
-	return this.isVisible;
+	return this.visible;
 };
 
 Text.prototype.draw = function() {

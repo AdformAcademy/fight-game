@@ -1,6 +1,6 @@
 var Session = require('./session');
 
-function SessionCollection() {};
+var SessionCollection = {};
 
 SessionCollection.list = [];
 
@@ -25,6 +25,7 @@ SessionCollection.sessionExists = function(sessionId) {
 SessionCollection.createSession = function(socket) {
   var sesObj = new Session(socket, null, Session.READY);
   SessionCollection.list[socket.id] = sesObj;
+  return sesObj;
 };
 
 SessionCollection.deleteSession = function(sessionId) {

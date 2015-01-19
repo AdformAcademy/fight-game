@@ -1,6 +1,6 @@
-var Point = require('./canvas/point');
+var Point = require('../../common/point');
 
-function EventCollection() {};
+var EventCollection = {};
 
 EventCollection.clickList = [];
 EventCollection.mouseOverList = [];
