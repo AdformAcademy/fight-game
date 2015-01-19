@@ -131,6 +131,12 @@ InputProcessor.prototype.processComboInputs = function (input) {
 		physics.punch();
 		input.punchKey = true;
 	}
+	else if (control.isDown(keys.KICK) && player.isJumping()) {
+		console.log("jumping and kicking");
+		player.setKicking(true);
+		physics.kick();
+		input.kickKey = true;
+	}
 	else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
 		player.setUsingCombo(true);
 		physics.comboPunch();

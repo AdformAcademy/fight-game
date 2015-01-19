@@ -381,18 +381,23 @@ SocketServer.executeInput = function(player, input) {
 			player.setPunching(true);
 			SocketServer.punch(player);
 		}
+		if (player.isJumping() && input.kickKey) {
+			console.log("Jumping and kicking");
+			player.setKicking(true);
+			SocketServer.kick(player);
+		}
 		else if (input.punchKey && player.isPunching()) {
 			var inputs = SocketServer.punchInputs[player.getID()];
 			if(inputs !== undefined) {
 				inputs.push(input);
 			}
 		}
-		if(input.kickKey) {
+		if (input.kickKey) {
 			player.setKicking(true);
 			SocketServer.kick(player);
 			console.log('simple kick');
 		}
-		else if(input.kickKey) {
+		else if (input.kickKey && player.isKicking()) {
 			var inputs = SocketServer.kickInputs[player.getID()];
 			if(inputs !== undefined) {
 				inputs.push(input);

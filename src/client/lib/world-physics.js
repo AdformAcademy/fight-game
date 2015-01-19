@@ -154,6 +154,40 @@ WorldPhysics.prototype.kick = function () {
 	}, 1000/30);
 };
 
+WorldPhysics.prototype.jumpPunch = function() {
+	t = 0;
+	var player = this.player;
+	var updateP = setInterval(function () {
+		t += 30;
+		if (player.usingCombo()) {
+			player.setPunching(false);
+			clearInterval(updateP);
+		}
+		if (t >= 300) {
+			player.setPunching(false);
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
+WorldPhysics.prototype.jumpKick = function() {
+	t = 0;
+	var player = this.player;
+	var updateP = setInterval(function () {
+		t += 30;
+		if (player.usingCombo()) {
+			player.setKicking(false);
+			clearInterval(updateP);
+		}
+		if (t >= 400) {
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			player.setKicking(false);
+			clearInterval(updateP);
+		}
+	}, 1000/30);
+};
+
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
 	var player = this.player;
@@ -183,6 +217,18 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		}
 		else if (!player.isPunched()) {
 			playerSprite.setActiveAnimation('standAnimation');
+		}
+	}
+
+
+	if (player.isJumping()) {
+		if (packet.punchKey) {
+			console.log('JUMP TESTTT');
+			playerSprite.setActiveAnimation('jumpPunchAnimation');
+		}
+		else if (packet.kickKey) {
+			console.log('JUMP TESTTT');
+			playerSprite.setActiveAnimation('jumpKickAnimation');
 		}
 	}
 };
