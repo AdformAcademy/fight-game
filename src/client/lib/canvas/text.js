@@ -3,7 +3,7 @@ var Point;
 
 function Text(text, size) {
 	App = require('../../app');
-	Point = require('./point');
+	Point = require('../../../common/point');
 
 	this.text = text;
 	this.size = size;
