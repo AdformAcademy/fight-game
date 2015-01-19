@@ -9,6 +9,7 @@ var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
+var LifeBar = require('./canvas/life-bar');
 var socket = io();
 
 var GlobalEvents = {};
@@ -62,8 +63,41 @@ socket.on('playing', function(data) {
   var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
   var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 
-  App.player = new Player(new Point(data.player.x, data.player.y), playerSprite);
-  App.opponent = new Player(new Point(data.opponent.x, data.opponent.y), opponentSprite);
+  App.player = new Player({
+    location: new Point(data.player.x, data.player.y),
+    spriteSheet: playerSprite,
+    lifeBar: new LifeBar({
+      location: function () {
+        return new Point(10, 10);
+      },
+      width: function () {
+        return App.canvasObj.getWidth() * 0.47;
+      },
+      height: function () {
+        return 31;
+      },
+      currentValue: 645,
+      maxValue: 1000
+    })
+  });
+
+  App.opponent = new Player({
+    location: new Point(data.opponent.x, data.opponent.y),
+    spriteSheet: opponentSprite,
+    lifeBar: new LifeBar({
+      location: function () {
+        return new Point(Math.round(App.canvasObj.getWidth() * 0.515), 10);
+      },
+      width: function () {
+        return App.canvasObj.getWidth() * 0.47;
+      },
+      height: function () {
+        return 31;
+      },
+      currentValue: 300,
+      maxValue: 1000
+    })
+  });
 
   Client.physics = new WorldPhysics({
     player: App.player,

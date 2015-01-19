@@ -1,10 +1,11 @@
 var App;
 var BasePlayer = require('../../common/base-player');
 
-function Player(location, spritesheet) {
+function Player(params) {
 	App = require('../app');
-	this.location = location;
-	this.spritesheet = spritesheet;
+	this.location = params.location;
+	this.spritesheet = params.spriteSheet;
+	this.lifeBar = params.lifeBar;
 	this.depth = 0;
 };
 
@@ -28,8 +29,17 @@ Player.prototype.getDepth = function() {
 	return this.depth;
 };
 
+Player.prototype.getLifeBar = function() {
+	return this.lifeBar;
+};
+
+Player.prototype.setLifeBar = function(lifeBar) {
+	this.lifeBar = lifeBar;
+};
+
 Player.prototype.update = function() {
 	this.spritesheet.update();
+	this.lifeBar.update();
 };
 
 Player.prototype.draw = function() {

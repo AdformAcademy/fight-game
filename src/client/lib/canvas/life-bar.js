@@ -37,4 +37,7 @@ LifeBar.prototype.update = function () {
 	//TODO: update logic
 };
 
+LifeBar.prototype.dispose = function () {
+};
+
 module.exports = LifeBar;

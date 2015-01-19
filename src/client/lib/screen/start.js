@@ -15,7 +15,7 @@ function StartScreen() {
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	WaitingScreen = require('./waiting');
-	Background = require('../canvas/background');
+	Background = require('../canvas/background');	
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button('./img/start_button.png');
@@ -64,6 +64,6 @@ StartScreen.prototype.graphics = function() {
 StartScreen.prototype.dispose = function() {
 	this.startButton.dispose();
 	this.startText.dispose();
-}
+};
 
 module.exports = StartScreen;
