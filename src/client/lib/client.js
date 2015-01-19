@@ -74,7 +74,7 @@ Client.processServerData = function() {
     	var olives = state.opponent.lives;
 
     	physics.applyCoordinates(App.player, x, y, null);
-    	console.log('player lives: ' + lives + ', opponent lives' + olives);
+    	console.log('player lives: ' + lives + ', opponent lives ' + olives);
     	//update livebars
 
     	App.player.setPunched(ppunched);

@@ -293,6 +293,7 @@ SocketServer.punch = function(player) {
 				}
 			}
 			clearInterval(updateP);
+			player.setPunching(false);
 		}
 	}, 1000 / 30);
 	player.setPunching(false);
@@ -320,8 +321,8 @@ SocketServer.kick = function (player) {
 			clearInterval(updateK);
 		}
 		if(!dealingDamage && kicked) {
-			deadlingDamage = true;
 			opponent.dealDamage(player.getDamage('kick'));
+			dealingDamage = true;
 		}
 		if(t >= 400) {
 			if(kicked == 1){
@@ -341,7 +342,7 @@ SocketServer.kick = function (player) {
 			clearInterval(updateK);
 			player.setKicking(false);
 		}
-	}, 1000/30);
+	}, 1000 / 30);
 	player.setKicking(false);
 }
 
