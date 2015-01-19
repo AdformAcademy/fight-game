@@ -1,7 +1,7 @@
 var App;
 
 var SpriteSheet = function (params) {
-	App = require('../app');
+	App = require('../../app');
 	this.canvas = App.canvasObj.canvas;
 	this.image = params.image;
 	this.data = params.data;

@@ -7,7 +7,7 @@ var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
-var SpriteSheet = require('./spritesheet');
+var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
 var socket = io();
 
