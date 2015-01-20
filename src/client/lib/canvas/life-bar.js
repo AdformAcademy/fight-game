@@ -1,10 +1,24 @@
 var ProgressBar = require('./progress-bar');
 
 var LifeBar = function (params) {
-	var usedMaskImage = new Image();
-	usedMaskImage.src = './img/health.png';
-	var leftMaskImage = new Image();
-	leftMaskImage.src = './img/health-used.png';
+	this.healthVeryHighMask = new Image();
+	this.healthVeryHighMask.src = './img/health/very-high.png';
+
+	this.healthHighMask = new Image();
+	this.healthHighMask.src = './img/health/high.png';
+
+	this.healthNormalMask = new Image();
+	this.healthNormalMask.src = './img/health/normal.png';
+
+	this.healthLowMask = new Image();
+	this.healthLowMask.src = './img/health/low.png';
+
+	this.healthVeryLowMask = new Image();
+	this.healthVeryLowMask.src = './img/health/very-low.png';
+
+	this.leftMaskImage = new Image();
+	this.leftMaskImage.src = './img/health/used.png';
+
 	this.params = {
 		location: params.location,
 		width: params.width,
@@ -19,9 +33,9 @@ var LifeBar = function (params) {
 		},
 		fill: {
 			left: '#B5B5B5',
-			leftMask: leftMaskImage,
+			leftMask: this.leftMaskImage,
 			used: '#39BD1E',
-			usedMask: usedMaskImage,
+			usedMask: this.healthVeryHighMask,
 			usedOpacity: 1,
 			globalOpacity: 1
 		}
@@ -65,10 +79,28 @@ LifeBar.prototype.animateChange = function () {
 	}, 1000 / 30);
 };
 
+LifeBar.prototype.updateMask = function () {
+	var maxValue = this.params.maxValue;
+	var currentValue = this.params.currentValue;
+	var percentage = currentValue * 100 / maxValue;
+	if (percentage >= 80) {
+		this.params.fill.usedMask = this.healthVeryHighMask;
+	} else if (percentage < 80 && percentage >= 60) {
+		this.params.fill.usedMask = this.healthHighMask;
+	} else if (percentage < 60 && percentage >= 40) {
+		this.params.fill.usedMask = this.healthNormalMask;
+	} else if (percentage < 40 && percentage >= 20) {
+		this.params.fill.usedMask = this.healthLowMask;
+	} else if (percentage < 20) {
+		this.params.fill.usedMask = this.healthVeryLowMask;
+	}
+};
+
 LifeBar.prototype.update = function () {
 	if (!this.animating && this.stored) {
 		this.animateChange();
 	}
+	this.updateMask();
 };
 
 LifeBar.prototype.dispose = function () {

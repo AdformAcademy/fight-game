@@ -100,10 +100,10 @@ ProgressBar.prototype.constructSourceLayer = function (canvas, params) {
 	this.drawStatusBarLines(canvas, params);
 	canvas.globalAlpha = 1;
 	if (params.fill.leftMask === undefined) {
+		canvas.fillStyle = params.fill.left;
+	} else {
 		var pattern = canvas.createPattern(params.fill.leftMask, 'repeat-x');
 		canvas.fillStyle = pattern;
-	} else {
-		canvas.fillStyle = params.fill.left;
 	}
 	canvas.fill();
 };
