@@ -94,24 +94,28 @@ SocketServer.prepareClient = function (socket) {
 				player: {
 					x: player.getX(),
 					y: player.getY(),
-					data: playerData.spriteSheetData
+					data: playerData.spriteSheetData,
+					lives: player.getLives()
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					data: opponentData.spriteSheetData
+					data: opponentData.spriteSheetData,
+					lives: opponent.getLives()
 				}
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					data: opponentData.spriteSheetData
+					data: opponentData.spriteSheetData,
+					lives: opponent.getLives()
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
-					data: playerData.spriteSheetData
+					data: playerData.spriteSheetData,
+					lives: player.getLives()
 				}
 			});
 		}

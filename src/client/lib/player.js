@@ -39,6 +39,7 @@ Player.prototype.setLifeBar = function(lifeBar) {
 
 Player.prototype.update = function() {
 	this.spritesheet.update();
+	this.lifeBar.update();
 };
 
 Player.prototype.draw = function() {

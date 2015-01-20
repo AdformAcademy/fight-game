@@ -75,7 +75,7 @@ socket.on('playing', function(data) {
 			height: function () {
 				return 31;
 			},
-			currentValue: 645,
+			currentValue: data.player.lives,
 			maxValue: 1000
 		})
 	});
@@ -93,7 +93,7 @@ socket.on('playing', function(data) {
 			height: function () {
 				return 31;
 			},
-			currentValue: 300,
+			currentValue: data.opponent.lives,
 			maxValue: 1000
 		})
 	});
