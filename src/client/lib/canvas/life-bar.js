@@ -21,57 +21,51 @@ var LifeBar = function (params) {
 		}
 	};
 	this.location = params.location;
-	this.changesBuffer = [];
 	this.animating = false;
+	this.updatedValue = 0;
+	this.stored = false;
 };
 
 LifeBar.prototype = new ProgressBar();
 
 LifeBar.prototype.store = function (value) {
-	this.changesBuffer.push(value);
+	this.updatedValue = value;
+	this.stored = true;
 };
 
-LifeBar.prototype.useBuffer = function () {
-	var value = this.changesBuffer[0];
-	if (value === undefined) {
-		return;
-	}
-	var currentValue = this.params.currentValue;
-	if (value !== currentValue) {
-		this.animateChange(value);
-	}
-	this.changesBuffer.shift();
-};
-
-LifeBar.prototype.animateChange = function (value) {
+LifeBar.prototype.animateChange = function () {
 	var self = this;
 	var changeRate = 0.1;
 	var changeMultiplier = 2;
 	this.animating = true;
 	var animate = setInterval(function () {
 		var currentValue = self.params.currentValue;
+		var updatedValue = self.updatedValue;
 		var changed = changeRate * changeMultiplier;
-		if (currentValue > value) {
+		var increasing = true;
+		if (currentValue > updatedValue) {
 			changed = -changed;
+			increasing = false;
 		}
 		self.changeCurrentValue(changed);
 		changeRate = Math.abs(changed);
-		if (self.params.currentValue < value) {
-			self.setCurrentValue(value);
+		if ((self.params.currentValue < updatedValue && !increasing) || 
+			(self.params.currentValue > updatedValue && increasing)) {
+			self.setCurrentValue(updatedValue);
 			clearInterval(animate);
 			self.animating = false;
+			self.stored = false;
 		}
 	}, 1000 / 30);
 };
 
 LifeBar.prototype.update = function () {
-	if (!this.animating) {
-		this.useBuffer();
+	if (!this.animating && this.stored) {
+		this.animateChange();
 	}
 };
 
 LifeBar.prototype.dispose = function () {
-	this.changesBuffer = [];
 };
 
 module.exports = LifeBar;
