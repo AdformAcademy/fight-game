@@ -189,6 +189,7 @@ SocketServer.comboPunch = function (player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
     var opx = opponent.getX();
+
     if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
 		punched = 1;
 		opponent.setPunched(3);
@@ -200,7 +201,7 @@ SocketServer.comboPunch = function (player) {
 	if(punched) {
 		opponent.dealDamage(player.getDamage('punchCombo'));
 	}
-
+	
 	var updateP = setInterval(function(){
 		t += 30;
 		if(t >= 800){
@@ -259,24 +260,25 @@ SocketServer.punch = function(player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
     var opx = opponent.getX();
+
+    if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
+		punched = 1;
+		opponent.setPunched(1);
+	}
+	if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
+		punched = 2;
+		opponent.setPunched(1);
+	}
+	if (player.usingCombo()) {
+		player.setPunching(false);
+		clearInterval(updateP);
+	}
+	if(punched) {
+		opponent.dealDamage(player.getDamage('punch'));
+	}
+
 	var updateP = setInterval(function(){
 		t += 30;
-		if(SocketServer.checkPunchCollisionLeft(player, opponent, 65, 60, 40)){
-			punched = 1;
-			opponent.setPunched(1);
-		}
-		if(SocketServer.checkPunchCollisionRight(player, opponent, 65, 60, 40)){
-			punched = 2;
-			opponent.setPunched(1);
-		}
-		if (player.usingCombo()) {
-			player.setPunching(false);
-			clearInterval(updateP);
-		}
-		if(!dealingDamage && punched) {
-			dealingDamage = true;
-			opponent.dealDamage(player.getDamage('punch'));
-		}
 		if(t >= 300){
 			if(punched == 1){
 				if(opx < Config.screenWidth - 185){
@@ -306,24 +308,25 @@ SocketServer.kick = function (player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 	var x = player.getX();
     var opx = opponent.getX();
+
+	if(SocketServer.checkPunchCollisionLeft(player, opponent, 80, 60, 40)){
+		kicked = 1;
+		opponent.setPunched(2);
+	}
+	if(SocketServer.checkPunchCollisionRight(player, opponent, 80, 60, 40)){
+		kicked = 2;
+		opponent.setPunched(2);
+	}
+	if(player.usingCombo()){
+		player.setKicking(false);
+		clearInterval(updateK);
+	}
+	if(kicked) {
+		opponent.dealDamage(player.getDamage('kick'));
+	}
+
 	var updateK = setInterval(function() {
 		t += 30;
-		if(SocketServer.checkPunchCollisionLeft(player, opponent, 80, 60, 40)){
-			kicked = 1;
-			opponent.setPunched(2);
-		}
-		if(SocketServer.checkPunchCollisionRight(player, opponent, 80, 60, 40)){
-			kicked = 2;
-			opponent.setPunched(2);
-		}
-		if(player.usingCombo()){
-			player.setKicking(false);
-			clearInterval(updateK);
-		}
-		if(!dealingDamage && kicked) {
-			opponent.dealDamage(player.getDamage('kick'));
-			dealingDamage = true;
-		}
 		if(t >= 400) {
 			if(kicked == 1){
 				if(opx < Config.screenWidth - 185){
