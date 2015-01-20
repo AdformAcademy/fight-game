@@ -69,15 +69,15 @@ ProgressBar.prototype.setBorder = function (border) {
 	this.params.border = border;
 };
 
-ProgressBar.prototype.getFillColors = function () {
-	return this.params.fillColors;
+ProgressBar.prototype.getFill = function () {
+	return this.params.fill;
 };
 
-ProgressBar.prototype.setFillColors = function (fillColors) {
-	if (typeof fillColors !== 'object') {
+ProgressBar.prototype.setFill = function (fill) {
+	if (typeof fill !== 'object') {
 		return;
 	}
-	this.params.fillColors = fillColors;
+	this.params.fill = fill;
 };
 
 ProgressBar.prototype.drawStatusBarLines = function (canvas, params) {
@@ -99,7 +99,12 @@ ProgressBar.prototype.constructSourceLayer = function (canvas, params) {
 	canvas.globalAlpha = 0;
 	this.drawStatusBarLines(canvas, params);
 	canvas.globalAlpha = 1;
-	canvas.fillStyle = params.fillColors.left;
+	if (params.fill.leftMask === undefined) {
+		var pattern = canvas.createPattern(params.fill.leftMask, 'repeat-x');
+		canvas.fillStyle = pattern;
+	} else {
+		canvas.fillStyle = params.fill.left;
+	}
 	canvas.fill();
 };
 
@@ -108,13 +113,13 @@ ProgressBar.prototype.constructDestinationLayer = function (canvas, params) {
 	var height = params.height();
 	canvas.globalCompositeOperation = 'source-atop';
 
-	if (params.mask === undefined) {
-		canvas.fillStyle = params.fillColors.used;
-		canvas.globalAlpha = params.fillColors.usedOpacity;
+	if (params.fill.usedMask === undefined) {
+		canvas.fillStyle = params.fill.used;
+		canvas.globalAlpha = params.fill.usedOpacity;
 		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
 	} else {
-		canvas.globalAlpha = params.fillColors.usedOpacity;
-		var pattern = canvas.createPattern(params.mask, 'repeat-x');
+		canvas.globalAlpha = params.fill.usedOpacity;
+		var pattern = canvas.createPattern(params.fill.usedMask, 'repeat-x');
 		canvas.fillStyle = pattern;
 		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
 	}
@@ -152,7 +157,7 @@ ProgressBar.prototype.draw = function () {
 	var canvas = App.canvasObj.canvas;
 	var location = this.location();
 	var image = this.constructImage(this.params);
-	canvas.globalAlpha = this.params.fillColors.globalOpacity;
+	canvas.globalAlpha = this.params.fill.globalOpacity;
 	canvas.drawImage(image, location.getX(), location.getY());
 	canvas.globalAlpha = 1;
 };
