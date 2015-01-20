@@ -56,7 +56,7 @@ SocketServer.prepareClient = function (socket) {
 			var playerData = JSON.parse(
 				fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
 			var opponentData = JSON.parse(
-				fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
+				fs.readFileSync(Config.charactersPath + 'character3.json', 'utf8'));
 
 			var player = new Player({
 				id: session.sessionId,
