@@ -1,7 +1,10 @@
 var ProgressBar = require('./progress-bar');
 
 var LifeBar = function (params) {
+	var maskImage = new Image();
+	maskImage.src = './img/health.png';
 	this.params = {
+		mask: maskImage,
 		location: params.location,
 		width: params.width,
 		height: params.height,
@@ -10,12 +13,12 @@ var LifeBar = function (params) {
 		border: {
 			drawBorder: true,
 			width: 3,
-			color: 'black',
+			color: '#7D7D7D',
 			radius: 17
 		},
 		fillColors: {
-			left: 'yellow',
-			used: 'red',
+			left: '#B5B5B5',
+			used: '#39BD1E',
 			usedOpacity: 1,
 			globalOpacity: 1
 		}

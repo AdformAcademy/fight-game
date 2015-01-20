@@ -107,9 +107,17 @@ ProgressBar.prototype.constructDestinationLayer = function (canvas, params) {
 	var width = params.width();
 	var height = params.height();
 	canvas.globalCompositeOperation = 'source-atop';
-	canvas.fillStyle = params.fillColors.used;
-	canvas.globalAlpha = params.fillColors.usedOpacity;
-	canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
+
+	if (params.mask === undefined) {
+		canvas.fillStyle = params.fillColors.used;
+		canvas.globalAlpha = params.fillColors.usedOpacity;
+		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
+	} else {
+		canvas.globalAlpha = params.fillColors.usedOpacity;
+		var pattern = canvas.createPattern(params.mask, 'repeat-x');
+		canvas.fillStyle = pattern;
+		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
+	}
 	canvas.globalAlpha = 1;
 };
 
