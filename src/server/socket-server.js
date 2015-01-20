@@ -18,13 +18,15 @@ SocketServer.jumpInputs = [];
 SocketServer.punchInputs = [];
 SocketServer.kickInputs = [];
 
-SocketServer.prepareSocketData = function(player, opponent) {
+SocketServer.prepareSocketData = function(player, opponent, socket) {
 	var data = {
 		player: {
 			x: player.getX(),
 			y: player.getY(),
 			z: player.getZ(),
 			punched: player.isPunched(),
+			victor: player.isVictor(),
+			defeated: player.isDefeated(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives()
 		},
@@ -32,7 +34,9 @@ SocketServer.prepareSocketData = function(player, opponent) {
 			x: opponent.getX(),
 			y: opponent.getY(),
 			z: opponent.getZ(),
-			punched: opponent.isPunched(), 
+			punched: opponent.isPunched(),
+			victor: opponent.isVictor(),
+			defeated: opponent.isDefeated(),
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
 			lives: opponent.getLives()
 		}
@@ -130,13 +134,23 @@ SocketServer.deleteObjects = function(session) {
 	}
 };
 
-SocketServer.disconnectClient = function(socket) {
+SocketServer.disconnectClient = function(socket, status) {
 	var session = SessionCollection.getSessionObject(socket.id);
+	console.log(status);
+	console.log(status == "Victory");
 	if (session !== undefined && session.opponentId !== null) {
+		if(status == "Victory")
+			socket.emit(Session.VICTORY);
+		else
+			socket.emit(Session.UNACTIVE);
+	
 		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
-		opponentSession.socket.emit(Session.UNACTIVE);
+		if(status == "Victory")
+			opponentSession.socket.emit(Session.DEFEAT);
+		else
+			opponentSession.socket.emit(Session.UNACTIVE);
 	}
-	socket.emit(Session.UNACTIVE);
+	
 	SocketServer.deleteObjects(session);
 	SocketServer.deleteObjects(opponentSession);
 	SessionCollection.printSessions();
@@ -146,8 +160,9 @@ SocketServer.storeInput = function(socket, packet) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && SocketServer.inputs[socket.id] !== undefined) {
 		SocketServer.inputs[socket.id].push(packet);
-	} else {
-		SocketServer.disconnectClient(socket);
+	}
+	else {
+		SocketServer.disconnectClient(socket, "");
 	}
 };
 
@@ -505,6 +520,7 @@ SocketServer.updatePlayer = function(player) {
 		var punchInputs = SocketServer.punchInputs[sessionId];
 		var kickInputs = SocketServer.kickInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
+		var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 		if (input !== undefined) {
 			SocketServer.updatePlayerPhysics(player);
@@ -536,6 +552,10 @@ SocketServer.updatePlayer = function(player) {
 				kickInputs.shift();
 			}
 		}
+		if (player.getLives() <= 0) {
+			player.Defeat(true);
+			opponent.Victory(true);
+		}
 	}
 };
 
@@ -559,9 +579,12 @@ SocketServer.updateWorld = function() {
 			var player = PlayerCollection.getPlayerObject(session.socket.id);
 			if (player !== undefined) {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-				var data = SocketServer.prepareSocketData(player, opponent);		
+				var data = SocketServer.prepareSocketData(player, opponent);	
 				session.socket.emit('update', data);
 				SocketServer.proccessedInputs[opponent.getID()] = [];
+				if(player.isVictor()){
+					SocketServer.disconnectClient(session.socket, "Victory");
+				}
 			}
 		}
 	}

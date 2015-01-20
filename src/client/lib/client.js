@@ -66,9 +66,13 @@ Client.processServerData = function() {
     	var x = state.player.x;
     	var y = state.player.y;
     	var ppunched = state.player.punched;
+    	var pVictor = state.player.victor;
+    	var pDefeated= state.player.defeated;
     	var ox = state.opponent.x;
     	var oy = state.opponent.y;
     	var opunched = state.opponent.punched;
+    	var oVictor = state.opponent.victor;
+    	var oDefeated= state.opponent.defeated;
     	var oz = state.opponent.z;
     	var lives = state.player.lives;
     	var olives = state.opponent.lives;
@@ -82,7 +86,11 @@ Client.processServerData = function() {
     	opponentLifeBar.setCurrentValue(state.opponent.lives);
 
     	App.player.setPunched(ppunched);
+    	App.player.Victory(pVictor);
+    	App.player.Defeat(pDefeated);
     	App.opponent.setPunched(opunched);
+    	App.opponent.Victory(oVictor);
+    	App.opponent.Defeat(oDefeated);
 
     	if (Client.interpolation) {
     		Client.appendOpponentInputs(state.opponent.sequence);

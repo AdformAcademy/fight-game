@@ -60,9 +60,6 @@ Player.prototype.dealDamage = function (damage) {
     damageMultiplier = 0.2;
   }
   this.lives -= damage * damageMultiplier;
-  if(this.lives < 0) {
-    this.lives = 1000;
-  }
 };
 
 

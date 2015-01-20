@@ -8,6 +8,22 @@ var BasePlayer = function () {
 	this.combo = false;
 	this.defending = false;
 	this.punched = 0;
+	this.won = false;
+	this.lost = false;
+};
+
+BasePlayer.prototype.Victory = function(status) {
+	this.won = status;
+};
+BasePlayer.prototype.isVictor = function() {
+	return this.won == true;
+};
+
+BasePlayer.prototype.Defeat = function(status) {
+	this.lost = status;
+};
+BasePlayer.prototype.isDefeated = function() {
+	return this.lost == true;
 };
 
 BasePlayer.prototype.getLocation = function () {

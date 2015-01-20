@@ -6,6 +6,7 @@ var EventCollection = require('./event-collection');
 var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
+var EndScreen = require('./screen/end');
 var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
@@ -118,7 +119,23 @@ socket.on('unactive', function() {
   App.gameStarted = false;
   Client.stop();
   App.screen.dispose();
-  App.screen = new StartScreen();
+  App.screen = new EndScreen('Connection lost');
+  App.canvasObj.setGraphics(App.screen.graphics);
+});
+
+socket.on('victory', function() {
+  App.gameStarted = false;
+  Client.stop();
+  App.screen.dispose();
+  App.screen = new EndScreen('Victory');
+  App.canvasObj.setGraphics(App.screen.graphics);
+});
+
+socket.on('defeat', function() {
+  App.gameStarted = false;
+  Client.stop();
+  App.screen.dispose();
+  App.screen = new EndScreen('Defeat');
   App.canvasObj.setGraphics(App.screen.graphics);
 });
 

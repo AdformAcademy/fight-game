@@ -8,6 +8,8 @@ function Session(socket, opponentId, state) {
 Session.READY = 'ready';
 Session.PLAYING = 'playing';
 Session.UNACTIVE = 'unactive';
+Session.VICTORY = 'victory';
+Session.DEFEAT = 'defeat';
 
 Session.prototype.socket = function() {
 	return this.socket;
