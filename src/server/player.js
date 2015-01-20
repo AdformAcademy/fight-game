@@ -1,4 +1,5 @@
 var BasePlayer = require('../common/base-player');
+var Config = require('./config.js');
 
 var Player = function (params) {
   this.id = params.id;
@@ -57,15 +58,13 @@ Player.prototype.getDamage = function (action) {
 Player.prototype.dealDamage = function (damage) {
   var damageMultiplier = 1;
   if (this.defending) {
-    damageMultiplier = 0.2;
+    damageMultiplier = Config.playerDefenceMultiplier;
   }
   this.lives -= damage * damageMultiplier;
   if(this.lives < 0) {
     this.lives = 1000;
   }
 };
-
-
 
 Player.prototype.toPacket = function() {
   return {

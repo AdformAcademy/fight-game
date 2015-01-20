@@ -6,6 +6,7 @@ function Player(params) {
 	this.location = params.location;
 	this.spritesheet = params.spriteSheet;
 	this.lifeBar = params.lifeBar;
+	this.energyBar = params.energyBar;
 	this.depth = 0;
 };
 
@@ -33,13 +34,22 @@ Player.prototype.getLifeBar = function() {
 	return this.lifeBar;
 };
 
+Player.prototype.getEnergyBar = function() {
+	return this.energyBar;
+}
+
 Player.prototype.setLifeBar = function(lifeBar) {
 	this.lifeBar = lifeBar;
+};
+
+Player.prototype.setEnergyBar = function(energyBar) {
+	this.energyBar = energyBar;
 };
 
 Player.prototype.update = function() {
 	this.spritesheet.update();
 	this.lifeBar.update();
+	this.energyBar.update();
 };
 
 Player.prototype.draw = function() {

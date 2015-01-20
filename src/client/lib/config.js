@@ -12,4 +12,10 @@ Config.canvasUpdateInterval = 30;
 Config.canvasMaskColor = '#000000';
 Config.quickTapDuration = 300;
 
+Config.progressBarPadding = 10;
+Config.lifeBarWidthRatio = 0.47;
+Config.energyBarWidthRatio = 0.2;
+Config.lifeBarHeight = 31;
+Config.energyBarHeight = 20;
+
 module.exports = Config;

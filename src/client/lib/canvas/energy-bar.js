@@ -1,6 +1,6 @@
 var ProgressBar = require('./progress-bar');
 
-var LifeBar = function (params) {
+var EnergyBar = function (params) {
 	this.params = {
 		location: params.location,
 		width: params.width,
@@ -11,11 +11,11 @@ var LifeBar = function (params) {
 			drawBorder: true,
 			width: 3,
 			color: 'black',
-			radius: 17
+			radius: 10
 		},
 		fillColors: {
-			left: 'red',
-			used: 'yellow',
+			left: 'green',
+			used: 'blue',
 			usedOpacity: 1,
 			globalOpacity: 1
 		}
@@ -23,21 +23,21 @@ var LifeBar = function (params) {
 	this.location = params.location;
 };
 
-LifeBar.prototype = new ProgressBar();
+EnergyBar.prototype = new ProgressBar();
 
-LifeBar.prototype.decrease = function (value) {
+EnergyBar.prototype.decrease = function (value) {
 	//TODO: animated decrease
 };
 
-LifeBar.prototype.increase = function (value) {
+EnergyBar.prototype.increase = function (value) {
 	//TODO: animated increase
 };
 
-LifeBar.prototype.update = function () {
+EnergyBar.prototype.update = function () {
 	//TODO: update logic
 };
 
-LifeBar.prototype.dispose = function () {
+EnergyBar.prototype.dispose = function () {
 };
 
-module.exports = LifeBar;
+module.exports = EnergyBar;
