@@ -8,6 +8,8 @@ var Player = function (params) {
   this.lastProcessedInput = 0;
   this.location = params.location;
   this.z = params.z || 0;
+  this.lives = params.characterData.lives;
+  this.damage = params.characterData.damage;
 };
 
 Player.prototype = new BasePlayer();
@@ -43,6 +45,27 @@ Player.prototype.getCurrentAnimation = function () {
 Player.prototype.getCharacterData = function () {
   return this.characterData;
 };
+
+Player.prototype.getLives = function () {
+  return this.lives;
+}
+
+Player.prototype.getDamage = function (action) {
+  return this.damage[action];
+}
+
+Player.prototype.dealDamage = function (damage) {
+  var damageMultiplier = 1;
+  if (this.defending) {
+    damageMultiplier = 0.2;
+  }
+  this.lives -= damage * damageMultiplier;
+  if(this.lives < 0) {
+    this.lives = 1000;
+  }
+};
+
+
 
 Player.prototype.toPacket = function() {
   return {
