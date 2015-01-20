@@ -78,8 +78,8 @@ Client.processServerData = function() {
     	physics.applyCoordinates(App.player, x, y, null);
     	console.log('player lives: ' + lives + ', opponent lives ' + olives);
     	
-    	playerLifeBar.setCurrentValue(state.player.lives);
-    	opponentLifeBar.setCurrentValue(state.opponent.lives);
+    	playerLifeBar.update(state.player.lives);
+    	opponentLifeBar.update(state.opponent.lives);
 
     	App.player.setPunched(ppunched);
     	App.opponent.setPunched(opunched);
