@@ -6,6 +6,14 @@
 		"punchCombo": 150,
 		"kickCombo": 200
 	},
+	"maxEnergy": 1000,
+	"costs": {
+		"punch": 25,
+		"kick": 35,
+		"punchCombo": 300,
+		"kickCombo": 400,
+		"jump": 10
+	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character1.png",
 		"spriteDimensions": {

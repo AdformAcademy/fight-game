@@ -11,7 +11,7 @@ var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
 var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
-var Config = require('./config.js');
+var Config = require('./config');
 var socket = io();
 
 var GlobalEvents = {};
@@ -68,6 +68,7 @@ socket.on('playing', function(data) {
   App.player = new Player({
     location: new Point(data.player.x, data.player.y),
     spriteSheet: playerSprite,
+    energyCosts: data.player.energyCosts,
     lifeBar: new LifeBar({
       location: function () {
         return new Point(Config.progressBarPadding, Config.progressBarPadding);
@@ -92,7 +93,7 @@ socket.on('playing', function(data) {
       height: function () {
         return Config.energyBarHeight;
       },
-      currentValue: 1000,
+      currentValue: 0,
       maxValue: 1000
     })
   });
@@ -100,6 +101,7 @@ socket.on('playing', function(data) {
   App.opponent = new Player({
     location: new Point(data.opponent.x, data.opponent.y),
     spriteSheet: opponentSprite,
+    energyCosts: data.opponent.energyCosts,
     lifeBar: new LifeBar({
       location: function () {
         return new Point(
@@ -127,7 +129,7 @@ socket.on('playing', function(data) {
       height: function () {
         return Config.energyBarHeight;
       },
-      currentValue: 1000,
+      currentValue: 0,
       maxValue: 1000
     })
   });

@@ -14,8 +14,8 @@ var EnergyBar = function (params) {
 			radius: 10
 		},
 		fillColors: {
-			left: 'green',
-			used: 'blue',
+			left: '#072F4A',
+			used: '#42FFAA',
 			usedOpacity: 1,
 			globalOpacity: 1
 		}
@@ -27,14 +27,23 @@ EnergyBar.prototype = new ProgressBar();
 
 EnergyBar.prototype.decrease = function (value) {
 	//TODO: animated decrease
+	this.setCurrentValue(value);
 };
 
 EnergyBar.prototype.increase = function (value) {
 	//TODO: animated increase
+	this.setCurrentValue(value);
 };
 
-EnergyBar.prototype.update = function () {
-	//TODO: update logic
+EnergyBar.prototype.update = function (value) {
+    var currentValue = this.params.currentValue;
+    if (currentValue !== value) {
+        if (value > currentValue) {
+            this.increase(value);
+        } else {
+            this.decrease(value);
+        }
+    }
 };
 
 EnergyBar.prototype.dispose = function () {

@@ -10,6 +10,7 @@ Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
 Config.screenWidth = 900;
 Config.playerDefenceMultiplier = 0.2;
+Config.playerEnergyIncrement = 0.5;
 
 Config.firstSpawnLocation = {
 	x: 0,

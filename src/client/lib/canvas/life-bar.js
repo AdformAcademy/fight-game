@@ -14,8 +14,8 @@ var LifeBar = function (params) {
 			radius: 17
 		},
 		fillColors: {
-			left: 'red',
-			used: 'yellow',
+			left: '#E02904',
+			used: '#FFCC00',
 			usedOpacity: 1,
 			globalOpacity: 1
 		}
@@ -27,14 +27,23 @@ LifeBar.prototype = new ProgressBar();
 
 LifeBar.prototype.decrease = function (value) {
 	//TODO: animated decrease
+	this.setCurrentValue(value);
 };
 
 LifeBar.prototype.increase = function (value) {
 	//TODO: animated increase
+	this.setCurrentValue(value);
 };
 
-LifeBar.prototype.update = function () {
-	//TODO: update logic
+LifeBar.prototype.update = function (value) {
+	var currentValue = this.params.currentValue;
+    if (currentValue !== value && value !== undefined) {
+        if (value > currentValue) {
+            this.increase(value);
+        } else {
+            this.decrease(value);
+        }
+    }
 };
 
 LifeBar.prototype.dispose = function () {

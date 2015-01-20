@@ -119,31 +119,31 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var control = InputCollection;
 	var player = this.player;
 
-	if (control.quickTapped(keys.KICK) && !player.isJumping()) {
+	if (control.quickTapped(keys.KICK) && !player.isJumping() && player.hasEnoughEnergy('kickCombo')) {
 		player.setUsingCombo(true);
 		physics.comboKick();
 		input.kickCombo = true;
 		console.log('kick combo');
 	}
-	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
+	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
 		console.log("jumping and punching");
 		player.setPunching(true);
 		physics.punch();
 		input.punchKey = true;
 	}
-	else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
+	else if (control.quickTapped(keys.PUNCH) && !player.isJumping() && player.hasEnoughEnergy('punchCombo')) {
 		player.setUsingCombo(true);
 		physics.comboPunch();
 		input.punchCombo = true;
 		console.log('combo punch');
 	}
-	else if (control.isDown(keys.PUNCH)) {
+	else if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
 		input.punchKey = true;
 		player.setPunching(true);
 		physics.punch();
 		console.log('simple punch');
 	}
-	else if(control.isDown(keys.KICK)) {
+	else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
 		input.kickKey = true;
 		player.setKicking(true);
 		physics.kick();
@@ -163,7 +163,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.JUMP)) {
+	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump')) {
 		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
 			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
