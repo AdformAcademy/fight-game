@@ -26,7 +26,8 @@ SocketServer.prepareSocketData = function(player, opponent) {
 			z: player.getZ(),
 			punched: player.isPunched(),
 			input: player.getLastProcessedInput(),
-			lives: player.getLives()
+			lives: player.getLives(),
+			energy: player.getEnergy()
 		},
 		opponent: {
 			x: opponent.getX(),
@@ -34,7 +35,8 @@ SocketServer.prepareSocketData = function(player, opponent) {
 			z: opponent.getZ(),
 			punched: opponent.isPunched(), 
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
-			lives: opponent.getLives()
+			lives: opponent.getLives(),
+			energy: opponent.getEnergy()
 		}
 	};
 	return data;
@@ -95,13 +97,13 @@ SocketServer.prepareClient = function (socket) {
 					x: player.getX(),
 					y: player.getY(),
 					data: playerData.spriteSheetData,
-					lives: player.getLives()
+					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
 					data: opponentData.spriteSheetData,
-					lives: opponent.getLives()
+					energyCosts: opponentData.costs
 				}
 			});
 			targetSession.socket.emit(Session.PLAYING, {
@@ -109,13 +111,13 @@ SocketServer.prepareClient = function (socket) {
 					x: opponent.getX(),
 					y: opponent.getY(),
 					data: opponentData.spriteSheetData,
-					lives: opponent.getLives()
+					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
 					data: playerData.spriteSheetData,
-					lives: player.getLives()
+					energyCosts: opponentData.costs
 				}
 			});
 		}
@@ -205,6 +207,8 @@ SocketServer.comboPunch = function (player) {
 	if(punched) {
 		opponent.dealDamage(player.getDamage('punchCombo'));
 	}
+
+	player.useEnergy('kickCombo');
 	
 	var updateP = setInterval(function(){
 		t += 30;
@@ -233,6 +237,9 @@ SocketServer.comboKick = function (player) {
 	if(kicked) {
 		opponent.dealDamage(player.getDamage('kickCombo'));
 	}
+
+	player.useEnergy('kickCombo');
+
 	var updateP = setInterval(function(){
 		t += 30;
 		if(t >= 600){
@@ -279,6 +286,9 @@ SocketServer.punch = function(player) {
 	}
 	if(punched) {
 		opponent.dealDamage(player.getDamage('punch'));
+		player.addEnergy('punch');
+	} else {
+		player.useEnergy('punch');
 	}
 
 	var updateP = setInterval(function(){
@@ -327,6 +337,9 @@ SocketServer.kick = function (player) {
 	}
 	if(kicked) {
 		opponent.dealDamage(player.getDamage('kick'));
+		player.addEnergy('kick');
+	} else {
+		player.useEnergy('kick');
 	}
 
 	var updateK = setInterval(function() {
@@ -383,6 +396,7 @@ SocketServer.executeInput = function(player, input) {
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
+		player.useEnergy('jump');
 	}
 	else if(input.jumpKey && player.isJumping() && !player.isPunched()) {
 		var inputs = SocketServer.jumpInputs[player.getID()];
@@ -509,6 +523,8 @@ SocketServer.updatePlayer = function(player) {
 		var punchInputs = SocketServer.punchInputs[sessionId];
 		var kickInputs = SocketServer.kickInputs[sessionId];
 		var input = SocketServer.processPlayerInputs(player);
+
+		player.increaseEnergy();
 
 		if (input !== undefined) {
 			SocketServer.updatePlayerPhysics(player);

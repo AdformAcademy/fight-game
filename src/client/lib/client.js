@@ -74,9 +74,10 @@ Client.processServerData = function() {
     	var olives = state.opponent.lives;
     	var playerLifeBar = App.player.getLifeBar();
     	var opponentLifeBar = App.opponent.getLifeBar();
+    	var playerEnergyBar = App.player.getEnergyBar();
+    	var opponentEnergyBar = App.opponent.getEnergyBar();
 
     	physics.applyCoordinates(App.player, x, y, null);
-    	console.log('player lives: ' + lives + ', opponent lives ' + olives);
     	
     	if (ppunched) {
     		playerLifeBar.store(state.player.lives);
@@ -85,6 +86,9 @@ Client.processServerData = function() {
     		opponentLifeBar.store(state.opponent.lives);
     	}
     	
+    	playerEnergyBar.store(state.player.energy);
+    	opponentEnergyBar.store(state.opponent.energy);
+
     	App.player.setPunched(ppunched);
     	App.opponent.setPunched(opunched);
 
