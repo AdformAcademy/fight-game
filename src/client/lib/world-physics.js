@@ -69,7 +69,7 @@ WorldPhysics.prototype.jump = function () {
 	    var speedZ = player.getSpeedZ();
 	    var size = Config.playerSize;
 
-		if (Math.abs(x - opx) < size && Math.abs(y - opy) < size / 3) {
+		/*if (Math.abs(x - opx) < size && Math.abs(y - opy) < size / 3) {
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
 			if (z >= -(y + size - opy)) {
@@ -78,10 +78,10 @@ WorldPhysics.prototype.jump = function () {
 				player.getSpriteSheet().setActiveAnimation('standAnimation');
 			}
 		}
-		else {
+		else {*/
 			speedZ -= Config.playerAcceleration;
 			z -= speedZ;
-		}
+		//}
 		if (z > 0) {
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumping(false);
@@ -93,66 +93,58 @@ WorldPhysics.prototype.jump = function () {
 		player.setSpeedZ(speedZ);
 	}, 1000/30);
 };
-
-WorldPhysics.prototype.comboPunch = function () {
-	var t = 0;
+WorldPhysics.prototype.hit = function (time, size, power, heightDifference, yDifference) {
 	var player = this.player;
-	var updateP = setInterval(function () {
+	var opponent = this.opponent;
+	var t = 0;
+	var hit = 0;
+	var x = player.getX();
+    var opx = opponent.getX();
+
+	if(WorldPhysics.checkPunchCollisionLeft(player, opponent, size, heightDifference, yDifference)){
+		hit = 1;
+		opponent.setPunched(2);
+	}
+	if(WorldPhysics.checkPunchCollisionRight(player, opponent, size, heightDifference, yDifference)){
+		hit = 2;
+		opponent.setPunched(2);
+	}
+	var updateH = setInterval(function () {
 		t += 30;
-		if (t >= 800) {
-			player.setUsingCombo(false);
+		if (t >= time) {
+			if(hit == 1){
+				if(opx < Config.screenWidth - 185){
+					opx += power;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			else if(hit == 2){
+				if(opx > -135){
+					opx -= power;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
+			player.setHiting(false);
+			player.setUsingCombo(false);
+			clearInterval(updateH);
 		}
 	}, 1000/30);
 };
 
-WorldPhysics.prototype.comboKick = function () {
-	var t = 0;
-	var player = this.player;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (t >= 600) {
-			player.setUsingCombo(false);
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
-		}
-	}, 1000/30);
+WorldPhysics.checkPunchCollisionLeft = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
+		&& (Math.abs(player.getY() - opponent.getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
 }
 
-WorldPhysics.prototype.punch = function () {
-	var player = this.player;
-	var t = 0;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (player.usingCombo()) {
-			player.setPunching(false);
-			clearInterval(updateP);
-		}
-		if (t >= 300) {
-			player.setPunching(false);
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
-		}
-	}, 1000/30);
-};
-
-WorldPhysics.prototype.kick = function () {
-	var player = this.player;
-	var t = 0;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (player.usingCombo()) {
-			player.setKicking(false);
-			clearInterval(updateP);
-		}
-		if (t >= 400) {
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setKicking(false);
-			clearInterval(updateP);
-		}
-	}, 1000/30);
-};
+WorldPhysics.checkPunchCollisionRight = function(player, opponent, size, heightDifference, yDifference) {
+	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
+		&& (Math.abs(player.getY() - opponent.getY()) <= yDifference)
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
@@ -174,7 +166,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 
-	if (player.isStanding()) {
+	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}

@@ -17,8 +17,7 @@ BaseConfig.keyBindings = {
 	JUMP: 88,
 	KICK: 86,
 	PUNCH: 90,
-	DEFEND: 67,
-	KICK: 86
+	DEFEND: 67
 };
 
 module.exports = BaseConfig;

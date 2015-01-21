@@ -5,6 +5,7 @@ var BasePlayer = function () {
 	this.jumping = false;
 	this.punching = false;
 	this.kicking = false;
+	this.hiting = false;
 	this.combo = false;
 	this.defending = false;
 	this.punched = 0;
@@ -96,6 +97,14 @@ BasePlayer.prototype.setUsingCombo = function (combo) {
 
 BasePlayer.prototype.usingCombo = function () {
 	return this.combo == true;
+};
+
+BasePlayer.prototype.setHiting = function (hiting) {
+	this.hit = hiting;
+};
+
+BasePlayer.prototype.isHiting = function() {
+	return this.hit == true;
 };
 
 BasePlayer.prototype.setDefending = function (defending) {

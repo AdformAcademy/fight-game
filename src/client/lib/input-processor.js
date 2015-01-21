@@ -120,34 +120,36 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var player = this.player;
 
 	if (control.quickTapped(keys.KICK) && !player.isJumping()) {
-		player.setUsingCombo(true);
-		physics.comboKick();
-		input.kickCombo = true;
 		console.log('kick combo');
+		player.setUsingCombo(true);
+		player.setHiting(true);
+		physics.hit(600, 80, 15, 60, 40);
+		input.kickCombo = true;
+	}
+	else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
+		console.log('punch combo');
+		player.setUsingCombo(true);
+		player.setHiting(true);
+		physics.hit(800, 65, 0, 60, 40);
+		input.punchCombo = true;
+	}	
+	else if (control.isDown(keys.PUNCH)) {
+		console.log('simple punch');
+		player.setHiting(true);
+		physics.hit(300, 65, 5, 60, 40);
+		input.punchKey = true;
+	}
+	else if(control.isDown(keys.KICK)) {
+		console.log('simple kick');
+		player.setHiting(true);
+		physics.hit(400, 80, 10, 60, 40);
+		input.kickKey = true;
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
 		console.log("jumping and punching");
-		player.setPunching(true);
-		physics.punch();
+		player.setHiting(true);
+		physics.hit(300, 65, 5, 60, 40);
 		input.punchKey = true;
-	}
-	else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
-		player.setUsingCombo(true);
-		physics.comboPunch();
-		input.punchCombo = true;
-		console.log('combo punch');
-	}
-	else if (control.isDown(keys.PUNCH)) {
-		input.punchKey = true;
-		player.setPunching(true);
-		physics.punch();
-		console.log('simple punch');
-	}
-	else if(control.isDown(keys.KICK)) {
-		input.kickKey = true;
-		player.setKicking(true);
-		physics.kick();
-		console.log('simple kick');
 	}
 };
 
@@ -187,8 +189,7 @@ InputProcessor.prototype.processInputs = function() {
 	var input = this.createBlankInput();
 	var player = this.player;
 
-	if(!player.isPunching() && !player.isKicking() 
-			&& !player.isPunched() && !player.usingCombo()) {
+	if(!player.isHiting() && !player.isPunched() || player.isJumping()) {
 		this.processMovementInputs(input);
 		this.processComboInputs(input);
 		this.processActionInputs(input);
