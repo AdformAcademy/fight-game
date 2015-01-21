@@ -80,50 +80,42 @@ ProgressBar.prototype.setFill = function (fill) {
 	this.params.fill = fill;
 };
 
-ProgressBar.prototype.drawStatusBarLines = function (canvas, params) {
+ProgressBar.prototype.drawSourceLayer = function (canvas, params) {
+	var location = this.location();
 	var width = params.width();
 	var height = params.height();
-	canvas.moveTo(50, 0);
-	canvas.lineTo(width - 50, 0);
-	canvas.arcTo(width, 0, width, 10, params.border.radius);
-	canvas.arcTo(width, height, 
-		width - 50, height, params.border.radius);
-	canvas.lineTo(width - 50, height);
-	canvas.arcTo(0, height, 0, 0, params.border.radius);
-	canvas.arcTo(0, 0, 50, 0, params.border.radius);
-	canvas.lineTo(50, 0);
-	canvas.stroke();
-};
-
-ProgressBar.prototype.constructSourceLayer = function (canvas, params) {
-	canvas.globalAlpha = 0;
-	this.drawStatusBarLines(canvas, params);
-	canvas.globalAlpha = 1;
+	canvas.save();
+	canvas.globalAlpha = params.fill.leftOpacity;
 	if (params.fill.leftMask === undefined) {
 		canvas.fillStyle = params.fill.left;
 	} else {
-		var pattern = canvas.createPattern(params.fill.leftMask, 'repeat-x');
+		var pattern = canvas.createPattern(params.fill.leftMask, 'repeat');
 		canvas.fillStyle = pattern;
 	}
-	canvas.fill();
+	canvas.translate(location.getX(), location.getY());
+	canvas.fillRect(0, 0, width, height);
+	canvas.globalAlpha = params.fill.globalOpacity;
+	canvas.restore();
 };
 
-ProgressBar.prototype.constructDestinationLayer = function (canvas, params) {
+ProgressBar.prototype.drawDestinationLayer = function (canvas, params) {
+	var location = this.location();
 	var width = params.width();
 	var height = params.height();
-	canvas.globalCompositeOperation = 'source-atop';
 
+	canvas.save();
+	canvas.globalAlpha = params.fill.usedOpacity;
 	if (params.fill.usedMask === undefined) {
 		canvas.fillStyle = params.fill.used;
-		canvas.globalAlpha = params.fill.usedOpacity;
-		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
 	} else {
-		canvas.globalAlpha = params.fill.usedOpacity;
-		var pattern = canvas.createPattern(params.fill.usedMask, 'repeat-x');
+		var pattern = canvas.createPattern(params.fill.usedMask, 'repeat');
 		canvas.fillStyle = pattern;
-		canvas.fillRect(0, 0, width * (params.currentValue / params.maxValue), height);
 	}
-	canvas.globalAlpha = 1;
+	canvas.translate(location.getX(), location.getY());
+	canvas.fillRect(0, 0, 
+			width * (params.currentValue / params.maxValue), height);
+	canvas.globalAlpha = params.fill.globalOpacity;
+	canvas.restore();
 };
 
 ProgressBar.prototype.constructBorder = function (canvas, params) {
@@ -132,33 +124,13 @@ ProgressBar.prototype.constructBorder = function (canvas, params) {
 	this.drawStatusBarLines(canvas, params);
 };
 
-ProgressBar.prototype.constructImage = function (params) {
-	var tempCanvas = document.createElement('canvas');
-	var width = params.width();
-	var height = params.height();
-	tempCanvas.width = width;
-	tempCanvas.height = height;
-	var canvas = tempCanvas.getContext('2d');
-
-	this.constructSourceLayer(canvas, params);
-	this.constructDestinationLayer(canvas, params);
-
-	if (params.border.drawBorder) {
-		this.constructBorder(canvas, params);
-	}
-	
-	var image = new Image();
-	image.src = tempCanvas.toDataURL();
-
-	return image;
-};
-
 ProgressBar.prototype.draw = function () {
 	var canvas = App.canvasObj.canvas;
-	var location = this.location();
-	var image = this.constructImage(this.params);
+	var params = this.params;
+
 	canvas.globalAlpha = this.params.fill.globalOpacity;
-	canvas.drawImage(image, location.getX(), location.getY());
+	this.drawSourceLayer(canvas, params);
+	this.drawDestinationLayer(canvas, params);
 	canvas.globalAlpha = 1;
 };
 

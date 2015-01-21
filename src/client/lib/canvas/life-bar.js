@@ -25,17 +25,12 @@ var LifeBar = function (params) {
 		height: params.height,
 		currentValue: params.currentValue,
 		maxValue: params.maxValue,
-		border: {
-			drawBorder: true,
-			width: 3,
-			color: '#212121',
-			radius: 17
-		},
 		fill: {
 			left: '#B5B5B5',
 			leftMask: this.leftMaskImage,
 			used: '#39BD1E',
 			usedMask: this.healthVeryHighMask,
+			leftOpacity: 1,
 			usedOpacity: 1,
 			globalOpacity: 1
 		}

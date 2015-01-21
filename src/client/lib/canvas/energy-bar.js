@@ -12,17 +12,12 @@ var EnergyBar = function (params) {
 		height: params.height,
 		currentValue: params.currentValue,
 		maxValue: params.maxValue,
-		border: {
-			drawBorder: true,
-			width: 3,
-			color: 'black',
-			radius: 10
-		},
 		fill: {
 			left: '#072F4A',
 			leftMask: this.leftMaskImage,
 			used: '#42FFAA',
 			usedMask: this.usedMaskImage,
+			leftOpacity: 1,
 			usedOpacity: 1,
 			globalOpacity: 1
 		}
