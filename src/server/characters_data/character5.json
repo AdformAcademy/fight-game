@@ -1,0 +1,125 @@
+{
+	"lives": 100,
+	"damage": {
+		"punch": 5,
+		"kick": 7,
+		"punchCombo": 15,
+		"kickCombo": 20
+	},
+	"spriteSheetData": {
+		"spriteSheetImage": "character5.png",
+		"spriteDimensions": {
+			"width": 43200,
+			"height": 224,
+			"frameWidth": 320
+		},
+		"animations": {
+			"damageAnimation": {
+				"name": "damageAnimation",
+				"startFrame": 0,
+				"frames": 8,
+				"speed": 10.0,
+				"order": "asc"
+			},
+			"jumpAnimation": {
+				"name": "jumpAnimation",
+				"startFrame": 8,
+				"frames": 10,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"moveAnimation": {
+				"name": "moveAnimation",
+				"startFrame": 18,
+				"frames": 8,
+				"speed": 0.5,
+				"order": "desc"
+			},
+			"punchAnimation1": {
+				"name": "punchAnimation1",
+				"startFrame": 26,
+				"frames": 10,
+				"speed": 0.7,
+				"order": "asc"
+			},
+			"punchAnimation2": {
+				"name": "punchAnimation2",
+				"startFrame": 36,
+				"frames": 3,
+				"speed": 0.4,
+				"order": "asc"
+			},
+			"standAnimation": {
+				"name": "standAnimation",
+				"startFrame": 39,
+				"frames": 9,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"jumpKickAnimation": {
+				"name": "jumpKickAnimation",
+				"startFrame": 48,
+				"frames": 12,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"runningAnimation": {
+				"name": "runningAnimation",
+				"startFrame": 60,
+				"frames": 10,
+				"speed": 0.35,
+				"order": "asc"
+			},
+			"jumpPunchAnimation": {
+				"name": "jumpPunchAnimation",
+				"startFrame": 70,
+				"frames": 5,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"kickAnimation": {
+				"name": "kickAnimation",
+				"startFrame": 75,
+				"frames": 8,
+				"speed": 0.4,
+				"order": "desc"
+			},
+			"punchComboAnimation": {
+				"name": "punchComboAnimation",
+				"startFrame": 83,
+				"frames": 14,
+				"speed": 0.6,
+				"order": "asc"
+			},
+			"defendAnimation": {
+				"name": "defendAnimation",
+				"startFrame": 97,
+				"frames": 1,
+				"speed": 0.2,
+				"order": "asc"
+			},
+			"kickComboAnimation": {
+				"name": "kickComboAnimation",
+				"startFrame": 98,
+				"frames": 13,
+				"speed": 0.5,
+				"order": "asc"
+			},
+			"fatalityAnimation": {
+				"name": "fatalityAnimation",
+				"startFrame": 111,
+				"frames": 7,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"beatenAnimation": {
+				"name": "beatenAnimation",
+				"startFrame": 118,
+				"frames": 10,
+				"speed": 0.3,
+				"order": "desc"
+			}
+		},
+		"defaultAnimation": "standAnimation"
+	}
+}
