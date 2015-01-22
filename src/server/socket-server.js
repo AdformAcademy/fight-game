@@ -54,7 +54,7 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.state = Session.PLAYING;
 
 			var playerData = JSON.parse(
-				fs.readFileSync(Config.charactersPath + 'character4.json', 'utf8'));
+				fs.readFileSync(Config.charactersPath + 'character6.json', 'utf8'));
 			var opponentData = JSON.parse(
 				fs.readFileSync(Config.charactersPath + 'character5.json', 'utf8'));
 
