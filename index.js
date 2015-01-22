@@ -14,7 +14,9 @@ switch (env) {
 var Express = require('./src/server/express');
 var SocketServer = require('./src/server/socket-server');
 var Tasks = require('./src/server/tasks');
+var Config = require('./src/server/config');
 var io = require('socket.io')(SocketServer.http);
+var fs = require('fs');
 
 Express.loadResources(__dirname);
 Tasks.start();
@@ -41,4 +43,20 @@ io.on('connection', function(socket) {
   socket.on('update', function(packet) {
     SocketServer.storeInput(socket, packet);
   });
+
+  socket.on('choose', function () {
+    fs.readdir(Config.charactersPath, function (err, files) {
+      if (err) throw err;
+      var packetData = {};
+      files.forEach(function (file) {
+        var characterData = JSON.parse(fs.readFileSync(Config.charactersPath + file, 'utf8'));
+        packetData[file] = characterData;
+      });
+      socket.emit('choose-character', packetData);
+    });
+  });
+  
 });
+
+
+
