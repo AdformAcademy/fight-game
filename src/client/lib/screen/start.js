@@ -3,7 +3,7 @@ var Utilities;
 var Button;
 var Point;
 var Text;
-var ChooseScreen;
+var ChooseWaitingScreen;
 var Background;
 var socket = io();
 var obj;
@@ -14,7 +14,7 @@ function StartScreen() {
 	Button = require('../canvas/button');
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
-	ChooseScreen = require('./choose');
+	ChooseWaitingScreen = require('./choose-waiting');
 	Background = require('../canvas/background');	
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
@@ -39,7 +39,7 @@ function StartScreen() {
 
 	this.startButton.onClick(function() {
 		//socket.emit('ready', '');
-		App.screen = new ChooseScreen();
+		App.screen = new ChooseWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});

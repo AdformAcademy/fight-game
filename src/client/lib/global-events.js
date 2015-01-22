@@ -7,6 +7,7 @@ var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
+var ChooseWaitingScreen = require('./screen/choose-waiting');
 var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
 var LifeBar = require('./canvas/life-bar');
@@ -146,6 +147,12 @@ socket.on('playing', function(data) {
 
   App.screen.dispose();
   App.screen = new CountDownScreen();
+  App.canvasObj.setGraphics(App.screen.graphics);
+});
+
+socket.on('choose-character', function (data) {
+  App.screen.dispose();
+  App.screen = new ChooseWaitingScreen();
   App.canvasObj.setGraphics(App.screen.graphics);
 });
 
