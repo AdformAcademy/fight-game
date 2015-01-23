@@ -2,24 +2,27 @@ var App;
 var Utilities;
 var EventCollection;
 
-function Button(image) {
+function Button(params) {
 	App = require('../../app');
 	Utilities = require('./utilities');
 	EventCollection = require('../event-collection');
 
-	this.src = image;
+	this.src = params.image;
 	this.image = new Image();
 	this.image.src = this.src;
-	this.hoverImage = null;
+	this.hoverImage = new Image();
+	this.hoverImage.src = params.hoverImage || this.image.src;
 	this.activeImage = this.image;
 
-	this.location = null;
+	this.location = params.location || null;
 	this.onClickEvent = null;
 	this.mouseOverEvent = null;
 	this.mouseLeaveEvent = null;
 	this.mouseEventAdded = false;
 	this.mouseEntered = false;
 	this.visible = true;
+	this.useSpriteSheet = params.useSpriteSheet || false;
+	this.spriteSheet = params.spriteSheet || null;
 };
 
 Button.prototype.getImage = function() {
@@ -71,9 +74,30 @@ Button.prototype.setLocation = function(location) {
 	this.location = location;
 };
 
+Button.prototype.setSpriteSheet = function(spriteSheet) {
+	this.spriteSheet = spriteSheet;
+};
+
+Button.prototype.getSpriteSheet = function() {
+	return this.spriteSheet;
+};
+
+Button.prototype.useSpriteSheet = function(useSpriteSheet) {
+	this.useSpriteSheet = useSpriteSheet;
+};
+
+Button.prototype.usingSpriteSheet = function() {
+	return this.useSpriteSheet;
+};
+
 Button.prototype.drawButton = function() {
 	if (this.visible) {
-		App.canvasObj.canvas.drawImage(this.activeImage, this.location().getX(), this.location().getY());
+		if (this.useSpriteSheet) {
+			obj.spriteSheet.draw(this.location().getX(), this.location().getY());
+		} else {
+			App.canvasObj.canvas.drawImage(this.activeImage, 
+				this.location().getX(), this.location().getY());
+		}
 	}
 };
 

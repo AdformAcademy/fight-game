@@ -36,6 +36,21 @@ SpriteSheet.prototype.isFlipped = function () {
 	return this.flipH;
 };
 
+SpriteSheet.prototype.isLastFrame = function () {
+	var activeAnimation = this.activeAnimation;
+	var currentFrame = this.currentFrame;
+	if (activeAnimation.order === 'asc') {
+		if (currentFrame === activeAnimation.startFrame + activeAnimation.frames) {
+			return true;
+		}
+	} else {
+		if (currentFrame === activeAnimation.startFrame) {
+			return true;
+		}
+	}
+	return false;
+};
+
 SpriteSheet.prototype.setActiveAnimation = function (animationName) {
 	if (this.activeAnimation.name !== animationName) {
 		this.activeAnimation = this.animations[animationName];

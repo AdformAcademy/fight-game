@@ -7,12 +7,13 @@ var Point = require('../../common/point');
 var Player = require('./player');
 var StartScreen = require('./screen/start');
 var CountDownScreen = require('./screen/count-down');
-var ChooseWaitingScreen = require('./screen/choose-waiting');
+var ChooseScreen = require('./screen/choose');
 var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
 var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
 var Config = require('./config');
+var CharacterChooser = require('./character-chooser');
 var socket = io();
 
 var GlobalEvents = {};
@@ -23,6 +24,10 @@ $(window).keydown(function (event) {
 
 $(window).keyup(function (event) {
 	InputCollection.onKeyup(event);
+});
+
+$(window).keypress(function (event) {
+  InputCollection.onKeyPress(event);
 });
 
 $(window).click(function(event) {
@@ -152,8 +157,9 @@ socket.on('playing', function(data) {
 
 socket.on('choose-character', function (data) {
   App.screen.dispose();
-  App.screen = new ChooseWaitingScreen();
+  App.screen = new ChooseScreen();
   App.canvasObj.setGraphics(App.screen.graphics);
+  CharacterChooser.start(App.screen);
 });
 
 socket.on('unactive', function() {

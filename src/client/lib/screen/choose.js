@@ -1,11 +1,8 @@
 var App;
 var Utilities;
-var Button;
 var Point;
 var Text;
-var ChooseScreen;
 var Background;
-var socket = io();
 var obj;
 
 var ChooseScreen = function () {
@@ -16,17 +13,14 @@ var ChooseScreen = function () {
 	Background = require('../canvas/background');	
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
-	this.loadingText = new Text('Loading', 30);
-	this.loadingText.color = '#cbcbcb';
-	this.loadingText.fontType = 'Arial';
-	this.loadingValue = 0;
-	this.dots = 0;
-	this.loaded = false;
+	this.infoText = new Text('Choose character', 30);
+	this.infoText.color = '#cbcbcb';
+	this.infoText.fontType = 'Arial';
 
-	var centerX = Utilities.centerX(this.loadingText.getTextWidth());
+	this.buttons = [];
 
-	this.loadingText.setLocation(function() {
-		var x = centerX;
+	this.infoText.setLocation(function() {
+		var x = Utilities.centerX(obj.infoText.getTextWidth());;
 		var y = App.canvasObj.getHeight() * 0.15;
 		return new Point(x, y);
 	});
@@ -34,31 +28,34 @@ var ChooseScreen = function () {
 	obj = this;
 };
 
-ChooseScreen.prototype.animateLoading = function() {
-	var dots = [];
-	obj.loadingValue += 0.07;
-	if (obj.loadingValue > 1) {
-		obj.loadingValue = 0;
-		obj.dots++;
-		if (obj.dots > 3) {
-			obj.dots = 0;
-		}
+ChooseScreen.prototype.drawButtons = function () {
+	for (var button in obj.buttons) {
+		obj.buttons[button].draw();
 	}
-	for (var i = 0; i < obj.dots; i++) {
-		dots.push('.');
+};
+
+ChooseScreen.prototype.disposeButtons = function () {
+	for (var button in obj.buttons) {
+		obj.buttons[button].dispose();
 	}
-	obj.loadingText.setText('Loading' + dots.join(''));
+};
+
+ChooseScreen.prototype.addButton = function (button) {
+	this.buttons.push(button);
+};
+
+ChooseScreen.prototype.getButtons = function () {
+	return this.buttons;
 };
 
 ChooseScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
-	obj.animateLoading();
-	obj.loadingText.draw();
-	App.canvasObj.canvas.globalAlpha = 1;
+	obj.infoText.draw();
+	obj.drawButtons();
 };
 
 ChooseScreen.prototype.dispose = function() {
-	App.canvasObj.canvas.globalAlpha = 1;
+	obj.disposeButtons();
 };
 
 module.exports = ChooseScreen;
