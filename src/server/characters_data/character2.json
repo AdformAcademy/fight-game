@@ -104,6 +104,20 @@
 				"frames": 6,
 				"speed": 0.3,
 				"order": "asc"
+			},
+			"fatalityAnimation": {
+				"name": "fatalityAnimation",
+				"startFrame": 75,
+				"frames": 5,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"beatenAnimation": {
+				"name": "beatenAnimation",
+				"startFrame": 63,
+				"frames": 11,
+				"speed": 0.3,
+				"order": "desc"
 			}
 		},
 		"defaultAnimation": "standAnimation"
