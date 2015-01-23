@@ -6,6 +6,21 @@
 		"punchCombo": 15,
 		"kickCombo": 20
 	},
+	"spriteSheetButton": {
+		"spriteSheetIntroImage": "3RyoIntro.png",
+			"spriteDimensions": {
+			"width": 3200,
+			"height": 224,
+			"frameWidth": 320
+		},
+		"animation": {
+			"name": "introAnimation",
+			"startFrame": 0,
+			"frames": 10,
+			"speed": 0.2,
+			"order": "asc"
+		}
+	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character3.png",
 		"spriteDimensions": {

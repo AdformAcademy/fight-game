@@ -6,6 +6,21 @@
 		"punchCombo": 150,
 		"kickCombo": 200
 	},
+	"spriteSheetButton": {
+		"spriteSheetIntroImage": "2RobertIntro.png",
+			"spriteDimensions": {
+			"width": 4160,
+			"height": 224,
+			"frameWidth": 320
+		},
+		"animation": {
+			"name": "introAnimation",
+			"startFrame": 0,
+			"frames": 13,
+			"speed": 0.2,
+			"order": "asc"
+		}
+	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character2.png",
 		"spriteDimensions": {
