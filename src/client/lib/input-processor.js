@@ -118,43 +118,44 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
-
-	if (control.quickTapped(keys.KICK) && !player.isJumping()) {
-		console.log('kick combo');
-		player.setUsingCombo(true);
-		player.setHiting(true);
-		physics.hit(600, 80, 15, 60, 40);
-		input.kickCombo = true;
-	}
-	else if (control.quickTapped(keys.PUNCH) && !player.isJumping()) {
-		console.log('punch combo');
-		player.setUsingCombo(true);
-		player.setHiting(true);
-		physics.hit(800, 65, 0, 60, 40);
-		input.punchCombo = true;
-	}	
-	else if (control.isDown(keys.PUNCH)) {
-		console.log('simple punch');
-		player.setHiting(true);
-		physics.hit(300, 65, 5, 60, 40);
-		input.punchKey = true;
-	}
-	else if(control.isDown(keys.KICK)) {
-		console.log('simple kick');
-		player.setHiting(true);
-		physics.hit(400, 80, 10, 60, 40);
-		input.kickKey = true;
+	if(!player.isJumping()){
+		if (control.quickTapped(keys.KICK)) {
+			console.log('kick combo');
+			player.setUsingCombo(true);
+			player.setHiting(true);
+			physics.hit(600, 80, 15, 60, 40);
+			input.kickCombo = true;
+		}
+		else if (control.quickTapped(keys.PUNCH)) {
+			console.log('punch combo');
+			player.setUsingCombo(true);
+			player.setHiting(true);
+			physics.hit(800, 65, 0, 60, 40);
+			input.punchCombo = true;
+		}	
+		else if (control.isDown(keys.PUNCH)) {
+			console.log('simple punch');
+			player.setHiting(true);
+			physics.hit(300, 65, 5, 60, 40);
+			input.punchKey = true;
+		}
+		else if(control.isDown(keys.KICK)) {
+			console.log('simple kick');
+			player.setHiting(true);
+			physics.hit(400, 80, 10, 60, 40);
+			input.kickKey = true;
+		}
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
 		console.log("jumping and punching");
 		player.setHiting(true);
-		physics.hit(800, 65, 5, 60, 40);
+		physics.hit(780, 65, 5, 120, 40);
 		input.punchKey = true;
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping()) {
 		console.log("jumping and kicking");
 		player.setHiting(true);
-		physics.hit(800, 80, 10, 60, 40);
+		physics.hit(780, 80, 10, 120, 40);
 		input.kickKey = true;
 	}
 };
@@ -195,10 +196,12 @@ InputProcessor.prototype.processInputs = function() {
 	var input = this.createBlankInput();
 	var player = this.player;
 
-	if(!player.isHiting() && !player.isPunched() || player.isJumping()) {
-		this.processMovementInputs(input);
+	if(!player.isHiting() && !player.isPunched()) {
 		this.processComboInputs(input);
 		this.processActionInputs(input);
+	}
+	if(!player.isHiting() && !player.isPunched() || player.isJumping()) {
+		this.processMovementInputs(input);
 	}
 	this.inputCounter++;
 	return input;

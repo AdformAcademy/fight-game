@@ -68,20 +68,8 @@ WorldPhysics.prototype.jump = function () {
 	    var opz = opponent.getZ();
 	    var speedZ = player.getSpeedZ();
 	    var size = Config.playerSize;
-
-		/*if (Math.abs(x - opx) < size && Math.abs(y - opy) < size / 3) {
-			speedZ -= Config.playerAcceleration;
-			z -= speedZ;
-			if (z >= -(y + size - opy)) {
-				z = -(y + size - opy);
-				speedZ = 0;
-				player.getSpriteSheet().setActiveAnimation('standAnimation');
-			}
-		}
-		else {*/
-			speedZ -= Config.playerAcceleration;
-			z -= speedZ;
-		//}
+		speedZ -= Config.playerAcceleration;
+		z -= speedZ;
 		if (z > 0) {
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumping(false);
