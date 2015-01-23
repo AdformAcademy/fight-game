@@ -22,17 +22,13 @@ InputCollection.quickTapped = function (keyCode) {
 InputCollection.isPressed = function (keyCode) {
 	var isPressed = InputCollection.keysPressed[keyCode];
 	if (isPressed) {
-		InputCollection.keysPressed = false;
+		InputCollection.keysPressed[keyCode] = false;
 	}
 	return isPressed;
 };
 
 InputCollection.onKeydown = function(event) {
 	InputCollection.pressed[event.keyCode] = true;
-};
-
-InputCollection.onKeyPress = function(event) {
-	InputCollection.keysPressed[event.keyCode] = true;
 };
 
 InputCollection.onKeyup = function(event) {
@@ -45,6 +41,7 @@ InputCollection.onKeyup = function(event) {
 		}
 	}
 	InputCollection.pressTimes[event.keyCode] = currentPressTime;
+	InputCollection.keysPressed[event.keyCode] = true;
 	delete InputCollection.pressed[event.keyCode];
 };
 

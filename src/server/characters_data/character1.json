@@ -6,13 +6,23 @@
 		"punchCombo": 150,
 		"kickCombo": 200
 	},
-	"maxEnergy": 1000,
-	"costs": {
-		"punch": 25,
-		"kick": 35,
-		"punchCombo": 300,
-		"kickCombo": 400,
-		"jump": 10
+	"spriteSheetButton": {
+		"spriteSheetIntroImage": "2RobertIntro.png",
+			"spriteDimensions": {
+			"width": 4160,
+			"height": 224,
+			"frameWidth": 320
+		},
+		"animations": {
+			"animation": {
+				"name": "introAnimation",
+				"startFrame": 0,
+				"frames": 13,
+				"speed": 0.2,
+				"order": "asc"
+			}
+		},
+		"defaultAnimation": "animation"
 	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character1.png",
@@ -112,6 +122,27 @@
 				"frames": 6,
 				"speed": 0.3,
 				"order": "asc"
+			},
+			"fatalityAnimation": {
+				"name": "fatalityAnimation",
+				"startFrame": 63,
+				"frames": 10,
+				"speed": 0.3,
+				"order": "asc"
+			},
+			"beatenAnimation": {
+				"name": "beatenAnimation",
+				"startFrame": 74,
+				"frames": 6,
+				"speed": 0.3,
+				"order": "desc"
+			},
+			"introAnimation": {
+				"name": "introAnimation",
+				"startFrame": 74,
+				"frames": 6,
+				"speed": 0.3,
+				"order": "desc"
 			}
 		},
 		"defaultAnimation": "standAnimation"

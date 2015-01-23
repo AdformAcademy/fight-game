@@ -9,7 +9,7 @@ CharacterChooser.activeButton = 0;
 CharacterChooser.buttons = null;
 
 CharacterChooser.resetUnactiveButton = function (index) {
-	var button = CharacterChooser.buttons[CharacterChooser.activeButton];
+	var button = CharacterChooser.buttons[index];
 	if (button !== undefined) {
 		var spriteSheet = button.getSpriteSheet();
 		spriteSheet.setCurrentFrame(0);
@@ -20,28 +20,28 @@ CharacterChooser.updateActiveButton = function () {
 	var button = CharacterChooser.buttons[CharacterChooser.activeButton];
 	if (button !== undefined) {
 		var spriteSheet = button.getSpriteSheet();
-		if (!spriteSheet.isLastFrame()) {
-			spriteSheet.update();
-		}
+		spriteSheet.update();
 	}
 };
 
 CharacterChooser.handleControls = function () {
 	var control = InputCollection;
 	var oldActiveButton = CharacterChooser.activeButton;
-	if (control.isPressed(37)) {
+	if (control.isPressed(39)) {
 		CharacterChooser.activeButton++;
 		if (CharacterChooser.activeButton + 1 > CharacterChooser.buttons.length) {
 			CharacterChooser.activeButton = 0;
 		}
 	}
-	else if (control.isPressed(39)) {
+	else if (control.isPressed(37)) {
 		CharacterChooser.activeButton--;
 		if (CharacterChooser.activeButton < 0) {
 			CharacterChooser.activeButton = CharacterChooser.buttons.length - 1;
 		}
 	}
+	
 	if (oldActiveButton !== CharacterChooser.activeButton) {
+		console.log(CharacterChooser.activeButton);
 		CharacterChooser.resetUnactiveButton(oldActiveButton);
 	}
 };

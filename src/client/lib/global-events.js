@@ -14,6 +14,7 @@ var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
 var Config = require('./config');
 var CharacterChooser = require('./character-chooser');
+var Button = require('./canvas/button');
 var socket = io();
 
 var GlobalEvents = {};
@@ -24,10 +25,6 @@ $(window).keydown(function (event) {
 
 $(window).keyup(function (event) {
 	InputCollection.onKeyup(event);
-});
-
-$(window).keypress(function (event) {
-  InputCollection.onKeyPress(event);
 });
 
 $(window).click(function(event) {
@@ -156,10 +153,52 @@ socket.on('playing', function(data) {
 });
 
 socket.on('choose-character', function (data) {
+  var buttons = [];
+
+  var startX = App.canvasObj.getWidth() * 0.15;
+  var startY = App.canvasObj.getHeight() * 0.2;
+  var width = 228;
+  var height = 160;
+  var shiftX = 0;
+  var shiftY = 0;
+  var buttonsInRow = 3;
+  var currentButton = 1;
+
+  for (var character in data) {
+    var x = startX + shiftX;
+    var y = startY + shiftY;
+
+    var spriteImage = new Image();
+    console.log(data[character].spriteSheetIntroImage);
+    spriteImage.src = './img/' + data[character].spriteSheetIntroImage;
+    var button = new Button({
+      useSpriteSheet: true,
+      spriteSheet: new SpriteSheet({
+        image: spriteImage,
+        data: data[character],
+        useScale: true,
+        scaleWidth: width,
+        scaleHeight: height
+      }),
+      location: new Point(x, y)
+    });
+
+    buttons.push(button);
+
+    shiftX += width;
+    currentButton++;
+    if (currentButton > buttonsInRow) {
+      currentButton = 1;
+      shiftX = 0;
+      shiftY += height;
+    }
+  }
   App.screen.dispose();
-  App.screen = new ChooseScreen();
-  App.canvasObj.setGraphics(App.screen.graphics);
-  CharacterChooser.start(App.screen);
+  var screen = new ChooseScreen();
+  screen.setButtons(buttons);
+  App.screen = screen;
+  App.canvasObj.setGraphics(screen.graphics);
+  CharacterChooser.start(screen);
 });
 
 socket.on('unactive', function() {

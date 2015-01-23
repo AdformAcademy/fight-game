@@ -29,19 +29,21 @@ var ChooseScreen = function () {
 };
 
 ChooseScreen.prototype.drawButtons = function () {
-	for (var button in obj.buttons) {
-		obj.buttons[button].draw();
+	var buttons = obj.buttons;
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].drawButton();
 	}
 };
 
 ChooseScreen.prototype.disposeButtons = function () {
-	for (var button in obj.buttons) {
-		obj.buttons[button].dispose();
+	var buttons = obj.buttons;
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].dispose();
 	}
 };
 
-ChooseScreen.prototype.addButton = function (button) {
-	this.buttons.push(button);
+ChooseScreen.prototype.setButtons = function (buttons) {
+	this.buttons = buttons;
 };
 
 ChooseScreen.prototype.getButtons = function () {

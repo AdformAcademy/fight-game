@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
       var packetData = {};
       files.forEach(function (file) {
         var characterData = JSON.parse(fs.readFileSync(Config.charactersPath + file, 'utf8'));
-        packetData[file] = characterData;
+        packetData[file] = characterData.spriteSheetButton;
       });
       socket.emit('choose-character', packetData);
     });

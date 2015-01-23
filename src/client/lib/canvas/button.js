@@ -7,12 +7,14 @@ function Button(params) {
 	Utilities = require('./utilities');
 	EventCollection = require('../event-collection');
 
-	this.src = params.image;
-	this.image = new Image();
-	this.image.src = this.src;
-	this.hoverImage = new Image();
-	this.hoverImage.src = params.hoverImage || this.image.src;
-	this.activeImage = this.image;
+	if (!params.useSpriteSheet) {
+		this.src = params.image;
+		this.image = new Image();
+		this.image.src = this.src;
+		this.hoverImage = new Image();
+		this.hoverImage.src = params.hoverImage || this.image.src;
+		this.activeImage = this.image;
+	}
 
 	this.location = params.location || null;
 	this.onClickEvent = null;
@@ -92,22 +94,24 @@ Button.prototype.usingSpriteSheet = function() {
 
 Button.prototype.drawButton = function() {
 	if (this.visible) {
+		var loc = typeof this.location === 'function' ? this.location() : this.location;
 		if (this.useSpriteSheet) {
-			obj.spriteSheet.draw(this.location().getX(), this.location().getY());
+			this.spriteSheet.draw(loc.getX(), loc.getY());
 		} else {
 			App.canvasObj.canvas.drawImage(this.activeImage, 
-				this.location().getX(), this.location().getY());
+				loc.getX(), loc.getY());
 		}
 	}
 };
 
 Button.prototype.pointIntersects = function(location) {
+	var loc = typeof this.location === 'function' ? this.location() : this.location;
 	if (this.visible) {
 		var canvasLocation = Utilities.toCanvasLocation(location);
-		var xIntersects = canvasLocation.getX() >= this.location().getX() && 
-		canvasLocation.getX() <= this.location().getX() + this.activeImage.width;
-		var yIntersects = canvasLocation.getY() >= this.location().getY() &&
-		canvasLocation.getY() <= this.location().getY() + this.activeImage.height;
+		var xIntersects = canvasLocation.getX() >= loc.getX() && 
+		canvasLocation.getX() <= loc.getX() + this.activeImage.width;
+		var yIntersects = canvasLocation.getY() >= loc.getY() &&
+		canvasLocation.getY() <= loc.getY() + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;
