@@ -11,6 +11,8 @@ var CountDownScreen = require('./screen/count-down');
 var SpriteSheet = require('./canvas/spritesheet');
 var WorldPhysics = require('./world-physics');
 var LifeBar = require('./canvas/life-bar');
+var EnergyBar = require('./canvas/energy-bar');
+var Config = require('./config');
 var socket = io();
 
 var GlobalEvents = {};
@@ -67,17 +69,32 @@ socket.on('playing', function(data) {
   App.player = new Player({
     location: new Point(data.player.x, data.player.y),
     spriteSheet: playerSprite,
+    energyCosts: data.player.energyCosts,
     lifeBar: new LifeBar({
       location: function () {
-        return new Point(10, 10);
+        return new Point(Config.progressBarPadding, Config.progressBarPadding);
       },
       width: function () {
-        return App.canvasObj.getWidth() * 0.47;
+        return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
       },
       height: function () {
-        return 31;
+        return Config.lifeBarHeight;
       },
-      currentValue: 645,
+      currentValue: 1000,
+      maxValue: 1000
+    }),
+    energyBar: new EnergyBar({
+      location: function() {
+        return new Point(Config.progressBarPadding,
+          Config.progressBarPadding * 2 + Config.lifeBarHeight);
+      },
+      width: function () {
+        return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+      },
+      height: function () {
+        return Config.energyBarHeight;
+      },
+      currentValue: 0,
       maxValue: 1000
     })
   });
@@ -85,17 +102,35 @@ socket.on('playing', function(data) {
   App.opponent = new Player({
     location: new Point(data.opponent.x, data.opponent.y),
     spriteSheet: opponentSprite,
+    energyCosts: data.opponent.energyCosts,
     lifeBar: new LifeBar({
       location: function () {
-        return new Point(Math.round(App.canvasObj.getWidth() * 0.515), 10);
+        return new Point(
+          Math.round(App.canvasObj.getWidth() * (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding),
+          Config.progressBarPadding);
       },
       width: function () {
-        return App.canvasObj.getWidth() * 0.47;
+        return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
       },
       height: function () {
-        return 31;
+        return Config.lifeBarHeight;
       },
-      currentValue: 300,
+      currentValue: 1000,
+      maxValue: 1000
+    }),
+    energyBar: new EnergyBar({
+      location: function() {
+        return new Point(
+          Math.round(App.canvasObj.getWidth() * (1 - Config.energyBarWidthRatio) - Config.progressBarPadding),
+          Config.progressBarPadding * 2 + Config.lifeBarHeight);
+      },
+      width: function () {
+        return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+      },
+      height: function () {
+        return Config.energyBarHeight;
+      },
+      currentValue: 0,
       maxValue: 1000
     })
   });

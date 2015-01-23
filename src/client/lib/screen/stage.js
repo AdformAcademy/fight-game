@@ -21,6 +21,8 @@ StageScreen.prototype.graphics = function() {
 	var opponent= obj.opponent;
 	var playerLifeBar = player.getLifeBar();
 	var opponentLifebar = opponent.getLifeBar();
+	var playerEnergyBar = player.getEnergyBar();
+	var opponentEnergyBar = opponent.getEnergyBar();
 
 	obj.backgroundImage.draw();
 	if (player.getDepth() > opponent.getDepth()) {
@@ -31,7 +33,9 @@ StageScreen.prototype.graphics = function() {
 		player.draw();
 	}
 	playerLifeBar.draw();
+	playerEnergyBar.draw();
 	opponentLifebar.draw();
+	opponentEnergyBar.draw();
 };
 
 StageScreen.prototype.dispose = function() {
