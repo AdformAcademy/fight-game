@@ -27,6 +27,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			punched: player.isPunched(),
 			victor: player.isVictor(),
 			defeated: player.isDefeated(),
+			hiting: player.isHiting(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives()
 		},
