@@ -148,8 +148,14 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
 		console.log("jumping and punching");
 		player.setHiting(true);
-		physics.hit(300, 65, 5, 60, 40);
+		physics.hit(800, 65, 5, 60, 40);
 		input.punchKey = true;
+	}
+	else if (control.isDown(keys.KICK) && player.isJumping()) {
+		console.log("jumping and kicking");
+		player.setHiting(true);
+		physics.hit(800, 80, 10, 60, 40);
+		input.kickKey = true;
 	}
 };
 

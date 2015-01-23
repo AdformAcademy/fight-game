@@ -293,12 +293,12 @@ SocketServer.executeInput = function(player, input) {
 			player.setHiting(true);
 			SocketServer.hit(player, "punchCombo",800, 65, 0, 60, 40);
 		}
-		if(input.kickKey) {
+		if (input.kickKey) {
 			player.setHiting(true);
 			SocketServer.hit(player, "kick", 400, 80, 10, 60, 40);
 			console.log('simple kick');
 		}
-		else if(input.kickKey) {
+		else if (input.kickKey && player.isKicking()) {
 			var inputs = SocketServer.kickInputs[player.getID()];
 			if(inputs !== undefined) {
 				inputs.push(input);
@@ -318,24 +318,12 @@ SocketServer.executeInput = function(player, input) {
 		if (player.isJumping() && input.punchKey) {
 			console.log("Jumping and punching");
 			player.setHiting(true);
-			SocketServer.hit(player, "punch", 300, 65, 5, 60, 40);
-		}
-		else if (input.punchKey && !player.isHiting()) {
-			var inputs = SocketServer.punchInputs[player.getID()];
-			if(inputs !== undefined) {
-				inputs.push(input);
-			}
+			SocketServer.hit(player, "punch", 800, 65, 5, 60, 40);
 		}
 		if (player.isJumping() && input.kickKey) {
 			console.log("Jumping and kicking");
 			player.setHiting(true);
-			SocketServer.hit(player, "kick", 400, 85, 10, 60, 40);
-		}
-		else if (input.kickKey && !player.isHiting()) {
-			var inputs = SocketServer.punchInputs[player.getID()];
-			if(inputs !== undefined) {
-				inputs.push(input);
-			}
+			SocketServer.hit(player, "kick", 800, 85, 10, 60, 40);
 		}
 		if(input.key === key.UP_LEFT) {
 			if(Collisions.checkUpCollision(player, opponent, size))

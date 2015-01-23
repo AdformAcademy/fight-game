@@ -165,7 +165,6 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	} else if (packet.key === keys.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
-
 	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
@@ -175,6 +174,16 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		}
 		else if (!player.isPunched()) {
 			playerSprite.setActiveAnimation('standAnimation');
+		}
+	}
+	if (player.isJumping()) {
+		if (packet.punchKey) {
+			console.log('JUMP TEST');
+			playerSprite.setActiveAnimation('jumpPunchAnimation');
+		}
+		else if (packet.kickKey) {
+			console.log('JUMP TEST');
+			playerSprite.setActiveAnimation('jumpKickAnimation');
 		}
 	}
 };
