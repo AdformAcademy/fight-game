@@ -15,6 +15,7 @@ var Player = function (params) {
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = 0;
+  this.characterId = params.characterId || 1;
 };
 
 Player.prototype = new BasePlayer();
@@ -90,6 +91,14 @@ Player.prototype.addEnergy = function (action) {
 
 Player.prototype.increaseEnergy = function () {
   this.energy += Config.playerEnergyIncrement;
+};
+
+Player.prototype.setCharacterId = function (id) {
+  this.characterId = id;
+};
+
+Player.prototype.getCharacterId = function () {
+  return this.characterId;
 };
 
 Player.prototype.toPacket = function() {

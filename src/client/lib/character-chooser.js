@@ -1,4 +1,7 @@
+var App = require('../app');
 var InputCollection = require('./input-collection');
+var WaitingScreen = require('./screen/waiting');
+var socket = io();
 
 var CharacterChooser = {};
 
@@ -24,6 +27,15 @@ CharacterChooser.updateActiveButton = function () {
 	}
 };
 
+CharacterChooser.choose = function (id) {
+	socket.emit('ready', id);
+	var screen = App.screen;
+	screen.dispose();
+	App.screen = new WaitingScreen();
+	App.canvasObj.setGraphics(App.screen.graphics);
+	CharacterChooser.stop();
+};
+
 CharacterChooser.handleControls = function () {
 	var control = InputCollection;
 	var oldActiveButton = CharacterChooser.activeButton;
@@ -38,17 +50,22 @@ CharacterChooser.handleControls = function () {
 		if (CharacterChooser.activeButton < 0) {
 			CharacterChooser.activeButton = CharacterChooser.buttons.length - 1;
 		}
+	} else if (control.isPressed(13)) {
+		var button = CharacterChooser.buttons[CharacterChooser.activeButton];
+		var id = button.getId();
+		CharacterChooser.choose(id);
+		return;
 	}
-	
 	if (oldActiveButton !== CharacterChooser.activeButton) {
-		console.log(CharacterChooser.activeButton);
 		CharacterChooser.resetUnactiveButton(oldActiveButton);
 	}
 };
 
 CharacterChooser.update = function() {
 	CharacterChooser.handleControls();
-	CharacterChooser.updateActiveButton();
+	if (CharacterChooser.isRunning) {
+		CharacterChooser.updateActiveButton();
+	}
 };
 
 CharacterChooser.stop = function() {

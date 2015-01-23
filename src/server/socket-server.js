@@ -42,10 +42,10 @@ SocketServer.prepareSocketData = function(player, opponent) {
 	return data;
 };
 
-SocketServer.prepareClient = function (socket) {
+SocketServer.prepareClient = function (socket, selection) {
 	if (!SessionCollection.sessionExists(socket.id)) {
 		var targetSession = SessionCollection.getAvailableSession();
-		SessionCollection.createSession(socket);
+		SessionCollection.createSession(socket, selection);
 		console.log(socket.id + ' is ready');
 		if (targetSession !== undefined) {
 			var session = SessionCollection.getSessionObject(socket.id);
@@ -55,24 +55,31 @@ SocketServer.prepareClient = function (socket) {
 			targetSession.opponentId = session.sessionId;
 			targetSession.state = Session.PLAYING;
 
+			var playerSelection = session.getSelection();
+			var opponentSelection = targetSession.getSelection();
+
 			var playerData = JSON.parse(
-				fs.readFileSync(Config.charactersPath + 'character1.json', 'utf8'));
+				fs.readFileSync(Config.charactersPath + 
+					'character' + playerSelection + '.json', 'utf8'));
 			var opponentData = JSON.parse(
-				fs.readFileSync(Config.charactersPath + 'character2.json', 'utf8'));
+				fs.readFileSync(Config.charactersPath + 
+					'character' + opponentSelection + '.json', 'utf8'));
 
 			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
 				location: new Point(Config.firstSpawnLocation.x, Config.firstSpawnLocation.y),
 				z: Config.firstSpawnLocation.z,
-				characterData: playerData
+				characterData: playerData,
+				characterId: playerSelection
 			});
 			var opponent = new Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
 				location: new Point(Config.secondSpawnLocation.x, Config.secondSpawnLocation.y),
 				z: Config.secondSpawnLocation.z,
-				characterData: opponentData
+				characterData: opponentData,
+				characterId: opponentSelection
 			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);

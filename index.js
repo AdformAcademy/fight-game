@@ -36,8 +36,8 @@ io.on('connection', function(socket) {
     SocketServer.disconnectClient(socket);
   });
 
-  socket.on('ready', function() {
-    SocketServer.prepareClient(socket);
+  socket.on('ready', function(selection) {
+    SocketServer.prepareClient(socket, selection);
   });
 
   socket.on('update', function(packet) {
@@ -51,12 +51,9 @@ io.on('connection', function(socket) {
       files.forEach(function (file) {
         var characterData = JSON.parse(fs.readFileSync(Config.charactersPath + file, 'utf8'));
         packetData[file] = characterData.spriteSheetButton;
+        packetData[file].id = characterData.id;
       });
       socket.emit('choose-character', packetData);
     });
   });
-  
 });
-
-
-

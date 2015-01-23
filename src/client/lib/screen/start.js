@@ -45,7 +45,6 @@ function StartScreen() {
 	});
 
 	this.startButton.onClick(function() {
-		//socket.emit('ready', '');
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);

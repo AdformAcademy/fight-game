@@ -15,7 +15,7 @@ function Button(params) {
 		this.hoverImage.src = params.hoverImage || this.image.src;
 		this.activeImage = this.image;
 	}
-
+	this.id = params.id || null;
 	this.location = params.location || null;
 	this.onClickEvent = null;
 	this.mouseOverEvent = null;
@@ -25,6 +25,14 @@ function Button(params) {
 	this.visible = true;
 	this.useSpriteSheet = params.useSpriteSheet || false;
 	this.spriteSheet = params.spriteSheet || null;
+};
+
+Button.prototype.getId = function () {
+	return this.id;
+};
+
+Button.prototype.setId = function (id) {
+	this.id = id;
 };
 
 Button.prototype.getImage = function() {
