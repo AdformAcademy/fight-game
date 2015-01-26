@@ -20,6 +20,7 @@ CharacterChooser.resetUnactiveButton = function (index) {
 	if (button !== undefined) {
 		var spriteSheet = button.getSpriteSheet();
 		spriteSheet.setCurrentFrame(0);
+		button.setBorderColor('#5E5E5E');
 	}
 };
 
@@ -28,6 +29,7 @@ CharacterChooser.updateActiveButton = function () {
 	if (button !== undefined) {
 		var spriteSheet = button.getSpriteSheet();
 		spriteSheet.update();
+		button.setBorderColor('#DEDEDE');
 	}
 };
 
@@ -70,18 +72,20 @@ CharacterChooser.handleControls = function () {
 
 CharacterChooser.createButtons = function (data) {
 	var buttons = [];
-	var startX = App.canvasObj.getWidth() * 0.15;
+	var startX = App.canvasObj.getWidth() * 0.125;
 	var startY = App.canvasObj.getHeight() * 0.2;
 	var width = 228;
 	var height = 160;
 	var shiftX = 0;
 	var shiftY = 0;
+	var margin = 3;
 	var buttonsInRow = 3;
-	var currentButton = 1;
+	var currentButton = 0;
+	var currentRow = 0;
 
 	for (var character in data) {
-		var x = startX + shiftX;
-		var y = startY + shiftY;
+		var x = startX + shiftX + (margin * currentButton);
+		var y = startY + shiftY + (margin * currentRow);
 		var spriteImage = new Image();
 		spriteImage.src = './img/' + data[character].spriteSheetIntroImage;
 		var button = new Button({
@@ -94,15 +98,21 @@ CharacterChooser.createButtons = function (data) {
 				scaleWidth: width,
 				scaleHeight: height
 			}),
-			location: new Point(x, y)
+			location: new Point(x, y),
+			drawBorder: true,
+			borderWidth: 3,
+			borderColor: '#5E5E5E',
+			width: width,
+			height: height
 		});
 
 		buttons.push(button);
 
 		shiftX += width;
 		currentButton++;
-		if (currentButton > buttonsInRow) {
-			currentButton = 1;
+		if (currentButton + 1 > buttonsInRow) {
+			currentButton = 0;
+			currentRow++;
 			shiftX = 0;
 			shiftY += height;
 		}

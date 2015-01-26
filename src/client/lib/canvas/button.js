@@ -25,6 +25,11 @@ function Button(params) {
 	this.visible = true;
 	this.useSpriteSheet = params.useSpriteSheet || false;
 	this.spriteSheet = params.spriteSheet || null;
+	this.drawBorder = params.drawBorder || null;
+	this.borderWidth = params.borderWidth || null;
+	this.borderColor = params.borderColor || 'black';
+	this.width = params.width || null;
+	this.height = params.height || null;
 };
 
 Button.prototype.getId = function () {
@@ -100,14 +105,46 @@ Button.prototype.usingSpriteSheet = function() {
 	return this.useSpriteSheet;
 };
 
+Button.prototype.setDrawBorder = function (drawBorder) {
+	this.drawBorder = drawBorder;
+};
+
+Button.prototype.borderIsDrawing = function () {
+	return this.drawBorder;
+};
+
+Button.prototype.getBorderWidth = function () {
+	return this.borderWidth;
+};
+
+Button.prototype.setBorderWidth = function (borderWidth) {
+	if (typeof borderWidth === 'number') {
+		this.borderWidth = borderWidth;
+	}
+};
+
+Button.prototype.getBorderColor = function () {
+	return this.borderColor;
+};
+
+Button.prototype.setBorderColor = function (borderColor) {
+	this.borderColor = borderColor;
+};
+
 Button.prototype.drawButton = function() {
+	var canvas = App.canvasObj.canvas;
 	if (this.visible) {
 		var loc = typeof this.location === 'function' ? this.location() : this.location;
 		if (this.useSpriteSheet) {
 			this.spriteSheet.draw(loc.getX(), loc.getY());
 		} else {
-			App.canvasObj.canvas.drawImage(this.activeImage, 
+			canvas.drawImage(this.activeImage, 
 				loc.getX(), loc.getY());
+		}
+		if (this.drawBorder) {
+			canvas.strokeStyle = this.borderColor;
+			canvas.lineWidth = this.borderWidth;
+			canvas.strokeRect(loc.getX(), loc.getY(), this.width, this.height);
 		}
 	}
 };
