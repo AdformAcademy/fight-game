@@ -91,6 +91,9 @@ Player.prototype.addEnergy = function (action) {
 
 Player.prototype.increaseEnergy = function () {
   this.energy += Config.playerEnergyIncrement;
+  if(this.energy > this.maxEnergy) {
+    this.energy = this.maxEnergy;
+  }
 };
 
 Player.prototype.setCharacterId = function (id) {
