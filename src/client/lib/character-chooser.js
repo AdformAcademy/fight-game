@@ -50,6 +50,9 @@ CharacterChooser.handleControls = function () {
 		if (CharacterChooser.activeButton < 0) {
 			CharacterChooser.activeButton = CharacterChooser.buttons.length - 1;
 		}
+	} else if (control.isPressed(38) || (control.isPressed(40))) {
+		CharacterChooser.activeButton += CharacterChooser.buttons.length / 2;
+		CharacterChooser.activeButton %= CharacterChooser.buttons.length;
 	} else if (control.isPressed(13)) {
 		var button = CharacterChooser.buttons[CharacterChooser.activeButton];
 		var id = button.getId();
