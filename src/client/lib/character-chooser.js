@@ -1,6 +1,10 @@
 var App = require('../app');
 var InputCollection = require('./input-collection');
+var ChooseScreen = require('./screen/choose');
 var WaitingScreen = require('./screen/waiting');
+var Button = require('./canvas/button');
+var SpriteSheet = require('./canvas/spritesheet');
+var Point = require('../../common/point')
 var socket = io();
 
 var CharacterChooser = {};
@@ -61,6 +65,59 @@ CharacterChooser.handleControls = function () {
 	}
 };
 
+CharacterChooser.createButtons = function (data) {
+	var buttons = [];
+	var startX = App.canvasObj.getWidth() * 0.15;
+	var startY = App.canvasObj.getHeight() * 0.2;
+	var width = 228;
+	var height = 160;
+	var shiftX = 0;
+	var shiftY = 0;
+	var buttonsInRow = 3;
+	var currentButton = 1;
+
+	for (var character in data) {
+		var x = startX + shiftX;
+		var y = startY + shiftY;
+		var spriteImage = new Image();
+		spriteImage.src = './img/' + data[character].spriteSheetIntroImage;
+		var button = new Button({
+			id: data[character].id,
+			useSpriteSheet: true,
+			spriteSheet: new SpriteSheet({
+				image: spriteImage,
+				data: data[character],
+				useScale: true,
+				scaleWidth: width,
+				scaleHeight: height
+			}),
+			location: new Point(x, y)
+		});
+
+		buttons.push(button);
+
+		shiftX += width;
+		currentButton++;
+		if (currentButton > buttonsInRow) {
+			currentButton = 1;
+			shiftX = 0;
+			shiftY += height;
+		}
+	}
+	return buttons;
+};
+
+CharacterChooser.createScreen = function (data) {
+	var buttons = CharacterChooser.createButtons(data);
+	App.screen.dispose();
+	var screen = new ChooseScreen();
+	screen.setButtons(buttons);
+	CharacterChooser.screen = screen;
+	CharacterChooser.buttons = screen.getButtons();
+	App.screen = screen;
+	App.canvasObj.setGraphics(screen.graphics);
+};
+
 CharacterChooser.update = function() {
 	CharacterChooser.handleControls();
 	if (CharacterChooser.isRunning) {
@@ -76,10 +133,8 @@ CharacterChooser.stop = function() {
 	clearInterval(CharacterChooser.updateInterval);
 };
 
-CharacterChooser.start = function(screen) {
+CharacterChooser.start = function() {
 	CharacterChooser.isRunning = true;
-	CharacterChooser.screen = screen;
-	CharacterChooser.buttons = screen.getButtons();
 	CharacterChooser.updateInterval = setInterval(function() {
 		CharacterChooser.update();
 	}, 1000 / 30);

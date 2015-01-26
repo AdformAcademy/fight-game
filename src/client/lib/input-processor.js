@@ -1,5 +1,4 @@
 var App = require('../app');
-var Client = require('./client');
 var Collisions = require('../../common/collisions');
 var InputCollection = require('./input-collection');
 var Config = require('./config');
@@ -114,7 +113,7 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 
 InputProcessor.prototype.processComboInputs = function (input) {
 
-	var physics = Client.physics;
+	var physics = App.physics;
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
@@ -154,7 +153,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 };
 
 InputProcessor.prototype.processActionInputs = function (input) {
-	var physics = Client.physics;
+	var physics = App.physics;
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;

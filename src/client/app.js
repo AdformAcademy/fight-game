@@ -8,5 +8,6 @@ App.canvasObj = new Canvas('#window');
 App.gameStarted = false;
 App.player = null;
 App.opponent = null;
+App.physics = null;
 
 require('./lib/global-events');
