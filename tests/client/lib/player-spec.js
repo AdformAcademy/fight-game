@@ -20,7 +20,10 @@ describe('Player', function () {
 
 		locationMock = new Point(0, 1);
 		spritesheetMock = {};
-		player = new Player(locationMock, spritesheetMock);
+		player = new Player({
+			location: locationMock,
+			spriteSheet: spritesheetMock
+		});
 	});
 
 	afterEach(function() {

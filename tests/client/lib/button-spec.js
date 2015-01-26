@@ -22,7 +22,7 @@ describe('Button', function () {
 	});
 
 	it('should get default hover image', function() {
-		expect(button.getHoverImage()).toBe(null);
+		expect(button.getHoverImage()).toBeDefined();
 	});
 
 	it('should get width equal to 5', function() {
