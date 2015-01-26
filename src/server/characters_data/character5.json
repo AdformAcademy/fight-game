@@ -24,7 +24,7 @@
 		"animation": {
 			"name": "introAnimation",
 			"startFrame": 0,
-			"frames": 12,
+			"frames": 13,
 			"speed": 0.2,
 			"order": "asc"
 		}
@@ -41,7 +41,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 8,
-				"speed": 10.0,
+				"speed": 0.5,
 				"order": "asc"
 			},
 			"jumpAnimation": {

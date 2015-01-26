@@ -41,49 +41,49 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 10.0,
+				"speed": 0.6,
 				"order": "asc"
 			},
 			"jumpAnimation": {
 				"name": "jumpAnimation",
 				"startFrame": 8,
 				"frames": 15,
-				"speed": 0.2,
-				"order": "asc"
+				"speed": 0.48,
+				"order": "desc"
 			},
 			"moveAnimation": {
 				"name": "moveAnimation",
 				"startFrame": 22,
 				"frames": 12,
-				"speed": 0.35,
+				"speed": 0.4,
 				"order": "desc"
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",
 				"startFrame": 34,
 				"frames": 5,
-				"speed": 0.2,
+				"speed": 0.5,
 				"order": "asc"
 			},
 			"punchAnimation2": {
 				"name": "punchAnimation2",
 				"startFrame": 39,
 				"frames": 6,
-				"speed": 0.2,
+				"speed": 0.5,
 				"order": "asc"
 			},
 			"standAnimation": {
 				"name": "standAnimation",
 				"startFrame": 45,
 				"frames": 8,
-				"speed": 0.4,
+				"speed": 0.3,
 				"order": "asc"
 			},
 			"jumpKickAnimation": {
 				"name": "jumpKickAnimation",
 				"startFrame": 54,
 				"frames": 4,
-				"speed": 0.3,
+				"speed": 0.2,
 				"order": "asc"
 			},
 			"runningAnimation": {
@@ -97,7 +97,7 @@
 				"name": "jumpPunchAnimation",
 				"startFrame": 66,
 				"frames": 6,
-				"speed": 0.2,
+				"speed": 0.5,
 				"order": "asc"
 			},
 			"kickAnimation": {
