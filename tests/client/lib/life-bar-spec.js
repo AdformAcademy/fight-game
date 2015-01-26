@@ -25,15 +25,25 @@ describe('LifeBar', function () {
 		container.append(canvas);
 		point = new Point(0, 0);
 
-		this.healthVeryHighMask = new Image();
-		this.leftMaskImage = new Image();
+		healthVeryHighMask = new Image();
+		healthVeryHighMask.src = './img/health/very-high.png';
+		healthHighMask = new Image();
+		healthHighMask.src = './img/health/high.png';
+		healthNormalMask = new Image();
+		healthNormalMask.src = './img/health/normal.png';
+		healthLowMask = new Image();
+		healthLowMask.src = './img/health/low.png';
+		healthVeryLowMask = new Image();
+		healthVeryLowMask.src = './img/health/very-low.png';
+		leftMaskImage = new Image();
+		leftMaskImage.src = './img/health/used.png';
 
 		paramsMock = {
 			location: point,
 			width: 900,
 			height: 550,
-			currentValue: 500,
-			maxValue: 900,
+			currentValue: 50,
+			maxValue: 90,
 			fill: {
 				left: '#B5B5B5',
 				leftMask: leftMaskImageMock,
@@ -66,10 +76,20 @@ describe('LifeBar', function () {
     it('should be defined \'dispose\'', function () {
         expect(lifeBar.dispose).toBeDefined();
     });
-
+    
     it('should update value to 3', function () {
-        energyBar.store(3);
+        lifeBar.store(3);
         expect(lifeBar.updatedValue).toBe(3);
     });
+
+    it('should update to', function () {
+        lifeBar.updateMask();
+        expect(lifeBar.paramsMock.fill.usedMask).toBe(healthNormalMask);
+    });
+
+    /*it('should update to', function () {
+        energyBar.store(5);
+        expect(lifeBar.animateChange).toBe(5);
+    });*/
 
 });
