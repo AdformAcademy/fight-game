@@ -1,7 +1,14 @@
 var App = require('../app');
 var Config = require('./config');
+var Player = require('./player');
+var Point = require('../../common/point');
+var SpriteSheet = require('./canvas/spritesheet');
+var LifeBar = require('./canvas/life-bar');
+var EnergyBar = require('./canvas/energy-bar');
 var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
+var WorldPhysics = require('./world-physics');
+var CountDownScreen = require('./screen/count-down');
 var socket = io();
 
 var Client = module.exports = {};
@@ -15,7 +22,6 @@ Client.prediction = true;
 Client.reconciliation = true;
 Client.interpolation = true;
 Client.opponentInputs = [];
-Client.physics = null;
 Client.inputProcessor = null;
 
 Client.storeInput = function(input) {
@@ -27,7 +33,7 @@ Client.storeServerData = function(data) {
 };
 
 Client.interpolate = function() {
-	var physics = Client.physics;
+	var physics = App.physics;
 	var bufferSize = Client.opponentInputs.length;
 	var opponent = App.opponent;
 	if (bufferSize < 10) {
@@ -46,7 +52,7 @@ Client.interpolate = function() {
 };
 
 Client.reconciliate = function(state) {
-	var physics = Client.physics;
+	var physics = App.physics;
 	var j = 0;
 	while (j < Client.inputs.length) {
 		var input = Client.inputs[j];
@@ -60,7 +66,7 @@ Client.reconciliate = function(state) {
 };
 
 Client.processServerData = function() {
-	var physics = Client.physics;
+	var physics = App.physics;
     for (var i = 0; i < Client.serverData.length; i++) {
     	var state = Client.serverData[i];
     	var x = state.player.x;
@@ -120,7 +126,7 @@ Client.appendOpponentInputs = function(inputs) {
 };
 
 Client.processLocalInputs = function () {
-	var physics = Client.physics;
+	var physics = App.physics;
 	var player = App.player;
 	var packet = Client.inputProcessor.processInputs();
 
@@ -141,8 +147,114 @@ Client.sendServerUpdate = function (packet) {
 	socket.emit('update', packet);
 };
 
+Client.initializeGame = function (data) {
+	var playerSpriteData = data.player.data;
+	var opponentSpriteData = data.opponent.data;
+	var playerSpriteImage = new Image();
+	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
+
+	var opponentSpriteImage = new Image();
+	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+
+	var buildSprite = function(image, spriteSheetData) {
+		return new SpriteSheet({
+			image: image,
+			data: spriteSheetData,
+			frames: 1,
+		});
+	};
+
+	var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
+	var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
+
+	App.player = new Player({
+		location: new Point(data.player.x, data.player.y),
+		spriteSheet: playerSprite,
+		energyCosts: data.player.energyCosts,
+		lifeBar: new LifeBar({
+			location: function () {
+				return new Point(Config.progressBarPadding, Config.progressBarPadding);
+			},
+			width: function () {
+				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+			},
+			height: function () {
+				return Config.lifeBarHeight;
+			},
+			currentValue: 1000,
+			maxValue: 1000
+		}),
+		energyBar: new EnergyBar({
+			location: function() {
+				return new Point(Config.progressBarPadding,
+				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+			},
+			width: function () {
+				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+			},
+			height: function () {
+				return Config.energyBarHeight;
+			},
+			currentValue: 0,
+			maxValue: 1000
+		})
+	});
+
+	App.opponent = new Player({
+		location: new Point(data.opponent.x, data.opponent.y),
+		spriteSheet: opponentSprite,
+		energyCosts: data.opponent.energyCosts,
+		lifeBar: new LifeBar({
+			location: function () {
+			return new Point(
+				Math.round(App.canvasObj.getWidth() * 
+				(1 - Config.lifeBarWidthRatio) - Config.progressBarPadding),
+				Config.progressBarPadding);
+			},
+			width: function () {
+				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+			},
+			height: function () {
+				return Config.lifeBarHeight;
+			},
+			currentValue: 1000,
+			maxValue: 1000
+		}),
+		energyBar: new EnergyBar({
+			location: function() {
+			return new Point(
+				Math.round(App.canvasObj.getWidth() * 
+				(1 - Config.energyBarWidthRatio) - Config.progressBarPadding),
+				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+			},
+			width: function () {
+				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+			},
+			height: function () {
+			return Config.energyBarHeight;
+			},
+			currentValue: 0,
+			maxValue: 1000
+		})
+	});
+
+	App.physics = new WorldPhysics({
+		player: App.player,
+		opponent: App.opponent
+	});
+
+	Client.inputProcessor = new InputProcessor({
+		player: App.player,
+		opponent: App.opponent
+	});
+
+	App.screen.dispose();
+	App.screen = new CountDownScreen();
+	App.canvasObj.setGraphics(App.screen.graphics);
+};
+
 Client.update = function() {
-	var physics = Client.physics;
+	var physics = App.physics;
 	Client.processServerData();
 	var packet = Client.processLocalInputs();
 	Client.sendServerUpdate(packet);

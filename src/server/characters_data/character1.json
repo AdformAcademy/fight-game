@@ -1,4 +1,5 @@
 {
+	"id": 1,
 	"lives": 1000,
 	"damage": {
 		"punch": 50,
@@ -15,19 +16,22 @@
 		"jump": 10
 	},
 	"spriteSheetButton": {
-		"spriteSheetIntroImage": "1.png",
+		"spriteSheetIntroImage": "2RobertIntro.png",
 			"spriteDimensions": {
 			"width": 4160,
 			"height": 224,
 			"frameWidth": 320
 		},
-		"animation": {
-			"name": "introAnimation",
-			"startFrame": 0,
-			"frames": 1,
-			"speed": 0.2,
-			"order": "asc"
-		}
+		"animations": {
+			"animation": {
+				"name": "introAnimation",
+				"startFrame": 0,
+				"frames": 13,
+				"speed": 0.2,
+				"order": "asc"
+			}
+		},
+		"defaultAnimation": "animation"
 	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character1.png",

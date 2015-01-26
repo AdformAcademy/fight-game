@@ -22,8 +22,9 @@ SessionCollection.sessionExists = function(sessionId) {
   return SessionCollection.list[sessionId] !== undefined;
 };
 
-SessionCollection.createSession = function(socket) {
+SessionCollection.createSession = function(socket, selection) {
   var sesObj = new Session(socket, null, Session.READY);
+  sesObj.setSelection(selection);
   SessionCollection.list[socket.id] = sesObj;
   return sesObj;
 };

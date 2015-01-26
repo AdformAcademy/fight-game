@@ -18,6 +18,9 @@ var SpriteSheet = function (params) {
 	this.currentFrame = this.startFrame;
 	this.activeFrameIndex = this.startFrame;
 	this.flipH = false;
+	this.scale = params.useScale || false;
+	this.scaleWidth = params.scaleWidth || null;
+	this.scaleHeight = params.scaleHeight || null;
 };
 
 SpriteSheet.prototype.getCurrentFrame = function () {
@@ -26,6 +29,7 @@ SpriteSheet.prototype.getCurrentFrame = function () {
 
 SpriteSheet.prototype.setCurrentFrame = function (currentFrame) {
 	this.currentFrame = currentFrame;
+	this.activeFrameIndex = currentFrame;
 };
 
 SpriteSheet.prototype.getCurrentAnimation = function () {
@@ -34,6 +38,21 @@ SpriteSheet.prototype.getCurrentAnimation = function () {
 
 SpriteSheet.prototype.isFlipped = function () {
 	return this.flipH;
+};
+
+SpriteSheet.prototype.isLastFrame = function () {
+	var activeAnimation = this.activeAnimation;
+	var currentFrame = this.currentFrame;
+	if (activeAnimation.order === 'asc') {
+		if (currentFrame === activeAnimation.startFrame + activeAnimation.frames) {
+			return true;
+		}
+	} else {
+		if (currentFrame === activeAnimation.startFrame) {
+			return true;
+		}
+	}
+	return false;
 };
 
 SpriteSheet.prototype.setActiveAnimation = function (animationName) {
@@ -87,12 +106,20 @@ SpriteSheet.prototype.update = function() {
 
 SpriteSheet.prototype.draw = function(x, y) {
 	var scaleX = this.flipH ? this.dimensions.frameWidth * -1 - x : x;
-	var scale = this.flipH ? -1 : 1; 
+	var scale = this.flipH ? -1 : 1;
+	var frameWidth, frameHeight; 
 	this.canvas.save();
 	this.canvas.scale(scale, 1);
+	if (!this.scale) {
+		frameWidth = this.dimensions.frameWidth;
+		frameHeight = this.dimensions.height;
+	} else {
+		frameWidth = this.scaleWidth;
+		frameHeight = this.scaleHeight;
+	}
 	this.canvas.drawImage(this.image, this.currentFrame * this.dimensions.frameWidth, 
 		0, this.dimensions.frameWidth, this.dimensions.height, 
-		scaleX, y, this.dimensions.frameWidth, this.dimensions.height);
+		scaleX, y, frameWidth, frameHeight);
 	this.canvas.restore();
 };
 

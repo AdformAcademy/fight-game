@@ -1,4 +1,5 @@
 {
+	"id": 2,
 	"lives": 1000,
 	"damage": {
 		"punch": 50,
@@ -21,13 +22,16 @@
 			"height": 224,
 			"frameWidth": 320
 		},
-		"animation": {
-			"name": "introAnimation",
-			"startFrame": 0,
-			"frames": 13,
-			"speed": 0.2,
-			"order": "asc"
-		}
+		"animations": {
+			"animation": {
+				"name": "introAnimation",
+				"startFrame": 0,
+				"frames": 13,
+				"speed": 0.2,
+				"order": "asc"
+			}
+		},
+		"defaultAnimation": "animation"
 	},
 	"spriteSheetData": {
 		"spriteSheetImage": "character2.png",

@@ -3,7 +3,7 @@ var Utilities;
 var Button;
 var Point;
 var Text;
-var WaitingScreen;
+var ChooseWaitingScreen;
 var Background;
 var socket = io();
 var obj;
@@ -14,12 +14,19 @@ function StartScreen() {
 	Button = require('../canvas/button');
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
-	WaitingScreen = require('./waiting');
+	ChooseWaitingScreen = require('./choose-waiting');
 	Background = require('../canvas/background');	
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
-	this.startButton = new Button('./img/start_button.png');
-	this.startButton.setHoverImage('./img/start_button_hover.png');
+	this.startButton = new Button({
+		image: './img/start_button.png',
+		hoverImage: './img/start_button_hover.png',
+		location: function() {
+			var x = Utilities.centerX(obj.startButton.getActiveImage().width);
+			var y = App.canvasObj.getHeight() * 0.4;
+			return new Point(x, y);
+		}
+	});
 	this.startText = new Text('Are you ready to begin a fight?', 30);
 	this.startText.setColor('#cbcbcb');
 	this.startText.setFontType('Arial');
@@ -38,8 +45,8 @@ function StartScreen() {
 	});
 
 	this.startButton.onClick(function() {
-		socket.emit('ready', '');
-		App.screen = new WaitingScreen();
+		socket.emit('choose', '');
+		App.screen = new ChooseWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});
