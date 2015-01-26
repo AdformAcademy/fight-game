@@ -20,6 +20,9 @@ var EnergyBar = function (params) {
 			leftOpacity: 1,
 			usedOpacity: 1,
 			globalOpacity: 1
+		},
+		border: {
+			radius: 10
 		}
 	};
 	this.location = params.location;

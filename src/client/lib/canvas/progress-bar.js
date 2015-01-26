@@ -118,19 +118,38 @@ ProgressBar.prototype.drawDestinationLayer = function (canvas, params) {
 	canvas.restore();
 };
 
-ProgressBar.prototype.constructBorder = function (canvas, params) {
-	canvas.lineWidth = params.border.width;
-	canvas.strokeStyle = params.border.color || 'black';
-	this.drawStatusBarLines(canvas, params);
-};
+ProgressBar.prototype.constructBorder = function (params) {
+	var location = this.location();
+	var x = location.getX();
+	var y = location.getY();
+	var width = params.width();
+	var height = params.height();
+	var radius = params.border.radius;
+	var canvas = App.canvasObj.canvas;
+
+    canvas.beginPath();
+    canvas.moveTo(x + radius, y);
+    canvas.lineTo(x + width - radius, y);
+    canvas.quadraticCurveTo(x + width, y, x + width, y + radius);
+    canvas.lineTo(x + width, y + height - radius);
+    canvas.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    canvas.lineTo(x + radius, y + height);
+    canvas.quadraticCurveTo(x, y + height, x, y + height - radius);
+    canvas.lineTo(x, y + radius);
+    canvas.quadraticCurveTo(x, y, x + radius, y);
+    canvas.closePath();
+}
 
 ProgressBar.prototype.draw = function () {
 	var canvas = App.canvasObj.canvas;
 	var params = this.params;
-
+	canvas.save();
 	canvas.globalAlpha = this.params.fill.globalOpacity;
+	this.constructBorder(params);
+	canvas.clip();
 	this.drawSourceLayer(canvas, params);
 	this.drawDestinationLayer(canvas, params);
+	canvas.restore();
 	canvas.globalAlpha = 1;
 };
 

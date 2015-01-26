@@ -33,6 +33,9 @@ var LifeBar = function (params) {
 			leftOpacity: 1,
 			usedOpacity: 1,
 			globalOpacity: 1
+		},
+		border: {
+			radius: 18
 		}
 	};
 	this.location = params.location;
