@@ -1,19 +1,19 @@
 {
 	"id": 2,
-	"lives": 1000,
+	"lives": 100,
 	"damage": {
-		"punch": 50,
-		"kick": 70,
-		"punchCombo": 150,
-		"kickCombo": 200
+		"punch": 5,
+		"kick": 7,
+		"punchCombo": 15,
+		"kickCombo": 20
 	},
-	"maxEnergy": 1000,
+	"maxEnergy": 100,
 	"costs": {
-		"punch": 25,
-		"kick": 35,
-		"punchCombo": 300,
-		"kickCombo": 400,
-		"jump": 10
+		"punch": 2,
+		"kick": 3,
+		"punchCombo": 30,
+		"kickCombo": 40,
+		"jump": 1
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "2RobertIntro.png",

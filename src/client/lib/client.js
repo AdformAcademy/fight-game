@@ -148,8 +148,8 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
-	var playerSpriteData = data.player.data;
-	var opponentSpriteData = data.opponent.data;
+	var playerSpriteData = data.player.data.spriteSheetData;
+	var opponentSpriteData = data.opponent.data.spriteSheetData;
 	var playerSpriteImage = new Image();
 	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
@@ -181,8 +181,8 @@ Client.initializeGame = function (data) {
 			height: function () {
 				return Config.lifeBarHeight;
 			},
-			currentValue: 1000,
-			maxValue: 1000
+			currentValue: data.player.data.lives,
+			maxValue: data.player.data.lives
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
@@ -196,7 +196,7 @@ Client.initializeGame = function (data) {
 				return Config.energyBarHeight;
 			},
 			currentValue: 0,
-			maxValue: 1000
+			maxValue: data.player.data.maxEnergy
 		})
 	});
 
@@ -217,8 +217,8 @@ Client.initializeGame = function (data) {
 			height: function () {
 				return Config.lifeBarHeight;
 			},
-			currentValue: 1000,
-			maxValue: 1000
+			currentValue: data.opponent.data.lives,
+			maxValue: data.opponent.data.lives
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
@@ -234,7 +234,7 @@ Client.initializeGame = function (data) {
 			return Config.energyBarHeight;
 			},
 			currentValue: 0,
-			maxValue: 1000
+			maxValue: data.opponent.data.maxEnergy
 		})
 	});
 

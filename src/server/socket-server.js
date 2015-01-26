@@ -107,13 +107,13 @@ SocketServer.prepareClient = function (socket, selection) {
 				player: {
 					x: player.getX(),
 					y: player.getY(),
-					data: playerData.spriteSheetData,
+					data: playerData,
 					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					data: opponentData.spriteSheetData,
+					data: opponentData,
 					energyCosts: opponentData.costs
 				}
 			});
@@ -121,13 +121,13 @@ SocketServer.prepareClient = function (socket, selection) {
 				player: {
 					x: opponent.getX(),
 					y: opponent.getY(),
-					data: opponentData.spriteSheetData,
+					data: opponentData,
 					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: player.getX(),
 					y: player.getY(),
-					data: playerData.spriteSheetData,
+					data: playerData,
 					energyCosts: opponentData.costs
 				}
 			});

@@ -14,7 +14,7 @@ var Player = function (params) {
   this.damage = params.characterData.damage;
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
-  this.energy = 0;
+  this.energy = params.characterData.maxEnergy / 2;
   this.characterId = params.characterId || 1;
 };
 
