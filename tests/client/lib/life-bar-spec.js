@@ -43,6 +43,7 @@ describe('LifeBar', function () {
 			width: 900,
 			height: 550,
 			currentValue: 50,
+			updatedValue: 40,
 			maxValue: 90,
 			fill: {
 				left: '#B5B5B5',
@@ -76,20 +77,20 @@ describe('LifeBar', function () {
     it('should be defined \'dispose\'', function () {
         expect(lifeBar.dispose).toBeDefined();
     });
-    
+
     it('should update value to 3', function () {
         lifeBar.store(3);
         expect(lifeBar.updatedValue).toBe(3);
     });
 
-    it('should update to', function () {
+    it('should update usedMask value to healthNormalMask', function () {
         lifeBar.updateMask();
         expect(lifeBar.paramsMock.fill.usedMask).toBe(healthNormalMask);
     });
 
-    /*it('should update to', function () {
-        energyBar.store(5);
-        expect(lifeBar.animateChange).toBe(5);
-    });*/
+    it('should update to', function () {
+        lifeBar.animateChange();
+        expect(lifeBar.paramsMock.currentValue).toBe(40);
+    });
 
 });
