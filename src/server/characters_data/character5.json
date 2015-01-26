@@ -16,11 +16,11 @@
 		"jump": 1
 	},
 	"spriteSheetButton": {
-		"spriteSheetIntroImage": "5KarmanIntro.png",
+		"spriteSheetIntroImage": "5KarmanSmallIntro.png",
 			"spriteDimensions": {
 			"width": 3840,
-			"height": 224,
-			"frameWidth": 320
+			"height": 164,
+			"frameWidth": 212
 		},
 		"animations": {
 			"animation": {

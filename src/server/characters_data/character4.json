@@ -16,11 +16,11 @@
 		"jump": 1
 	},
 	"spriteSheetButton": {
-		"spriteSheetIntroImage": "4WylerIntro.png",
+		"spriteSheetIntroImage": "4WylerSmallIntro.png",
 			"spriteDimensions": {
 			"width": 3200,
-			"height": 224,
-			"frameWidth": 320
+			"height": 164,
+			"frameWidth": 212
 		},
 		"animations": {
 			"animation": {

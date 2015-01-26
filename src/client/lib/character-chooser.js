@@ -87,7 +87,7 @@ CharacterChooser.createButtons = function (data) {
 		var x = startX + shiftX + (margin * currentButton);
 		var y = startY + shiftY + (margin * currentRow);
 		var spriteImage = new Image();
-		spriteImage.src = './img/' + data[character].spriteSheetIntroImage;
+		spriteImage.src = './img/characters/' + data[character].spriteSheetIntroImage;
 		var button = new Button({
 			id: data[character].id,
 			useSpriteSheet: true,

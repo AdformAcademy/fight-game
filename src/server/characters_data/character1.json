@@ -16,17 +16,17 @@
 		"jump": 1
 	},
 	"spriteSheetButton": {
-		"spriteSheetIntroImage": "2RobertIntro.png",
+		"spriteSheetIntroImage": "1KasumiSmallIntro.png",
 			"spriteDimensions": {
 			"width": 4160,
-			"height": 224,
-			"frameWidth": 320
+			"height": 164,
+			"frameWidth": 212
 		},
 		"animations": {
 			"animation": {
 				"name": "introAnimation",
 				"startFrame": 0,
-				"frames": 13,
+				"frames": 8,
 				"speed": 0.2,
 				"order": "asc"
 			}
