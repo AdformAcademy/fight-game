@@ -54,40 +54,42 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var player = this.player;
 	if(!player.isJumping()){
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
+				console.log('kick combo');
 				player.setUsingCombo(true);
 				player.setHiting(true);
-				physics.hit(600, 80, 15, 60, 40);
+				physics.hit(600, 80, 15, 60);
 				input.kickCombo = true;
 			}
 		else if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
+				console.log('punch combo');
 				player.setUsingCombo(true);
 				player.setHiting(true);
-				physics.hit(800, 65, 0, 60, 40);
+				physics.hit(800, 65, 0, 60);
 				input.punchCombo = true;
 			}	
 		else if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
 				console.log('simple punch');
 				player.setHiting(true);
-				physics.hit(300, 65, 5, 60, 40);
+				physics.hit(300, 65, 5, 60);
 				input.punchKey = true;
 			}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
 				console.log('simple kick');
 				player.setHiting(true);
-				physics.hit(400, 80, 10, 60, 40);
+				physics.hit(400, 80, 10, 60);
 				input.kickKey = true;
 			}
 		}
 		else if (control.isDown(keys.PUNCH) && player.isJumping()) {
 			console.log("jumping and punching");
 			player.setHiting(true);
-			physics.hit(780, 65, 5, 120, 40);
+			physics.hit(780, 65, 5, 120);
 			input.punchKey = true;
 		}
 		else if (control.isDown(keys.KICK) && player.isJumping()) {
 			console.log("jumping and kicking");
 			player.setHiting(true);
-			physics.hit(780, 80, 10, 120, 40);
+			physics.hit(780, 80, 10, 120);
 			input.kickKey = true;
 		}
 };
@@ -114,14 +116,13 @@ InputProcessor.prototype.processActionInputs = function (input) {
 		}
 	}
 	if (control.isDown(keys.DEFEND)) {
-		if (!player.isDefending()) {
 			player.setDefending(true);
+			input.key = keys.DEFEND;
 		}
-		input.key = keys.DEFEND;
-	}
 	else {
 		player.setDefending(false);
 	}
+	
 };
 
 InputProcessor.prototype.processInputs = function() {
