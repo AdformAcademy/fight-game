@@ -150,18 +150,16 @@ SocketServer.deleteObjects = function(session) {
 SocketServer.disconnectClient = function(socket, status) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && session.opponentId !== null) {
-		if(status == "Victory")
-			socket.emit(Session.VICTORY);
-		else
-			socket.emit(Session.UNACTIVE);
-	
 		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
-		if(status == "Victory")
+		if(status == "Victory") {
+			socket.emit(Session.VICTORY);
 			opponentSession.socket.emit(Session.DEFEAT);
-		else
+		} else {
 			opponentSession.socket.emit(Session.UNACTIVE);
+		}			
+	} else {
+		socket.emit(Session.UNACTIVE);
 	}
-	
 	SocketServer.deleteObjects(session);
 	SocketServer.deleteObjects(opponentSession);
 	SessionCollection.printSessions();
