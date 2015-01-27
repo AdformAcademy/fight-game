@@ -13,9 +13,8 @@ var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
 describe('EnergyBar', function () {
 
 	var energyBar,
-		paramsMock,
-		body;
-
+		paramsMock;
+		
 	beforeEach(function () {
 		container = $('<div id="container"></div>');
 		body.append(container);
