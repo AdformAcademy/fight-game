@@ -24,33 +24,11 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 	var y = player.getLocation().getY();
 	var z = player.getZ();
 
-	if (input.key === keys.UP_RIGHT) {
-		x += Config.playerMoveSpeed;
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.UP_LEFT) {
-		x -= Config.playerMoveSpeed;
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN_LEFT) {
-		x -= Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN_RIGHT) {
-		x += Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.RIGHT) {
+	if (input.key === keys.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
 	else if (input.key === keys.LEFT) {
 		x -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.UP) {
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN) {
-		y += Config.playerMoveSpeed;
 	}
 
 	this.applyCoordinates(player, x, y, z);

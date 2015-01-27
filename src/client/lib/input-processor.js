@@ -34,62 +34,7 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var y = player.getLocation().getY();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
-		if (x < screenWidth - 185 && y > 150 
-			&& Collisions.checkRightCollision(player, opponent, size)
-			&& Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_RIGHT;
-		}
-		else if (x < screenWidth - 185 
-			&& Collisions.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
-		if (x > -135 && y > 150 && Collisions.checkLeftCollision(player, opponent, size)
-			&& Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_LEFT;
-		}
-		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
-		if (x > -135 && y < screenHeight - 200 
-				&& Collisions.checkLeftCollision(player, opponent, size)
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN_LEFT;
-		}
-		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y < screenHeight - 200 
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
-		if (x < screenWidth - 185 && y < screenHeight - 200 
-				&& Collisions.checkRightCollision(player, opponent, size)
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN_RIGHT;
-		}
-		else if (x < screenWidth - 185 
-				&& Collisions.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y < screenHeight - 200 
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.RIGHT)) {
+	if (control.isDown(keys.RIGHT)) {
 		if (x < screenWidth - 185 && Collisions.checkRightCollision(player, opponent, size)) {
 			input.key = keys.RIGHT;
 		}
@@ -97,16 +42,6 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	else if (control.isDown(keys.LEFT)) {
 		if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
 			input.key = keys.LEFT;
-		}
-	}
-	else if (control.isDown(keys.UP)) {
-		if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.DOWN)) {
-		if (y < screenHeight - 200 && Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
 		}
 	}
 };
@@ -197,7 +132,7 @@ InputProcessor.prototype.processInputs = function() {
 		this.processComboInputs(input);
 		this.processActionInputs(input);
 	}
-	if(!player.isHiting() && !player.isPunched() || player.isJumping()) {
+	if(!player.isHiting() && !player.isPunched() && !player.isDefending() || player.isJumping()) {
 		this.processMovementInputs(input);
 	}
 	this.inputCounter++;

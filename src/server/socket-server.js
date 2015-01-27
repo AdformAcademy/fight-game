@@ -338,46 +338,14 @@ SocketServer.executeInput = function(player, input) {
 			SocketServer.hit(player, "kick", 780, 85, 10, 120, 40);
 		}
 	}
-	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()){
-		if(input.key === key.UP_LEFT) {
-			if(Collisions.checkUpCollision(player, opponent, size))
-				y -= Config.playerMoveSpeed;
-			if(Collisions.checkLeftCollision(player, opponent, size))
-				x -= Config.playerMoveSpeed;
-		}
-		else if(input.key === key.UP_RIGHT) {
-			if(Collisions.checkUpCollision(player, opponent, size))
-				y -= Config.playerMoveSpeed;
-			if(Collisions.checkRightCollision(player, opponent, size))
-				x += Config.playerMoveSpeed;
-		}
-		else if(input.key === key.DOWN_LEFT) {
-			if(Collisions.checkDownCollision(player, opponent, size))
-				y += Config.playerMoveSpeed;
-			if(Collisions.checkLeftCollision(player, opponent, size))
-				x -= Config.playerMoveSpeed;
-		}
-		else if(input.key === key.DOWN_RIGHT) {
-			if(Collisions.checkDownCollision(player, opponent, size))
-				y += Config.playerMoveSpeed;
-			if(Collisions.checkRightCollision(player, opponent, size))
-				x += Config.playerMoveSpeed;
-		}
-		else if(input.key === key.LEFT) {
+	if(!player.isHiting() && player.isPunched() == 0 && !player.isDefending() || player.isJumping()){
+		if(input.key === key.LEFT) {
 			if(Collisions.checkLeftCollision(player, opponent, size))
 				x -= Config.playerMoveSpeed;
 		}
 		else if(input.key === key.RIGHT) {
 			if(Collisions.checkRightCollision(player, opponent, size))
 				x += Config.playerMoveSpeed;
-		}
-		else if(input.key === key.UP) {
-			if(Collisions.checkUpCollision(player, opponent, size))
-				y -= Config.playerMoveSpeed;
-		}
-		else if(input.key === key.DOWN) {
-			if(Collisions.checkDownCollision(player, opponent, size))
-				y += Config.playerMoveSpeed;
 		}
 		else if (input.key === key.DEFEND) {
 			player.setDefending(true);
