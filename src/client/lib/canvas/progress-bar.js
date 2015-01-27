@@ -1,6 +1,7 @@
-var App = require('../../app');;
+var App;
 
 var ProgressBar = function (params) {
+	App = require('../../app');
 	this.params = params !== undefined ? params : null;
 	this.location = params !== undefined ? params.location : null;
 };

@@ -15,17 +15,17 @@ describe('Utilities', function () {
 		body.append(container);
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
-		utilities = new Utilities();
 	});
 	
 	it('should set location to {5, 6}', function () {
 		var location = new Point(5, 6);
-		var exp = new Point(5, 6);
-		expect(utilities.toCanvasLocation(location)).toBe(exp);
+		var loc = Utilities.toCanvasLocation(location);
+		expect(loc.getX()).toBe(5);
+		expect(loc.getY()).toBe(6);
 	});
 
 	it('should return middle', function () {
 		var objectWidthMock = 900;
-		expect(utilities.centerX(objectWidthMock)).toBe(0);
+		expect(Utilities.centerX(objectWidthMock)).toBe(0);
 	});
 });
