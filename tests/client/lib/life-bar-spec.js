@@ -69,4 +69,14 @@ describe('LifeBar', function () {
         lifeBar.store(3);
         expect(lifeBar.updatedValue).toBe(3);
     });
+
+    it('should update to', function () {
+    	lifeBar.store(40);
+    	jasmine.clock().install();
+        lifeBar.animateChange();
+        expect(lifeBar.params.currentValue).toBe(50);
+        jasmine.clock().tick(1000);
+        expect(lifeBar.params.currentValue).toBe(40);
+        jasmine.clock().uninstall();
+    });
 });
