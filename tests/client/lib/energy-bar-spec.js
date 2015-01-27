@@ -1,11 +1,20 @@
 'use strict';
 
+var body = $(document.body),
+	container = $('<div id="container"></div>'),
+	canvas = $('<canvas id="window" width="900" height="550"></canvas>');
+
+body.append(container);
+container.append(canvas);
+
+var ProgressBar = require('../../../src/client/lib/canvas/progress-bar.js');
 var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
 
 describe('EnergyBar', function () {
 
-	var energyBar;
-	var paramsMock;
+	var energyBar,
+		paramsMock,
+		body;
 
 	beforeEach(function () {
 		container = $('<div id="container"></div>');
