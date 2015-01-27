@@ -6,12 +6,12 @@ BaseConfig.playerJumpSpeed = 35;
 BaseConfig.playerSize = 30;
 
 BaseConfig.keyBindings = {
-	LEFT: 37,
-	RIGHT: 39,
-	JUMP: 38,
-	KICK: 67,
-	PUNCH: 88,
-	DEFEND: 40
+	LEFT: 65,
+	RIGHT: 68,
+	JUMP: 87,
+	KICK: 85,
+	PUNCH: 89,
+	DEFEND: 83
 };
 
 module.exports = BaseConfig;
