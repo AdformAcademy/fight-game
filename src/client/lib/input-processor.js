@@ -117,6 +117,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
+
 	if(!player.isJumping()){
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
 				player.setUsingCombo(true);
