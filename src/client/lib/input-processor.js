@@ -80,19 +80,19 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				physics.hit(400, 80, 10, 60);
 				input.kickKey = true;
 			}
-		}
-		else if (control.isDown(keys.PUNCH) && player.isJumping()) {
-			console.log("jumping and punching");
-			player.setHiting(true);
-			physics.hit(780, 65, 5, 120);
-			input.punchKey = true;
-		}
-		else if (control.isDown(keys.KICK) && player.isJumping()) {
-			console.log("jumping and kicking");
-			player.setHiting(true);
-			physics.hit(780, 80, 10, 120);
-			input.kickKey = true;
-		}
+	}
+	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
+		console.log("jumping and punching");
+		player.setHiting(true);
+		physics.hit(780, 65, 5, 120);
+		input.punchKey = true;
+	}
+	else if (control.isDown(keys.KICK) && player.isJumping()) {
+		console.log("jumping and kicking");
+		player.setHiting(true);
+		physics.hit(780, 80, 10, 120);
+		input.kickKey = true;
+	}
 };
 
 InputProcessor.prototype.processActionInputs = function (input) {
@@ -116,7 +116,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 			physics.jump();
 		}
 	}
-	if (control.isDown(keys.DEFEND)) {
+	if (control.isDown(keys.DEFEND) && !player.isJumping()) {
 			player.setDefending(true);
 			input.key = keys.DEFEND;
 		}
