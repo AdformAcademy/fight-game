@@ -25,7 +25,7 @@ describe('EnergyBar', function () {
 			width: 1,
 			heigth: 1,
 			currentValue: 2,
-			maxValue: 4
+			maxValue: 10
 		};
 		energyBar = new EnergyBar(paramsMock);
 	});
@@ -49,5 +49,15 @@ describe('EnergyBar', function () {
 	it('should update value to 3', function () {
 		energyBar.store(3);
 		expect(energyBar.updatedValue).toBe(3);
+	});
+
+	it('should update value to 8', function () {
+		energyBar.store(8);
+		jasmine.clock().install();
+		energyBar.animateChange();
+		expect(energyBar.params.currentValue).toBe(2);
+		jasmine.clock().tick(1000);
+		expect(energyBar.params.currentValue).toBe(8);
+		jasmine.clock().uninstall();
 	});
 });
