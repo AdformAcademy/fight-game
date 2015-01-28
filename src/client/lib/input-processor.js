@@ -34,62 +34,7 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var y = player.getLocation().getY();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.RIGHT) && control.isDown(keys.UP)) {
-		if (x < screenWidth - 185 && y > 150 
-			&& Collisions.checkRightCollision(player, opponent, size)
-			&& Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_RIGHT;
-		}
-		else if (x < screenWidth - 185 
-			&& Collisions.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.LEFT) && control.isDown(keys.UP)) {
-		if (x > -135 && y > 150 && Collisions.checkLeftCollision(player, opponent, size)
-			&& Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP_LEFT;
-		}
-		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.LEFT)) {
-		if (x > -135 && y < screenHeight - 200 
-				&& Collisions.checkLeftCollision(player, opponent, size)
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN_LEFT;
-		}
-		else if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
-			input.key = keys.LEFT;
-		}
-		else if (y < screenHeight - 200 
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.DOWN) && control.isDown(keys.RIGHT)) {
-		if (x < screenWidth - 185 && y < screenHeight - 200 
-				&& Collisions.checkRightCollision(player, opponent, size)
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN_RIGHT;
-		}
-		else if (x < screenWidth - 185 
-				&& Collisions.checkRightCollision(player, opponent, size)) {
-			input.key = keys.RIGHT;
-		}
-		else if (y < screenHeight - 200 
-				&& Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
-		}
-	}
-	else if (control.isDown(keys.RIGHT)) {
+	if (control.isDown(keys.RIGHT)) {
 		if (x < screenWidth - 185 && Collisions.checkRightCollision(player, opponent, size)) {
 			input.key = keys.RIGHT;
 		}
@@ -97,16 +42,6 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	else if (control.isDown(keys.LEFT)) {
 		if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
 			input.key = keys.LEFT;
-		}
-	}
-	else if (control.isDown(keys.UP)) {
-		if (y > 150 && Collisions.checkUpCollision(player, opponent, size)) {
-			input.key = keys.UP;
-		}
-	}
-	else if (control.isDown(keys.DOWN)) {
-		if (y < screenHeight - 200 && Collisions.checkDownCollision(player, opponent, size)) {
-			input.key = keys.DOWN;
 		}
 	}
 };
@@ -120,40 +55,42 @@ InputProcessor.prototype.processComboInputs = function (input) {
 
 	if(!player.isJumping()){
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
+				console.log('kick combo');
 				player.setUsingCombo(true);
 				player.setHiting(true);
-				physics.hit(600, 80, 15, 60, 40);
+				physics.hit(600, 80, 15, 60);
 				input.kickCombo = true;
 			}
 		else if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
+				console.log('punch combo');
 				player.setUsingCombo(true);
 				player.setHiting(true);
-				physics.hit(800, 65, 0, 60, 40);
+				physics.hit(800, 65, 0, 60);
 				input.punchCombo = true;
 			}	
 		else if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
 				console.log('simple punch');
 				player.setHiting(true);
-				physics.hit(300, 65, 5, 60, 40);
+				physics.hit(300, 65, 5, 60);
 				input.punchKey = true;
 			}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
 				console.log('simple kick');
 				player.setHiting(true);
-				physics.hit(400, 80, 10, 60, 40);
+				physics.hit(400, 80, 10, 60);
 				input.kickKey = true;
 			}
 		}
 		else if (control.isDown(keys.PUNCH) && player.isJumping()) {
 			console.log("jumping and punching");
 			player.setHiting(true);
-			physics.hit(780, 65, 5, 120, 40);
+			physics.hit(780, 65, 5, 120);
 			input.punchKey = true;
 		}
 		else if (control.isDown(keys.KICK) && player.isJumping()) {
 			console.log("jumping and kicking");
 			player.setHiting(true);
-			physics.hit(780, 80, 10, 120, 40);
+			physics.hit(780, 80, 10, 120);
 			input.kickKey = true;
 		}
 };
@@ -180,14 +117,13 @@ InputProcessor.prototype.processActionInputs = function (input) {
 		}
 	}
 	if (control.isDown(keys.DEFEND)) {
-		if (!player.isDefending()) {
 			player.setDefending(true);
+			input.key = keys.DEFEND;
 		}
-		input.key = keys.DEFEND;
-	}
 	else {
 		player.setDefending(false);
 	}
+	
 };
 
 InputProcessor.prototype.processInputs = function() {
@@ -198,7 +134,7 @@ InputProcessor.prototype.processInputs = function() {
 		this.processComboInputs(input);
 		this.processActionInputs(input);
 	}
-	if(!player.isHiting() && !player.isPunched() || player.isJumping()) {
+	if(!player.isHiting() && !player.isPunched() && !player.isDefending() || player.isJumping()) {
 		this.processMovementInputs(input);
 	}
 	this.inputCounter++;
