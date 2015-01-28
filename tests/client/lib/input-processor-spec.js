@@ -86,12 +86,6 @@ describe('InputProcessor', function () {
 		expect(input.jumpKey).toBe(blankInput.jumpKey);
 	});
 
-	it('should assign 40 to \'input.key\'', function () {
-		InputCollection.onKeydown({keyCode: Config.keyBindings.DOWN});
-		inputProcessor.processMovementInputs(blankInput);
-		expect(blankInput.key).toBe(Config.keyBindings.DOWN);
-	});
-
 	it('should assign \'true\' to \'input.jumpKey\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.JUMP});
 
