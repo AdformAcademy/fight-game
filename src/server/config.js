@@ -14,12 +14,10 @@ Config.playerEnergyIncrement = 0.1;
 
 Config.firstSpawnLocation = {
 	x: 0,
-	y: 300,
 	z: 0
 };
 Config.secondSpawnLocation = {
 	x: 500,
-	y: 300,
 	z: 0
 };
 Config.charactersPath = 'src/server/characters_data/';

@@ -1,14 +1,13 @@
 var Config = require('./config');
+var Collisions = require('../../common/collisions');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 };
 
-WorldPhysics.prototype.applyCoordinates = function(player, x, y, z) {
-	var playerLocation = player.getLocation();
-	playerLocation.setX(x);
-	playerLocation.setY(y);
+WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
+	player.setX(x);
 	if (z !== null) {
 		player.setZ(z);
 	}
@@ -20,8 +19,7 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 	}
 	var opponent = player === this.player ? this.opponent : this.player;
 	var keys = Config.keyBindings;
-	var x = player.getLocation().getX();
-	var y = player.getLocation().getY();
+	var x = player.getX();
 	var z = player.getZ();
 
 	if (input.key === keys.RIGHT) {
@@ -31,18 +29,16 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 		x -= Config.playerMoveSpeed;
 	}
 
-	this.applyCoordinates(player, x, y, z);
+	this.applyCoordinates(player, x, z);
 };
 
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
 	var updateZ = setInterval(function () {
-	    var x = player.getLocation().getX();
-	    var y = player.getLocation().getY();
+	    var x = player.getX();
 	    var z = player.getZ();
-	    var opx = opponent.getLocation().getX();
-	    var opy = opponent.getLocation().getY();
+	    var opx = opponent.getX();
 	    var opz = opponent.getZ();
 	    var speedZ = player.getSpeedZ();
 	    var size = Config.playerSize;
@@ -67,11 +63,11 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	var x = player.getX();
     var opx = opponent.getX();
 
-	if(WorldPhysics.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
+	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(2);
 	}
-	if(WorldPhysics.checkPunchCollisionRight(player, opponent, size, heightDifference)){
+	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
 		hit = 2;
 		opponent.setPunched(2);
 	}
@@ -99,16 +95,6 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 		}
 	}, 1000/30);
 };
-
-WorldPhysics.checkPunchCollisionLeft = function(player, opponent, size, heightDifference) {
-	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
-
-WorldPhysics.checkPunchCollisionRight = function(player, opponent, size, heightDifference) {
-	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
@@ -157,8 +143,8 @@ WorldPhysics.prototype.flipPlayerSpritesheets = function () {
 	var opponent = this.opponent;
 	var playerSpriteSheet = player.getSpriteSheet();
 	var opponentSpriteSheet = opponent.getSpriteSheet();
-	var x = player.getLocation().getX();
-	var opx = opponent.getLocation().getX();
+	var x = player.getX();
+	var opx = opponent.getX();
 
 	if (x < opx) {
 		playerSpriteSheet.flipAnimation(true);
@@ -176,12 +162,10 @@ WorldPhysics.prototype.flipPlayerSpritesheets = function () {
 WorldPhysics.prototype.updatePlayersDepth = function () {
 	var player = this.player;
 	var opponent = this.opponent;
-	var y = player.getLocation().getY();
 	var z = player.getZ();
-	var oy = opponent.getLocation().getY();
 	var oz = opponent.getZ();
 
-	if (y > oy) {
+	if (z > oz) {
 		player.setDepth(0);
 		opponent.setDepth(1);
 	} else {

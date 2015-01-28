@@ -1,5 +1,6 @@
 var App;
 var BasePlayer = require('../../common/base-player');
+var Config = require('./config');
 
 function Player(params) {
 	App = require('../app');
@@ -58,7 +59,7 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.draw = function() {
-	this.spritesheet.draw(this.location.getX(), this.location.getY() + this.getZ());
+	this.spritesheet.draw(this.location, Config.floorHeight + this.getZ());
 };
 
 module.exports = Player;

@@ -23,7 +23,6 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 	var data = {
 		player: {
 			x: player.getX(),
-			y: player.getY(),
 			z: player.getZ(),
 			punched: player.isPunched(),
 			victor: player.isVictor(),
@@ -34,7 +33,6 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 		},
 		opponent: {
 			x: opponent.getX(),
-			y: opponent.getY(),
 			z: opponent.getZ(),
 			punched: opponent.isPunched(),
 			victor: opponent.isVictor(),
@@ -73,7 +71,7 @@ SocketServer.prepareClient = function (socket, selection) {
 			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
-				location: new Point(Config.firstSpawnLocation.x, Config.firstSpawnLocation.y),
+				location: Config.firstSpawnLocation.x,
 				z: Config.firstSpawnLocation.z,
 				characterData: playerData,
 				characterId: playerSelection
@@ -81,7 +79,7 @@ SocketServer.prepareClient = function (socket, selection) {
 			var opponent = new Player({
 				id: targetSession.sessionId,
 				opponentId: targetSession.opponentId,
-				location: new Point(Config.secondSpawnLocation.x, Config.secondSpawnLocation.y),
+				location: Config.secondSpawnLocation.x,
 				z: Config.secondSpawnLocation.z,
 				characterData: opponentData,
 				characterId: opponentSelection
@@ -110,13 +108,11 @@ SocketServer.prepareClient = function (socket, selection) {
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
-					y: player.getY(),
 					data: playerData,
 					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: opponent.getX(),
-					y: opponent.getY(),
 					data: opponentData,
 					energyCosts: opponentData.costs
 				}
@@ -124,13 +120,11 @@ SocketServer.prepareClient = function (socket, selection) {
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
-					y: opponent.getY(),
 					data: opponentData,
 					energyCosts: playerData.costs
 				},
 				opponent: {
 					x: player.getX(),
-					y: player.getY(),
 					data: playerData,
 					energyCosts: opponentData.costs
 				}
@@ -183,10 +177,8 @@ SocketServer.storeInput = function(socket, packet) {
 SocketServer.updateZ = function(player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
     var x = player.getX();
-    var y = player.getY();
     var z = player.getZ();
     var opx = opponent.getX();
-    var opy = opponent.getY();
     var opz = opponent.getZ();
     var speedZ = player.getSpeedZ();
 
@@ -212,11 +204,11 @@ SocketServer.hit = function (player, damage, time, size, power, heightDifference
 	var x = player.getX();
     var opx = opponent.getX();
 
-	if(SocketServer.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
+	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(1);
 	}
-	if(SocketServer.checkPunchCollisionRight(player, opponent, size, heightDifference)){
+	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
 		hit = 2;
 		opponent.setPunched(1);
 	}
@@ -249,31 +241,19 @@ SocketServer.hit = function (player, damage, time, size, power, heightDifference
 	}, 1000/30);
 };
 
-SocketServer.checkPunchCollisionLeft = function(player, opponent, size, heightDifference) {
-	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
-
-SocketServer.checkPunchCollisionRight = function(player, opponent, size, heightDifference) {
-	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
-		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
-}
-
 SocketServer.executeInput = function(player, input) {
 	var key = Config.keyBindings;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 	var x = player.getX();
-	var y = player.getY();
 	var z = player.getZ();
-	var opy = opponent.getY();
 	var opz = opponent.getZ();
 	
 
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
-	if(input.jumpKey && !player.isJumping() && y - opz - opy != Config.playerSize && !player.isPunched()) {
+	if(input.jumpKey && !player.isJumping() && !player.isPunched()) {
 		speedZ = Config.playerJumpSpeed;
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
@@ -362,7 +342,6 @@ SocketServer.executeInput = function(player, input) {
 		}
 	}
 	player.setX(x);
-	player.setY(y);
 	player.setCurrentAnimation(input.animationName);
 };
 

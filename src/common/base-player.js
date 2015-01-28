@@ -27,14 +27,6 @@ BasePlayer.prototype.isDefeated = function() {
 	return this.lost == true;
 };
 
-BasePlayer.prototype.getLocation = function () {
-	return this.location;
-};
-
-BasePlayer.prototype.setLocation = function (location) {
-	this.location = location;
-};
-
 BasePlayer.prototype.getZ = function () {
 	return this.z;
 };
@@ -44,19 +36,11 @@ BasePlayer.prototype.setZ = function (z) {
 };
 
 BasePlayer.prototype.getX = function () {
-	return this.location.getX();
-};
-
-BasePlayer.prototype.getY = function () {
-	return this.location.getY();
+	return this.location
 };
 
 BasePlayer.prototype.setX = function (x) {
-	this.location.setX(x);
-};
-
-BasePlayer.prototype.setY = function (y) {
-	this.location.setY(y);
+	this.location = x;
 };
 
 BasePlayer.prototype.getSpeedZ = function () {

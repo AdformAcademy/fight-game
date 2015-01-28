@@ -13,7 +13,7 @@ describe('InputProcessor', function () {
 	var inputProcessor;
 	var paramsMock;
 	var playerParamsMock = {
-		location: new Point(250, 250),
+		location: 250,
 		spriteSheet: null,
 		lifeBar: null,
 		energyBar: {getCurrentValue: function () {
@@ -28,7 +28,7 @@ describe('InputProcessor', function () {
 		}
 	};
 	var opponentParamsMock = {
-		location: new Point(500, 250),
+		location: 500,
 		spriteSheet: null,
 		lifeBar: null,
 		energyBar: {getCurrentValue: function () {

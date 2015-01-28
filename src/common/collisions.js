@@ -10,4 +10,14 @@ Collisions.checkRightCollision = function(player, opponent, size) {
 		|| (Math.abs(player.getZ() - opponent.getZ()) >= size);
 };
 
+Collisions.checkPunchCollisionLeft = function(player, opponent, size, heightDifference) {
+	return (player.getX() < opponent.getX() && opponent.getX() - player.getX() < size
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
+
+Collisions.checkPunchCollisionRight = function(player, opponent, size, heightDifference) {
+	return (player.getX() > opponent.getX() && player.getX() - opponent.getX() < size
+		&& (Math.abs(player.getZ() - opponent.getZ()) <= heightDifference));
+}
+
 module.exports = Collisions;

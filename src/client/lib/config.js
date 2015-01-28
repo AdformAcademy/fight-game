@@ -7,6 +7,7 @@ Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
+Config.floorHeight = BaseConfig.floorHeight;
 
 Config.canvasUpdateInterval = 30;
 Config.canvasMaskColor = '#000000';

@@ -30,8 +30,7 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var screenHeight = this.canvas.getHeight();
 	var player = this.player;
 	var opponent = this.opponent;
-	var x = player.getLocation().getX();
-	var y = player.getLocation().getY();
+	var x = player.getX();
 	var size = Config.playerSize;
 
 	if (control.isDown(keys.RIGHT)) {
@@ -101,14 +100,12 @@ InputProcessor.prototype.processActionInputs = function (input) {
 	var control = InputCollection;
 	var player = this.player;
 	var opponent = this.opponent;
-	var y = player.getLocation().getY();
 	var z = player.getZ();
-	var opy = opponent.getLocation().getY();
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
 	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump')) {
-		if(!player.isJumping() && y + z > 0 && y - opz - opy != size) {
+		if(!player.isJumping()) {
 			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
 			player.setSpeedZ(speedZ);

@@ -39,13 +39,13 @@ Client.interpolate = function() {
 	if (bufferSize < 10) {
 		var input = Client.opponentInputs[0];
 		if (input !== undefined) {
-			physics.applyCoordinates(opponent, input.x, input.y, input.z);
+			physics.applyCoordinates(opponent, input.x, input.z);
 			opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
 			Client.opponentInputs.shift();
 		}
 	} else {
 		var lastInput = Client.opponentInputs[bufferSize - 1];
-		physics.applyCoordinates(opponent, lastInput.x, lastInput.y, lastInput.z);
+		physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
 		opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
 		Client.opponentInputs = [];
 	}
@@ -70,15 +70,13 @@ Client.processServerData = function() {
     for (var i = 0; i < Client.serverData.length; i++) {
     	var state = Client.serverData[i];
     	var x = state.player.x;
-    	var y = state.player.y;
     	var ppunched = state.player.punched;
     	var pVictor = state.player.victor;
     	var pDefeated = state.player.defeated;
     	var ox = state.opponent.x;
-    	var oy = state.opponent.y;
     	var opunched = state.opponent.punched;
     	var oVictor = state.opponent.victor;
-    	var oDefeated= state.opponent.defeated;
+    	var oDefeated = state.opponent.defeated;
     	var oz = state.opponent.z;
     	var lives = state.player.lives;
     	var olives = state.opponent.lives;
@@ -87,7 +85,7 @@ Client.processServerData = function() {
     	var playerEnergyBar = App.player.getEnergyBar();
     	var opponentEnergyBar = App.opponent.getEnergyBar();
 
-    	physics.applyCoordinates(App.player, x, y, null);
+    	physics.applyCoordinates(App.player, x, null);
     	
     	if (ppunched) {
     		playerLifeBar.store(state.player.lives);
@@ -109,7 +107,7 @@ Client.processServerData = function() {
     	if (Client.interpolation) {
     		Client.appendOpponentInputs(state.opponent.sequence);
     	} else {
-    		physics.applyCoordinates(App.opponent, ox, oy, oz);
+    		physics.applyCoordinates(App.opponent, ox, oz);
     	}    	
 
     	if (Client.prediction && Client.reconciliation) {
@@ -168,7 +166,7 @@ Client.initializeGame = function (data) {
 	var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 
 	App.player = new Player({
-		location: new Point(data.player.x, data.player.y),
+		location: data.player.x,
 		spriteSheet: playerSprite,
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
@@ -201,7 +199,7 @@ Client.initializeGame = function (data) {
 	});
 
 	App.opponent = new Player({
-		location: new Point(data.opponent.x, data.opponent.y),
+		location: data.opponent.x,
 		spriteSheet: opponentSprite,
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({

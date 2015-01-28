@@ -18,10 +18,9 @@ describe('Player', function () {
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
 
-		locationMock = new Point(0, 1);
 		spritesheetMock = {};
 		player = new Player({
-			location: locationMock,
+			location: 0,
 			spriteSheet: spritesheetMock
 		});
 	});
@@ -37,19 +36,6 @@ describe('Player', function () {
 	it('should set X coordinate to 5', function() {
 		player.setX(5);
 		expect(player.getX()).toBe(5);
-	});
-
-	it('should get default Y coordinate', function() {
-		expect(player.getY()).toBe(1);
-	});
-
-	it('should set Y coordinate to 5', function() {
-		player.setY(5);
-		expect(player.getY()).toBe(5);
-	});
-
-	it('should get default location', function() {
-		expect(player.getLocation()).toBe(locationMock);
 	});
 
 	it('should get default spritesheet', function() {

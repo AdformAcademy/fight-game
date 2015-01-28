@@ -103,8 +103,7 @@ Player.prototype.getCharacterId = function () {
 
 Player.prototype.toPacket = function() {
   return {
-    x: this.location.getX(),
-    y: this.location.getY(),
+    x: this.location,
     z: this.z,
     currentAnimation: this.currentAnimation
   };
