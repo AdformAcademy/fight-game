@@ -17,8 +17,11 @@ describe('Button', function () {
 		body.append(container);
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
-		imageStringMock = 'image-mock.png';
-		button = new Button(imageStringMock);
+		imageStringMock = './img/start_button.png';
+		button = new Button({
+			image: imageStringMock,
+			useSpriteSheet: false
+		});
 	});
 
 	it('should get default hover image', function() {
