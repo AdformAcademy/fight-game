@@ -49,11 +49,13 @@ socket.on('choose-character', function (data) {
 });
 
 socket.on('unactive', function() {
-	App.gameStarted = false;
-	Client.stop();
-	App.screen.dispose();
-	App.screen = new EndScreen('Connection lost');
-	App.canvasObj.setGraphics(App.screen.graphics);
+	if (App.gameStarted) {
+		App.gameStarted = false;
+		Client.stop();
+		App.screen.dispose();
+		App.screen = new EndScreen('Connection lost');
+		App.canvasObj.setGraphics(App.screen.graphics);
+	}
 });
 
 socket.on('victory', function() {

@@ -69,7 +69,7 @@ SpriteSheet.prototype.setActiveAnimation = function (animationName) {
 };
 
 SpriteSheet.prototype.getAnimationOrder = function () {
-	return this.activeAnimation.order;
+	return this.order;
 };
 
 SpriteSheet.prototype.setAnimationOrder = function (order) {

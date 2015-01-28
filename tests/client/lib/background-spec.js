@@ -15,7 +15,7 @@ describe('Background', function () {
 		body.append(container);
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
-		imageStringMock = 'image-mock.png';
+		imageStringMock = './img/waiting_screen_background.png';
 		background = new Background(imageStringMock);
 	});
 
