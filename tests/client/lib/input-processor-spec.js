@@ -6,13 +6,14 @@ var Config = require('../../../src/client/lib/config.js');
 var Player = require('../../../src/client/lib/player.js');
 var Point = require('../../../src/common/point.js');
 var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
+var App = require('../../../src/client/app.js');
 
 describe('InputProcessor', function () {
 
 	var inputProcessor;
 	var paramsMock;
 	var playerParamsMock = {
-		location: new Point(500, 1200),
+		location: new Point(250, 250),
 		spriteSheet: null,
 		lifeBar: null,
 		energyBar: {getCurrentValue: function () {
@@ -27,7 +28,7 @@ describe('InputProcessor', function () {
 		}
 	};
 	var opponentParamsMock = {
-		location: new Point(1500, 1200),
+		location: new Point(500, 250),
 		spriteSheet: null,
 		lifeBar: null,
 		energyBar: {getCurrentValue: function () {
@@ -69,6 +70,13 @@ describe('InputProcessor', function () {
 		InputCollection.pressTimes = {};
 		InputCollection.quickTaps = {};
 		InputCollection.keysPressed = {};
+		App.physics = {
+			jump: function () {},
+			kick: function () {},
+			punch: function () {},
+			comboKick: function () {},
+			comboPunch: function () {}
+		}
 	});
 
 	it('should create blank input', function () {
@@ -81,16 +89,14 @@ describe('InputProcessor', function () {
 		expect(input.jumpKey).toBe(blankInput.jumpKey);
 	});
 
-	/*it('should assign 40 to \'input.key\'', function () {
+	it('should assign 40 to \'input.key\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.DOWN});
-		console.log(InputCollection.pressed[40]);
 		inputProcessor.processMovementInputs(blankInput);
 		expect(blankInput.key).toBe(Config.keyBindings.DOWN);
 	});
 
 	it('should assign \'true\' to \'input.jumpKey\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.JUMP});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.JUMP});
 
 		inputProcessor.processActionInputs(blankInput);
 		expect(blankInput.jumpKey).toBe(true);
@@ -98,7 +104,6 @@ describe('InputProcessor', function () {
 
 	it('should assign \'true\' to \'input.kickKey\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.KICK});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.KICK});
 
 		inputProcessor.processComboInputs(blankInput);
 		expect(blankInput.kickKey).toBe(true);
@@ -117,21 +122,16 @@ describe('InputProcessor', function () {
 	it('should return given input', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.LEFT});
 		InputCollection.onKeydown({keyCode: Config.keyBindings.JUMP});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.LEFT});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.JUMP});
 		InputCollection.onKeydown({keyCode: Config.keyBindings.PUNCH});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.PUNCH});
-		InputCollection.onKeydown({keyCode: Config.keyBindings.PUNCH});
-		InputCollection.onKeyup({keyCode: Config.keyBindings.PUNCH});
 
 		var input = inputProcessor.processInputs();
 		var inputMock = {
 			id: 0,
 			key: Config.keyBindings.LEFT,
 			jumpKey: true,
-			punchKey: false,
+			punchKey: true,
 			kickKey: false,
-			punchCombo: true,
+			punchCombo: false,
 			kickCombo: false
 		}
 
@@ -141,5 +141,5 @@ describe('InputProcessor', function () {
 		expect(input.punchCombo).toBe(inputMock.punchCombo);
 		expect(input.kickCombo).toBe(inputMock.kickCombo);
 		expect(input.jumpKey).toBe(inputMock.jumpKey);
-	});*/
+	});
 });
