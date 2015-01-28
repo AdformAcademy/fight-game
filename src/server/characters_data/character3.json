@@ -16,11 +16,11 @@
 		"jump": 1
 	},
 	"spriteSheetButton": {
-		"spriteSheetIntroImage": "3RyoIntro.png",
+		"spriteSheetIntroImage": "3RyoSmallIntro.png",
 			"spriteDimensions": {
 			"width": 3200,
-			"height": 224,
-			"frameWidth": 320
+			"height": 164,
+			"frameWidth": 212
 		},
 		"animations": {
 			"animation": {
