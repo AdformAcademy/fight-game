@@ -38,6 +38,10 @@ module.exports = function(config) {
         'tests/client/**/*.js': ['browserify']
     },
 
+    proxies: {
+        '/img/': 'http://localhost:3000/img/'
+    },
+
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
