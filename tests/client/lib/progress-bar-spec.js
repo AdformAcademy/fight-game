@@ -87,7 +87,9 @@ describe('ProgressBar', function () {
     			return 50;
     		}
     	};
-        progressBar.setLocation(mockLocation);
+        progressBar.setLocation(function () {
+        	return mockLocation;
+        });
         expect(progressBar.getLocation()).toBe(mockLocation);
     });
 
