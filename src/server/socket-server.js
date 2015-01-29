@@ -68,6 +68,9 @@ SocketServer.prepareClient = function (socket, selection) {
 				fs.readFileSync(Config.charactersPath + 
 					'character' + opponentSelection + '.json', 'utf8'));
 
+			var soundsData = JSON.parse(
+				fs.readFileSync(Config.soundsDataFile, 'utf8'));
+
 			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
@@ -115,7 +118,8 @@ SocketServer.prepareClient = function (socket, selection) {
 					x: opponent.getX(),
 					data: opponentData,
 					energyCosts: opponentData.costs
-				}
+				},
+				soundsData: soundsData
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
@@ -127,7 +131,8 @@ SocketServer.prepareClient = function (socket, selection) {
 					x: player.getX(),
 					data: playerData,
 					energyCosts: opponentData.costs
-				}
+				},
+				soundsData: soundsData
 			});
 		}
 	}

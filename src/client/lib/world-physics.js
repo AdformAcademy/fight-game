@@ -1,5 +1,6 @@
 var Config = require('./config');
 var Collisions = require('../../common/collisions');
+var SoundCollection = require('./sound-collection');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
@@ -35,6 +36,9 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
+
+    SoundCollection.play('jump');
+
 	var updateZ = setInterval(function () {
 	    var x = player.getX();
 	    var z = player.getZ();
@@ -50,6 +54,7 @@ WorldPhysics.prototype.jump = function () {
 			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;
+			SoundCollection.play('land');
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
@@ -66,10 +71,12 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(2);
+		SoundCollection.play('punch');
 	}
 	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
 		hit = 2;
 		opponent.setPunched(2);
+		SoundCollection.play('punch');
 	}
 	var updateH = setInterval(function () {
 		t += 30;

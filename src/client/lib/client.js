@@ -7,6 +7,7 @@ var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
 var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
+var SoundCollection = require('./sound-collection');
 var WorldPhysics = require('./world-physics');
 var CountDownScreen = require('./screen/count-down');
 var socket = io();
@@ -153,6 +154,8 @@ Client.initializeGame = function (data) {
 
 	var opponentSpriteImage = new Image();
 	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+
+	SoundCollection.load(data.soundsData);
 
 	var buildSprite = function(image, spriteSheetData) {
 		return new SpriteSheet({
