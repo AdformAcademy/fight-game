@@ -255,10 +255,9 @@ SocketServer.executeInput = function(player, input) {
 	var x = player.getX();
 	var z = player.getZ();
 	var opz = opponent.getZ();
-	
-
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
+    var map = player.getMap();
 
 	if(input.jumpKey && !player.isJumping() && !player.isPunched()) {
 		speedZ = Config.playerJumpSpeed;
@@ -331,14 +330,16 @@ SocketServer.executeInput = function(player, input) {
 			SocketServer.hit(player, "kick", 780, 85, 10, 120);
 		}
 	}
-	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()){
-		if(!player.isDefending()){
+	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()) {
+		if(!player.isDefending()) {
 			if(input.key === key.LEFT) {
-				if(Collisions.checkLeftCollision(player, opponent, size))
+				if(x > map.dimensions.left - 135  
+					&& Collisions.checkLeftCollision(player, opponent, size))
 					x -= Config.playerMoveSpeed;
 			}
-			else if(input.key === key.RIGHT) {
-				if(Collisions.checkRightCollision(player, opponent, size))
+			else if(input.key === key.RIGHT) {	 
+				if(x < map.dimensions.width - 185
+					&& Collisions.checkRightCollision(player, opponent, size))
 					x += Config.playerMoveSpeed;
 			}
 		}
