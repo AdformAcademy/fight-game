@@ -210,6 +210,7 @@ SocketServer.hit = function (player, damage, time, size, power, heightDifference
 	var dealingDamage = false;
 	var x = player.getX();
     var opx = opponent.getX();
+    var map = player.getMap();
 
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
@@ -229,14 +230,14 @@ SocketServer.hit = function (player, damage, time, size, power, heightDifference
 		t += 30;
 		if (t >= time) {
 			if(hit == 1){
-				if(opx < Config.screenWidth - 185){
+				if(opx < map.dimensions.width - 185){
 					opx += power;
 					opponent.setX(opx);
 					opponent.setPunched(0);
 				}
 			}
 			else if(hit == 2){
-				if(opx > -135){
+				if(opx > map.dimensions.left - 135){
 					opx -= power;
 					opponent.setX(opx);
 					opponent.setPunched(0);

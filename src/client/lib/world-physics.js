@@ -4,6 +4,7 @@ var Collisions = require('../../common/collisions');
 var WorldPhysics = function(params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
+	this.world = params.world;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -56,6 +57,7 @@ WorldPhysics.prototype.jump = function () {
 	}, 1000/30);
 };
 WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
+	var self = this;
 	var player = this.player;
 	var opponent = this.opponent;
 	var t = 0;
@@ -75,14 +77,14 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 		t += 30;
 		if (t >= time) {
 			if(hit == 1){
-				if(opx < Config.screenWidth - 185){
+				if(opx < self.world.width - 185){
 					opx += power;
 					opponent.setX(opx);
 					opponent.setPunched(0);
 				}
 			}
 			else if(hit == 2){
-				if(opx > -135){
+				if(opx > self.world.left - 135){
 					opx -= power;
 					opponent.setX(opx);
 					opponent.setPunched(0);

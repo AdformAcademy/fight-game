@@ -257,13 +257,14 @@ Client.initializeGame = function (data) {
 
 	App.physics = new WorldPhysics({
 		player: App.player,
-		opponent: App.opponent
+		opponent: App.opponent,
+		world: Client.world
 	});
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
 		opponent: App.opponent,
-		worldRect: Client.world,
+		world: Client.world
 	});
 
 	App.screen.dispose();

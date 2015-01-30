@@ -7,7 +7,7 @@ var InputProcessor = function (params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 	this.canvas = App.canvasObj;
-	this.world = params.worldRect;
+	this.world = params.world;
 	this.inputCounter = 0;
 };
 
