@@ -7,6 +7,7 @@ var InputProcessor = function (params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 	this.canvas = App.canvasObj;
+	this.world = params.worldRect;
 	this.inputCounter = 0;
 };
 
@@ -34,12 +35,14 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var size = Config.playerSize;
 
 	if (control.isDown(keys.RIGHT)) {
-		if (x < screenWidth - 185 && Collisions.checkRightCollision(player, opponent, size)) {
+		if (x < this.world.width - 185 
+				&& Collisions.checkRightCollision(player, opponent, size)) {
 			input.key = keys.RIGHT;
 		}
 	}
 	else if (control.isDown(keys.LEFT)) {
-		if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
+		if (x > this.world.left - 135 
+				&& Collisions.checkLeftCollision(player, opponent, size)) {
 			input.key = keys.LEFT;
 		}
 	}

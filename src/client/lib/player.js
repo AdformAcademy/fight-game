@@ -58,8 +58,8 @@ Player.prototype.update = function() {
 	this.energyBar.update();
 };
 
-Player.prototype.draw = function() {
-	this.spritesheet.draw(this.location, Config.floorHeight + this.getZ());
+Player.prototype.draw = function(xView, yView) {
+	this.spritesheet.draw(this.location - xView, (Config.floorHeight + this.getZ()) - yView);
 };
 
 module.exports = Player;

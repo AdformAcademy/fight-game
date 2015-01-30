@@ -23,14 +23,16 @@ StageScreen.prototype.graphics = function() {
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();
 	var opponentEnergyBar = opponent.getEnergyBar();
+	var xView = Client.camera.xView;
+	var yView = Client.camera.yView;
 
-	obj.backgroundImage.draw();
+	obj.backgroundImage.draw(xView, yView);
 	if (player.getDepth() > opponent.getDepth()) {
-		player.draw();
-		opponent.draw();
+		player.draw(xView, yView);
+		opponent.draw(xView, yView);
 	} else {
-		opponent.draw();
-		player.draw();
+		opponent.draw(xView, yView);
+		player.draw(xView, yView);
 	}
 	playerLifeBar.draw();
 	playerEnergyBar.draw();

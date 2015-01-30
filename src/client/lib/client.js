@@ -9,6 +9,8 @@ var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
 var WorldPhysics = require('./world-physics');
 var CountDownScreen = require('./screen/count-down');
+var Rectangle = require('./canvas/rectangle');
+var Camera = require('./canvas/camera');
 var socket = io();
 
 var Client = module.exports = {};
@@ -23,6 +25,8 @@ Client.reconciliation = true;
 Client.interpolation = true;
 Client.opponentInputs = [];
 Client.inputProcessor = null;
+Client.camera = null;
+Client.world = null;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -146,6 +150,7 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
+	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
 	var opponentSpriteData = data.opponent.data.spriteSheetData;
 	var playerSpriteImage = new Image();
@@ -174,7 +179,7 @@ Client.initializeGame = function (data) {
 				return new Point(Config.progressBarPadding, Config.progressBarPadding);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+				return canvas.getWidth() * Config.lifeBarWidthRatio;
 			},
 			height: function () {
 				return Config.lifeBarHeight;
@@ -188,7 +193,7 @@ Client.initializeGame = function (data) {
 				Config.progressBarPadding * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+				return canvas.getWidth() * Config.energyBarWidthRatio;
 			},
 			height: function () {
 				return Config.energyBarHeight;
@@ -205,12 +210,12 @@ Client.initializeGame = function (data) {
 		lifeBar: new LifeBar({
 			location: function () {
 			return new Point(
-				Math.round(App.canvasObj.getWidth() * 
+				Math.round(canvas.getWidth() * 
 				(1 - Config.lifeBarWidthRatio) - Config.progressBarPadding),
 				Config.progressBarPadding);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+				return canvas.getWidth() * Config.lifeBarWidthRatio;
 			},
 			height: function () {
 				return Config.lifeBarHeight;
@@ -221,12 +226,12 @@ Client.initializeGame = function (data) {
 		energyBar: new EnergyBar({
 			location: function() {
 			return new Point(
-				Math.round(App.canvasObj.getWidth() * 
+				Math.round(canvas.getWidth() * 
 				(1 - Config.energyBarWidthRatio) - Config.progressBarPadding),
 				Config.progressBarPadding * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+				return canvas.getWidth() * Config.energyBarWidthRatio;
 			},
 			height: function () {
 			return Config.energyBarHeight;
@@ -236,6 +241,19 @@ Client.initializeGame = function (data) {
 		})
 	});
 
+	Client.world = new Rectangle(0, 0, 3000, 1000);
+
+	Client.camera = new Camera({
+		yView: 0,
+		xView: 0,
+		canvasWidth: canvas.getWidth(),
+		canvasHeight: canvas.getHeight(),
+		axis: 'horizontal',
+		worldRect: Client.world
+	});
+
+	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2);
+
 	App.physics = new WorldPhysics({
 		player: App.player,
 		opponent: App.opponent
@@ -243,7 +261,8 @@ Client.initializeGame = function (data) {
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
-		opponent: App.opponent
+		opponent: App.opponent,
+		worldRect: Client.world,
 	});
 
 	App.screen.dispose();
@@ -263,6 +282,7 @@ Client.update = function() {
 	App.opponent.update();
 	physics.flipPlayerSpritesheets();
 	physics.updatePlayersDepth();
+	Client.camera.update();
 };
 
 Client.stop = function() {

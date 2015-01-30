@@ -13,11 +13,11 @@ Config.playerDefenceMultiplier = 0.2;
 Config.playerEnergyIncrement = 0.1;
 
 Config.firstSpawnLocation = {
-	x: 0,
+	x: 1000,
 	z: 0
 };
 Config.secondSpawnLocation = {
-	x: 500,
+	x: 1500,
 	z: 0
 };
 Config.charactersPath = 'src/server/characters_data/';

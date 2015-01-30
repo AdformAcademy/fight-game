@@ -27,7 +27,7 @@ Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone) {
 };                 
 
 Camera.prototype.update = function () {
-    if(this.followed != null) {       
+    if(this.followed !== null) {    
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
             if(this.followed.getX() - this.xView  + this.xDeadZone > this.wView) {
                 this.xView = this.followed.getX() - (this.wView - this.xDeadZone);
