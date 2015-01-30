@@ -241,7 +241,8 @@ Client.initializeGame = function (data) {
 		})
 	});
 
-	Client.world = new Rectangle(0, 0, 3000, 1000);
+	Client.world = new Rectangle(0, 0, 
+		data.map.dimensions.width, data.map.dimensions.height);
 
 	Client.camera = new Camera({
 		yView: 0,

@@ -16,6 +16,7 @@ var Player = function (params) {
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = params.characterData.maxEnergy / 2;
   this.characterId = params.characterId || 1;
+  this.map = params.map;
 };
 
 Player.prototype = new BasePlayer();
@@ -99,6 +100,14 @@ Player.prototype.setCharacterId = function (id) {
 
 Player.prototype.getCharacterId = function () {
   return this.characterId;
+};
+
+Player.prototype.getMap = function () {
+  return this.map;
+};
+
+Player.prototype.setMap = function (map) {
+  this.map = map;
 };
 
 Player.prototype.toPacket = function() {

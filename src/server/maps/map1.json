@@ -1,0 +1,8 @@
+{
+	"id": 1,
+	"mapData": "waiting_screen_background.png",
+	"dimensions": {
+		"width": 3000,
+		"height": 1000
+	}
+}

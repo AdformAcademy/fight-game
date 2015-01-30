@@ -68,13 +68,17 @@ SocketServer.prepareClient = function (socket, selection) {
 				fs.readFileSync(Config.charactersPath + 
 					'character' + opponentSelection + '.json', 'utf8'));
 
+			var mapData = JSON.parse(
+				fs.readFileSync('src/server/maps/map1.json', 'utf8'));
+
 			var player = new Player({
 				id: session.sessionId,
 				opponentId: session.opponentId,
 				location: Config.firstSpawnLocation.x,
 				z: Config.firstSpawnLocation.z,
 				characterData: playerData,
-				characterId: playerSelection
+				characterId: playerSelection,
+				map: mapData
 			});
 			var opponent = new Player({
 				id: targetSession.sessionId,
@@ -82,7 +86,8 @@ SocketServer.prepareClient = function (socket, selection) {
 				location: Config.secondSpawnLocation.x,
 				z: Config.secondSpawnLocation.z,
 				characterData: opponentData,
-				characterId: opponentSelection
+				characterId: opponentSelection,
+				map: mapData
 			});
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
@@ -109,25 +114,27 @@ SocketServer.prepareClient = function (socket, selection) {
 				player: {
 					x: player.getX(),
 					data: playerData,
-					energyCosts: playerData.costs
+					energyCosts: playerData.costs,
 				},
 				opponent: {
 					x: opponent.getX(),
 					data: opponentData,
-					energyCosts: opponentData.costs
-				}
+					energyCosts: opponentData.costs,
+				},
+				map: mapData
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
 					data: opponentData,
-					energyCosts: playerData.costs
+					energyCosts: playerData.costs,
 				},
 				opponent: {
 					x: player.getX(),
 					data: playerData,
-					energyCosts: opponentData.costs
-				}
+					energyCosts: opponentData.costs,
+				},
+				map: mapData
 			});
 		}
 	}
