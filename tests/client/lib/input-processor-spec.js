@@ -6,6 +6,7 @@ var Config = require('../../../src/client/lib/config.js');
 var Player = require('../../../src/client/lib/player.js');
 var Point = require('../../../src/common/point.js');
 var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
+var Rectangle = require('../../../src/client/lib/canvas/rectangle.js');
 var App = require('../../../src/client/app.js');
 
 describe('InputProcessor', function () {
@@ -63,7 +64,8 @@ describe('InputProcessor', function () {
 				getHeigth: function () {
 					return 2000;
 				}
-			}
+			},
+			worldRect: new Rectangle(0, 0, 3000, 1000)
 		};
 		inputProcessor = new InputProcessor(paramsMock);
 		InputCollection.pressed = {};
