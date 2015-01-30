@@ -5,17 +5,26 @@ var BasePlayer = function () {
 	this.jumping = false;
 	this.punching = false;
 	this.kicking = false;
+	this.hiting = false;
 	this.combo = false;
 	this.defending = false;
 	this.punched = 0;
+	this.won = false;
+	this.lost = false;
 };
 
-BasePlayer.prototype.getLocation = function () {
-	return this.location;
+BasePlayer.prototype.Victory = function(status) {
+	this.won = status;
+};
+BasePlayer.prototype.isVictor = function() {
+	return this.won == true;
 };
 
-BasePlayer.prototype.setLocation = function (location) {
-	this.location = location;
+BasePlayer.prototype.Defeat = function(status) {
+	this.lost = status;
+};
+BasePlayer.prototype.isDefeated = function() {
+	return this.lost == true;
 };
 
 BasePlayer.prototype.getZ = function () {
@@ -27,19 +36,11 @@ BasePlayer.prototype.setZ = function (z) {
 };
 
 BasePlayer.prototype.getX = function () {
-	return this.location.getX();
-};
-
-BasePlayer.prototype.getY = function () {
-	return this.location.getY();
+	return this.location
 };
 
 BasePlayer.prototype.setX = function (x) {
-	this.location.setX(x);
-};
-
-BasePlayer.prototype.setY = function (y) {
-	this.location.setY(y);
+	this.location = x;
 };
 
 BasePlayer.prototype.getSpeedZ = function () {
@@ -80,6 +81,14 @@ BasePlayer.prototype.setUsingCombo = function (combo) {
 
 BasePlayer.prototype.usingCombo = function () {
 	return this.combo == true;
+};
+
+BasePlayer.prototype.setHiting = function (hiting) {
+	this.hit = hiting;
+};
+
+BasePlayer.prototype.isHiting = function() {
+	return this.hit == true;
 };
 
 BasePlayer.prototype.setDefending = function (defending) {

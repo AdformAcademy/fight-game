@@ -5,6 +5,7 @@ var InputCollection = {};
 InputCollection.pressed = {};
 InputCollection.pressTimes = {};
 InputCollection.quickTaps = {};
+InputCollection.keysPressed = {};
 
 InputCollection.isDown = function (keyCode) {
 	return InputCollection.pressed[keyCode];
@@ -16,6 +17,14 @@ InputCollection.quickTapped = function (keyCode) {
 		InputCollection.quickTaps[keyCode] = false;
 	}
 	return quickTapped;
+};
+
+InputCollection.isPressed = function (keyCode) {
+	var isPressed = InputCollection.keysPressed[keyCode];
+	if (isPressed) {
+		InputCollection.keysPressed[keyCode] = false;
+	}
+	return isPressed;
 };
 
 InputCollection.onKeydown = function(event) {
@@ -32,6 +41,7 @@ InputCollection.onKeyup = function(event) {
 		}
 	}
 	InputCollection.pressTimes[event.keyCode] = currentPressTime;
+	InputCollection.keysPressed[event.keyCode] = true;
 	delete InputCollection.pressed[event.keyCode];
 };
 

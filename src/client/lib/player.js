@@ -1,10 +1,14 @@
 var App;
 var BasePlayer = require('../../common/base-player');
+var Config = require('./config');
 
-function Player(location, spritesheet) {
+function Player(params) {
 	App = require('../app');
-	this.location = location;
-	this.spritesheet = spritesheet;
+	this.location = params.location;
+	this.spritesheet = params.spriteSheet;
+	this.lifeBar = params.lifeBar;
+	this.energyBar = params.energyBar;
+	this.energyCosts = params.energyCosts;
 	this.depth = 0;
 };
 
@@ -28,12 +32,34 @@ Player.prototype.getDepth = function() {
 	return this.depth;
 };
 
+Player.prototype.getLifeBar = function() {
+	return this.lifeBar;
+};
+
+Player.prototype.getEnergyBar = function() {
+	return this.energyBar;
+};
+
+Player.prototype.hasEnoughEnergy = function(action) {
+	return this.energyBar.getCurrentValue() >= this.energyCosts[action];
+}
+
+Player.prototype.setLifeBar = function(lifeBar) {
+	this.lifeBar = lifeBar;
+};
+
+Player.prototype.setEnergyBar = function(energyBar) {
+	this.energyBar = energyBar;
+};
+
 Player.prototype.update = function() {
 	this.spritesheet.update();
+	this.lifeBar.update();
+	this.energyBar.update();
 };
 
 Player.prototype.draw = function() {
-	this.spritesheet.draw(this.location.getX(), this.location.getY() + this.getZ());
+	this.spritesheet.draw(this.location, Config.floorHeight + this.getZ());
 };
 
 module.exports = Player;

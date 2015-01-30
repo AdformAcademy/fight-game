@@ -17,17 +17,30 @@ function StageScreen() {
 };
 
 StageScreen.prototype.graphics = function() {
+	var player = obj.player;
+	var opponent= obj.opponent;
+	var playerLifeBar = player.getLifeBar();
+	var opponentLifebar = opponent.getLifeBar();
+	var playerEnergyBar = player.getEnergyBar();
+	var opponentEnergyBar = opponent.getEnergyBar();
+
 	obj.backgroundImage.draw();
-	if (obj.player.getDepth() > obj.opponent.getDepth()) {
-		obj.player.draw();
-		obj.opponent.draw();
+	if (player.getDepth() > opponent.getDepth()) {
+		player.draw();
+		opponent.draw();
 	} else {
-		obj.opponent.draw();
-		obj.player.draw();
+		opponent.draw();
+		player.draw();
 	}
+	playerLifeBar.draw();
+	playerEnergyBar.draw();
+	opponentLifebar.draw();
+	opponentEnergyBar.draw();
 };
 
 StageScreen.prototype.dispose = function() {
+	obj.player.getLifeBar().dispose();
+	obj.opponent.getLifeBar().dispose();
 };
 
 module.exports = StageScreen;

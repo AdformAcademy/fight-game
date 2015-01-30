@@ -2,24 +2,42 @@ var App;
 var Utilities;
 var EventCollection;
 
-function Button(image) {
+function Button(params) {
 	App = require('../../app');
 	Utilities = require('./utilities');
 	EventCollection = require('../event-collection');
 
-	this.src = image;
-	this.image = new Image();
-	this.image.src = this.src;
-	this.hoverImage = null;
-	this.activeImage = this.image;
-
-	this.location = null;
+	if (!params.useSpriteSheet) {
+		this.src = params.image;
+		this.image = new Image();
+		this.image.src = this.src;
+		this.hoverImage = new Image();
+		this.hoverImage.src = params.hoverImage || this.image.src;
+		this.activeImage = this.image;
+	}
+	this.id = params.id || null;
+	this.location = params.location || null;
 	this.onClickEvent = null;
 	this.mouseOverEvent = null;
 	this.mouseLeaveEvent = null;
 	this.mouseEventAdded = false;
 	this.mouseEntered = false;
 	this.visible = true;
+	this.useSpriteSheet = params.useSpriteSheet || false;
+	this.spriteSheet = params.spriteSheet || null;
+	this.drawBorder = params.drawBorder || null;
+	this.borderWidth = params.borderWidth || null;
+	this.borderColor = params.borderColor || 'black';
+	this.width = params.width || null;
+	this.height = params.height || null;
+};
+
+Button.prototype.getId = function () {
+	return this.id;
+};
+
+Button.prototype.setId = function (id) {
+	this.id = id;
 };
 
 Button.prototype.getImage = function() {
@@ -71,19 +89,74 @@ Button.prototype.setLocation = function(location) {
 	this.location = location;
 };
 
+Button.prototype.setSpriteSheet = function(spriteSheet) {
+	this.spriteSheet = spriteSheet;
+};
+
+Button.prototype.getSpriteSheet = function() {
+	return this.spriteSheet;
+};
+
+Button.prototype.useSpriteSheet = function(useSpriteSheet) {
+	this.useSpriteSheet = useSpriteSheet;
+};
+
+Button.prototype.usingSpriteSheet = function() {
+	return this.useSpriteSheet;
+};
+
+Button.prototype.setDrawBorder = function (drawBorder) {
+	this.drawBorder = drawBorder;
+};
+
+Button.prototype.borderIsDrawing = function () {
+	return this.drawBorder;
+};
+
+Button.prototype.getBorderWidth = function () {
+	return this.borderWidth;
+};
+
+Button.prototype.setBorderWidth = function (borderWidth) {
+	if (typeof borderWidth === 'number') {
+		this.borderWidth = borderWidth;
+	}
+};
+
+Button.prototype.getBorderColor = function () {
+	return this.borderColor;
+};
+
+Button.prototype.setBorderColor = function (borderColor) {
+	this.borderColor = borderColor;
+};
+
 Button.prototype.drawButton = function() {
+	var canvas = App.canvasObj.canvas;
 	if (this.visible) {
-		App.canvasObj.canvas.drawImage(this.activeImage, this.location().getX(), this.location().getY());
+		var loc = typeof this.location === 'function' ? this.location() : this.location;
+		if (this.useSpriteSheet) {
+			this.spriteSheet.draw(loc.getX(), loc.getY());
+		} else {
+			canvas.drawImage(this.activeImage, 
+				loc.getX(), loc.getY());
+		}
+		if (this.drawBorder) {
+			canvas.strokeStyle = this.borderColor;
+			canvas.lineWidth = this.borderWidth;
+			canvas.strokeRect(loc.getX(), loc.getY(), this.width, this.height);
+		}
 	}
 };
 
 Button.prototype.pointIntersects = function(location) {
+	var loc = typeof this.location === 'function' ? this.location() : this.location;
 	if (this.visible) {
 		var canvasLocation = Utilities.toCanvasLocation(location);
-		var xIntersects = canvasLocation.getX() >= this.location().getX() && 
-		canvasLocation.getX() <= this.location().getX() + this.activeImage.width;
-		var yIntersects = canvasLocation.getY() >= this.location().getY() &&
-		canvasLocation.getY() <= this.location().getY() + this.activeImage.height;
+		var xIntersects = canvasLocation.getX() >= loc.getX() && 
+		canvasLocation.getX() <= loc.getX() + this.activeImage.width;
+		var yIntersects = canvasLocation.getY() >= loc.getY() &&
+		canvasLocation.getY() <= loc.getY() + this.activeImage.height;
 		return xIntersects && yIntersects;
 	}
 	return false;

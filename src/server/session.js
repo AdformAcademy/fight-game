@@ -3,11 +3,14 @@ function Session(socket, opponentId, state) {
 	this.sessionId = socket.id;
 	this.opponentId = opponentId;
 	this.state = state;
+	this.selection = 0;
 };
 
 Session.READY = 'ready';
 Session.PLAYING = 'playing';
 Session.UNACTIVE = 'unactive';
+Session.VICTORY = 'victory';
+Session.DEFEAT = 'defeat';
 
 Session.prototype.socket = function() {
 	return this.socket;
@@ -23,6 +26,17 @@ Session.prototype.opponentId = function() {
 
 Session.prototype.state = function() {
 	return this.state;
+};
+
+Session.prototype.getSelection = function() {
+	return this.selection;
+};
+
+Session.prototype.setSelection = function(selection) {
+	if (typeof selection !== 'number') {
+		selection = 1;
+	}
+	this.selection = selection;
 };
 
 Session.prototype.toString = function() {

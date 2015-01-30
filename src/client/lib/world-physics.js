@@ -1,14 +1,13 @@
 var Config = require('./config');
+var Collisions = require('../../common/collisions');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 };
 
-WorldPhysics.prototype.applyCoordinates = function(player, x, y, z) {
-	var playerLocation = player.getLocation();
-	playerLocation.setX(x);
-	playerLocation.setY(y);
+WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
+	player.setX(x);
 	if (z !== null) {
 		player.setZ(z);
 	}
@@ -20,68 +19,31 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 	}
 	var opponent = player === this.player ? this.opponent : this.player;
 	var keys = Config.keyBindings;
-	var x = player.getLocation().getX();
-	var y = player.getLocation().getY();
+	var x = player.getX();
 	var z = player.getZ();
 
-	if (input.key === keys.UP_RIGHT) {
-		x += Config.playerMoveSpeed;
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.UP_LEFT) {
-		x -= Config.playerMoveSpeed;
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN_LEFT) {
-		x -= Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN_RIGHT) {
-		x += Config.playerMoveSpeed;
-		y += Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.RIGHT) {
+	if (input.key === keys.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
 	else if (input.key === keys.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.UP) {
-		y -= Config.playerMoveSpeed;
-	}
-	else if (input.key === keys.DOWN) {
-		y += Config.playerMoveSpeed;
-	}
 
-	this.applyCoordinates(player, x, y, z);
+	this.applyCoordinates(player, x, z);
 };
 
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
 	var updateZ = setInterval(function () {
-	    var x = player.getLocation().getX();
-	    var y = player.getLocation().getY();
+	    var x = player.getX();
 	    var z = player.getZ();
-	    var opx = opponent.getLocation().getX();
-	    var opy = opponent.getLocation().getY();
+	    var opx = opponent.getX();
 	    var opz = opponent.getZ();
 	    var speedZ = player.getSpeedZ();
 	    var size = Config.playerSize;
-
-		if (Math.abs(x - opx) < size && Math.abs(y - opy) < size / 3) {
-			speedZ -= Config.playerAcceleration;
-			z -= speedZ;
-			if (z >= -(y + size - opy)) {
-				z = -(y + size - opy);
-				speedZ = 0;
-				player.getSpriteSheet().setActiveAnimation('standAnimation');
-			}
-		}
-		else {
-			speedZ -= Config.playerAcceleration;
-			z -= speedZ;
-		}
+		speedZ -= Config.playerAcceleration;
+		z -= speedZ;
 		if (z > 0) {
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumping(false);
@@ -93,63 +55,43 @@ WorldPhysics.prototype.jump = function () {
 		player.setSpeedZ(speedZ);
 	}, 1000/30);
 };
-
-WorldPhysics.prototype.comboPunch = function () {
-	var t = 0;
+WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	var player = this.player;
-	var updateP = setInterval(function () {
+	var opponent = this.opponent;
+	var t = 0;
+	var hit = 0;
+	var x = player.getX();
+    var opx = opponent.getX();
+
+	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
+		hit = 1;
+		opponent.setPunched(2);
+	}
+	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
+		hit = 2;
+		opponent.setPunched(2);
+	}
+	var updateH = setInterval(function () {
 		t += 30;
-		if (t >= 800) {
+		if (t >= time) {
+			if(hit == 1){
+				if(opx < Config.screenWidth - 185){
+					opx += power;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			else if(hit == 2){
+				if(opx > -135){
+					opx -= power;
+					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+			}
+			player.getSpriteSheet().setActiveAnimation('standAnimation');
+			player.setHiting(false);
 			player.setUsingCombo(false);
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
-		}
-	}, 1000/30);
-};
-
-WorldPhysics.prototype.comboKick = function () {
-	var t = 0;
-	var player = this.player;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (t >= 600) {
-			player.setUsingCombo(false);
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
-		}
-	}, 1000/30);
-}
-
-WorldPhysics.prototype.punch = function () {
-	var player = this.player;
-	var t = 0;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (player.usingCombo()) {
-			player.setPunching(false);
-			clearInterval(updateP);
-		}
-		if (t >= 300) {
-			player.setPunching(false);
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			clearInterval(updateP);
-		}
-	}, 1000/30);
-};
-
-WorldPhysics.prototype.kick = function () {
-	var player = this.player;
-	var t = 0;
-	var updateP = setInterval(function () {
-		t += 30;
-		if (player.usingCombo()) {
-			player.setKicking(false);
-			clearInterval(updateP);
-		}
-		if (t >= 400) {
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setKicking(false);
-			clearInterval(updateP);
+			clearInterval(updateH);
 		}
 	}, 1000/30);
 };
@@ -173,8 +115,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	} else if (packet.key === keys.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
-
-	if (player.isStanding()) {
+	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
 			playerSprite.setActiveAnimation('moveAnimation');
 		}
@@ -185,6 +126,16 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 			playerSprite.setActiveAnimation('standAnimation');
 		}
 	}
+	if (player.isJumping()) {
+		if (packet.punchKey) {
+			console.log('JUMP TEST');
+			playerSprite.setActiveAnimation('jumpPunchAnimation');
+		}
+		else if (packet.kickKey) {
+			console.log('JUMP TEST');
+			playerSprite.setActiveAnimation('jumpKickAnimation');
+		}
+	}
 };
 
 WorldPhysics.prototype.flipPlayerSpritesheets = function () {
@@ -192,8 +143,8 @@ WorldPhysics.prototype.flipPlayerSpritesheets = function () {
 	var opponent = this.opponent;
 	var playerSpriteSheet = player.getSpriteSheet();
 	var opponentSpriteSheet = opponent.getSpriteSheet();
-	var x = player.getLocation().getX();
-	var opx = opponent.getLocation().getX();
+	var x = player.getX();
+	var opx = opponent.getX();
 
 	if (x < opx) {
 		playerSpriteSheet.flipAnimation(true);
@@ -211,12 +162,10 @@ WorldPhysics.prototype.flipPlayerSpritesheets = function () {
 WorldPhysics.prototype.updatePlayersDepth = function () {
 	var player = this.player;
 	var opponent = this.opponent;
-	var y = player.getLocation().getY();
 	var z = player.getZ();
-	var oy = opponent.getLocation().getY();
 	var oz = opponent.getZ();
 
-	if (y > oy) {
+	if (z > oz) {
 		player.setDepth(0);
 		opponent.setDepth(1);
 	} else {
