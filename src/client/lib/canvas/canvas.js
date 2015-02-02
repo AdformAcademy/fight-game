@@ -65,13 +65,13 @@ Canvas.prototype.drawBackground = function() {
 };
 
 Canvas.prototype.draw = function() {
-	var obj = this;
-	this.clearCanvas();
-	this.drawBackground();
-	this.drawGraphics();
-	setTimeout(function() {
-		obj.draw()
-	}, 1000 / this.updateInterval);
+	var self = this;
+	self.clearCanvas();
+	self.drawBackground();
+	self.drawGraphics();
+	requestAnimationFrame(function () {
+		self.draw();
+	});
 };
 
 module.exports = Canvas;
