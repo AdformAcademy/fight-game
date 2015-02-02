@@ -65,7 +65,7 @@ describe('InputProcessor', function () {
 					return 2000;
 				}
 			},
-			worldRect: new Rectangle(0, 0, 3000, 1000)
+			world: new Rectangle(0, 0, 3000, 1000)
 		};
 		inputProcessor = new InputProcessor(paramsMock);
 		InputCollection.pressed = {};
