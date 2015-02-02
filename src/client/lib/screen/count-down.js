@@ -28,6 +28,7 @@ function CountDownScreen(){
 
 	this.countDownText = new Text(3, 50);
 	this.countDownText.setColor('#FFFFFF');
+	this.animating = false;
 
 	this.countDownText.setLocation(function() {
 		var x = Utilities.centerX(obj.countDownText.getTextWidth());
@@ -35,18 +36,13 @@ function CountDownScreen(){
 		return new Point(x, y);
 	});
 	this.doCountDown();
+	this.animateCountDown();
 };
 
 CountDownScreen.prototype.doCountDown = function() {
 	this.countDownInterval = setInterval(function () {
 		var countAnimation = obj.countAnimation;
 		var oldVal = countAnimation.numbers;
-		
-		countAnimation.numbers--;
-		countAnimation.size = 50;
-		countAnimation.incrementation = 1;
-		countAnimation.opacity = 1;
-		countAnimation.opacityStep = 0.01;
 		if (oldVal <= 0) {
 			obj.countDownText.setText('FIGHT!!!');
 			if (oldVal === -1) {
@@ -65,24 +61,42 @@ CountDownScreen.prototype.doCountDown = function() {
 };
 
 CountDownScreen.prototype.animateCountDown = function() {
-	var countAnimation = obj.countAnimation;
-	countAnimation.incrementation += countAnimation.incrementation * 0.095;
-	countAnimation.size += countAnimation.incrementation;
+	var self = this;
+	var oldValue = self.countDownText.getText();
+	self.animating = true;
+	var updateInterval = setInterval(function () {
+		var currentValue = self.countDownText.getText();
+		if (!self.animating) {
+			clearInterval(updateInterval);
+			return;
+		}
+		var countAnimation = self.countAnimation;
 
-	countAnimation.opacityStep += countAnimation.opacityStep * 0.1;
-	if (countAnimation.opacity - countAnimation.opacityStep < 0) {
-		countAnimation.opacity = 0;
-	} else {
-		countAnimation.opacity -= countAnimation.opacityStep;
-	}
-	
-	obj.countDownText.setSize(obj.countAnimation.size);
+		if (currentValue !== oldValue) {
+			countAnimation.numbers--;
+			countAnimation.size = 50;
+			countAnimation.incrementation = 1;
+			countAnimation.opacity = 1;
+			countAnimation.opacityStep = 0.01;
+			oldValue = currentValue; 
+		}
+
+		countAnimation.incrementation += countAnimation.incrementation * 0.095;
+		countAnimation.size += countAnimation.incrementation;
+
+		countAnimation.opacityStep += countAnimation.opacityStep * 0.1;
+		if (countAnimation.opacity - countAnimation.opacityStep < 0) {
+			countAnimation.opacity = 0;
+		} else {
+			countAnimation.opacity -= countAnimation.opacityStep;
+		}
+		self.countDownText.setSize(self.countAnimation.size);
+	}, 1000 / 30);
 };
 
 CountDownScreen.prototype.graphics = function() {
 	App.canvasObj.canvas.globalAlpha = 1;
 	obj.backgroundImage.draw();
-	obj.animateCountDown();
 	App.canvasObj.canvas.globalAlpha = obj.countAnimation.opacity;
 	obj.countDownText.draw();
 	App.canvasObj.canvas.restore();
@@ -92,6 +106,7 @@ CountDownScreen.prototype.dispose = function() {
 	clearInterval(this.countDownInterval);
 	App.canvasObj.canvas.globalAlpha = 1;
 	App.canvasObj.canvas.restore();
+	this.animating = false;
 };
 
 module.exports = CountDownScreen;
