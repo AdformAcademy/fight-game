@@ -68,8 +68,9 @@ SocketServer.prepareClient = function (socket, selection) {
 				fs.readFileSync(Config.charactersPath + 
 					'character' + opponentSelection + '.json', 'utf8'));
 
+			var randomMap = Math.floor(Math.random() * 2) + 1;
 			var mapData = JSON.parse(
-				fs.readFileSync('src/server/maps/map1.json', 'utf8'));
+				fs.readFileSync('src/server/maps/map' + randomMap +'.json', 'utf8'));
 
 			var player = new Player({
 				id: session.sessionId,
