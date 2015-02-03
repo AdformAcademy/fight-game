@@ -1,15 +1,10 @@
 var App;
 var Client;
-var Point;
-var Background;
 var obj;
 
 function StageScreen() {
 	App = require('../../app');
 	Client = require('../client');
-	Point = require('../../../common/point');
-	Background = require('../canvas/background');
-	this.backgroundImage = new Background('./img/stage_background.png');
 	this.player = App.player;
 	this.opponent = App.opponent;
 	obj = this;
