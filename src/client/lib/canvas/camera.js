@@ -16,6 +16,7 @@ var Camera = function (params) {
     this.hView = params.canvasHeight;          
     this.axis = params.axis || AXIS.BOTH;  
     this.followed = null;
+    this.following = false;
     this.viewportRect = new Rectangle(this.xView, this.yView, this.wView, this.hView);             
     this.worldRect = params.worldRect;
 }
@@ -26,8 +27,13 @@ Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone) {
     this.yDeadZone = yDeadZone;
 };                 
 
+Camera.prototype.isFollowing = function () {
+    return this.following;
+};
+
 Camera.prototype.update = function () {
-    if(this.followed !== null) {    
+    if(this.followed !== null) {
+        this.following = true;    
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
             if(this.followed.getX() - this.xView  + this.xDeadZone > this.wView) {
                 this.xView = this.followed.getX() - (this.wView - this.xDeadZone);
@@ -57,6 +63,7 @@ Camera.prototype.update = function () {
         if(this.viewportRect.bottom > this.worldRect.bottom) {
             this.yView = this.worldRect.bottom - this.hView;
         }
+        this.following = false;
     }
 };
 

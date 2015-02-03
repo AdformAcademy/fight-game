@@ -13,6 +13,7 @@ function StageScreen() {
 	this.player = App.player;
 	this.opponent = App.opponent;
 	obj = this;
+	this.parallax = Client.parallax;
 	Client.start();
 };
 
@@ -25,8 +26,8 @@ StageScreen.prototype.graphics = function() {
 	var opponentEnergyBar = opponent.getEnergyBar();
 	var xView = Client.camera.xView;
 	var yView = Client.camera.yView;
-
-	obj.backgroundImage.draw(xView, yView);
+	
+	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {
 		player.draw(xView, yView);
 		opponent.draw(xView, yView);

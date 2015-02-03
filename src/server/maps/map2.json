@@ -3,9 +3,10 @@
 	"dimensions": {
 		"top": 0,
 		"left": 0,
-		"width": 3000,
+		"width": 2000,
 		"height": 1000
 	},
+	"groundHeight": 290,
 	"patterns": {
 		"1": {
 			"speed": 0.3,

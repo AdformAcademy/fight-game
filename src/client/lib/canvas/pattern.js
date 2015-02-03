@@ -1,12 +1,8 @@
-var Point;
 var App;
 
 var Pattern = function (location, speed, image) {
-
 	App = require('../../app');
-	Point = require('../../../common/point');
-
-	this.location = new Point(0, 0);
+	this.location = location;
 	this.speed = speed;
 	this.image = new Image();
 	this.image.src = image;

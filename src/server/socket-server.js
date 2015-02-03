@@ -113,11 +113,13 @@ SocketServer.prepareClient = function (socket, selection) {
 			session.socket.emit(Session.PLAYING, {
 				player: {
 					x: player.getX(),
+					y: player.getZ(),
 					data: playerData,
 					energyCosts: playerData.costs,
 				},
 				opponent: {
 					x: opponent.getX(),
+					y: opponent.getZ(),
 					data: opponentData,
 					energyCosts: opponentData.costs,
 				},
@@ -126,11 +128,13 @@ SocketServer.prepareClient = function (socket, selection) {
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
 					x: opponent.getX(),
+					y: opponent.getZ(),
 					data: opponentData,
 					energyCosts: playerData.costs,
 				},
 				opponent: {
 					x: player.getX(),
+					y: player.getZ(),
 					data: playerData,
 					energyCosts: opponentData.costs,
 				},

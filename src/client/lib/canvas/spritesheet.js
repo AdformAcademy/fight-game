@@ -23,6 +23,10 @@ var SpriteSheet = function (params) {
 	this.scaleHeight = params.scaleHeight || null;
 };
 
+SpriteSheet.prototype.getSpriteSheetHeight = function () {
+	return this.dimensions.height;
+};
+
 SpriteSheet.prototype.getCurrentFrame = function () {
 	return this.currentFrame;
 };

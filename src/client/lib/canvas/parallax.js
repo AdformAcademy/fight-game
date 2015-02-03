@@ -1,7 +1,5 @@
-var Parallax = function (pattern, camera) {
-
+var Parallax = function (camera) {
 	this.patterns = [];
-
 	this.camera = camera;
 };
 
@@ -10,20 +8,24 @@ Parallax.prototype.addPattern = function (pattern) {
 };
 
 Parallax.prototype.moveLeft = function () {
-	for (var pattern in this.patterns) {
-		pattern.moveLeft();
+	if (this.camera.isFollowing()) {
+		for (var i = 0; i < this.patterns.length; i++) {
+			this.patterns[i].moveLeft();
+		}
 	}
 };
 
 Parallax.prototype.moveRight = function () {
-	for (var pattern in this.patterns) {
-		pattern.moveRight();
+	if (this.camera.isFollowing()) {
+		for (var i = 0; i < this.patterns.length; i++) {
+			this.patterns[i].moveRight();
+		}
 	}
 };
 
 Parallax.prototype.draw = function () {
-	for (var pattern in this.patterns) {
-		pattern.draw(this.camera.xView, this.camera.yView);
+	for (var i = 0; i < this.patterns.length; i++) {
+		this.patterns[i].draw(this.camera.xView, this.camera.yView);
 	}
 };
 

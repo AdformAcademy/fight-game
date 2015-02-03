@@ -5,6 +5,7 @@ var WorldPhysics = function(params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 	this.world = params.world;
+	this.parallax = params.parallax;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -173,6 +174,15 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 	} else {
 		player.setDepth(1);
 		opponent.setDepth(0);
+	}
+};
+
+WorldPhysics.prototype.applyParallax = function (packet) {
+	var keys = Config.keyBindings;
+	if (packet.key === keys.RIGHT) {
+		this.parallax.moveRight();
+	} else if (packet.key === keys.LEFT) {
+		this.parallax.moveLeft();
 	}
 };
 

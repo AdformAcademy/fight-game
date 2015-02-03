@@ -21,6 +21,7 @@ describe('Player', function () {
 		spritesheetMock = {};
 		player = new Player({
 			location: 0,
+			z: 0,
 			spriteSheet: spritesheetMock
 		});
 	});

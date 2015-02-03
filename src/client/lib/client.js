@@ -11,6 +11,8 @@ var WorldPhysics = require('./world-physics');
 var CountDownScreen = require('./screen/count-down');
 var Rectangle = require('./canvas/rectangle');
 var Camera = require('./canvas/camera');
+var Parallax = require('./canvas/parallax');
+var Pattern = require('./canvas/pattern');
 var socket = io();
 
 var Client = module.exports = {};
@@ -27,6 +29,7 @@ Client.opponentInputs = [];
 Client.inputProcessor = null;
 Client.camera = null;
 Client.world = null;
+Client.parallax = null;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -139,6 +142,7 @@ Client.processLocalInputs = function () {
 		}
 	}
 	physics.updatePlayerAnimation(packet);
+	physics.applyParallax(packet);
 	return packet;
 };
 
@@ -153,6 +157,7 @@ Client.initializeGame = function (data) {
 	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
 	var opponentSpriteData = data.opponent.data.spriteSheetData;
+	var mapData = data.map;
 	var playerSpriteImage = new Image();
 	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
@@ -172,6 +177,8 @@ Client.initializeGame = function (data) {
 
 	App.player = new Player({
 		location: data.player.x,
+		z: data.player.y,
+		groundHeight: mapData.groundHeight,
 		spriteSheet: playerSprite,
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
@@ -205,6 +212,8 @@ Client.initializeGame = function (data) {
 
 	App.opponent = new Player({
 		location: data.opponent.x,
+		z: data.opponent.y,
+		groundHeight: mapData.groundHeight,
 		spriteSheet: opponentSprite,
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
@@ -242,7 +251,7 @@ Client.initializeGame = function (data) {
 	});
 
 	Client.world = new Rectangle(0, 0, 
-		data.map.dimensions.width, data.map.dimensions.height);
+		mapData.dimensions.width, mapData.dimensions.height);
 
 	Client.camera = new Camera({
 		yView: 0,
@@ -255,16 +264,30 @@ Client.initializeGame = function (data) {
 
 	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-	App.physics = new WorldPhysics({
-		player: App.player,
-		opponent: App.opponent,
-		world: Client.world
-	});
-
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
 		opponent: App.opponent,
-		world: Client.world
+		world: Client.world,
+		parallax: Client.parallax
+	});
+
+	var parallax = new Parallax(Client.camera);
+
+	for (var pattern in mapData.patterns) {
+		var top = mapData.patterns[pattern].top;
+		var speed = mapData.patterns[pattern].speed;
+		var imageLocation = './img/maps/map' + mapData.id + '/pattern' + pattern + '.png';
+		var parallaxPattern = new Pattern(new Point(0, top), speed, imageLocation);
+		parallax.addPattern(parallaxPattern);
+	}
+
+	Client.parallax = parallax;
+
+	App.physics = new WorldPhysics({
+		player: App.player,
+		opponent: App.opponent,
+		world: Client.world,
+		parallax: Client.parallax
 	});
 
 	App.screen.dispose();
