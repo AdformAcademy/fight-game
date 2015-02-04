@@ -48,12 +48,19 @@
 				"speed": 0.4,
 				"order": "asc"
 			},
-			"moveAnimation": {
-				"name": "moveAnimation",
+			"moveLeftAnimation": {
+				"name": "moveLeftAnimation",
 				"startFrame": 18,
 				"frames": 9,
 				"speed": 0.5,
 				"order": "desc"
+			},
+			"moveRightAnimation": {
+				"name": "moveRightAnimation",
+				"startFrame": 18,
+				"frames": 9,
+				"speed": 0.5,
+				"order": "asc"
 			},
 			"jumpAnimation": {
 				"name": "jumpAnimation",

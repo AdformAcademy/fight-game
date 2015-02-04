@@ -102,6 +102,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
 	var player = this.player;
+	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
 
 	if (packet.kickCombo) {
@@ -120,7 +121,18 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	}
 	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
-			playerSprite.setActiveAnimation('moveAnimation');
+			if(player.getX() < opponent.getX()) {
+				if (packet.key === keys.RIGHT)
+					playerSprite.setActiveAnimation('moveLeftAnimation');
+				else if (packet.key === keys.LEFT)
+					playerSprite.setActiveAnimation('moveRightAnimation');
+			}
+			else {
+				if (packet.key === keys.LEFT)
+					playerSprite.setActiveAnimation('moveLeftAnimation');
+				else if (packet.key === keys.RIGHT)
+					playerSprite.setActiveAnimation('moveRightAnimation');
+			}
 		}
 		else if (player.isPunched()) {
 			playerSprite.setActiveAnimation('damageAnimation');
@@ -131,11 +143,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	}
 	if (player.isJumping()) {
 		if (packet.punchKey) {
-			console.log('JUMP TEST');
 			playerSprite.setActiveAnimation('jumpPunchAnimation');
 		}
 		else if (packet.kickKey) {
-			console.log('JUMP TEST');
 			playerSprite.setActiveAnimation('jumpKickAnimation');
 		}
 	}

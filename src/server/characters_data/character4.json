@@ -55,12 +55,19 @@
 				"speed": 0.4,
 				"order": "asc"
 			},
-			"moveAnimation": {
-				"name": "moveAnimation",
+			"moveLeftAnimation": {
+				"name": "moveLeftAnimation",
 				"startFrame": 18,
 				"frames": 13,
 				"speed": 0.35,
 				"order": "desc"
+			},
+			"moveRightAnimation": {
+				"name": "moveRightAnimation",
+				"startFrame": 18,
+				"frames": 13,
+				"speed": 0.35,
+				"order": "asc"
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",
