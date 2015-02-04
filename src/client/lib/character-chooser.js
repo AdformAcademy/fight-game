@@ -7,7 +7,7 @@ var SpriteSheet = require('./canvas/spritesheet');
 var Point = require('../../common/point')
 var socket = io();
 var Config = require('./config');
-
+var EventCollection = require('./event-collection');
 var CharacterChooser = {};
 
 CharacterChooser.isRunning = false;
@@ -109,6 +109,26 @@ CharacterChooser.createButtons = function (data) {
 			height: height
 		});
 
+		button.mouseOver(function() {
+			var oldActiveButton = CharacterChooser.activeButton;
+			CharacterChooser.activeButton = this.id - 1;
+			if (oldActiveButton !== CharacterChooser.activeButton) {
+				CharacterChooser.resetUnactiveButton(oldActiveButton);
+			}
+		});
+
+		button.onClick(function() {
+			var btn = CharacterChooser.buttons[CharacterChooser.activeButton];
+			var id = btn.getId();
+			for (var i = 0; i < CharacterChooser.buttons.length; i++) {
+				EventCollection.removeOnClickObject(CharacterChooser.buttons[i]);
+				EventCollection.removeMouseOverObject(CharacterChooser.buttons[i]);
+			}
+			CharacterChooser.choose(id);
+		})
+
+		EventCollection.addMouseOverObject(button);
+		EventCollection.addOnClickObject(button);
 		buttons.push(button);
 
 		shiftX += width;
