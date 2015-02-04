@@ -35,10 +35,10 @@ Camera.prototype.update = function () {
     if(this.followed !== null) {
         this.following = true;    
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
-            if(this.followed.getX() - this.xView  + this.xDeadZone > this.wView) {
+            if(this.followed.getX() + 160 - this.xView  + this.xDeadZone >= this.wView) {
                 this.xView = this.followed.getX() - (this.wView - this.xDeadZone);
-            } else if (this.followed.getX() - this.xDeadZone < this.xView) {
-                this.xView = this.followed.getX() - this.xDeadZone;
+            } else if (this.followed.getX() + 160 - this.xDeadZone < this.xView) {
+                this.xView = this.followed.getX() + 320 - this.xDeadZone;
             }
         }
         if(this.axis == AXIS.VERTICAL || this.axis == AXIS.BOTH) {

@@ -262,7 +262,7 @@ Client.initializeGame = function (data) {
 		worldRect: Client.world
 	});
 
-	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2);
+	Client.camera.follow(App.player, canvas.getWidth() / 2 + 160, canvas.getHeight() / 2);
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
@@ -296,6 +296,7 @@ Client.initializeGame = function (data) {
 };
 
 Client.update = function() {
+	var canvas = App.canvasObj;
 	var physics = App.physics;
 	Client.processServerData();
 	var packet = Client.processLocalInputs();
