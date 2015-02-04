@@ -179,10 +179,12 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 
 WorldPhysics.prototype.applyParallax = function (packet) {
 	var keys = Config.keyBindings;
-	if (packet.key === keys.RIGHT) {
-		this.parallax.moveRight();
-	} else if (packet.key === keys.LEFT) {
-		this.parallax.moveLeft();
+	if(!this.player.isHiting()){
+		if (packet.key === keys.RIGHT) {
+			this.parallax.moveRight();
+		} else if (packet.key === keys.LEFT) {
+			this.parallax.moveLeft();
+		}
 	}
 };
 
