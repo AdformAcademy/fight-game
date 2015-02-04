@@ -42,7 +42,7 @@ Player.prototype.getEnergyBar = function() {
 
 Player.prototype.hasEnoughEnergy = function(action) {
 	return this.energyBar.getCurrentValue() >= this.energyCosts[action];
-}
+};
 
 Player.prototype.setLifeBar = function(lifeBar) {
 	this.lifeBar = lifeBar;

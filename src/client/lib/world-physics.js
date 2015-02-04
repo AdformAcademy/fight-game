@@ -37,7 +37,8 @@ WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
 
-    SoundCollection.play('jump');
+    SoundCollection.play('common', 'jump');
+    SoundCollection.play('player', 'jump')
 
 	var updateZ = setInterval(function () {
 	    var x = player.getX();
@@ -54,7 +55,7 @@ WorldPhysics.prototype.jump = function () {
 			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;
-			SoundCollection.play('land');
+			SoundCollection.play('common', 'land');
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
@@ -71,13 +72,11 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(2);
-		SoundCollection.play('punch');
 	}
 	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
 		hit = 2;
 		opponent.setPunched(2);
-		SoundCollection.play('punch');
-	}
+	}	
 	var updateH = setInterval(function () {
 		t += 30;
 		if (t >= time) {
@@ -101,6 +100,8 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 			clearInterval(updateH);
 		}
 	}, 1000/30);
+
+	return hit;
 };
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {

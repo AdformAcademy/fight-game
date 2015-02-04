@@ -19,6 +19,8 @@ SocketServer.punchInputs = [];
 SocketServer.kickInputs = [];
 SocketServer.comboInputs = [];
 
+SocketServer.sounds = [];
+
 SocketServer.prepareSocketData = function(player, opponent, socket) {
 	var data = {
 		player: {
@@ -29,7 +31,8 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			defeated: player.isDefeated(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives(),
-			energy: player.getEnergy()
+			energy: player.getEnergy(),
+			sounds: player.getSounds()
 		},
 		opponent: {
 			x: opponent.getX(),
@@ -39,9 +42,13 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			defeated: opponent.isDefeated(),
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
 			lives: opponent.getLives(),
-			energy: opponent.getEnergy()
+			energy: opponent.getEnergy(),
+			sounds: opponent.getSounds()
 		}
 	};
+
+	opponent.clearSounds();
+
 	return data;
 };
 
@@ -68,7 +75,7 @@ SocketServer.prepareClient = function (socket, selection) {
 				fs.readFileSync(Config.charactersPath + 
 					'character' + opponentSelection + '.json', 'utf8'));
 
-			var soundsData = JSON.parse(
+			var commonSoundsData = JSON.parse(
 				fs.readFileSync(Config.soundsDataFile, 'utf8'));
 
 			var player = new Player({
@@ -119,7 +126,7 @@ SocketServer.prepareClient = function (socket, selection) {
 					data: opponentData,
 					energyCosts: opponentData.costs
 				},
-				soundsData: soundsData
+				soundsData: commonSoundsData
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
@@ -132,7 +139,7 @@ SocketServer.prepareClient = function (socket, selection) {
 					data: playerData,
 					energyCosts: opponentData.costs
 				},
-				soundsData: soundsData
+				soundsData: commonSoundsData
 			});
 		}
 	}
@@ -179,6 +186,10 @@ SocketServer.storeInput = function(socket, packet) {
 	}
 };
 
+SocketServer.clearSounds = function() {
+	SocketServer.sounds = [];
+}
+
 SocketServer.updateZ = function(player) {
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
     var x = player.getX();
@@ -194,6 +205,7 @@ SocketServer.updateZ = function(player) {
 			z = 0;
 			speedZ = 0;
 			player.setJumping(false);
+			opponent.storeSound('common', 'land');
 		}
 	};
 	player.setZ(z);
@@ -244,6 +256,8 @@ SocketServer.hit = function (player, damage, time, size, power, heightDifference
 			clearInterval(updateH);
 		}
 	}, 1000/30);
+
+	return hit;
 };
 
 SocketServer.executeInput = function(player, input) {
@@ -254,7 +268,6 @@ SocketServer.executeInput = function(player, input) {
 	var z = player.getZ();
 	var opz = opponent.getZ();
 	
-
 	var speedZ = player.getSpeedZ();
     var size = Config.playerSize;
 
@@ -263,6 +276,8 @@ SocketServer.executeInput = function(player, input) {
 		player.setSpeedZ(speedZ);
 		player.setJumping(true);
 		player.useEnergy('jump');
+		opponent.storeSound('common', 'jump');
+		opponent.storeSound('opponent', 'jump');
 	}
 	else if(input.jumpKey && player.isJumping() && !player.isPunched()) {
 		var inputs = SocketServer.jumpInputs[player.getID()];
@@ -276,7 +291,14 @@ SocketServer.executeInput = function(player, input) {
 			if (input.kickCombo && !player.isHiting()) {
 				console.log('kick combo');
 				player.setHiting(true);
-				SocketServer.hit(player, "kickCombo", 600, 80, 15, 60);
+				var hit = SocketServer.hit(player, "kickCombo", 600, 80, 15, 60);
+				if (hit === 0) {
+					opponent.storeSound('common', 'miss');
+				} else {
+					opponent.storeSound('opponent', 'comboKick');
+					opponent.storeSound('opponent', 'kick');
+					opponent.storeSound('player', 'hit');
+				}
 			}
 			else if (input.kickCombo){
 				var inputs = SocketServer.comboInputs[player.getID()];
@@ -287,7 +309,14 @@ SocketServer.executeInput = function(player, input) {
 			if (input.punchCombo && !player.isHiting()) {
 				console.log('punch combo');
 				player.setHiting(true);
-				SocketServer.hit(player, "punchCombo",800, 65, 0, 60);
+				var hit = SocketServer.hit(player, "punchCombo",800, 65, 0, 60);
+				if (hit === 0) {
+					opponent.storeSound('common', 'miss');
+				} else {
+					opponent.storeSound('opponent', 'comboPunch');
+					opponent.storeSound('opponent', 'punch');
+					opponent.storeSound('player', 'hit');
+				}
 			}
 			else if (input.punchCombo){
 				var inputs = SocketServer.comboInputs[player.getID()];
@@ -297,7 +326,13 @@ SocketServer.executeInput = function(player, input) {
 			}
 			if (input.kickKey && !player.isHiting()) {
 				player.setHiting(true);
-				SocketServer.hit(player, "kick", 400, 80, 10, 60);
+				var hit = SocketServer.hit(player, "kick", 400, 80, 10, 60);
+				if (hit === 0) {
+					opponent.storeSound('common', 'miss');
+				} else {
+					opponent.storeSound('opponent', 'kick');
+					opponent.storeSound('player', 'hit');
+				}
 				console.log('simple kick');
 			}
 			else if (input.kickKey){
@@ -308,7 +343,13 @@ SocketServer.executeInput = function(player, input) {
 			}
 			if(input.punchKey && !player.isHiting()) {
 				player.setHiting(true);
-				SocketServer.hit(player, "punch", 300, 65, 5, 60);
+				var hit = SocketServer.hit(player, "punch", 300, 65, 5, 60);
+				if (hit === 0) {
+					opponent.storeSound('common', 'miss');
+				} else {
+					opponent.storeSound('opponent', 'punch');
+					opponent.storeSound('player', 'hit');
+				}
 				console.log('simple punch');
 			}
 			else if(input.punchKey){
@@ -321,12 +362,24 @@ SocketServer.executeInput = function(player, input) {
 		if (player.isJumping() && input.punchKey) {
 			console.log("Jumping and punching");
 			player.setHiting(true);
-			SocketServer.hit(player, "punch", 780, 65, 5, 120);
+			var hit = SocketServer.hit(player, "punch", 780, 65, 5, 120);
+			if (hit === 0) {
+				opponent.storeSound('common', 'miss');
+			} else {
+				opponent.storeSound('opponent', 'punch');
+				opponent.storeSound('player', 'hit');
+			}
 		}
 		if (player.isJumping() && input.kickKey) {
 			console.log("Jumping and kicking");
 			player.setHiting(true);
-			SocketServer.hit(player, "kick", 780, 85, 10, 120);
+			var hit = SocketServer.hit(player, "kick", 780, 85, 10, 120);
+			if (hit === 0) {
+				opponent.storeSound('common', 'miss');
+			} else {
+				opponent.storeSound('opponent', 'kick');
+				opponent.storeSound('player', 'hit');
+			}
 		}
 	}
 	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()){
