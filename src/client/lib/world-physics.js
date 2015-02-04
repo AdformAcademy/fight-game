@@ -83,11 +83,21 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 					opponent.setX(opx);
 					opponent.setPunched(0);
 				}
+				else{
+					x -= power;
+					player.setX(x);
+					opponent.setPunched(0);
+				}
 			}
 			else if(hit == 2){
 				if(opx > self.world.left - 135){
 					opx -= power;
 					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+				else{
+					x += power;
+					player.setX(x);
 					opponent.setPunched(0);
 				}
 			}
