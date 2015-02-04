@@ -176,6 +176,16 @@ Client.initializeGame = function (data) {
 
 	var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
 	var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
+	var LBY = Config.progressBarPadding;
+
+	if(data.player.x < data.opponent.x){
+		var PLBX = Config.progressBarPadding;
+		var OpLBX = Math.round(canvas.getWidth() * (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+	}
+	else{
+		var PLBX = Math.round(canvas.getWidth() * (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+		var OpLBX = Config.progressBarPadding;
+	}
 
 	App.player = new Player({
 		location: data.player.x,
@@ -185,7 +195,7 @@ Client.initializeGame = function (data) {
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
-				return new Point(Config.progressBarPadding, Config.progressBarPadding);
+				return new Point(PLBX, LBY);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.lifeBarWidthRatio;
@@ -198,8 +208,7 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
-				return new Point(Config.progressBarPadding,
-				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+				return new Point(PLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.energyBarWidthRatio;
@@ -220,10 +229,7 @@ Client.initializeGame = function (data) {
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
-			return new Point(
-				Math.round(canvas.getWidth() * 
-				(1 - Config.lifeBarWidthRatio) - Config.progressBarPadding),
-				Config.progressBarPadding);
+			return new Point(OpLBX, LBY);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.lifeBarWidthRatio;
@@ -236,10 +242,7 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
-			return new Point(
-				Math.round(canvas.getWidth() * 
-				(1 - Config.energyBarWidthRatio) - Config.progressBarPadding),
-				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+			return new Point(OpLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.energyBarWidthRatio;
