@@ -66,6 +66,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 					SoundCollection.play('player', 'kick');
 					SoundCollection.play('opponent', 'hit');
 				} else {
+					SoundCollection.play('player', 'comboKick');
 					SoundCollection.play('common', 'miss');
 				}
 			}
@@ -81,6 +82,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 					SoundCollection.play('player', 'punch');
 					SoundCollection.play('opponent', 'hit');
 				} else {
+					SoundCollection.play('player', 'comboPunch');
 					SoundCollection.play('common', 'miss');
 				}
 			}	

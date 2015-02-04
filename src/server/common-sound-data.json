@@ -1,5 +1,6 @@
 {
 	"jump": 1,
 	"land": 1,
-	"miss": 3
+	"miss": 3,
+	"victory": 1
 }
