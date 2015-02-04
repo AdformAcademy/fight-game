@@ -168,7 +168,7 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 	var z = player.getZ();
 	var oz = opponent.getZ();
 
-	if (z > oz) {
+	if (z < oz || !player.isPunched()) {
 		player.setDepth(0);
 		opponent.setDepth(1);
 	} else {
