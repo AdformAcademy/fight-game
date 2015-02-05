@@ -7,6 +7,7 @@ var ChooseWaitingScreen;
 var Background;
 var socket = io();
 var obj;
+var Config;
 
 function EndScreen(status) {
 	App = require('../../app');
@@ -15,8 +16,10 @@ function EndScreen(status) {
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	ChooseWaitingScreen = require('./choose-waiting');
+	InputCollection = require('../input-collection');
 	Background = require('../canvas/background');	
-
+	Config = require('../config');
+	
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
@@ -69,7 +72,16 @@ function EndScreen(status) {
 	});
 };
 
+EndScreen.prototype.handleControls = function () {
+	var control = InputCollection;
+	var keys = Config.keyBindings;
+	if(control.isPressed(keys.ENTER)) {
+		this.startButton.executeClick();
+	}
+}
+
 EndScreen.prototype.graphics = function() {
+	obj.handleControls();
 	obj.backgroundImage.draw();
 	obj.startButton.drawButton();
 	obj.endText.draw();

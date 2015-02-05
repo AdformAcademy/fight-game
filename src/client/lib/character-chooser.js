@@ -6,7 +6,8 @@ var Button = require('./canvas/button');
 var SpriteSheet = require('./canvas/spritesheet');
 var Point = require('../../common/point')
 var socket = io();
-
+var Config = require('./config');
+var EventCollection = require('./event-collection');
 var CharacterChooser = {};
 
 CharacterChooser.isRunning = false;
@@ -44,22 +45,24 @@ CharacterChooser.choose = function (id) {
 
 CharacterChooser.handleControls = function () {
 	var control = InputCollection;
+	var keys = Config.keyBindings;
 	var oldActiveButton = CharacterChooser.activeButton;
-	if (control.isPressed(39)) {
+	if (control.isPressed(keys.RIGHT)|| (control.isPressed(keys.RIGHT_ARROW))) {
 		CharacterChooser.activeButton++;
 		if (CharacterChooser.activeButton + 1 > CharacterChooser.buttons.length) {
 			CharacterChooser.activeButton = 0;
 		}
 	}
-	else if (control.isPressed(37)) {
+	else if (control.isPressed(keys.LEFT) || (control.isPressed(keys.LEFT_ARROW))) {
 		CharacterChooser.activeButton--;
 		if (CharacterChooser.activeButton < 0) {
 			CharacterChooser.activeButton = CharacterChooser.buttons.length - 1;
 		}
-	} else if (control.isPressed(38) || (control.isPressed(40))) {
+	} else if	(control.isPressed(keys.JUMP) 	|| control.isPressed(keys.UP_ARROW) ||
+				 control.isPressed(keys.DEFEND)	|| control.isPressed(keys.DOWN_ARROW)) {
 		CharacterChooser.activeButton += CharacterChooser.buttons.length / 2;
 		CharacterChooser.activeButton %= CharacterChooser.buttons.length;
-	} else if (control.isPressed(13)) {
+	} else if (control.isPressed(keys.ENTER)) {
 		var button = CharacterChooser.buttons[CharacterChooser.activeButton];
 		var id = button.getId();
 		CharacterChooser.choose(id);
@@ -106,6 +109,26 @@ CharacterChooser.createButtons = function (data) {
 			height: height
 		});
 
+		button.mouseOver(function() {
+			var oldActiveButton = CharacterChooser.activeButton;
+			CharacterChooser.activeButton = this.id - 1;
+			if (oldActiveButton !== CharacterChooser.activeButton) {
+				CharacterChooser.resetUnactiveButton(oldActiveButton);
+			}
+		});
+
+		button.onClick(function() {
+			var btn = CharacterChooser.buttons[CharacterChooser.activeButton];
+			var id = btn.getId();
+			for (var i = 0; i < CharacterChooser.buttons.length; i++) {
+				EventCollection.removeOnClickObject(CharacterChooser.buttons[i]);
+				EventCollection.removeMouseOverObject(CharacterChooser.buttons[i]);
+			}
+			CharacterChooser.choose(id);
+		})
+
+		EventCollection.addMouseOverObject(button);
+		EventCollection.addOnClickObject(button);
 		buttons.push(button);
 
 		shiftX += width;

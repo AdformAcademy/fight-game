@@ -152,11 +152,19 @@ Button.prototype.drawButton = function() {
 Button.prototype.pointIntersects = function(location) {
 	var loc = typeof this.location === 'function' ? this.location() : this.location;
 	if (this.visible) {
+		var buttonWidth, buttonHeight;
+		if(this.useSpriteSheet) {
+			buttonWidth = this.width;
+			buttonHeight = this.height;
+		} else {
+			buttonWidth = this.activeImage.width;
+			buttonHeight = this.activeImage.height;
+		}
 		var canvasLocation = Utilities.toCanvasLocation(location);
 		var xIntersects = canvasLocation.getX() >= loc.getX() && 
-		canvasLocation.getX() <= loc.getX() + this.activeImage.width;
+		canvasLocation.getX() <= loc.getX() + buttonWidth;
 		var yIntersects = canvasLocation.getY() >= loc.getY() &&
-		canvasLocation.getY() <= loc.getY() + this.activeImage.height;
+		canvasLocation.getY() <= loc.getY() + buttonHeight;
 		return xIntersects && yIntersects;
 	}
 	return false;
