@@ -2,18 +2,18 @@
 	"id": 4,
 	"lives": 100,
 	"damage": {
-		"punch": 3,
-		"kick": 5,
-		"punchCombo": 15,
+		"punch": 5,
+		"kick": 8,
+		"punchCombo": 18,
 		"kickCombo": 20
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 5,
-		"kick": 10,
+		"punch": 10,
+		"kick": 15,
 		"punchCombo": 60,
-		"kickCombo": 80,
-		"jump": 10
+		"kickCombo": 70,
+		"jump": 20
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "4WylerSmallIntro.png",
