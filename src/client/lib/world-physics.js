@@ -217,11 +217,13 @@ WorldPhysics.prototype.updateViewport = function () {
 	var x = player.getX();
 	var opx = opponent.getX();
 
-	if (x < opx) {
-		this.animateViewportChange(320);
-	}
-	else {
-		this.animateViewportChange(0);
+	if (this.camera.isFollowing()) {
+		if (x < opx) {
+			this.animateViewportChange(320);
+		}
+		else {
+			this.animateViewportChange(0);
+		}
 	}
 };
 
@@ -233,19 +235,19 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 	this.animating = true;
 	var self = this;
 	var camera = this.camera;
-	var currentPadding = this.camera.getPadding();
+	var currentAlign = this.camera.getObjectAlign();
 	var currentAmount = amount;
-	var addition = currentAmount > currentPadding ? 10 : -10;
+	var addition = currentAmount > currentAlign ? 10 : -10;
 	var animate = setInterval(function () {
-		currentPadding += addition;
-		if (currentAmount > currentPadding && addition < 0 
-				|| currentAmount < currentPadding && addition > 0) {
-			currentPadding = currentAmount;
+		currentAlign += addition;
+		if (currentAmount > currentAlign && addition < 0 
+				|| currentAmount < currentAlign && addition > 0) {
+			currentAlign = currentAmount;
 		}
 
-		camera.setPadding(currentPadding);
+		camera.setObjectAlign(currentAlign);
 
-		if (currentPadding === currentAmount) {
+		if (currentAlign === currentAmount) {
 			clearInterval(animate);
 			self.animating = false;
 		}

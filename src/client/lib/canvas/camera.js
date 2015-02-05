@@ -12,7 +12,7 @@ var Camera = function (params) {
     this.yView = params.yView || 0;
     this.xDeadZone = 0;
     this.yDeadZone = 0;
-    this.xPadding = 0;
+    this.align = 0;
     this.wView = params.canvasWidth;
     this.hView = params.canvasHeight;          
     this.axis = params.axis || AXIS.BOTH;  
@@ -22,22 +22,22 @@ var Camera = function (params) {
     this.worldRect = params.worldRect;
 }
 
-Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, xPadding) {
+Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, align) {
     var self = this;   
     this.followed = gameObject; 
     this.yDeadZone = yDeadZone;
-    this.xPadding = xPadding;
+    this.align = align;
     this.xDeadZone = function () {
-        return xDeadZone + self.xPadding;
+        return xDeadZone + self.align;
     };
 };                 
 
-Camera.prototype.setPadding = function (xPadding) {
-    this.xPadding = xPadding;
+Camera.prototype.setObjectAlign = function (align) {
+    this.align = align;
 };
 
-Camera.prototype.getPadding = function () {
-    return this.xPadding;
+Camera.prototype.getObjectAlign = function () {
+    return this.align;
 };
 
 Camera.prototype.isFollowing = function () {
@@ -49,10 +49,10 @@ Camera.prototype.update = function () {
         this.following = true;
         var xDeadZone = this.xDeadZone();  
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
-            if(this.followed.getX() + this.xPadding - this.xView + xDeadZone >= this.wView) {
+            if(this.followed.getX() + this.align - this.xView + xDeadZone >= this.wView) {
                 this.xView = this.followed.getX() - (this.wView - xDeadZone);
-            } else if (this.followed.getX() + this.xPadding - xDeadZone < this.xView) {
-                this.xView = this.followed.getX() + (this.xPadding * 2) - xDeadZone;
+            } else if (this.followed.getX() + this.align - xDeadZone < this.xView) {
+                this.xView = this.followed.getX() + (this.align * 2) - xDeadZone;
             }
         }
         if(this.axis == AXIS.VERTICAL || this.axis == AXIS.BOTH) {
