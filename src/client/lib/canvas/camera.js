@@ -22,12 +22,23 @@ var Camera = function (params) {
     this.worldRect = params.worldRect;
 }
 
-Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, xPadding) {       
+Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, xPadding) {
+    var self = this;   
     this.followed = gameObject; 
-    this.xDeadZone = xDeadZone + xPadding;
     this.yDeadZone = yDeadZone;
     this.xPadding = xPadding;
+    this.xDeadZone = function () {
+        return xDeadZone + self.xPadding;
+    };
 };                 
+
+Camera.prototype.setPadding = function (xPadding) {
+    this.xPadding = xPadding;
+};
+
+Camera.prototype.getPadding = function () {
+    return this.xPadding;
+};
 
 Camera.prototype.isFollowing = function () {
     return this.following;
@@ -35,12 +46,13 @@ Camera.prototype.isFollowing = function () {
 
 Camera.prototype.update = function () {
     if(this.followed !== null) {
-        this.following = true;    
+        this.following = true;
+        var xDeadZone = this.xDeadZone();  
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
-            if(this.followed.getX() + this.xPadding - this.xView + this.xDeadZone >= this.wView) {
-                this.xView = this.followed.getX() - (this.wView - this.xDeadZone);
-            } else if (this.followed.getX() + this.xPadding - this.xDeadZone < this.xView) {
-                this.xView = this.followed.getX() + (this.xPadding * 2) - this.xDeadZone;
+            if(this.followed.getX() + this.xPadding - this.xView + xDeadZone >= this.wView) {
+                this.xView = this.followed.getX() - (this.wView - xDeadZone);
+            } else if (this.followed.getX() + this.xPadding - xDeadZone < this.xView) {
+                this.xView = this.followed.getX() + (this.xPadding * 2) - xDeadZone;
             }
         }
         if(this.axis == AXIS.VERTICAL || this.axis == AXIS.BOTH) {
@@ -70,11 +82,11 @@ Camera.prototype.update = function () {
 };
 
 Camera.prototype.leftCollision = function (player, playerWidth) {
-    return this.xView <= player.getX() + (playerWidth / 2) + this.xPadding;
+    return this.xView <= player.getX() + playerWidth * 5;
 };
 
 Camera.prototype.rightCollision = function (player, playerWidth) {
-    return this.xView + this.wView >= player.getX() + (playerWidth / 2) + this.xPadding;
+    return this.xView + this.wView >= player.getX() + playerWidth * 5;
 };
 
 module.exports = Camera;

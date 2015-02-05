@@ -267,7 +267,7 @@ Client.initializeGame = function (data) {
 		worldRect: Client.world
 	});
 
-	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2, 160);
+	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2, 0);
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
@@ -293,7 +293,8 @@ Client.initializeGame = function (data) {
 		player: App.player,
 		opponent: App.opponent,
 		world: Client.world,
-		parallax: Client.parallax
+		parallax: Client.parallax,
+		camera: Client.camera
 	});
 
 	App.screen.dispose();
@@ -314,6 +315,7 @@ Client.update = function() {
 	App.opponent.update();
 	physics.flipPlayerSpritesheets();
 	physics.updatePlayersDepth();
+	physics.updateViewport();
 	Client.camera.update();
 };
 

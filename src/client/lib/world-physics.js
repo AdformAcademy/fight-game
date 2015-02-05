@@ -6,6 +6,9 @@ var WorldPhysics = function(params) {
 	this.opponent = params.opponent;
 	this.world = params.world;
 	this.parallax = params.parallax;
+	this.camera = params.camera;
+	this.animating = false;
+	this.oldAnimatingValue = -1;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -206,6 +209,48 @@ WorldPhysics.prototype.applyParallax = function (packet) {
 			this.parallax.moveLeft();
 		}
 	}
+};
+
+WorldPhysics.prototype.updateViewport = function () {
+	var player = this.player;
+	var opponent = this.opponent;
+	var x = player.getX();
+	var opx = opponent.getX();
+
+	if (x < opx) {
+		this.animateViewportChange(320);
+	}
+	else {
+		this.animateViewportChange(0);
+	}
+};
+
+WorldPhysics.prototype.animateViewportChange = function (amount) {
+	if (this.animating || this.oldAnimatingValue === amount) {
+		return;
+	}
+	this.oldAnimatingValue = amount;
+	this.animating = true;
+	var self = this;
+	var camera = this.camera;
+	var currentPadding = this.camera.getPadding();
+	var currentAmount = amount;
+	var addition = currentAmount > currentPadding ? 10 : -10;
+	var animate = setInterval(function () {
+		console.log(currentPadding);
+		currentPadding += addition;
+		if (currentAmount > currentPadding && addition < 0 
+				|| currentAmount < currentPadding && addition > 0) {
+			currentPadding = currentAmount;
+		}
+
+		camera.setPadding(currentPadding);
+
+		if (currentPadding === currentAmount) {
+			clearInterval(animate);
+			self.animating = false;
+		}
+	}, 1000 / 30);
 };
 
 module.exports = WorldPhysics;
