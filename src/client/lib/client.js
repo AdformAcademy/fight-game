@@ -178,15 +178,6 @@ Client.initializeGame = function (data) {
 	var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
 	var LBY = Config.progressBarPadding;
 
-	if(data.player.x < data.opponent.x){
-		var PLBX = Config.progressBarPadding;
-		var OpLBX = Math.round(canvas.getWidth() * (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
-	}
-	else{
-		var PLBX = Math.round(canvas.getWidth() * (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
-		var OpLBX = Config.progressBarPadding;
-	}
-
 	App.player = new Player({
 		location: data.player.x,
 		z: data.player.y,
@@ -197,6 +188,13 @@ Client.initializeGame = function (data) {
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
+				if(data.player.x < data.opponent.x){
+					var PLBX = Config.progressBarPadding;
+				}
+				else{
+					var PLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+				}
 				return new Point(PLBX, LBY);
 			},
 			width: function () {
@@ -210,6 +208,13 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
+				if(data.player.x < data.opponent.x){
+					var PLBX = Config.progressBarPadding;
+				}
+				else{
+					var PLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.energyBarWidthRatio) - Config.progressBarPadding);
+				}
 				return new Point(PLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
@@ -233,7 +238,14 @@ Client.initializeGame = function (data) {
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
-			return new Point(OpLBX, LBY);
+				if(data.player.x < data.opponent.x) {
+					var OpLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+				}
+				else {
+					var OpLBX = Config.progressBarPadding;
+				}
+				return new Point(OpLBX, LBY);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.lifeBarWidthRatio;
@@ -246,7 +258,14 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
-			return new Point(OpLBX, LBY * 2 + Config.lifeBarHeight);
+				if(data.player.x < data.opponent.x) {
+					var OpLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.energyBarWidthRatio) - Config.progressBarPadding);
+				}
+				else {
+					var OpLBX = Config.progressBarPadding;
+				}
+				return new Point(OpLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
 				return canvas.getWidth() * Config.energyBarWidthRatio;
