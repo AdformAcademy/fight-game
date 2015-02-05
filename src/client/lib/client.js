@@ -267,13 +267,14 @@ Client.initializeGame = function (data) {
 		worldRect: Client.world
 	});
 
-	Client.camera.follow(App.player, canvas.getWidth() / 2 + 160, canvas.getHeight() / 2);
+	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2, 160);
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
 		opponent: App.opponent,
 		world: Client.world,
-		parallax: Client.parallax
+		parallax: Client.parallax,
+		camera: Client.camera
 	});
 
 	var parallax = new Parallax(Client.camera);

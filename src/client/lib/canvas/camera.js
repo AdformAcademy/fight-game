@@ -12,6 +12,7 @@ var Camera = function (params) {
     this.yView = params.yView || 0;
     this.xDeadZone = 0;
     this.yDeadZone = 0;
+    this.xPadding = 0;
     this.wView = params.canvasWidth;
     this.hView = params.canvasHeight;          
     this.axis = params.axis || AXIS.BOTH;  
@@ -21,10 +22,11 @@ var Camera = function (params) {
     this.worldRect = params.worldRect;
 }
 
-Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone) {       
+Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, xPadding) {       
     this.followed = gameObject; 
-    this.xDeadZone = xDeadZone;
+    this.xDeadZone = xDeadZone + xPadding;
     this.yDeadZone = yDeadZone;
+    this.xPadding = xPadding;
 };                 
 
 Camera.prototype.isFollowing = function () {
@@ -35,10 +37,10 @@ Camera.prototype.update = function () {
     if(this.followed !== null) {
         this.following = true;    
         if(this.axis == AXIS.HORIZONTAL || this.axis == AXIS.BOTH) {
-            if(this.followed.getX() + 160 - this.xView  + this.xDeadZone >= this.wView) {
+            if(this.followed.getX() + this.xPadding - this.xView + this.xDeadZone >= this.wView) {
                 this.xView = this.followed.getX() - (this.wView - this.xDeadZone);
-            } else if (this.followed.getX() + 160 - this.xDeadZone < this.xView) {
-                this.xView = this.followed.getX() + 320 - this.xDeadZone;
+            } else if (this.followed.getX() + this.xPadding - this.xDeadZone < this.xView) {
+                this.xView = this.followed.getX() + (this.xPadding * 2) - this.xDeadZone;
             }
         }
         if(this.axis == AXIS.VERTICAL || this.axis == AXIS.BOTH) {
@@ -65,6 +67,14 @@ Camera.prototype.update = function () {
         }
         this.following = false;
     }
+};
+
+Camera.prototype.leftCollision = function (player, playerWidth) {
+    return this.xView <= player.getX() + (playerWidth / 2) + this.xPadding;
+};
+
+Camera.prototype.rightCollision = function (player, playerWidth) {
+    return this.xView + this.wView >= player.getX() + (playerWidth / 2) + this.xPadding;
 };
 
 module.exports = Camera;

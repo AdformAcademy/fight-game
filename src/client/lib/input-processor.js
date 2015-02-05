@@ -8,6 +8,7 @@ var InputProcessor = function (params) {
 	this.opponent = params.opponent;
 	this.canvas = App.canvasObj;
 	this.world = params.world;
+	this.camera = params.camera;
 	this.inputCounter = 0;
 };
 
@@ -33,16 +34,19 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var opponent = this.opponent;
 	var x = player.getX();
 	var size = Config.playerSize;
+	var camera = this.camera;
 
 	if (control.isDown(keys.RIGHT)) {
 		if (x < this.world.width - 185 
-				&& Collisions.checkRightCollision(player, opponent, size)) {
+				&& Collisions.checkRightCollision(player, opponent, size)
+				&& camera.leftCollision(opponent, size)) {
 			input.key = keys.RIGHT;
 		}
 	}
 	else if (control.isDown(keys.LEFT)) {
 		if (x > this.world.left - 135 
-				&& Collisions.checkLeftCollision(player, opponent, size)) {
+				&& Collisions.checkLeftCollision(player, opponent, size)
+				&& camera.rightCollision(opponent, size)) {
 			input.key = keys.LEFT;
 		}
 	}
