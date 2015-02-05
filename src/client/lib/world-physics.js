@@ -237,7 +237,6 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 	var currentAmount = amount;
 	var addition = currentAmount > currentPadding ? 10 : -10;
 	var animate = setInterval(function () {
-		console.log(currentPadding);
 		currentPadding += addition;
 		if (currentAmount > currentPadding && addition < 0 
 				|| currentAmount < currentPadding && addition > 0) {
