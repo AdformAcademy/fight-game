@@ -1,19 +1,23 @@
 var App;
 
-var Pattern = function (location, speed, image) {
+var Pattern = function (y, speed, image) {
 	App = require('../../app');
-	this.location = location;
+	this.y = y;
+	this.x = 0;
 	this.speed = speed;
 	this.image = new Image();
 	this.image.src = image;
 };
 
-Pattern.prototype.getLocation = function() {
-	return this.location;
+Pattern.prototype.getY = function() {
+	return this.y();
 };
 
-Pattern.prototype.setLocation = function(location) {
-	this.location = location;
+Pattern.prototype.setY = function(y) {
+	if (typeof y !== 'function') {
+		return;
+	}
+	this.y = y;
 };
 
 Pattern.prototype.getSpeed = function() {
@@ -25,18 +29,17 @@ Pattern.prototype.setSpeed = function(speed) {
 };
 
 Pattern.prototype.draw = function (xView, yView) {
+	var y = this.y();
 	var canvas = App.canvasObj.canvas;
-	canvas.drawImage(this.image, this.location.getX() - xView, this.location.getY() - yView);
+	canvas.drawImage(this.image, this.x - xView, y - yView);
 };
 
 Pattern.prototype.moveLeft = function () {
-	var x = this.location.getX();
-	this.location.setX(x - this.speed);
+	this.x -= this.speed;
 };
 
 Pattern.prototype.moveRight = function () {
-	var x = this.location.getX();
-	this.location.setX(x + this.speed);
+	this.x += this.speed;
 };
 
 module.exports = Pattern;

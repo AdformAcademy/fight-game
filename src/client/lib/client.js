@@ -190,7 +190,9 @@ Client.initializeGame = function (data) {
 	App.player = new Player({
 		location: data.player.x,
 		z: data.player.y,
-		groundHeight: mapData.groundHeight,
+		groundHeight: function () {
+			return canvas.getHeight() * (mapData.groundHeight / 100);
+		},
 		spriteSheet: playerSprite,
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
@@ -224,7 +226,9 @@ Client.initializeGame = function (data) {
 	App.opponent = new Player({
 		location: data.opponent.x,
 		z: data.opponent.y,
-		groundHeight: mapData.groundHeight,
+		groundHeight: function () {
+			return canvas.getHeight() * (mapData.groundHeight / 100);
+		},
 		spriteSheet: opponentSprite,
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
@@ -280,10 +284,17 @@ Client.initializeGame = function (data) {
 	var parallax = new Parallax(Client.camera);
 
 	for (var pattern in mapData.patterns) {
-		var top = mapData.patterns[pattern].top;
+
+		var yLocation = function (pattern) {
+			return function () {
+				var top = canvas.getHeight() * (mapData.patterns[pattern].top / 100);
+				return top;
+			};
+		}(pattern);
+		
 		var speed = mapData.patterns[pattern].speed;
 		var imageLocation = './img/maps/map' + mapData.id + '/pattern' + pattern + '.png';
-		var parallaxPattern = new Pattern(new Point(0, top), speed, imageLocation);
+		var parallaxPattern = new Pattern(yLocation, speed, imageLocation);
 		parallax.addPattern(parallaxPattern);
 	}
 

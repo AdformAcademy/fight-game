@@ -6,7 +6,7 @@
 		"width": 2000,
 		"height": 1000
 	},
-	"groundHeight": 427,
+	"groundHeight": 77.6,
 	"patterns": {
 		"1": {
 			"speed": 7.1,
@@ -14,11 +14,11 @@
 		},
 		"2": {
 			"speed": 6.5,
-			"top": 280
+			"top": 50.9
 		},
 		"3": {
 			"speed": 0,
-			"top": 370
+			"top": 67.27
 		}
 	}
 }

@@ -62,7 +62,7 @@ Player.prototype.update = function() {
 
 Player.prototype.draw = function(xView, yView) {
 	var playerHeight = this.spritesheet.getSpriteSheetHeight();
-	var z = this.groundHeight - playerHeight;
+	var z = this.groundHeight() - playerHeight;
 	this.spritesheet.draw(this.getX() - xView, (z + this.getZ()) - yView);
 };
 
