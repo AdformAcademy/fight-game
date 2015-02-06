@@ -7,6 +7,7 @@ var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
 var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
+var SoundCollection = require('./sound-collection');
 var WorldPhysics = require('./world-physics');
 var CountDownScreen = require('./screen/count-down');
 var Rectangle = require('./canvas/rectangle');
@@ -92,9 +93,11 @@ Client.processServerData = function() {
     	var opponentLifeBar = App.opponent.getLifeBar();
     	var playerEnergyBar = App.player.getEnergyBar();
     	var opponentEnergyBar = App.opponent.getEnergyBar();
+    	var sounds = state.player.sounds;
 
     	physics.applyCoordinates(App.player, x, null);
-    	
+    	SoundCollection.playServerSounds(sounds);
+
     	if (ppunched) {
     		playerLifeBar.store(state.player.lives);
     	}
@@ -165,6 +168,9 @@ Client.initializeGame = function (data) {
 
 	var opponentSpriteImage = new Image();
 	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+
+	SoundCollection.clear();
+	SoundCollection.load(data.soundsData, data.player.data, data.opponent.data);
 
 	var buildSprite = function(image, spriteSheetData) {
 		return new SpriteSheet({

@@ -8,6 +8,7 @@ var Background;
 var socket = io();
 var obj;
 var Config;
+var SoundCollection;
 
 function EndScreen(status) {
 	App = require('../../app');
@@ -19,6 +20,7 @@ function EndScreen(status) {
 	InputCollection = require('../input-collection');
 	Background = require('../canvas/background');	
 	Config = require('../config');
+	SoundCollection = require('../sound-collection');
 	
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button({
@@ -31,10 +33,13 @@ function EndScreen(status) {
 		}
 	});
 	this.endText = new Text(status + '!', 50);
-	if(status == "Victory")
+	if(status == "Victory") {
+		SoundCollection.play('common', 'victory');
 		this.endText.setColor('#00C800');
-	else
+	} else {
+		SoundCollection.play('player', 'death');
 		this.endText.setColor('#C80000');
+	}
 	this.endText.setFontType('Arial');
 	this.challengeText = new Text('Would you like to try again?', 30);
 	this.challengeText.setColor('#cbcbcb');

@@ -155,5 +155,14 @@
 			}
 		},
 		"defaultAnimation": "standAnimation"
+	},
+	"sounds": {
+		"kick": 2,
+		"punch": 2,
+		"comboKick": 1,
+		"comboPunch": 1,
+		"jump": 1,
+		"hit": 3,
+		"death": 1
 	}
 }

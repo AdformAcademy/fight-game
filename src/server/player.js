@@ -17,6 +17,7 @@ var Player = function (params) {
   this.energy = params.characterData.maxEnergy / 2;
   this.characterId = params.characterId || 1;
   this.map = params.map;
+  this.sounds = [];
 };
 
 Player.prototype = new BasePlayer();
@@ -109,6 +110,21 @@ Player.prototype.getMap = function () {
 Player.prototype.setMap = function (map) {
   this.map = map;
 };
+
+Player.prototype.storeSound = function(packet, sound) {
+  this.sounds.push({
+    packet: packet,
+    sound: sound
+  });
+};
+
+Player.prototype.clearSounds = function() {
+  this.sounds = [];
+}
+
+Player.prototype.getSounds = function () {
+  return this.sounds;
+}
 
 Player.prototype.toPacket = function() {
   return {
