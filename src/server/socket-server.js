@@ -43,13 +43,9 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			defeated: opponent.isDefeated(),
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
 			lives: opponent.getLives(),
-			energy: opponent.getEnergy(),
-			sounds: opponent.getSounds()
+			energy: opponent.getEnergy()
 		}
 	};
-
-	opponent.clearSounds();
-
 	return data;
 };
 
@@ -327,9 +323,9 @@ SocketServer.executeInput = function(player, input) {
 					player.setHiting(true);
 					var hit = SocketServer.hit(player, "kickCombo", 600, 80, 15, 60);
 					if (hit === 0) {
+						opponent.storeSound('opponent', 'comboKick');
 						opponent.storeSound('common', 'miss');
-					}
-					else {
+					} else {
 						opponent.storeSound('opponent', 'comboKick');
 						opponent.storeSound('opponent', 'kick');
 						opponent.storeSound('player', 'hit');
@@ -348,6 +344,7 @@ SocketServer.executeInput = function(player, input) {
 					player.setHiting(true);
 					var hit = SocketServer.hit(player, "punchCombo",800, 65, 0, 60);
 					if (hit === 0) {
+						opponent.storeSound('opponent', 'comboPunch');
 						opponent.storeSound('common', 'miss');
 					} else {
 						opponent.storeSound('opponent', 'comboPunch');
@@ -546,6 +543,7 @@ SocketServer.updateWorld = function() {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 				var data = SocketServer.prepareSocketData(player, opponent);	
 				session.socket.emit('update', data);
+				player.clearSounds();
 				SocketServer.proccessedInputs[opponent.getID()] = [];
 				if(player.isVictor()){
 					SocketServer.disconnectClient(session.socket, "Victory");
