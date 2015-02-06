@@ -72,7 +72,7 @@ SocketServer.prepareClient = function (socket, selection) {
 				fs.readFileSync(Config.charactersPath + 
 					'character' + opponentSelection + '.json', 'utf8'));
 
-			var randomMap = Math.floor(Math.random() * 2) + 1;
+			var randomMap = Math.floor(Math.random() * 3) + 1;
 			var mapData = JSON.parse(
 				fs.readFileSync('src/server/maps/map' + randomMap +'.json', 'utf8'));
 			var commonSoundsData = JSON.parse(
