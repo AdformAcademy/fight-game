@@ -58,10 +58,10 @@ SoundCollection.load = function (soundsData, playerData, opponentData) {
 };
 
 SoundCollection.play = function (sounds, action) {
-	var sounds = SoundCollection.sounds[sounds][action];
-	var index = Math.floor(Math.random() * sounds.length);
-	if(sounds[index] !== undefined) {
-		sounds[index].play();
+	var soundsPack = SoundCollection.sounds[sounds][action];
+	var index = Math.floor(Math.random() * soundsPack.length);
+	if(soundsPack[index] !== undefined) {
+		soundsPack[index].play();
 	}
 };
 

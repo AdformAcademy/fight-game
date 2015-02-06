@@ -9,6 +9,7 @@ var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
 var Rectangle = require('../../../src/client/lib/canvas/rectangle.js');
 var Camera = require('../../../src/client/lib/canvas/camera.js');
 var App = require('../../../src/client/app.js');
+var SoundCollection = require('../../../src/client/lib/sound-collection.js');
 
 describe('InputProcessor', function () {
 
@@ -91,6 +92,32 @@ describe('InputProcessor', function () {
 			hit: function () {},
 			jump: function () {}
 		}
+		SoundCollection.sounds = {
+			common: {
+				miss: [],
+				jump: [],
+				land: [],
+				victory: []
+			},
+			player: {
+				punch: [],
+				comboPunch: [],
+				kick: [],
+				comboKick: [],
+				jump: [],
+				hit: [],
+				death: []
+			},
+			opponent: {
+				punch: [],
+				comboPunch: [],
+				kick: [],
+				comboKick: [],
+				jump: [],
+				hit: [],
+				death: []
+			}
+		};
 	});
 
 	it('should create blank input', function () {
