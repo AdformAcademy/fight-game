@@ -2,18 +2,18 @@
 	"id": 6,
 	"lives": 100,
 	"damage": {
-		"punch": 3,
-		"kick": 5,
+		"punch": 4,
+		"kick": 4,
 		"punchCombo": 15,
-		"kickCombo": 20
+		"kickCombo": 17
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 5,
-		"kick": 10,
-		"punchCombo": 60,
-		"kickCombo": 80,
-		"jump": 10
+		"punch": 7,
+		"kick": 8,
+		"punchCombo": 50,
+		"kickCombo": 55,
+		"jump": 8
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "6JinSmallIntro.png",
@@ -74,7 +74,7 @@
 				"startFrame": 29,
 				"frames": 7,
 				"speed": 0.8,
-				"order": "asc"
+				"order": "desc"
 			},
 			"punchAnimation2": {
 				"name": "punchAnimation2",

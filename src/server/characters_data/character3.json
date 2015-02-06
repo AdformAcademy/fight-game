@@ -2,18 +2,18 @@
 	"id": 3,
 	"lives": 100,
 	"damage": {
-		"punch": 3,
+		"punch": 4,
 		"kick": 5,
-		"punchCombo": 15,
-		"kickCombo": 20
+		"punchCombo": 13,
+		"kickCombo": 16
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 5,
-		"kick": 10,
-		"punchCombo": 60,
-		"kickCombo": 80,
-		"jump": 10
+		"punch": 6,
+		"kick": 8,
+		"punchCombo": 45,
+		"kickCombo": 55,
+		"jump": 12
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "3RyoSmallIntro.png",
