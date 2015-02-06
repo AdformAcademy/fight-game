@@ -62,7 +62,6 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	
 	if(!player.isJumping() && !player.isDefending()) {
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
-			console.log('kick combo');
 			player.setUsingCombo(true);
 			player.setHiting(true);
 			var hit = physics.hit(600, 80, 15, 60);
@@ -77,7 +76,6 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				}
 			}
 		if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
-			console.log('punch combo');
 			player.setUsingCombo(true);
 			player.setHiting(true);
 			var hit = physics.hit(800, 65, 0, 60);
@@ -92,7 +90,6 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				}
 		}	
 		else if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
-			console.log('simple punch');
 				var hit = physics.hit(300, 65, 5, 60);
 			player.setHiting(true);
 			input.punchKey = true;
@@ -105,7 +102,6 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				}
 		}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
-			console.log('simple kick');
 			player.setHiting(true);
 				var hit = physics.hit(400, 80, 10, 60);
 			input.kickKey = true;
@@ -119,7 +115,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 		}
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
-		console.log("jumping and punching");
+
 		player.setHiting(true);
 		var hit = physics.hit(780, 65, 5, 120);
 		input.punchKey = true;
@@ -132,7 +128,6 @@ InputProcessor.prototype.processComboInputs = function (input) {
 		}
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping()) {
-		console.log("jumping and kicking");
 		player.setHiting(true);
 		var hit = physics.hit(780, 80, 10, 120);
 		input.kickKey = true;
@@ -156,7 +151,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump')) {
+	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump') && !player.isDefending()) {
 		if(!player.isJumping()) {
 			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
