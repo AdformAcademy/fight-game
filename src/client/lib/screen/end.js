@@ -37,7 +37,9 @@ function EndScreen(status) {
 		SoundCollection.play('common', 'victory');
 		this.endText.setColor('#00C800');
 	} else {
-		SoundCollection.play('player', 'death');
+		if(status == "Defeat") {
+			SoundCollection.play('player', 'death');
+		}
 		this.endText.setColor('#C80000');
 	}
 	this.endText.setFontType('Arial');
