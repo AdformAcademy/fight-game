@@ -27,10 +27,6 @@ describe('Config', function () {
 		expect(Config.keyBindings).toBeDefined();
 	});
 	
-	it('should be defined \'canvasUpdateInterval\'', function() {
-		expect(Config.canvasUpdateInterval).toBeDefined();
-	});
-	
 	it('should be defined \'canvasMaskColor\'', function() {
 		expect(Config.canvasMaskColor).toBeDefined();
 	});

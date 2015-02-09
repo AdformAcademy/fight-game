@@ -88,7 +88,6 @@ CharacterChooser.preview = function (id) {
 
 CharacterChooser.loadChosenCharacter = function (id) {
 	var spriteSheetData = CharacterChooser.data['character' + id + '.json'].spriteSheetData;
-	console.log(spriteSheetData);
 	var canvas = App.canvasObj;
 	var image = new Image();
 	var screen = App.screen;
