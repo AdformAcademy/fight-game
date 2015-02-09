@@ -1,3 +1,5 @@
+var Config = require('./config');
+
 var SoundCollection = {};
 
 SoundCollection.sounds = {
@@ -15,7 +17,7 @@ SoundCollection.loadCommonSounds = function (soundsData) {
 		}
 		for (var i = 0; i < soundsData[action]; i++) {
 			sound = new Audio();
-			sound.src = './audio/common/' + action + '/' + i + '.wav'; 
+			sound.src = Config.commonSoundsPath + action + '/' + i + '.wav'; 
 			commonSounds[action].push(sound);
 		}
 	}
@@ -30,7 +32,7 @@ SoundCollection.loadPlayerSounds = function (data) {
 		}
 		for(var i = 0; i < data.sounds[action]; i++) {
 			sound = new Audio();
-			sound.src = './audio/character' + data.id + '/' + action + '/' + i + '.wav';
+			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.wav';
 			playerSounds[action].push(sound);
 		}
 	}
@@ -45,7 +47,7 @@ SoundCollection.loadOpponentSounds = function (data) {
 		}
 		for(var i = 0; i < data.sounds[action]; i++) {
 			sound = new Audio();
-			sound.src = './audio/character' + data.id + '/' + action + '/' + i + '.wav';
+			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.wav';
 			opponentSounds[action].push(sound);
 		}
 	}

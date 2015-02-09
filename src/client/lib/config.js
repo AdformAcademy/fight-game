@@ -17,4 +17,7 @@ Config.energyBarWidthRatio = 0.2;
 Config.lifeBarHeight = 31;
 Config.energyBarHeight = 20;
 
+Config.commonSoundsPath = './audio/common/';
+Config.characterSoundsPath = './audio/character';
+
 module.exports = Config;
