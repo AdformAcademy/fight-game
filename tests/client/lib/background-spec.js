@@ -23,6 +23,30 @@ describe('Background', function () {
 		body.empty();
 	});
 
+	it('should define getImage method', function () {
+		expect(background.getImage).toBeDefined();
+	});
+
+	it('should define setImage method', function () {
+		expect(background.setImage).toBeDefined();
+	});
+
+	it('should define isVisible method', function () {
+		expect(background.isVisible).toBeDefined();
+	});
+
+	it('should define getLocation method', function () {
+		expect(background.getLocation).toBeDefined();
+	});
+
+	it('should define setLocation method', function () {
+		expect(background.setLocation).toBeDefined();
+	});
+
+	it('should define draw method', function () {
+		expect(background.draw).toBeDefined();
+	});
+
 	it('should get default visibility value to be true', function () {
 		expect(background.isVisible()).toBe(true);
 	});
