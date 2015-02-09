@@ -21,28 +21,56 @@ describe('Text', function () {
 		text = new Text(textMock, sizeMock);
 	});
 
-	it('should be defined \'text\'', function() {
-		expect(textMock).toBeDefined();
+	it('should define getLocation method', function () {
+		expect(text.getLocation).toBeDefined();
 	});
 
-	it('should be defined \'size\'', function() {
-		expect(sizeMock).toBeDefined();
+	it('should define setLocation method', function () {
+		expect(text.setLocation).toBeDefined();
 	});
 
-	it('should be defined \'location\'', function() {
-		expect(text.location).toBeDefined();
+	it('should define getFontType method', function () {
+		expect(text.getFontType).toBeDefined();
 	});
 
-	it('should be difined \'font type\'', function() {
-		expect(text.fontType).toBeDefined();
+	it('should define setFontType method', function () {
+		expect(text.setFontType).toBeDefined();
 	});
 
-	it('should be difined \'color\'', function() {
-		expect(text.color).toBeDefined();
+	it('should define getColor method', function () {
+		expect(text.getColor).toBeDefined();
 	});
 
-	it('should be difined \'is visable\'', function() {
-		expect(text.isVisible()).toBeDefined();
+	it('should define setColor method', function () {
+		expect(text.setColor).toBeDefined();
+	});
+
+	it('should define getSize method', function () {
+		expect(text.getSize).toBeDefined();
+	});
+
+	it('should define setSize method', function () {
+		expect(text.setSize).toBeDefined();
+	});
+
+	it('should define getText method', function () {
+		expect(text.getText).toBeDefined();
+	});
+
+	it('should define setText method', function () {
+		expect(text.setText).toBeDefined();
+	});
+
+	it('should define getTextWidth method', function () {
+		expect(text.getTextWidth).toBeDefined();
+	});
+
+	it('should define isVisible method', function () {
+		expect(text.isVisible).toBeDefined();
+	});
+
+	it('should define draw method', function () {
+		expect(text.draw).toBeDefined();
 	});
 
 	it('should get default location', function() {
@@ -66,7 +94,7 @@ describe('Text', function () {
 		expect(text.getText()).toBe(textMock);
 	});
 
-	it('should get default is visable', function() {
+	it('should get default is visible', function() {
 		expect(text.isVisible()).toBe(true);
 	});
 
