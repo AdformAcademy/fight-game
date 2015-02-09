@@ -97,7 +97,7 @@ Button.prototype.getSpriteSheet = function() {
 	return this.spriteSheet;
 };
 
-Button.prototype.useSpriteSheet = function(useSpriteSheet) {
+Button.prototype.setUsingSpriteSheet = function(useSpriteSheet) {
 	this.useSpriteSheet = useSpriteSheet;
 };
 
