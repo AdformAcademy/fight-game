@@ -7,6 +7,11 @@ var Path = require('path');
 describe('SoundCollection', function () {
 
 	var soundsDataMock;
+	var AudioMock = function () {
+		this.play = function () {
+			SoundCollection.playedSound = true;
+		}
+	};
 
 	beforeEach(function () {
 		SoundCollection.sounds = {
@@ -19,9 +24,6 @@ describe('SoundCollection', function () {
 			sounds1: 1,
 			sounds2: 3
 		};
-
-		Config.commonSoundsPath = Path.resolve('../../../', Config.commonSoundsPath);
-		Config.characterSoundsPath = Path.resolve('../../../', Config.characterSoundsPath);
 	});
 
 	it('should define sounds object', function () {
@@ -68,12 +70,15 @@ describe('SoundCollection', function () {
 		expect(SoundCollection.clear).toBeDefined();
 	});
 
-	/*it('should load common sounds', function () {
-		SoundCollection.loadCommonSounds(soundsDataMock);
-		var sounds = SoundCollection.sounds.common;
-		expect(sounds.sounds1.length).toBe(1);
-		expect(sounds.sounds2.length).toBe(3);
-	});*/
+	it('should use play function', function () {
+		SoundCollection.sounds.player.mockSounds = [];
+		SoundCollection.sounds.player.mockSounds.push(new AudioMock());
+
+		SoundCollection.playedSound = false;
+
+		SoundCollection.play('player', 'mockSounds');
+		expect(SoundCollection.playedSound).toBe(true);
+	});
 
 	it('should make sound arrays empty', function () {
 		SoundCollection.sounds = {
