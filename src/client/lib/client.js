@@ -14,6 +14,7 @@ var Rectangle = require('./canvas/rectangle');
 var Camera = require('./canvas/camera');
 var Parallax = require('./canvas/parallax');
 var Pattern = require('./canvas/pattern');
+var ResourceLoader = require('./resource-loader');
 var socket = io();
 
 var Client = module.exports = {};
@@ -194,18 +195,36 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
+	var loader = new ResourceLoader(function () {
+		App.screen.dispose();
+		App.screen = new CountDownScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+	});
 	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
 	var opponentSpriteData = data.opponent.data.spriteSheetData;
 	var mapData = data.map;
+
+	var id = loader.append();
 	var playerSpriteImage = new Image();
 	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
+	playerSpriteImage.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	var opponentSpriteImage = new Image();
 	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+	opponentSpriteImage.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
 	SoundCollection.clear();
-	SoundCollection.load(data.soundsData, data.player.data, data.opponent.data);
+	SoundCollection.load(loader, data.soundsData, data.player.data, data.opponent.data);
 
 	var buildSprite = function(image, spriteSheetData) {
 		return new SpriteSheet({
@@ -228,6 +247,7 @@ Client.initializeGame = function (data) {
 		spriteSheet: playerSprite,
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
+			loader: loader,
 			location: function () {
 				if(data.player.x < data.opponent.x){
 					var PLBX = Config.progressBarPadding;
@@ -248,6 +268,7 @@ Client.initializeGame = function (data) {
 			maxValue: data.player.data.lives
 		}),
 		energyBar: new EnergyBar({
+			loader: loader,
 			location: function() {
 				if(data.player.x < data.opponent.x){
 					var PLBX = Config.progressBarPadding;
@@ -278,6 +299,7 @@ Client.initializeGame = function (data) {
 		spriteSheet: opponentSprite,
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
+			loader: loader,
 			location: function () {
 				if(data.player.x < data.opponent.x) {
 					var OpLBX = Math.round(canvas.getWidth() 
@@ -298,6 +320,7 @@ Client.initializeGame = function (data) {
 			maxValue: data.opponent.data.lives
 		}),
 		energyBar: new EnergyBar({
+			loader: loader,
 			location: function() {
 				if(data.player.x < data.opponent.x) {
 					var OpLBX = Math.round(canvas.getWidth() 
@@ -354,7 +377,7 @@ Client.initializeGame = function (data) {
 		
 		var speed = mapData.patterns[pattern].speed;
 		var imageLocation = './img/maps/map' + mapData.id + '/pattern' + pattern + '.png';
-		var parallaxPattern = new Pattern(yLocation, speed, imageLocation);
+		var parallaxPattern = new Pattern(loader, yLocation, speed, imageLocation);
 		parallax.addPattern(parallaxPattern);
 	}
 
@@ -368,9 +391,13 @@ Client.initializeGame = function (data) {
 		camera: Client.camera
 	});
 
-	App.screen.dispose();
+	App.screen.animating = false;
+	App.screen.globalAlpha = 1;
+	App.screen.waitingText.setText('Loading...');
+
+	/*App.screen.dispose();
 	App.screen = new CountDownScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);
+	App.canvasObj.setGraphics(App.screen.graphics);*/
 };
 
 Client.update = function() {

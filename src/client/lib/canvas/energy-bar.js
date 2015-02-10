@@ -1,10 +1,25 @@
 var ProgressBar = require('./progress-bar');
 
 var EnergyBar = function (params) {
+	var loader = params.loader;
+
+	var id = loader.append();
 	this.usedMaskImage = new Image();
 	this.usedMaskImage.src = './img/energy/energy.png';
+	this.usedMaskImage.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
+
+	id = loader.append();
 	this.leftMaskImage = new Image();
 	this.leftMaskImage.src = './img/energy/used.png';
+	this.leftMaskImage.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
 	this.params = {
 		location: params.location,

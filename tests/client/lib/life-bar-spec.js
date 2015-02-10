@@ -27,6 +27,10 @@ describe('LifeBar', function () {
 		point = new Point(0, 0);
 
 		paramsMock = {
+			loader: {
+				append: function () {},
+				load: function () {}
+			},
 			location: point,
 			width: 900,
 			height: 550,
