@@ -7,6 +7,7 @@ var Point = require('../common/point');
 var Collisions = require('../common/collisions');
 var Config = require('./config');
 var fs = require('fs');
+var WorldPhysics = require('./world-physics');
 
 var SocketServer = {};
 
@@ -97,6 +98,7 @@ SocketServer.prepareClient = function (socket, selection) {
 				characterId: opponentSelection,
 				map: mapData
 			});
+
 			PlayerCollection.insertPlayer(session.sessionId, player);
 			PlayerCollection.insertPlayer(targetSession.sessionId, opponent);
 
@@ -199,88 +201,6 @@ SocketServer.clearSounds = function() {
 	SocketServer.sounds = [];
 }
 
-SocketServer.updateZ = function(player) {
-	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-    var x = player.getX();
-    var z = player.getZ();
-    var opx = opponent.getX();
-    var opz = opponent.getZ();
-    var speedZ = player.getSpeedZ();
-
-    if(z < 0 || player.isJumping()) {
-		speedZ -= Config.playerAcceleration;
-		z -= speedZ;
-		if(z >= 0) {
-			z = 0;
-			speedZ = 0;
-			player.setJumping(false);
-			opponent.storeSound('common', 'land');
-		}
-	};
-	player.setZ(z);
-	player.setSpeedZ(speedZ);
-};
-
-SocketServer.hit = function (player, damage, time, size, power, heightDifference) {
-	player.useEnergy(damage);
-	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-
-	var t = 0;
-	var hit = 0;
-	var dealingDamage = false;
-	var x = player.getX();
-    var opx = opponent.getX();
-    var map = player.getMap();
-
-	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
-		hit = 1;
-		opponent.setPunched(1);
-	}
-	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
-		hit = 2;
-		opponent.setPunched(1);
-	}
-	if(hit) {
-		opponent.dealDamage(player.getDamage(damage));
-	}
-	else
-		player.useEnergy(damage);
-
-	var updateH = setInterval (function () {
-		t += 30;
-		if(t >= time) {
-			if(hit == 1){
-				if(opx < map.dimensions.width - 185){
-					opx += power;
-					opponent.setX(opx);
-					opponent.setPunched(0);
-				}
-				else{
-					x -= power;
-					player.setX(x);
-					opponent.setPunched(0);
-				}
-			}
-			else if(hit == 2){
-				if(opx > map.dimensions.left - 135){
-					opx -= power;
-					opponent.setX(opx);
-					opponent.setPunched(0);
-				}
-				else{
-					x += power;
-					player.setX(x);
-					opponent.setPunched(0);
-				}
-			}
-			player.setHiting(false);
-			clearInterval(updateH);
-		}
-	}, 1000/30);
-
-	return hit;
-};
-
 SocketServer.executeInput = function(player, input) {
 	var key = Config.keyBindings;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
@@ -292,12 +212,18 @@ SocketServer.executeInput = function(player, input) {
     var size = Config.playerSize;
     var map = player.getMap();
 
+    var physics = new WorldPhysics({
+			player: player,
+			opponent: opponent
+	});
+
     if (input.jumpKey) {
 		if(!player.isJumping() && !player.isPunched() && !player.isDefending()) {
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
 			player.setJumping(true);
 			player.useEnergy('jump');
+			physics.jump()
 		opponent.storeSound('common', 'jump');
 		opponent.storeSound('opponent', 'jump');
 		}
@@ -321,7 +247,7 @@ SocketServer.executeInput = function(player, input) {
 				if (!player.isHiting()) {
 					console.log('kick combo');
 					player.setHiting(true);
-					var hit = SocketServer.hit(player, "kickCombo", 600, 80, 15, 60);
+					var hit = WorldPhysics.hit(player, "kickCombo", 600, 80, 15, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboKick');
 						opponent.storeSound('common', 'miss');
@@ -342,7 +268,7 @@ SocketServer.executeInput = function(player, input) {
 				if (!player.isHiting()) {
 					console.log('punch combo');
 					player.setHiting(true);
-					var hit = SocketServer.hit(player, "punchCombo",800, 65, 0, 60);
+					var hit = WorldPhysics.hit(player, "punchCombo",800, 65, 0, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboPunch');
 						opponent.storeSound('common', 'miss');
@@ -362,7 +288,7 @@ SocketServer.executeInput = function(player, input) {
 			if (input.kickKey) {
 				if (!player.isHiting()) {
 					player.setHiting(true);
-				var hit = SocketServer.hit(player, "kick", 400, 80, 10, 60);
+				var hit = WorldPhysics.hit(player, "kick", 400, 80, 10, 60);
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
 				} else {
@@ -381,7 +307,7 @@ SocketServer.executeInput = function(player, input) {
 			if(input.punchKey) {
 				if (!player.isHiting()) {
 					player.setHiting(true);
-				var hit = SocketServer.hit(player, "punch", 300, 65, 5, 60);
+				var hit = WorldPhysics.hit(player, "punch", 300, 65, 5, 60);
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
 				} else {
@@ -403,7 +329,7 @@ SocketServer.executeInput = function(player, input) {
 				if (!player.isHiting()) {
 					console.log("Jumping and punching");
 					player.setHiting(true);
-					var hit = SocketServer.hit(player, "punch", 780, 65, 5, 120);
+					var hit = WorldPhysics.hit(player, "punch", 780, 65, 5, 120);
 				}
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
@@ -417,7 +343,7 @@ SocketServer.executeInput = function(player, input) {
 				if (!player.isHiting()) {
 					console.log("Jumping and kicking");
 					player.setHiting(true);
-					var hit = SocketServer.hit(player, "kick", 780, 85, 10, 120);
+					var hit = WorldPhysics.hit(player, "kick", 780, 85, 10, 120);
 				}
 			if (hit === 0) {
 				opponent.storeSound('common', 'miss');
@@ -450,10 +376,6 @@ SocketServer.executeInput = function(player, input) {
 	player.setCurrentAnimation(input.animationName);
 };
 
-SocketServer.updatePlayerPhysics = function(player) {
-	SocketServer.updateZ(player);
-};
-
 SocketServer.processPlayerInputs = function(player) {
 	var sessionId = player.getID();
 	var inputs = SocketServer.inputs[sessionId];
@@ -477,7 +399,6 @@ SocketServer.updatePlayer = function(player) {
 		player.increaseEnergy();
 
 		if (input !== undefined) {
-			SocketServer.updatePlayerPhysics(player);
 			player.setLastProcessedInput(input);
 			var packet = player.toPacket();
 			SocketServer.proccessedInputs[sessionId].push(packet);
