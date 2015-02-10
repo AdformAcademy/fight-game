@@ -2,7 +2,7 @@ var BaseConfig = require('../common/base-config');
 
 var Config = {};
 
-Config.port = 3000;
+Config.port = global.env === 'prod' ? 80 : 3000;
 Config.playerMoveSpeed = BaseConfig.playerMoveSpeed;
 Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
