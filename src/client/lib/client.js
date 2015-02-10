@@ -31,6 +31,7 @@ Client.inputProcessor = null;
 Client.camera = null;
 Client.world = null;
 Client.parallax = null;
+Client.catchingInterpolation = false;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -40,22 +41,56 @@ Client.storeServerData = function(data) {
 	Client.serverData.push(data);
 };
 
-Client.interpolate = function() {
+Client.catchUpInterpolation = function () {
+	console.log('Cathing up');
+	Client.catchingInterpolation = true;
 	var physics = App.physics;
-	var bufferSize = Client.opponentInputs.length;
 	var opponent = App.opponent;
-	if (bufferSize < 10) {
-		var input = Client.opponentInputs[0];
-		if (input !== undefined) {
-			physics.applyCoordinates(opponent, input.x, input.z);
-			opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
-			Client.opponentInputs.shift();
+	var update = setInterval(function () {	
+		var bufferSize = Client.opponentInputs.length;
+		if (bufferSize > 20) {
+			var lastInput = Client.opponentInputs[bufferSize - 1];
+			physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
+			opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
+			Client.opponentInputs = [];
+		} else {
+			var input = Client.opponentInputs[0];
+			if (input !== undefined) {
+				physics.applyCoordinates(opponent, input.x, input.z);
+				opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
+				Client.opponentInputs.shift();
+			}
 		}
-	} else {
-		var lastInput = Client.opponentInputs[bufferSize - 1];
-		physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
-		opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
-		Client.opponentInputs = [];
+		console.log(bufferSize);
+		if (Client.opponentInputs.length < 1) {
+			Client.catchingInterpolation = false;
+			console.log('END');
+			clearInterval(update);
+		}
+	}, 1000 / 35);
+};
+
+Client.interpolate = function() {
+	if (!Client.catchingInterpolation) {
+		var physics = App.physics;
+		var bufferSize = Client.opponentInputs.length;
+		var opponent = App.opponent;
+		console.log('Buffer size: ' + bufferSize);
+		if (bufferSize < 5) {
+			var input = Client.opponentInputs[0];
+			if (input !== undefined) {
+				physics.applyCoordinates(opponent, input.x, input.z);
+				opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
+				Client.opponentInputs.shift();
+			}
+		} else if (bufferSize > 20) {
+			var lastInput = Client.opponentInputs[bufferSize - 1];
+			physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
+			opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
+			Client.opponentInputs = [];
+		} else {
+			Client.catchUpInterpolation();
+		}
 	}
 };
 
