@@ -114,7 +114,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				}
 		}
 	}
-	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
+	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
 
 		player.setHiting(true);
 		var hit = physics.hit(780, 65, 5, 120);
@@ -127,7 +127,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 			SoundCollection.play('common', 'miss');
 		}
 	}
-	else if (control.isDown(keys.KICK) && player.isJumping()) {
+	else if (control.isDown(keys.KICK) && player.isJumping() && player.hasEnoughEnergy('kick')) {
 		player.setHiting(true);
 		var hit = physics.hit(780, 80, 10, 120);
 		input.kickKey = true;
@@ -153,10 +153,9 @@ InputProcessor.prototype.processActionInputs = function (input) {
 
 	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump') && !player.isDefending()) {
 		if(!player.isJumping()) {
-			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
-			player.setSpeedZ(speedZ);
 			player.setJumping(true);
+			player.setSpeedZ(Config.playerJumpSpeed);
 			physics.jump();
 		}
 	}

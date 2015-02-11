@@ -41,11 +41,14 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
-
     SoundCollection.play('common', 'jump');
-    SoundCollection.play('player', 'jump')
-
+    SoundCollection.play('player', 'jump');
+    var d = new Date();
+	var n1 = d.getTime();
+	var t = 0;
+	console.log(n1);
 	var updateZ = setInterval(function () {
+		 t += 1;
 	    var x = player.getX();
 	    var z = player.getZ();
 	    var opx = opponent.getX();
@@ -55,6 +58,13 @@ WorldPhysics.prototype.jump = function () {
 		speedZ -= Config.playerAcceleration;
 		z -= speedZ;
 		if (z > 0) {
+			var d2 = new Date();
+			var n2 = d2.getTime();
+			console.log(n2);
+			console.log('');
+			console.log(n2-n1);
+			console.log('');
+			console.log(t);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumping(false);
 			clearInterval(updateZ);
