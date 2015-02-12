@@ -91,7 +91,7 @@ CharacterChooser.loadChosenCharacter = function (id) {
 	var canvas = App.canvasObj;
 	var image = new Image();
 	var screen = App.screen;
-	image.src = './img/' + spriteSheetData.spriteSheetImage;
+	image.src = './img/characters/' + spriteSheetData.spriteSheetImage;
 	image.onload = function () {
 		var playerSprite = new SpriteSheet({
 			image: image,

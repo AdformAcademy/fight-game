@@ -208,7 +208,7 @@ Client.initializeGame = function (data) {
 
 	var id = loader.append();
 	var playerSpriteImage = new Image();
-	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
+	playerSpriteImage.src = './img/characters/' + playerSpriteData.spriteSheetImage;
 	playerSpriteImage.onload = function (id) {
 		return function () {
 			loader.load(id);
@@ -217,7 +217,7 @@ Client.initializeGame = function (data) {
 
 	id = loader.append();
 	var opponentSpriteImage = new Image();
-	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+	opponentSpriteImage.src = './img/characters/' + opponentSpriteData.spriteSheetImage;
 	opponentSpriteImage.onload = function (id) {
 		return function () {
 			loader.load(id);
