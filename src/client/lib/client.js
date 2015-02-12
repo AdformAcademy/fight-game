@@ -9,7 +9,7 @@ var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
 var SoundCollection = require('./sound-collection');
 var WorldPhysics = require('./world-physics');
-var CountDownScreen = require('./screen/count-down');
+var StageScreen = require('./screen/stage');
 var Rectangle = require('./canvas/rectangle');
 var Camera = require('./canvas/camera');
 var Parallax = require('./canvas/parallax');
@@ -33,6 +33,7 @@ Client.camera = null;
 Client.world = null;
 Client.parallax = null;
 Client.catchingInterpolation = false;
+Client.gameStarted = false;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -197,7 +198,7 @@ Client.sendServerUpdate = function (packet) {
 Client.initializeGame = function (data) {
 	var loader = new ResourceLoader(function () {
 		App.screen.dispose();
-		App.screen = new CountDownScreen();
+		App.screen = new StageScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 	});
 	var canvas = App.canvasObj;
@@ -391,26 +392,27 @@ Client.initializeGame = function (data) {
 		camera: Client.camera
 	});
 
-	App.screen.animating = false;
-	App.screen.globalAlpha = 1;
-	App.screen.waitingText.setText('Loading...');
+	App.screen.load();
+};
 
-	/*App.screen.dispose();
-	App.screen = new CountDownScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);*/
+Client.startGame = function () {
+	Client.gameStarted = true;
 };
 
 Client.update = function() {
 	var canvas = App.canvasObj;
 	var physics = App.physics;
 	Client.processServerData();
-	var packet = Client.processLocalInputs();
-	Client.sendServerUpdate(packet);
-	if (Client.interpolation) {
-		Client.interpolate();
+	if (Client.gameStarted) {
+		var packet = Client.processLocalInputs();
+		Client.sendServerUpdate(packet);
+		if (Client.interpolation) {
+			Client.interpolate();
+		}
+		App.player.update();
+		App.opponent.update();
 	}
-	App.player.update();
-	App.opponent.update();
+
 	physics.flipPlayerSpritesheets();
 	physics.updatePlayersDepth();
 	physics.updateViewport();
@@ -418,10 +420,18 @@ Client.update = function() {
 };
 
 Client.stop = function() {
-	Client.isRunning = false;
 	Client.inputs = [];
 	Client.serverData = [];
+	Client.inputCounter = 0;
+	Client.updateWorldInterval = null;
+	Client.isRunning = false;
 	Client.opponentInputs = [];
+	Client.inputProcessor = null;
+	Client.camera = null;
+	Client.world = null;
+	Client.parallax = null;
+	Client.catchingInterpolation = false;
+	Client.gameStarted = false;
 	clearInterval(Client.updateWorldInterval);
 };
 

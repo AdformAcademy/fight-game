@@ -5,7 +5,6 @@ var App = module.exports = {};
 
 App.screen = new StartScreen();
 App.canvasObj = new Canvas('#window');
-App.gameStarted = false;
 App.player = null;
 App.opponent = null;
 App.physics = null;

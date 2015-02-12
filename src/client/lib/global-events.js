@@ -49,8 +49,7 @@ socket.on('choose-character', function (data) {
 });
 
 socket.on('unactive', function() {
-	if (App.gameStarted) {
-		App.gameStarted = false;
+	if (Client.gameStarted) {
 		Client.stop();
 		App.screen.dispose();
 		App.screen = new EndScreen('Connection lost');
@@ -59,7 +58,6 @@ socket.on('unactive', function() {
 });
 
 socket.on('victory', function() {
-	App.gameStarted = false;
 	Client.stop();
 	App.screen.dispose();
 	App.screen = new EndScreen('Victory');
@@ -67,7 +65,6 @@ socket.on('victory', function() {
 });
 
 socket.on('defeat', function() {
-	App.gameStarted = false;
 	Client.stop();
 	App.screen.dispose();
 	App.screen = new EndScreen('Defeat');
