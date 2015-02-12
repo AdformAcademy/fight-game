@@ -4,15 +4,15 @@
 	"damage": {
 		"punch": 3,
 		"kick": 5,
-		"punchCombo": 15,
-		"kickCombo": 20
+		"punchCombo": 12,
+		"kickCombo": 15
 	},
 	"maxEnergy": 100,
 	"costs": {
 		"punch": 5,
-		"kick": 10,
-		"punchCombo": 60,
-		"kickCombo": 80,
+		"kick": 8,
+		"punchCombo": 50,
+		"kickCombo": 60,
 		"jump": 10
 	},
 	"spriteSheetButton": {
@@ -48,12 +48,19 @@
 				"speed": 0.4,
 				"order": "asc"
 			},
-			"moveAnimation": {
-				"name": "moveAnimation",
-				"startFrame": 17,
-				"frames": 10,
+			"moveLeftAnimation": {
+				"name": "moveLeftAnimation",
+				"startFrame": 18,
+				"frames": 9,
 				"speed": 0.5,
 				"order": "desc"
+			},
+			"moveRightAnimation": {
+				"name": "moveRightAnimation",
+				"startFrame": 18,
+				"frames": 9,
+				"speed": 0.5,
+				"order": "asc"
 			},
 			"jumpAnimation": {
 				"name": "jumpAnimation",
@@ -155,5 +162,14 @@
 			}
 		},
 		"defaultAnimation": "standAnimation"
+	},
+	"sounds": {
+		"kick": 2,
+		"punch": 2,
+		"comboKick": 1,
+		"comboPunch": 1,
+		"jump": 1,
+		"hit": 3,
+		"death": 1
 	}
 }

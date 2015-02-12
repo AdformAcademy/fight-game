@@ -1,18 +1,14 @@
 var App;
 var Client;
-var Point;
-var Background;
 var obj;
 
 function StageScreen() {
 	App = require('../../app');
 	Client = require('../client');
-	Point = require('../../../common/point');
-	Background = require('../canvas/background');
-	this.backgroundImage = new Background('./img/stage_background.png');
 	this.player = App.player;
 	this.opponent = App.opponent;
 	obj = this;
+	this.parallax = Client.parallax;
 	Client.start();
 };
 
@@ -23,14 +19,16 @@ StageScreen.prototype.graphics = function() {
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();
 	var opponentEnergyBar = opponent.getEnergyBar();
-
-	obj.backgroundImage.draw();
+	var xView = Client.camera.xView;
+	var yView = Client.camera.yView;
+	
+	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {
-		player.draw();
-		opponent.draw();
+		player.draw(xView, yView);
+		opponent.draw(xView, yView);
 	} else {
-		opponent.draw();
-		player.draw();
+		opponent.draw(xView, yView);
+		player.draw(xView, yView);
 	}
 	playerLifeBar.draw();
 	playerEnergyBar.draw();

@@ -3,12 +3,15 @@ var env = process.argv[2] || 'dev';
 switch (env) {
 	case 'prod':
 		global.env = 'prod';
+		console.log('Production version');
 		break;
 	case 'dev':
 		global.env = 'dev';
+		console.log('Development version');
 		break;
 	default:
 		global.env = 'dev';
+		console.log('Development version');
 }
 
 var Express = require('./src/server/express');
@@ -50,8 +53,7 @@ io.on('connection', function(socket) {
 			files.forEach(function (file) {
 				var characterData = JSON.parse(fs.readFileSync(
 					Config.charactersPath + file, 'utf8'));
-				packetData[file] = characterData.spriteSheetButton;
-				packetData[file].id = characterData.id;
+				packetData[file] = characterData;
 			});
 			socket.emit('choose-character', packetData);
 		});

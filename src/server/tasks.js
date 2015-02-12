@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
+var stripDebug = require('gulp-strip-debug');
 
 var Tasks = {};
 
@@ -15,6 +16,7 @@ gulp.task('browserify', function () {
 	  	return gulp.src(['./src/client/*.js'])
 		    .pipe(browserified)
 		    .pipe(uglify())
+		    .pipe(stripDebug())
 		    .pipe(gulp.dest('./public/js/'));
   	}
   	return gulp.src(['./src/client/*.js'])

@@ -7,7 +7,6 @@ function Canvas(id) {
 
 	this.id = id;
 	this.canvasMaskColor = Config.canvasMaskColor;
-	this.updateInterval = Config.canvasUpdateInterval;
 	this.canvasObj = $(this.id)[0];
 	this.canvas = this.canvasObj.getContext('2d');
 	this.graphics = null;
@@ -31,14 +30,6 @@ Canvas.prototype.getOffsetLeft = function() {
 
 Canvas.prototype.getOffsetTop = function() {
 	return this.canvasObj.offsetTop;
-};
-
-Canvas.prototype.getUpdateInterval = function() {
-	return this.updateInterval;
-};
-
-Canvas.prototype.setUpdateInterval = function(updateInterval) {
-	this.updateInterval = updateInterval;
 };
 
 Canvas.prototype.clearCanvas = function() {
@@ -65,13 +56,13 @@ Canvas.prototype.drawBackground = function() {
 };
 
 Canvas.prototype.draw = function() {
-	var obj = this;
-	this.clearCanvas();
-	this.drawBackground();
-	this.drawGraphics();
-	setTimeout(function() {
-		obj.draw()
-	}, 1000 / this.updateInterval);
+	var self = this;
+	self.clearCanvas();
+	self.drawBackground();
+	self.drawGraphics();
+	requestAnimationFrame(function () {
+		self.draw();
+	});
 };
 
 module.exports = Canvas;

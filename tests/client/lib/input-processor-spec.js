@@ -6,7 +6,10 @@ var Config = require('../../../src/client/lib/config.js');
 var Player = require('../../../src/client/lib/player.js');
 var Point = require('../../../src/common/point.js');
 var EnergyBar = require('../../../src/client/lib/canvas/energy-bar.js');
+var Rectangle = require('../../../src/client/lib/canvas/rectangle.js');
+var Camera = require('../../../src/client/lib/canvas/camera.js');
 var App = require('../../../src/client/app.js');
+var SoundCollection = require('../../../src/client/lib/sound-collection.js');
 
 describe('InputProcessor', function () {
 
@@ -52,6 +55,19 @@ describe('InputProcessor', function () {
 		kickCombo: false
 	};
 
+	var player = new Player(playerParamsMock);
+	var worldRect = new Rectangle(0, 0, 3000, 1000);
+	var camera = new Camera({
+		yView: 0,
+		xView: 0,
+		canvasWidth: 900,
+		canvasHeight: 550,
+		axis: 'horizontal',
+		worldRect: worldRect
+	});
+
+	camera.follow(player, 900 / 2, 550 / 2, 0);
+
 	beforeEach(function () {
 		paramsMock = {
 			player: new Player(playerParamsMock),
@@ -63,7 +79,9 @@ describe('InputProcessor', function () {
 				getHeigth: function () {
 					return 2000;
 				}
-			}
+			},
+			world: worldRect,
+			camera: camera
 		};
 		inputProcessor = new InputProcessor(paramsMock);
 		InputCollection.pressed = {};
@@ -74,6 +92,32 @@ describe('InputProcessor', function () {
 			hit: function () {},
 			jump: function () {}
 		}
+		SoundCollection.sounds = {
+			common: {
+				miss: [],
+				jump: [],
+				land: [],
+				victory: []
+			},
+			player: {
+				punch: [],
+				comboPunch: [],
+				kick: [],
+				comboKick: [],
+				jump: [],
+				hit: [],
+				death: []
+			},
+			opponent: {
+				punch: [],
+				comboPunch: [],
+				kick: [],
+				comboKick: [],
+				jump: [],
+				hit: [],
+				death: []
+			}
+		};
 	});
 
 	it('should create blank input', function () {

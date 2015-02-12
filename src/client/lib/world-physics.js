@@ -1,9 +1,15 @@
 var Config = require('./config');
 var Collisions = require('../../common/collisions');
+var SoundCollection = require('./sound-collection');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
+	this.world = params.world;
+	this.parallax = params.parallax;
+	this.camera = params.camera;
+	this.animating = false;
+	this.oldAnimatingValue = -1;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -35,6 +41,10 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
+
+    SoundCollection.play('common', 'jump');
+    SoundCollection.play('player', 'jump')
+
 	var updateZ = setInterval(function () {
 	    var x = player.getX();
 	    var z = player.getZ();
@@ -50,12 +60,14 @@ WorldPhysics.prototype.jump = function () {
 			clearInterval(updateZ);
 			z = 0;
 			speedZ = 0;
+			SoundCollection.play('common', 'land');
 		}
 		player.setZ(z);
 		player.setSpeedZ(speedZ);
 	}, 1000/30);
 };
 WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
+	var self = this;
 	var player = this.player;
 	var opponent = this.opponent;
 	var t = 0;
@@ -70,21 +82,31 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	if(Collisions.checkPunchCollisionRight(player, opponent, size, heightDifference)){
 		hit = 2;
 		opponent.setPunched(2);
-	}
+	}	
 	var updateH = setInterval(function () {
 		t += 30;
 		if (t >= time) {
 			if(hit == 1){
-				if(opx < Config.screenWidth - 185){
+				if(opx < self.world.width - 185){
 					opx += power;
 					opponent.setX(opx);
 					opponent.setPunched(0);
 				}
+				else{
+					x -= power;
+					player.setX(x);
+					opponent.setPunched(0);
+				}
 			}
 			else if(hit == 2){
-				if(opx > -135){
+				if(opx > self.world.left - 135){
 					opx -= power;
 					opponent.setX(opx);
+					opponent.setPunched(0);
+				}
+				else{
+					x += power;
+					player.setX(x);
 					opponent.setPunched(0);
 				}
 			}
@@ -94,11 +116,14 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 			clearInterval(updateH);
 		}
 	}, 1000/30);
+
+	return hit;
 };
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
 	var player = this.player;
+	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
 
 	if (packet.kickCombo) {
@@ -117,7 +142,18 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	}
 	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
-			playerSprite.setActiveAnimation('moveAnimation');
+			if(player.getX() < opponent.getX()) {
+				if (packet.key === keys.RIGHT)
+					playerSprite.setActiveAnimation('moveLeftAnimation');
+				else if (packet.key === keys.LEFT)
+					playerSprite.setActiveAnimation('moveRightAnimation');
+			}
+			else {
+				if (packet.key === keys.LEFT)
+					playerSprite.setActiveAnimation('moveLeftAnimation');
+				else if (packet.key === keys.RIGHT)
+					playerSprite.setActiveAnimation('moveRightAnimation');
+			}
 		}
 		else if (player.isPunched()) {
 			playerSprite.setActiveAnimation('damageAnimation');
@@ -128,11 +164,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	}
 	if (player.isJumping()) {
 		if (packet.punchKey) {
-			console.log('JUMP TEST');
 			playerSprite.setActiveAnimation('jumpPunchAnimation');
 		}
 		else if (packet.kickKey) {
-			console.log('JUMP TEST');
 			playerSprite.setActiveAnimation('jumpKickAnimation');
 		}
 	}
@@ -165,13 +199,67 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 	var z = player.getZ();
 	var oz = opponent.getZ();
 
-	if (z > oz) {
+	if (z < oz || !player.isPunched()) {
 		player.setDepth(0);
 		opponent.setDepth(1);
 	} else {
 		player.setDepth(1);
 		opponent.setDepth(0);
 	}
+};
+
+WorldPhysics.prototype.applyParallax = function (packet) {
+	var keys = Config.keyBindings;
+	if(!this.player.isHiting()){
+		if (packet.key === keys.RIGHT) {
+			this.parallax.moveRight();
+		} else if (packet.key === keys.LEFT) {
+			this.parallax.moveLeft();
+		}
+	}
+};
+
+WorldPhysics.prototype.updateViewport = function () {
+	var player = this.player;
+	var opponent = this.opponent;
+	var x = player.getX();
+	var opx = opponent.getX();
+
+	if (this.camera.isFollowing()) {
+		if (x < opx) {
+			this.animateViewportChange(320);
+		}
+		else {
+			this.animateViewportChange(0);
+		}
+	}
+};
+
+WorldPhysics.prototype.animateViewportChange = function (amount) {
+	if (this.animating || this.oldAnimatingValue === amount) {
+		return;
+	}
+	this.oldAnimatingValue = amount;
+	this.animating = true;
+	var self = this;
+	var camera = this.camera;
+	var currentAlign = this.camera.getObjectAlign();
+	var currentAmount = amount;
+	var addition = currentAmount > currentAlign ? 10 : -10;
+	var animate = setInterval(function () {
+		currentAlign += addition;
+		if (currentAmount > currentAlign && addition < 0 
+				|| currentAmount < currentAlign && addition > 0) {
+			currentAlign = currentAmount;
+		}
+
+		camera.setObjectAlign(currentAlign);
+
+		if (currentAlign === currentAmount) {
+			clearInterval(animate);
+			self.animating = false;
+		}
+	}, 1000 / 30);
 };
 
 module.exports = WorldPhysics;

@@ -3,17 +3,17 @@
 	"lives": 100,
 	"damage": {
 		"punch": 3,
-		"kick": 5,
-		"punchCombo": 15,
-		"kickCombo": 20
+		"kick": 6,
+		"punchCombo": 13,
+		"kickCombo": 15
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 5,
-		"kick": 10,
-		"punchCombo": 60,
-		"kickCombo": 80,
-		"jump": 10
+		"punch": 4,
+		"kick": 6,
+		"punchCombo": 40,
+		"kickCombo": 45,
+		"jump": 8
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "5KarmanSmallIntro.png",
@@ -55,12 +55,19 @@
 				"speed": 0.3,
 				"order": "asc"
 			},
-			"moveAnimation": {
-				"name": "moveAnimation",
+			"moveLeftAnimation": {
+				"name": "moveLeftAnimation",
 				"startFrame": 18,
 				"frames": 8,
 				"speed": 0.5,
 				"order": "desc"
+			},
+			"moveRightAnimation": {
+				"name": "moveRightAnimation",
+				"startFrame": 18,
+				"frames": 8,
+				"speed": 0.5,
+				"order": "asc"
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",
@@ -148,5 +155,14 @@
 			}
 		},
 		"defaultAnimation": "standAnimation"
+	},
+	"sounds": {
+		"kick": 2,
+		"punch": 2,
+		"comboKick": 1,
+		"comboPunch": 1,
+		"jump": 1,
+		"hit": 3,
+		"death": 1
 	}
 }

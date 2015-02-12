@@ -44,10 +44,12 @@ Background.prototype.setLocation = function(location) {
 	this.location = location;
 };
 
-Background.prototype.draw = function() {
+Background.prototype.draw = function(xView, yView) {
+	xView = xView || 0;
+	yView = yView || 0;
 	if (this.visible) {
 		App.canvasObj.canvas.drawImage(this.image, 
-			this.location.getX(), this.location.getY(), this.width(), this.height());
+			this.location.getX() - xView, this.location.getY() - yView, this.width(), this.height());
 	}
 };
 

@@ -7,6 +7,8 @@ var ChooseWaitingScreen;
 var Background;
 var socket = io();
 var obj;
+var Config;
+var SoundCollection;
 
 function EndScreen(status) {
 	App = require('../../app');
@@ -15,8 +17,11 @@ function EndScreen(status) {
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	ChooseWaitingScreen = require('./choose-waiting');
+	InputCollection = require('../input-collection');
 	Background = require('../canvas/background');	
-
+	Config = require('../config');
+	SoundCollection = require('../sound-collection');
+	
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
@@ -28,10 +33,15 @@ function EndScreen(status) {
 		}
 	});
 	this.endText = new Text(status + '!', 50);
-	if(status == "Victory")
+	if(status == "Victory") {
+		SoundCollection.play('common', 'victory');
 		this.endText.setColor('#00C800');
-	else
+	} else {
+		if(status == "Defeat") {
+			SoundCollection.play('player', 'death');
+		}
 		this.endText.setColor('#C80000');
+	}
 	this.endText.setFontType('Arial');
 	this.challengeText = new Text('Would you like to try again?', 30);
 	this.challengeText.setColor('#cbcbcb');
@@ -69,7 +79,16 @@ function EndScreen(status) {
 	});
 };
 
+EndScreen.prototype.handleControls = function () {
+	var control = InputCollection;
+	var keys = Config.keyBindings;
+	if(control.isPressed(keys.ENTER)) {
+		this.startButton.executeClick();
+	}
+}
+
 EndScreen.prototype.graphics = function() {
+	obj.handleControls();
 	obj.backgroundImage.draw();
 	obj.startButton.drawButton();
 	obj.endText.draw();

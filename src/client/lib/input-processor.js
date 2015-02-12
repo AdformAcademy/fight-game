@@ -2,11 +2,14 @@ var App = require('../app');
 var Collisions = require('../../common/collisions');
 var InputCollection = require('./input-collection');
 var Config = require('./config');
+var SoundCollection = require('./sound-collection');
 
 var InputProcessor = function (params) {
 	this.player = params.player;
 	this.opponent = params.opponent;
 	this.canvas = App.canvasObj;
+	this.world = params.world;
+	this.camera = params.camera;
 	this.inputCounter = 0;
 };
 
@@ -32,14 +35,19 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var opponent = this.opponent;
 	var x = player.getX();
 	var size = Config.playerSize;
+	var camera = this.camera;
 
 	if (control.isDown(keys.RIGHT)) {
-		if (x < screenWidth - 185 && Collisions.checkRightCollision(player, opponent, size)) {
+		if (x < this.world.width - 185 
+				&& Collisions.checkRightCollision(player, opponent, size)
+				&& camera.leftCollision(opponent, size)) {
 			input.key = keys.RIGHT;
 		}
 	}
 	else if (control.isDown(keys.LEFT)) {
-		if (x > -135 && Collisions.checkLeftCollision(player, opponent, size)) {
+		if (x > this.world.left - 135 
+				&& Collisions.checkLeftCollision(player, opponent, size)
+				&& camera.rightCollision(opponent, size)) {
 			input.key = keys.LEFT;
 		}
 	}
@@ -51,46 +59,85 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var keys = Config.keyBindings;
 	var control = InputCollection;
 	var player = this.player;
-
-	if(!player.isJumping()){
+	
+	if(!player.isJumping() && !player.isDefending()) {
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
-				console.log('kick combo');
-				player.setUsingCombo(true);
-				player.setHiting(true);
-				physics.hit(600, 80, 15, 60);
-				input.kickCombo = true;
+			player.setUsingCombo(true);
+			player.setHiting(true);
+			var hit = physics.hit(600, 80, 15, 60);
+			input.kickCombo = true;
+				if(hit != 0) {
+					SoundCollection.play('player', 'comboKick');
+					SoundCollection.play('player', 'kick');
+					SoundCollection.play('opponent', 'hit');
+				} else {
+					SoundCollection.play('player', 'comboKick');
+					SoundCollection.play('common', 'miss');
+				}
 			}
-		else if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
-				console.log('punch combo');
-				player.setUsingCombo(true);
-				player.setHiting(true);
-				physics.hit(800, 65, 0, 60);
-				input.punchCombo = true;
-			}	
+		if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
+			player.setUsingCombo(true);
+			player.setHiting(true);
+			var hit = physics.hit(800, 65, 0, 60);
+			input.punchCombo = true;
+				if(hit != 0) {
+					SoundCollection.play('player', 'comboPunch');
+					SoundCollection.play('player', 'punch');
+					SoundCollection.play('opponent', 'hit');
+				} else {
+					SoundCollection.play('player', 'comboPunch');
+					SoundCollection.play('common', 'miss');
+				}
+		}	
 		else if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
-				console.log('simple punch');
-				player.setHiting(true);
-				physics.hit(300, 65, 5, 60);
-				input.punchKey = true;
-			}
+				var hit = physics.hit(300, 65, 5, 60);
+			player.setHiting(true);
+			input.punchKey = true;
+
+				if(hit != 0) {
+					SoundCollection.play('player', 'punch');
+					SoundCollection.play('opponent', 'hit');
+				} else {
+					SoundCollection.play('common', 'miss');
+				}
+		}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
-				console.log('simple kick');
-				player.setHiting(true);
-				physics.hit(400, 80, 10, 60);
-				input.kickKey = true;
-			}
+			player.setHiting(true);
+				var hit = physics.hit(400, 80, 10, 60);
+			input.kickKey = true;
+
+				if(hit != 0) {
+					SoundCollection.play('player', 'kick');
+					SoundCollection.play('opponent', 'hit');
+				} else {
+					SoundCollection.play('common', 'miss');
+				}
+		}
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping()) {
-		console.log("jumping and punching");
+
 		player.setHiting(true);
-		physics.hit(780, 65, 5, 120);
+		var hit = physics.hit(780, 65, 5, 120);
 		input.punchKey = true;
+
+		if(hit != 0) {
+			SoundCollection.play('player', 'punch');
+			SoundCollection.play('opponent', 'hit');
+		} else {
+			SoundCollection.play('common', 'miss');
+		}
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping()) {
-		console.log("jumping and kicking");
 		player.setHiting(true);
-		physics.hit(780, 80, 10, 120);
+		var hit = physics.hit(780, 80, 10, 120);
 		input.kickKey = true;
+
+		if(hit != 0) {
+			SoundCollection.play('player', 'kick');
+			SoundCollection.play('opponent', 'hit');
+		} else {
+			SoundCollection.play('common', 'miss');
+		}
 	}
 };
 
@@ -104,7 +151,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 	var opz = opponent.getZ();
 	var size = Config.playerSize;
 
-	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump')) {
+	if (control.isDown(keys.JUMP) && player.hasEnoughEnergy('jump') && !player.isDefending()) {
 		if(!player.isJumping()) {
 			var speedZ = Config.playerJumpSpeed;
 			input.jumpKey = true;
@@ -131,7 +178,8 @@ InputProcessor.prototype.processInputs = function() {
 		this.processComboInputs(input);
 		this.processActionInputs(input);
 	}
-	if(!player.isHiting() && !player.isPunched() && !player.isDefending() || player.isJumping()) {
+	if(!player.isHiting() && !player.isPunched() 
+			&& !player.isDefending() || player.isJumping()) {
 		this.processMovementInputs(input);
 	}
 	this.inputCounter++;

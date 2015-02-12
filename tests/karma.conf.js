@@ -15,9 +15,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        'tests/phantomjs-polyfills.js',
         'node_modules/socket.io/lib/socket.js',
-        'https://cdn.socket.io/socket.io-1.2.0.js',
-        'http://code.jquery.com/jquery-1.11.1.js',
+        'public/js/socket.io-1.2.0.js',
+        'public/js/jquery-1.11.2.min.js',
         'tests/client/**/*.js'
     ],
 

@@ -19,6 +19,10 @@ var ChooseScreen = function () {
 
 	this.buttons = [];
 
+	this.fadeValue = 1;
+	this.playerFadeValue = 0;
+	this.chosenPlayer = null;
+
 	this.infoText.setLocation(function() {
 		var x = Utilities.centerX(obj.infoText.getTextWidth());;
 		var y = App.canvasObj.getHeight() * 0.15;
@@ -51,9 +55,17 @@ ChooseScreen.prototype.getButtons = function () {
 };
 
 ChooseScreen.prototype.graphics = function() {
+	var canvas = App.canvasObj.canvas;
 	obj.backgroundImage.draw();
-	obj.infoText.draw();
-	obj.drawButtons();
+	canvas.save();
+	canvas.globalAlpha = obj.fadeValue;
+	if (obj.chosenPlayer === null) {
+		obj.infoText.draw();
+		obj.drawButtons();
+	} else {
+		obj.chosenPlayer.draw(0, 0);
+	}
+	canvas.globalAlpha = 1;
 };
 
 ChooseScreen.prototype.dispose = function() {

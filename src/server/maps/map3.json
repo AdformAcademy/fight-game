@@ -1,0 +1,36 @@
+{
+	"id": 3,
+	"dimensions": {
+		"top": 0,
+		"left": 0,
+		"width": 2000,
+		"height": 1000
+	},
+	"groundHeight": 98.0,
+	"patterns": {
+		"1": {
+			"speed": 0,
+			"top": 0
+		},
+		"2": {
+			"speed": 7.5,
+			"top": 0
+		},
+		"3": {
+			"speed": 6.5,
+			"top": 73.27
+		},
+		"4": {
+			"speed": 5.5,
+			"top": 0
+		},
+		"5": {
+			"speed": 4,
+			"top": 74.27
+		},
+		"6": {
+			"speed": 0,
+			"top": 89.27
+		}
+	}
+}

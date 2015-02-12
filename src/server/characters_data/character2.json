@@ -4,16 +4,16 @@
 	"damage": {
 		"punch": 3,
 		"kick": 5,
-		"punchCombo": 15,
-		"kickCombo": 20
+		"punchCombo": 14,
+		"kickCombo": 18
 	},
 	"maxEnergy": 100,
 	"costs": {
 		"punch": 5,
-		"kick": 10,
-		"punchCombo": 60,
-		"kickCombo": 80,
-		"jump": 10
+		"kick": 8,
+		"punchCombo": 55,
+		"kickCombo": 65,
+		"jump": 12
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "2RobertSmallIntro.png",
@@ -48,12 +48,19 @@
 				"speed": 0.35,
 				"order": "asc"
 			},
-			"moveAnimation": {
-				"name": "moveAnimation",
+			"moveLeftAnimation": {
+				"name": "moveLeftAnimation",
 				"startFrame": 19,
 				"frames": 12,
 				"speed": 0.5,
 				"order": "desc"
+			},
+			"moveRightAnimation": {
+				"name": "moveRightAnimation",
+				"startFrame": 19,
+				"frames": 12,
+				"speed": 0.5,
+				"order": "asc"
 			},
 			"jumpAnimation": {
 				"name": "jumpAnimation",
@@ -130,7 +137,7 @@
 				"startFrame": 119,
 				"frames": 20,
 				"speed": 0.7,
-				"order": "asc"
+				"order": "desc"
 			},
 			"fatalityAnimation": {
 				"name": "fatalityAnimation",
@@ -148,5 +155,14 @@
 			}
 		},
 		"defaultAnimation": "standAnimation"
+	},
+	"sounds": {
+		"kick": 2,
+		"punch": 2,
+		"comboKick": 1,
+		"comboPunch": 1,
+		"jump": 1,
+		"hit": 3,
+		"death": 1
 	}
 }

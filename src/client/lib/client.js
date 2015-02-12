@@ -7,8 +7,13 @@ var LifeBar = require('./canvas/life-bar');
 var EnergyBar = require('./canvas/energy-bar');
 var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
+var SoundCollection = require('./sound-collection');
 var WorldPhysics = require('./world-physics');
 var CountDownScreen = require('./screen/count-down');
+var Rectangle = require('./canvas/rectangle');
+var Camera = require('./canvas/camera');
+var Parallax = require('./canvas/parallax');
+var Pattern = require('./canvas/pattern');
 var socket = io();
 
 var Client = module.exports = {};
@@ -23,6 +28,10 @@ Client.reconciliation = true;
 Client.interpolation = true;
 Client.opponentInputs = [];
 Client.inputProcessor = null;
+Client.camera = null;
+Client.world = null;
+Client.parallax = null;
+Client.catchingInterpolation = false;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -32,22 +41,56 @@ Client.storeServerData = function(data) {
 	Client.serverData.push(data);
 };
 
-Client.interpolate = function() {
+Client.catchUpInterpolation = function () {
+	console.log('Cathing up');
+	Client.catchingInterpolation = true;
 	var physics = App.physics;
-	var bufferSize = Client.opponentInputs.length;
 	var opponent = App.opponent;
-	if (bufferSize < 10) {
-		var input = Client.opponentInputs[0];
-		if (input !== undefined) {
-			physics.applyCoordinates(opponent, input.x, input.z);
-			opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
-			Client.opponentInputs.shift();
+	var update = setInterval(function () {	
+		var bufferSize = Client.opponentInputs.length;
+		if (bufferSize > 20) {
+			var lastInput = Client.opponentInputs[bufferSize - 1];
+			physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
+			opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
+			Client.opponentInputs = [];
+		} else {
+			var input = Client.opponentInputs[0];
+			if (input !== undefined) {
+				physics.applyCoordinates(opponent, input.x, input.z);
+				opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
+				Client.opponentInputs.shift();
+			}
 		}
-	} else {
-		var lastInput = Client.opponentInputs[bufferSize - 1];
-		physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
-		opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
-		Client.opponentInputs = [];
+		console.log(bufferSize);
+		if (Client.opponentInputs.length < 1) {
+			Client.catchingInterpolation = false;
+			console.log('END');
+			clearInterval(update);
+		}
+	}, 1000 / 35);
+};
+
+Client.interpolate = function() {
+	if (!Client.catchingInterpolation) {
+		var physics = App.physics;
+		var bufferSize = Client.opponentInputs.length;
+		var opponent = App.opponent;
+		console.log('Buffer size: ' + bufferSize);
+		if (bufferSize < 5) {
+			var input = Client.opponentInputs[0];
+			if (input !== undefined) {
+				physics.applyCoordinates(opponent, input.x, input.z);
+				opponent.getSpriteSheet().setActiveAnimation(input.currentAnimation);
+				Client.opponentInputs.shift();
+			}
+		} else if (bufferSize > 20) {
+			var lastInput = Client.opponentInputs[bufferSize - 1];
+			physics.applyCoordinates(opponent, lastInput.x, lastInput.z);
+			opponent.getSpriteSheet().setActiveAnimation(lastInput.currentAnimation);
+			Client.opponentInputs = [];
+		} else {
+			Client.catchUpInterpolation();
+		}
 	}
 };
 
@@ -71,6 +114,7 @@ Client.processServerData = function() {
     	var state = Client.serverData[i];
     	var x = state.player.x;
     	var ppunched = state.player.punched;
+    	var hiting = state.player.hiting;
     	var pVictor = state.player.victor;
     	var pDefeated = state.player.defeated;
     	var ox = state.opponent.x;
@@ -84,9 +128,11 @@ Client.processServerData = function() {
     	var opponentLifeBar = App.opponent.getLifeBar();
     	var playerEnergyBar = App.player.getEnergyBar();
     	var opponentEnergyBar = App.opponent.getEnergyBar();
+    	var sounds = state.player.sounds;
 
     	physics.applyCoordinates(App.player, x, null);
-    	
+    	SoundCollection.playServerSounds(sounds);
+
     	if (ppunched) {
     		playerLifeBar.store(state.player.lives);
     	}
@@ -100,6 +146,7 @@ Client.processServerData = function() {
     	App.player.setPunched(ppunched);
     	App.player.Victory(pVictor);
     	App.player.Defeat(pDefeated);
+    	App.player.setHiting(hiting);
     	App.opponent.setPunched(opunched);
     	App.opponent.Victory(oVictor);
     	App.opponent.Defeat(oDefeated);
@@ -135,6 +182,7 @@ Client.processLocalInputs = function () {
 		}
 	}
 	physics.updatePlayerAnimation(packet);
+	physics.applyParallax(packet);
 	return packet;
 };
 
@@ -146,13 +194,18 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
+	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
 	var opponentSpriteData = data.opponent.data.spriteSheetData;
+	var mapData = data.map;
 	var playerSpriteImage = new Image();
 	playerSpriteImage.src = './img/' + playerSpriteData.spriteSheetImage;
 
 	var opponentSpriteImage = new Image();
 	opponentSpriteImage.src = './img/' + opponentSpriteData.spriteSheetImage;
+
+	SoundCollection.clear();
+	SoundCollection.load(data.soundsData, data.player.data, data.opponent.data);
 
 	var buildSprite = function(image, spriteSheetData) {
 		return new SpriteSheet({
@@ -164,17 +217,29 @@ Client.initializeGame = function (data) {
 
 	var playerSprite = buildSprite(playerSpriteImage, playerSpriteData);
 	var opponentSprite = buildSprite(opponentSpriteImage, opponentSpriteData);
+	var LBY = Config.progressBarPadding;
 
 	App.player = new Player({
 		location: data.player.x,
+		z: data.player.y,
+		groundHeight: function () {
+			return canvas.getHeight() * (mapData.groundHeight / 100);
+		},
 		spriteSheet: playerSprite,
 		energyCosts: data.player.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
-				return new Point(Config.progressBarPadding, Config.progressBarPadding);
+				if(data.player.x < data.opponent.x){
+					var PLBX = Config.progressBarPadding;
+				}
+				else{
+					var PLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+				}
+				return new Point(PLBX, LBY);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+				return canvas.getWidth() * Config.lifeBarWidthRatio;
 			},
 			height: function () {
 				return Config.lifeBarHeight;
@@ -184,11 +249,17 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
-				return new Point(Config.progressBarPadding,
-				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+				if(data.player.x < data.opponent.x){
+					var PLBX = Config.progressBarPadding;
+				}
+				else{
+					var PLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.energyBarWidthRatio) - Config.progressBarPadding);
+				}
+				return new Point(PLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+				return canvas.getWidth() * Config.energyBarWidthRatio;
 			},
 			height: function () {
 				return Config.energyBarHeight;
@@ -200,17 +271,25 @@ Client.initializeGame = function (data) {
 
 	App.opponent = new Player({
 		location: data.opponent.x,
+		z: data.opponent.y,
+		groundHeight: function () {
+			return canvas.getHeight() * (mapData.groundHeight / 100);
+		},
 		spriteSheet: opponentSprite,
 		energyCosts: data.opponent.energyCosts,
 		lifeBar: new LifeBar({
 			location: function () {
-			return new Point(
-				Math.round(App.canvasObj.getWidth() * 
-				(1 - Config.lifeBarWidthRatio) - Config.progressBarPadding),
-				Config.progressBarPadding);
+				if(data.player.x < data.opponent.x) {
+					var OpLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.lifeBarWidthRatio) - Config.progressBarPadding);
+				}
+				else {
+					var OpLBX = Config.progressBarPadding;
+				}
+				return new Point(OpLBX, LBY);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.lifeBarWidthRatio;
+				return canvas.getWidth() * Config.lifeBarWidthRatio;
 			},
 			height: function () {
 				return Config.lifeBarHeight;
@@ -220,13 +299,17 @@ Client.initializeGame = function (data) {
 		}),
 		energyBar: new EnergyBar({
 			location: function() {
-			return new Point(
-				Math.round(App.canvasObj.getWidth() * 
-				(1 - Config.energyBarWidthRatio) - Config.progressBarPadding),
-				Config.progressBarPadding * 2 + Config.lifeBarHeight);
+				if(data.player.x < data.opponent.x) {
+					var OpLBX = Math.round(canvas.getWidth() 
+						* (1 - Config.energyBarWidthRatio) - Config.progressBarPadding);
+				}
+				else {
+					var OpLBX = Config.progressBarPadding;
+				}
+				return new Point(OpLBX, LBY * 2 + Config.lifeBarHeight);
 			},
 			width: function () {
-				return App.canvasObj.getWidth() * Config.energyBarWidthRatio;
+				return canvas.getWidth() * Config.energyBarWidthRatio;
 			},
 			height: function () {
 			return Config.energyBarHeight;
@@ -236,14 +319,53 @@ Client.initializeGame = function (data) {
 		})
 	});
 
-	App.physics = new WorldPhysics({
-		player: App.player,
-		opponent: App.opponent
+	Client.world = new Rectangle(0, 0, 
+		mapData.dimensions.width, mapData.dimensions.height);
+
+	Client.camera = new Camera({
+		yView: 0,
+		xView: 0,
+		canvasWidth: canvas.getWidth(),
+		canvasHeight: canvas.getHeight(),
+		axis: 'horizontal',
+		worldRect: Client.world
 	});
+
+	Client.camera.follow(App.player, canvas.getWidth() / 2, canvas.getHeight() / 2, 0);
 
 	Client.inputProcessor = new InputProcessor({
 		player: App.player,
-		opponent: App.opponent
+		opponent: App.opponent,
+		world: Client.world,
+		parallax: Client.parallax,
+		camera: Client.camera
+	});
+
+	var parallax = new Parallax(Client.camera);
+
+	for (var pattern in mapData.patterns) {
+
+		var yLocation = function (pattern) {
+			return function () {
+				var top = canvas.getHeight() * (mapData.patterns[pattern].top / 100);
+				return top;
+			};
+		}(pattern);
+		
+		var speed = mapData.patterns[pattern].speed;
+		var imageLocation = './img/maps/map' + mapData.id + '/pattern' + pattern + '.png';
+		var parallaxPattern = new Pattern(yLocation, speed, imageLocation);
+		parallax.addPattern(parallaxPattern);
+	}
+
+	Client.parallax = parallax;
+
+	App.physics = new WorldPhysics({
+		player: App.player,
+		opponent: App.opponent,
+		world: Client.world,
+		parallax: Client.parallax,
+		camera: Client.camera
 	});
 
 	App.screen.dispose();
@@ -252,6 +374,7 @@ Client.initializeGame = function (data) {
 };
 
 Client.update = function() {
+	var canvas = App.canvasObj;
 	var physics = App.physics;
 	Client.processServerData();
 	var packet = Client.processLocalInputs();
@@ -263,6 +386,8 @@ Client.update = function() {
 	App.opponent.update();
 	physics.flipPlayerSpritesheets();
 	physics.updatePlayersDepth();
+	physics.updateViewport();
+	Client.camera.update();
 };
 
 Client.stop = function() {

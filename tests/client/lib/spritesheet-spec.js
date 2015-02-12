@@ -209,6 +209,14 @@ describe('SpriteSheet', function () {
 		expect(spriteSheet.draw).toBeDefined();
 	});
 
+	it('should define getSpriteSheetHeight method', function () {
+		expect(spriteSheet.getSpriteSheetHeight).toBeDefined();
+	});
+
+	it('should define getSpriteSheetWidth method', function () {
+		expect(spriteSheet.getSpriteSheetWidth).toBeDefined();
+	});
+
 	it('should get default startFrame', function () {
 		expect(spriteSheet.getCurrentFrame()).toBe(29);
 	});
@@ -216,6 +224,14 @@ describe('SpriteSheet', function () {
 	it('should set currentFrame to 30', function () {
 		spriteSheet.setCurrentFrame(30);
 		expect(spriteSheet.getCurrentFrame()).toBe(30);
+	});
+
+	it('should get default spritesheet height', function () {
+		expect(spriteSheet.getSpriteSheetHeight()).toBe(224);
+	});
+
+	it('should get default spritesheet width', function () {
+		expect(spriteSheet.getSpriteSheetWidth()).toBe(320);
 	});
 
 	it('should get default animation name', function () {

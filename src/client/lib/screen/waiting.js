@@ -22,6 +22,9 @@ function WaitingScreen() {
 	this.globalAlphaStep = 0.04;
 	obj = this;
 
+	this.animating = false;
+	this.animate();
+
 	this.waitingText.setLocation(function() {
 		var x = Utilities.centerX(obj.waitingText.getTextWidth());
 		var y = App.canvasObj.getHeight() * 0.2;
@@ -30,16 +33,23 @@ function WaitingScreen() {
 };
 
 WaitingScreen.prototype.animate = function() {
-	if (obj.globalAlpha >= 1 || obj.globalAlpha <= 0.15) {
-		obj.globalAlphaStep *= -1;
-	}
-	obj.globalAlpha += obj.globalAlphaStep;
-	App.canvasObj.canvas.globalAlpha = obj.globalAlpha;
+	var self = this;
+	self.animating = true;
+	var updateInterval = setInterval(function () {
+		if (!self.animating) {
+			clearInterval(updateInterval);
+			return;
+		}
+		if (self.globalAlpha >= 1 || self.globalAlpha <= 0.15) {
+			self.globalAlphaStep *= -1;
+		}
+		self.globalAlpha += self.globalAlphaStep;
+	}, 1000 / 30);
 };
 
 WaitingScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
-	obj.animate();
+	App.canvasObj.canvas.globalAlpha = obj.globalAlpha;
 	obj.waitingText.draw();
 	App.canvasObj.canvas.globalAlpha = 1;
 };
@@ -47,6 +57,7 @@ WaitingScreen.prototype.graphics = function() {
 WaitingScreen.prototype.dispose = function() {
 	App.canvasObj.canvas.globalAlpha = 1;
 	App.canvasObj.canvas.restore();
+	this.animating = false;
 };
 
 module.exports = WaitingScreen;
