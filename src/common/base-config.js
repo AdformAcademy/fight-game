@@ -19,4 +19,10 @@ BaseConfig.keyBindings = {
 	DOWN_ARROW: 40
 };
 
+BaseConfig.actions = {
+	LEFT: 'left',
+	RIGHT: 'right',
+	DEFEND: 'defend'
+};
+
 module.exports = BaseConfig;

@@ -21,7 +21,6 @@ SocketServer.kickInputs = [];
 SocketServer.comboInputs = [];
 SocketServer.sounds = [];
 
-
 SocketServer.prepareSocketData = function(player, opponent, socket) {
 	var data = {
 		player: {
@@ -205,6 +204,7 @@ SocketServer.clearSounds = function() {
 
 SocketServer.executeInput = function(player, input) {
 	var key = Config.keyBindings;
+	var actions = Config.actions;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 	var x = player.getX();
@@ -349,18 +349,18 @@ SocketServer.executeInput = function(player, input) {
 	}
 	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()) {
 		if(!player.isDefending()) {
-			if(input.key === key.LEFT) {
+			if(input.key === actions.LEFT) {
 				if(x > map.dimensions.left - 135  
 					&& Collisions.checkLeftCollision(player, opponent, size))
 					x -= Config.playerMoveSpeed;
 			}
-			else if(input.key === key.RIGHT) {	 
+			else if(input.key === actions.RIGHT) {	 
 				if(x < map.dimensions.width - 185
 					&& Collisions.checkRightCollision(player, opponent, size))
 					x += Config.playerMoveSpeed;
 			}
 		}
-		if (input.key === key.DEFEND) {
+		if (input.key === actions.DEFEND) {
 			player.setDefending(true);
 		} else {
 			player.setDefending(false);

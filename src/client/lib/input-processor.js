@@ -28,6 +28,7 @@ InputProcessor.prototype.createBlankInput = function () {
 InputProcessor.prototype.processMovementInputs = function (input) {
 
 	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var control = InputCollection;
 	var screenWidth = this.canvas.getWidth();
 	var screenHeight = this.canvas.getHeight();
@@ -41,14 +42,14 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 		if (x < this.world.width - 185 
 				&& Collisions.checkRightCollision(player, opponent, size)
 				&& camera.leftCollision(opponent, size)) {
-			input.key = keys.RIGHT;
+			input.key = actions.RIGHT;
 		}
 	}
 	else if (control.isDown(keys.LEFT)) {
 		if (x > this.world.left - 135 
 				&& Collisions.checkLeftCollision(player, opponent, size)
 				&& camera.rightCollision(opponent, size)) {
-			input.key = keys.LEFT;
+			input.key = actions.LEFT;
 		}
 	}
 };
@@ -144,6 +145,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 InputProcessor.prototype.processActionInputs = function (input) {
 	var physics = App.physics;
 	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var control = InputCollection;
 	var player = this.player;
 	var opponent = this.opponent;
@@ -161,7 +163,7 @@ InputProcessor.prototype.processActionInputs = function (input) {
 	}
 	if (control.isDown(keys.DEFEND) && !player.isJumping()) {
 			player.setDefending(true);
-			input.key = keys.DEFEND;
+			input.key = actions.DEFEND;
 		}
 	else {
 		player.setDefending(false);
