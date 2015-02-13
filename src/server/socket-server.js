@@ -30,6 +30,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			punched: player.isPunched(),
 			hiting: player.isHiting(),
 			victor: player.isVictor(),
+			fatality: player.isFatality(),
 			defeated: player.isDefeated(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives(),
@@ -41,6 +42,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			z: opponent.getZ(),
 			punched: opponent.isPunched(),
 			victor: opponent.isVictor(),
+			fatality: opponent.isFatality(),
 			defeated: opponent.isDefeated(),
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
 			lives: opponent.getLives(),
@@ -223,9 +225,9 @@ SocketServer.executeInput = function(player, input) {
 			player.setSpeedZ(speedZ);
 			player.setJumping(true);
 			player.useEnergy('jump');
-			physics.jump()
-		opponent.storeSound('common', 'jump');
-		opponent.storeSound('opponent', 'jump');
+			physics.jump();
+			opponent.storeSound('common', 'jump');
+			opponent.storeSound('opponent', 'jump');
 		}
 		else if(player.isJumping() && !player.isPunched() && !player.isDefending()) {
 			var inputs = SocketServer.jumpInputs[player.getID()];
@@ -435,7 +437,12 @@ SocketServer.updatePlayer = function(player) {
 				comboInputs.shift();
 			}
 		}
+
 		if (player.getLives() <= 0) {
+			player.Fatality(true);
+		}
+
+		if (player.isFatality() && player.isPunched()) {
 			player.Defeat(true);
 			opponent.Victory(true);
 		}
