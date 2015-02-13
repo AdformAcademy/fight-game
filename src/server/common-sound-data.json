@@ -2,5 +2,6 @@
 	"jump": 1,
 	"land": 1,
 	"miss": 3,
-	"victory": 1
+	"victory": 1,
+	"theme": 1
 }

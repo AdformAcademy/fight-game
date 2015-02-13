@@ -5,19 +5,21 @@ var SoundCollection = {};
 SoundCollection.sounds = {
 	common: {},
 	player: {},
-	opponent: {}
+	opponent: {},
+	theme: {}
 };
 
 SoundCollection.loadCommonSounds = function (soundsData) {
 	var sound;
 	var commonSounds = SoundCollection.sounds.common;
 	for (action in soundsData) {
+		console.log(soundsData);
 		if(commonSounds[action] === undefined) {
 			commonSounds[action] = [];
 		}
 		for (var i = 0; i < soundsData[action]; i++) {
 			sound = new Audio();
-			sound.src = Config.commonSoundsPath + action + '/' + i + '.wav'; 
+			sound.src = Config.commonSoundsPath + action + '/' + i + '.mp3';
 			commonSounds[action].push(sound);
 		}
 	}
@@ -54,6 +56,7 @@ SoundCollection.loadOpponentSounds = function (data) {
 };
 
 SoundCollection.load = function (soundsData, playerData, opponentData) {
+	// SoundCollection.loadThemeSound(themeData);
 	SoundCollection.loadCommonSounds(soundsData);
 	SoundCollection.loadPlayerSounds(playerData);
 	SoundCollection.loadOpponentSounds(opponentData);

@@ -1,20 +1,23 @@
 var App;
 var Client;
 var obj;
+var SoundCollection;
 
 function StageScreen() {
 	App = require('../../app');
 	Client = require('../client');
+	SoundCollection = require('../sound-collection');
 	this.player = App.player;
 	this.opponent = App.opponent;
 	obj = this;
 	this.parallax = Client.parallax;
 	Client.start();
+	SoundCollection.play('common', 'theme');
 };
 
 StageScreen.prototype.graphics = function() {
 	var player = obj.player;
-	var opponent= obj.opponent;
+	var opponent = obj.opponent;
 	var playerLifeBar = player.getLifeBar();
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();

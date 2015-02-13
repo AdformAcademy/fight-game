@@ -19,5 +19,6 @@ Config.energyBarHeight = 20;
 
 Config.commonSoundsPath = './audio/common/';
 Config.characterSoundsPath = './audio/character';
+// Config.themeSoundsPath = './audio/theme/';
 
 module.exports = Config;
