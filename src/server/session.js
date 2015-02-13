@@ -4,6 +4,7 @@ function Session(socket, opponentId, state) {
 	this.opponentId = opponentId;
 	this.state = state;
 	this.selection = 0;
+	this.wonFights = 0;
 };
 
 Session.READY = 'ready';
@@ -11,6 +12,7 @@ Session.PLAYING = 'playing';
 Session.UNACTIVE = 'unactive';
 Session.VICTORY = 'victory';
 Session.DEFEAT = 'defeat';
+Session.TOURNAMENT = 'tournament';
 
 Session.prototype.socket = function() {
 	return this.socket;
@@ -37,6 +39,14 @@ Session.prototype.setSelection = function(selection) {
 		selection = 1;
 	}
 	this.selection = selection;
+};
+
+Session.prototype.getWonFights = function () {
+	return this.wonFights;
+};
+
+Session.prototype.addWonFight = function () {
+	this.wonFights++;
 };
 
 Session.prototype.toString = function() {
