@@ -10,6 +10,7 @@ var Background;
 var Config;
 var Utilities;
 var StartScreen;
+var InputCollection;
 
 function OptionsScreen () {
 	App = require('../../app');
@@ -22,6 +23,9 @@ function OptionsScreen () {
 	Config = require('../config');
 	Utilities = require('../canvas/utilities');
 	StartScreen = require('./start');
+	InputCollection = require('../input-collection');
+
+	this.waitingForInput = false;
 
 	this.Text = {};
 	this.buttons = {};
@@ -39,8 +43,6 @@ function OptionsScreen () {
 	this.Text.controlsText = new Text('Controls:', 24);
 	this.Text.controlsText.setColor('#cbcbcb');
 	this.Text.controlsText.setFontType('Arial');
-
-	this.keyMap = Config.keyMap;
 
 	obj = this;
 
@@ -63,7 +65,6 @@ function OptionsScreen () {
 	});
 
 	var state;
-
 	if(SoundCollection.mute)
 		state = 1;
 	else
@@ -81,7 +82,7 @@ function OptionsScreen () {
 		}],		
 		location: function() {
 			var x = App.canvasObj.getWidth() * 0.7 - obj.buttons.soundsButton.getActiveImage().width;
-			var y = App.canvasObj.getHeight() * 0.4 - (obj.Text.soundsText.getSize() + obj.buttons.soundsButton.getActiveImage().height) / 2;
+			var y = App.canvasObj.getHeight() * 0.4 - (obj.Text.soundsText.getSize() + this.getActiveImage().height) / 2;
 			return new Point(x, y);
 		},
 		activeState: state
@@ -92,106 +93,162 @@ function OptionsScreen () {
 		hoverImage: './img/back_button_hover.png',
 		location: function() {
 			var x = Config.progressBarPadding;
-			var y = App.canvasObj.getHeight() - Config.progressBarPadding - obj.buttons.backButton.getActiveImage().height;
+			var y = App.canvasObj.getHeight() - Config.progressBarPadding - this.getActiveImage().height;
 			return new Point(x, y);
 		},
 	});
 
-	var layout = Config.controlsLayout;
-	this.ControlChanger = [];
-
-	var tempTxt, tempBtn;
-	var i = 0;
-
-	/*for (var key in layout) {
-
-		console.log(key + ' ' + layout[key]);
-
-		tempBtn = new Button({
-			image: './img/control_button.png',
-			hoverImage: './img/control_button_hover.png',
-			location: function () {
-				var x = App.canvasObj.getWidth() * 0.7 - tempBtn.getActiveImage().width;
-				var y = App.canvasObj.getHeight() * 0.6 + i * tempBtn.getActiveImage().height;
-				return new Point(x, y);
-			}
-		});
-
-		tempBtn.setText(new Text(obj.keyCodeToString(Config.keyBindings[key])));
-
-		tempTxt = new Text(layout[key], 24);
-		tempTxt.setColor('#cbcbcb');
-		tempTxt.setFontType('Arial');
-		tempTxt.setLocation(function () {
-			var x = App.canvasObj.getWidth() * 0.3;
-			var y = App.canvasObj.getHeigth() * 0.6 + i * tempBtn.activeImage.height + tempTxt.getSize();
-			return new Point(x, y);
-		});
-
-		tempBtn.onClick(function () {
-
-		});
-		tempBtn.mouseOver(function () {
-			tempBtn.setActiveImage(tempBtn.getHoverImage());
-			tempBtn.hover();
-		});
-		tempBtn.mouseLeave(function () {
-			tempBtn.setActiveImage(tempBtn.getImage());
-			tempBtn.hoverLeave();
-		});
-
-		this.ControlChanger.push({
-			button: tempBtn,
-			text: tempTxt
-		});
-
-		i++;
-	}*/
-
 	this.buttons.soundsButton.onClick(function () {
 		if(SoundCollection.mute) {
 			SoundCollection.mute = false;
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getImage(0));
+			this.setActiveImage(this.getImage(0));
 		} else {
 			SoundCollection.mute = true;
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getImage(1));
+			this.setActiveImage(this.getImage(1));
 		}
 	});
 
 	this.buttons.soundsButton.mouseOver(function () {
 		if(SoundCollection.mute) {
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getHoverImage(1));
+			this.setActiveImage(this.getHoverImage(1));
 		} else {
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getHoverImage(0));
+			this.setActiveImage(this.getHoverImage(0));
 		}
-		obj.buttons.soundsButton.hover();
+		this.hover();
 	});
 
 	this.buttons.soundsButton.mouseLeave(function () {
 		if(SoundCollection.mute) {
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getImage(1));
+			this.setActiveImage(this.getImage(1));
 		} else {
-			obj.buttons.soundsButton.setActiveImage(obj.buttons.soundsButton.getImage(0));
+			this.setActiveImage(this.getImage(0));
 		}
-		obj.buttons.soundsButton.hoverLeave();
+		this.hoverLeave();
 	});
 
 	this.buttons.backButton.onClick(function () {
-		socket.emit('options', '');
 		App.screen = new StartScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});
 
 	this.buttons.backButton.mouseOver(function () {
-		obj.buttons.backButton.setActiveImage(obj.buttons.backButton.getHoverImage());
-		obj.buttons.backButton.hover();
+		this.setActiveImage(this.getHoverImage());
+		this.hover();
 	});
 
 	this.buttons.backButton.mouseLeave(function () {
-		obj.buttons.backButton.setActiveImage(obj.buttons.backButton.getImage());
-		obj.buttons.backButton.hoverLeave();
+		this.setActiveImage(this.getImage());
+		this.hoverLeave();
 	});
+
+	this.keyMap = Config.keyMap;
+	var layout = Config.controlsLayout;
+	var tableData = Config.controlsTable;
+	this.ControlChanger = {};
+
+	var i = 0;
+
+	for (var key in layout) {
+		var tempTxt, tempBtn, tempBtnTxt;
+
+		tempBtn = new Button({
+			image: './img/control_button.png',
+			hoverImage: './img/control_button_hover.png',
+			location: function (ind) {
+				return function () {
+					var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth);
+					var y = App.canvasObj.getHeight() * (tableData.tableStart + (ind % 3) * tableData.rowHeight);
+					return new Point(x, y);
+				}
+			}(i)
+		});
+
+		tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18)
+		tempBtnTxt.setColor('#cbcbcb');
+		tempBtnTxt.setFontType('Arial');
+		tempBtnTxt.setLocation(function (ind) {
+			return function () {
+				var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth) + (tempBtn.getActiveImage().width - this.getTextWidth()) / 2;
+				var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
+				return new Point(x, y);
+			}
+		}(i));
+
+		tempTxt = new Text(layout[key], 18);
+		tempTxt.setColor('#cbcbcb');
+		tempTxt.setFontType('Arial');
+		tempTxt.setLocation(function (ind) {
+			return function () {
+				var x = App.canvasObj.getWidth() * (0.15 + Math.floor(ind / 3) * 0.35);
+				var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
+				return new Point(x, y);
+			}
+		}(i));
+
+		tempBtn.onClick(function () {
+			if(!obj.waitingForInput) {
+				var button = this;
+				obj.waitingForInput = true;
+				var input;
+				var handleInputs = setInterval (function(){
+					input = InputCollection.getCurrentInput();
+					if(input) {
+						if(obj.keyMap[input] || (48 <= input && input <= 90)) {
+							if(!obj.inputExists(input)) {
+								Config.keyBindings[button.getId()] = input;
+								clearInterval(blinking);
+								obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
+								obj.waitingForInput = false;
+								clearInterval(handleInputs);
+							} else {
+								obj.ControlChanger[button.getId()].buttonText.setColor('#ff5555');
+								setTimeout(function () {
+									obj.ControlChanger[button.getId()].buttonText.setColor('#cbcbcb');
+								}, 300);
+							}
+						} else if (input === Config.keyBindings.ESCAPE) {
+							clearInterval(blinking);
+							obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
+							obj.waitingForInput = false;
+							clearInterval(handleInputs);
+						}
+					}
+				}, 1000 / 30);
+				var state = 0;
+				obj.ControlChanger[button.getId()].buttonText.setText('');
+				var blinking = setInterval (function () {
+					state++;
+					state %= 2;
+					if(state == 1) {
+						obj.ControlChanger[button.getId()].buttonText.setText('_');
+					} else {
+						obj.ControlChanger[button.getId()].buttonText.setText('');
+					}
+				}, 200);
+			}
+		});
+		tempBtn.mouseOver(function () {
+			this.setActiveImage(this.getHoverImage());
+			this.hover();
+			console.log(this.location());
+		});
+		tempBtn.mouseLeave(function () {
+			this.setActiveImage(this.getImage());
+			this.hoverLeave();
+		});
+
+		tempBtn.setId(key);
+		console.log(tempBtn.getId());
+
+		obj.ControlChanger[tempBtn.getId()] = {
+			button: tempBtn,
+			text: tempTxt,
+			buttonText: tempBtnTxt
+		};
+
+		i++;
+	}
 };
 
 OptionsScreen.prototype.graphics = function () {
@@ -205,6 +262,7 @@ OptionsScreen.prototype.graphics = function () {
 	for (var key in obj.ControlChanger) {
 		obj.ControlChanger[key].button.drawButton();
 		obj.ControlChanger[key].text.draw();
+		obj.ControlChanger[key].buttonText.draw();
 	}
 };
 
@@ -218,14 +276,24 @@ OptionsScreen.prototype.dispose = function () {
 	for (var key in obj.ControlChanger) {
 		obj.ControlChanger[key].button.dispose();
 		obj.ControlChanger[key].text.dispose();
+		obj.ControlChanger[key].buttonText.dispose();
 	}
 };
 
 OptionsScreen.prototype.keyCodeToString = function(keyCode) {
 	if(48 <= keyCode && keyCode <= 90)
 		return String.fromCharCode(keyCode);
-	else if (obj.keyMap[event.keyCode] !== undefined)
-		return obj.keyMap[event.keyCode];
+	else if (obj.keyMap[keyCode] !== undefined)
+		return obj.keyMap[keyCode];
 };
+
+OptionsScreen.prototype.inputExists = function(keyCode) {
+	for (var key in Config.controlsLayout) {
+		if(Config.keyBindings[key] === keyCode) {
+			return true;
+		} 
+	}
+	return false;
+}
 
 module.exports = OptionsScreen;

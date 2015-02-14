@@ -30,7 +30,6 @@ function Button(params) {
 	this.borderColor = params.borderColor || 'black';
 	this.width = params.width || null;
 	this.height = params.height || null;
-	this.text = params.text || null;
 };
 
 Button.prototype.getId = function () {
@@ -80,19 +79,6 @@ Button.prototype.isVisible = function() {
 
 Button.prototype.setVisible = function(visible) {
 	this.visible = visible;
-};
-
-Button.prototype.setText = function (text) {
-	if(typeof text == 'string') {
-		console.log('textas');
-		this.text.setText(text);
-	} else {
-		this.text = text;
-	}
-};
-
-Button.prototype.getText = function () {
-	return this.text;
 };
 
 Button.prototype.getLocation = function() {
@@ -159,9 +145,6 @@ Button.prototype.drawButton = function() {
 			canvas.strokeStyle = this.borderColor;
 			canvas.lineWidth = this.borderWidth;
 			canvas.strokeRect(loc.getX(), loc.getY(), this.width, this.height);
-		}
-		if(this.text !== null) {
-			this.text.draw();
 		}
 	}
 };

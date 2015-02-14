@@ -132,6 +132,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var player = this.player;
 	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
@@ -153,15 +154,15 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
-				if (packet.key === keys.RIGHT)
+				if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.LEFT)
+				else if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 			else {
-				if (packet.key === keys.LEFT)
+				if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.RIGHT)
+				else if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 		}

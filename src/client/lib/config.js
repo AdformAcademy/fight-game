@@ -28,18 +28,20 @@ Config.controlsLayout = {
 	DEFEND: 'Defend',
 	KICK: 'Kick',
 	PUNCH: 'Punch'
-}
+};
+
+Config.controlsTable = {
+	rowHeight: 0.13,
+	columnWidth: 0.35,
+	padding: 0.03,
+	tableStart: 0.55,
+	buttonWidth: 0.12
+};
 
 Config.keyMap = {
-	8: 'BackSpc',
-	9: 'Tab',
-	13: 'Enter',
 	16: 'Shift',
 	17: 'Ctrl',
-	18: 'Alt',
-	19: 'Pause',
 	20: 'CapsLck',
-	27: 'Esc',
 	33: 'PgUp',
 	34: 'PgDn',
 	35: 'End',
