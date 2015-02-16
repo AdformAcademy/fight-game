@@ -38,6 +38,7 @@ vows.describe('SocketServer').addBatch({
 			var targetSession = SessionCollection.getSessionObject(targetSocketMock.id);
 			assert.isTrue(SocketServer.inputs[session.sessionId] !== undefined);
 			assert.isTrue(SocketServer.inputs[targetSession.sessionId] !== undefined);
+			SessionCollection.list = [];
 		}
 	}
 }).run();
