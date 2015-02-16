@@ -16,6 +16,9 @@ switch (env) {
 
 var Express = require('./src/server/express');
 var SocketServer = require('./src/server/socket-server');
+var Session = require('./src/server/session');
+var SessionCollection = require('./src/server/session-collection');
+var TournamentCollection = require('./src/server/tournament-collection');
 var Tasks = require('./src/server/tasks');
 var Config = require('./src/server/config');
 var io = require('socket.io')(SocketServer.http);
@@ -34,8 +37,9 @@ setInterval(function() {
 }, 10);
 
 io.on('connection', function(socket) {
-	socket.on('disconnect', function() {
+	socket.on('disconnect', function() {	
 		SocketServer.disconnectClient(socket);
+		TournamentCollection.disconnectSession(socket);
 	});
 
 	socket.on('ready', function(selection) {
@@ -57,5 +61,10 @@ io.on('connection', function(socket) {
 			});
 			socket.emit('choose-character', packetData);
 		});
+	});
+
+	socket.on('tournament', function (selection) {
+		var session = SessionCollection.createSession(socket, selection, Session.TOURNAMENT);
+		TournamentCollection.joinTournament(session);
 	});
 });

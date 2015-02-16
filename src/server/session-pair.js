@@ -40,7 +40,7 @@ SessionPair.prototype.getFirstSession = function () {
 	return this.firstSession;
 };
 
-SessionPair.prototype.setFirstSession = function (firsSession) {
+SessionPair.prototype.setFirstSession = function (firstSession) {
 	this.firstSession = firstSession;
 };
 

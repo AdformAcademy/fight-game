@@ -18,6 +18,11 @@ CharacterChooser.activeButton = 0;
 CharacterChooser.buttons = null;
 CharacterChooser.data = null;
 CharacterChooser.choosenPlayer = null;
+CharacterChooser.socketTarget = null;
+
+CharacterChooser.setSocketTarget = function (target) {
+	CharacterChooser.socketTarget = target;
+};
 
 CharacterChooser.resetUnactiveButton = function (index) {
 	var button = CharacterChooser.buttons[index];
@@ -38,12 +43,14 @@ CharacterChooser.updateActiveButton = function () {
 };
 
 CharacterChooser.loadWaitingScreen = function (id) {
-	socket.emit('ready', id);
-	var screen = App.screen;
-	screen.dispose();
-	App.screen = new WaitingScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);
-	CharacterChooser.stop();
+	if (CharacterChooser.isRunning) {
+		socket.emit(CharacterChooser.socketTarget, id);
+		var screen = App.screen;
+		screen.dispose();
+		App.screen = new WaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		CharacterChooser.stop();
+	}
 };
 
 CharacterChooser.preview = function (id) {

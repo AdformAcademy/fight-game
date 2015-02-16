@@ -75,6 +75,10 @@ socket.on('update', function(data) {
 	Client.storeServerData(data);
 });
 
+socket.on('tournament-waiting', function (data) {
+	console.log(data);
+});
+
 $(window).load(function () {
 	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();

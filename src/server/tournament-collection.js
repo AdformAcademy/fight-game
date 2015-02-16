@@ -28,6 +28,7 @@ TournamentCollection.deleteTournament = function (id) {
 	for (var i = 0; i < tournaments.length; i++) {
 		var tournament = tournaments[i];
 		if (tournament.getId() === id) {
+			tournament.stop();
 			tournaments.splice(i, 1);
 			return true;
 		}
@@ -59,6 +60,17 @@ TournamentCollection.joinTournament = function (session) {
 		}
 	}
 	return false;
+};
+
+TournamentCollection.disconnectSession = function (socket) {
+	var tournaments = TournamentCollection.tournaments;
+	for (var i = 0; i < tournaments.length; i++) {
+		var tournament = tournaments[i];
+		if (tournament.disconnectSession(socket) && tournament.isEmpty()) {
+			TournamentCollection.deleteTournament(tournament.getId());
+			return;
+		}
+	}
 };
 
 module.exports = TournamentCollection;

@@ -8,6 +8,7 @@ var Tournament = function (params) {
 	this.tournamentWaitTime = params.tournamentWaitTime;
 	this.tournamentTimer = this.startWaitTimer();
 	this.updateTimer = this.update();
+	this.tournamentBegan = false;
 };
 
 Tournament.prototype.getId = function () {
@@ -47,6 +48,7 @@ Tournament.prototype.startWaitTimer = function () {
 		self.tournamentWaitTime--;
 		if (self.tournamentWaitTime < 1) {
 			self.begin();
+			tournamentBegan = true;
 			clearInterval(waitTimer);
 		}
 	}, 1000);
@@ -246,10 +248,12 @@ Tournament.prototype.selectPairs = function () {
 };
 
 Tournament.prototype.updateSession = function (session) {
-	session.socket.emit('tournament-waiting', {
-		timer: this.tournamentWaitTime,
-		pairs: this.sessionPairs.length
-	});
+	if (session !== null) {
+		session.socket.emit('tournament-waiting', {
+			timer: this.tournamentWaitTime,
+			pairs: this.sessionPairs.length
+		});
+	}
 };
 
 Tournament.prototype.updateSessionPair = function (sessionPair) {
@@ -257,9 +261,7 @@ Tournament.prototype.updateSessionPair = function (sessionPair) {
 	var secondSession = sessionPair.getSecondSession();
 
 	this.updateSession(firstSession);
-	if (secondSession !== null) {
-		this.updateSession(secondSession);
-	}
+	this.updateSession(secondSession);
 };
 
 Tournament.prototype.updateSessions = function () {
@@ -272,11 +274,71 @@ Tournament.prototype.updateSessions = function () {
 	}
 };
 
+Tournament.prototype.endGameSession = function (sessions) {
+	session.socket.emit('tournament-disconnect-waiting', '');
+};
+
+Tournament.prototype.disconnectSession = function (socket) {
+	var sessionPairs = this.sessionPairs;
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+		var firstSession = sessionPair.getFirstSession();
+		var secondSession = sessionPair.getSecondSession();
+
+		if (firstSession !== null && firstSession.sessionId === socket.id) {
+
+			if (!this.tournamentBegan) {
+				this.sessionPairs.splice(i, 1);
+				return true;
+			}
+
+			if (secondSession !== null) {
+				secondSession.addWonFight();
+				sessionPair.setFirstSession(secondSession);
+				sessionPair.setSecondSession(null);
+				this.endGameSession(secondSession);
+			} else {
+				sessionPair.setFirstSession(null);
+			}
+			sessionPair.setFighting(false);
+			return true;
+		} else if (secondSession !== null && secondSession.sessionId === socket.id) {
+			if (firstSession !== null) {
+				firstSession.addWonFight();
+				this.endGameSession(firstSession);
+			}
+			sessionPair.setSecondSession(null);
+			sessionPair.setFighting(false);
+			return true;
+		}
+	}
+	return false;
+};
+
+Tournament.prototype.isEmpty = function () {
+	var sessionPairs = this.sessionPairs;
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+		var firstSession = sessionPair.getFirstSession();
+		var secondSession = sessionPair.getSecondSession();
+		if (firstSession !== null || secondSession !== null) {
+			return false;
+		}
+	}
+	return true;
+};
+
 Tournament.prototype.update = function () {
 	var self = this;
 	var updateTimer = setInterval(function () {
 		self.updateSessions();
 	}, 1000 / 30);
+	return updateTimer;
+};
+
+Tournament.prototype.stop = function () {
+	clearInterval(this.updateTimer);
+	clearInterval(this.tournamentTimer);
 };
 
 module.exports = Tournament;
