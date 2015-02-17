@@ -46,7 +46,7 @@ function StartScreen() {
 
 	this.startText = new Text('Are you ready to begin a fight?', 30);
 	this.startText.setColor('#cbcbcb');
-	this.startText.setFontType('Arial');
+	this.startText.setFontType('FSpirit');
 	obj = this;
 
 	this.tournamentButton.setLocation(function() {

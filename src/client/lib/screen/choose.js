@@ -15,7 +15,7 @@ var ChooseScreen = function () {
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.infoText = new Text('Choose character', 30);
 	this.infoText.color = '#cbcbcb';
-	this.infoText.fontType = 'Arial';
+	this.infoText.fontType = 'FSpirit';
 
 	this.buttons = [];
 

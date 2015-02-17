@@ -17,11 +17,11 @@ function WaitingScreen() {
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.waitingText = new Text('Waiting for opponent...', 30);
 	this.waitingText.color = '#cbcbcb';
-	this.waitingText.fontType = 'Arial';
+	this.waitingText.fontType = 'FSpirit';
 
 	this.loadingText = new Text('Loading', 30);
 	this.loadingText.color = '#cbcbcb';
-	this.loadingText.fontType = 'Arial';
+	this.loadingText.fontType = 'FSpirit';
 
 	this.globalAlpha = 1;
 	this.globalAlphaStep = 0.04;

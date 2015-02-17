@@ -42,10 +42,10 @@ function EndScreen(status) {
 		}
 		this.endText.setColor('#C80000');
 	}
-	this.endText.setFontType('Arial');
+	this.endText.setFontType('FSpirit');
 	this.challengeText = new Text('Would you like to try again?', 30);
 	this.challengeText.setColor('#cbcbcb');
-	this.challengeText.setFontType('Arial');
+	this.challengeText.setFontType('FSpirit');
 	
 	obj = this;
 

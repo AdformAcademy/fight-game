@@ -28,6 +28,7 @@ function StageScreen() {
 
 	this.countDownText = new Text(3, 50);
 	this.countDownText.setColor('#FFFFFF');
+	this.countDownText.setFontType('FSpirit');
 	this.animatingCountDown = false;
 
 	this.countDownText.setLocation(function() {
