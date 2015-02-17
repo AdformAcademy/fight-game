@@ -1,10 +1,14 @@
+var Session = require('./session');
+var SocketServer = require('./socket-server');
+var PlayerCollection = require('./player-collection');
+
 var SessionPair = function (params) {
 	this.id = params.id;
 	this.firstSession = params.firstSession || null;
 	this.secondSession = params.secondSession || null;
 	this.tournamentId = params.tournamentId || null;
-	this.tournamentTime = params.tournamentTime || null;
-	this.tournamentTimer = null;
+	this.fightTime = params.fightTime || null;
+	this.fightTimer = null;
 	this.fighting = false;
 };
 
@@ -16,12 +20,12 @@ SessionPair.prototype.setId = function (id) {
 	this.id = id;
 };
 
-SessionPair.prototype.getTournamentTime = function () {
-	return this.tournamentTime;
+SessionPair.prototype.getFightTime = function () {
+	return this.fightTime;
 };
 
-SessionPair.prototype.setTournamentTime = function (time) {
-	this.tournamentTime = time;
+SessionPair.prototype.setFightTime = function (time) {
+	this.fightTime = time;
 };
 
 SessionPair.prototype.getTournamentId = function () {
@@ -60,13 +64,55 @@ SessionPair.prototype.setFighting = function (fighting) {
 	this.fighting = fighting;
 };
 
+SessionPair.prototype.endGameSession = function (session, message) {
+	session.socket.emit('tournament-end-fight', message);
+};
+
+SessionPair.prototype.selectWinner = function () {
+	var firstSession = this.firstSession;
+	var secondSession = this.secondSession;
+	var firstPlayer = PlayerCollection.getPlayerObject(firstSession.socket.id);
+	var secondPlayer = PlayerCollection.getPlayerObject(secondSession.socket.id);
+
+	var firstPlayerHealth = firstPlayer.getLives();
+	var secondPlayerHealth = secondPlayer.getLives();
+
+	if (firstPlayerHealth > secondPlayerHealth) {
+		firstSession.addWonFight();
+		this.endGameSession(firstSession, 'You won');
+		firstSession.state = Session.TOURNAMENT;
+		firstSession.opponentId = null;
+		secondSession.socket.emit('message', 'You lost');
+		this.secondSession = null;
+		SocketServer.deleteObjects(secondSession);
+	} else if (firstPlayerHealth < secondPlayerHealth) {
+		secondSession.addWonFight();
+		this.endGameSession(secondSession, 'You won');
+		secondSession.state = Session.TOURNAMENT;
+		secondSession.opponentId = null;
+		firstSession.socket.emit('message', 'You lost');
+		this.firstSession = this.secondSession;
+		this.secondSession = null;
+		SocketServer.deleteObjects(firstSession);
+	} else {
+		firstSession.addWonFight();
+		this.endGameSession(firstSession, 'You won');
+		firstSession.state = Session.TOURNAMENT;
+		firstSession.opponentId = null;
+		secondSession.socket.emit('message', 'You lost');
+		this.secondSession = null;
+		SocketServer.deleteObjects(secondSession);
+	}
+};
+
 SessionPair.prototype.startTimer = function () {
 	var self = this;
-	this.tournamentTimer = setInterval(function () {
-		self.tournamentTime--;
-		if (self.tournamentTime < 1) {
+	this.fightTimer = setInterval(function () {
+		self.fightTime--;
+		if (self.fightTime < 1) {
+			self.selectWinner();
 			self.fighting = false;
-			clearInterval(self.tournamentTimer);
+			clearInterval(self.fightTimer);
 		}
 	}, 1000);
 };

@@ -1,6 +1,10 @@
+var Session = require('./session');
 var SessionPair = require('./session-pair');
 var SocketServer = require('./socket-server');
+var Player = require('./player');
 var PlayerCollection = require('./player-collection');
+var Config = require('./config');
+var fs = require('fs');
 
 var Tournament = function (params) {
 	this.id = params.id;
@@ -48,7 +52,7 @@ Tournament.prototype.startWaitTimer = function () {
 		self.tournamentWaitTime--;
 		if (self.tournamentWaitTime < 1) {
 			self.begin();
-			tournamentBegan = true;
+			self.tournamentBegan = true;
 			clearInterval(waitTimer);
 		}
 	}, 1000);
@@ -65,15 +69,24 @@ Tournament.prototype.begin = function () {
 	this.selectPairs();
 	if ((unpickedPair = this.removeUnpickedPair()) !== undefined) {
 		var session = unpickedPair.getFirstSession();
-		SocketServer.disconnectClient(session.socket);
+		session.socket.emit('message', 'Not enough players for tournament');
+		SocketServer.deleteObjects(session);
 	}
+
+	if (this.isEmpty()) {
+		this.stop();
+		return;
+	}
+
+	this.prepareSessionPairs();
 };
 
 Tournament.prototype.join = function (session) {
 	var sessionPair = new SessionPair({
 		id: this.sessionPairs.length,
 		firstSession: session,
-		tournamentId: this.id
+		tournamentId: this.id,
+		fightTime: 10
 	});
 
 	this.sessionPairs.push(sessionPair);
@@ -88,9 +101,9 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 	var secondSession = sessionPair.getSecondSession();
 
 	firstSession.opponentId = secondSession.sessionId;
-	firstSession.state = Session.PLAYING;
+	firstSession.state = Session.TOURNAMENT_PLAYING;
 	secondSession.opponentId = firstSession.sessionId;
-	secondSession.state = Session.PLAYING;
+	secondSession.state = Session.TOURNAMENT_PLAYING;
 
 	var playerSelection = firstSession.getSelection();
 	var opponentSelection = secondSession.getSelection();
@@ -247,7 +260,7 @@ Tournament.prototype.selectPairs = function () {
 
 };
 
-Tournament.prototype.updateSession = function (session) {
+Tournament.prototype.sendUpdateWaiting = function (sessionPair, session) {
 	if (session !== null) {
 		session.socket.emit('tournament-waiting', {
 			timer: this.tournamentWaitTime,
@@ -256,12 +269,28 @@ Tournament.prototype.updateSession = function (session) {
 	}
 };
 
-Tournament.prototype.updateSessionPair = function (sessionPair) {
+Tournament.prototype.sendUpdateProgress = function (sessionPair, session) {
+	if (session !== null) {
+		session.socket.emit('tournament-progress', {
+			fightTimer: sessionPair.getFightTime()
+		});
+	}
+};
+
+Tournament.prototype.sendPairUpdateWaiting = function (sessionPair) {
 	var firstSession = sessionPair.getFirstSession();
 	var secondSession = sessionPair.getSecondSession();
 
-	this.updateSession(firstSession);
-	this.updateSession(secondSession);
+	this.sendUpdateWaiting(sessionPair, firstSession);
+	this.sendUpdateWaiting(sessionPair, secondSession);
+};
+
+Tournament.prototype.sendPairUpdateProgress = function (sessionPair) {
+	var firstSession = sessionPair.getFirstSession();
+	var secondSession = sessionPair.getSecondSession();
+
+	this.sendUpdateProgress(sessionPair, firstSession);
+	this.sendUpdateProgress(sessionPair, secondSession);
 };
 
 Tournament.prototype.updateSessions = function () {
@@ -269,13 +298,11 @@ Tournament.prototype.updateSessions = function () {
 	for (var i = 0; i < sessionPairs.length; i++) {
 		var sessionPair = sessionPairs[i];
 		if (!sessionPair.isFighting()) {
-			this.updateSessionPair(sessionPair);
+			this.sendPairUpdateWaiting(sessionPair);
+		} else {
+			this.sendPairUpdateProgress(sessionPair);
 		}
 	}
-};
-
-Tournament.prototype.endGameSession = function (sessions) {
-	session.socket.emit('tournament-disconnect-waiting', '');
 };
 
 Tournament.prototype.disconnectSession = function (socket) {
@@ -286,7 +313,6 @@ Tournament.prototype.disconnectSession = function (socket) {
 		var secondSession = sessionPair.getSecondSession();
 
 		if (firstSession !== null && firstSession.sessionId === socket.id) {
-
 			if (!this.tournamentBegan) {
 				this.sessionPairs.splice(i, 1);
 				return true;
@@ -296,7 +322,10 @@ Tournament.prototype.disconnectSession = function (socket) {
 				secondSession.addWonFight();
 				sessionPair.setFirstSession(secondSession);
 				sessionPair.setSecondSession(null);
-				this.endGameSession(secondSession);
+				sessionPair.endGameSession(secondSession, 
+					'You won fight because your opponent disconnected');
+				secondSession.state = Session.TOURNAMENT;
+				secondSession.opponentId = null;
 			} else {
 				sessionPair.setFirstSession(null);
 			}
@@ -305,7 +334,10 @@ Tournament.prototype.disconnectSession = function (socket) {
 		} else if (secondSession !== null && secondSession.sessionId === socket.id) {
 			if (firstSession !== null) {
 				firstSession.addWonFight();
-				this.endGameSession(firstSession);
+				sessionPair.endGameSession(firstSession, 
+					'You won fight because your opponent disconnected');
+				firstSession.state = Session.TOURNAMENT;
+				firstSession.opponentId = null;
 			}
 			sessionPair.setSecondSession(null);
 			sessionPair.setFighting(false);
@@ -339,6 +371,22 @@ Tournament.prototype.update = function () {
 Tournament.prototype.stop = function () {
 	clearInterval(this.updateTimer);
 	clearInterval(this.tournamentTimer);
+	this.deleteObjects();
+};
+
+Tournament.prototype.deleteObjects = function () {
+	var sessionPairs = this.sessionPairs;
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+		var firstSession = sessionPair.getFirstSession();
+		var secondSession = sessionPair.getSecondSession();
+		if (firstSession !== null) {
+			SocketServer.deleteObjects(firstSession);
+		}
+		if (secondSession !== null) {
+			SocketServer.deleteObjects(secondSession);
+		}
+	}
 };
 
 module.exports = Tournament;

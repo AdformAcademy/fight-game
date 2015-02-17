@@ -420,6 +420,7 @@ Client.update = function() {
 };
 
 Client.stop = function() {
+	clearInterval(Client.updateWorldInterval);
 	Client.inputs = [];
 	Client.serverData = [];
 	Client.inputCounter = 0;
@@ -431,8 +432,7 @@ Client.stop = function() {
 	Client.world = null;
 	Client.parallax = null;
 	Client.catchingInterpolation = false;
-	Client.gameStarted = false;
-	clearInterval(Client.updateWorldInterval);
+	Client.gameStarted = false;	
 };
 
 Client.start = function() {

@@ -5,6 +5,7 @@ var EventCollection = require('./event-collection');
 var Point = require('../../common/point');
 var StartScreen = require('./screen/start');
 var EndScreen = require('./screen/end');
+var WaitingScreen = require('./screen/waiting');
 var Config = require('./config');
 var CharacterChooser = require('./character-chooser');
 var socket = io();
@@ -57,6 +58,15 @@ socket.on('unactive', function() {
 	}
 });
 
+socket.on('message', function (text) {
+	if (Client.gameStarted) {
+		Client.stop();
+	}
+	App.screen.dispose();
+	App.screen = new EndScreen(text);
+	App.canvasObj.setGraphics(App.screen.graphics);
+});
+
 socket.on('victory', function() {
 	Client.stop();
 	App.screen.dispose();
@@ -77,6 +87,20 @@ socket.on('update', function(data) {
 
 socket.on('tournament-waiting', function (data) {
 	console.log(data);
+});
+
+socket.on('tournament-progress', function (data) {
+	console.log(data);
+});
+
+socket.on('tournament-end-fight', function (data) {
+	if (Client.gameStarted) {
+		Client.stop();
+		App.screen.dispose();
+		App.screen = new WaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		//TODO tournament waiting screen
+	}
 });
 
 $(window).load(function () {

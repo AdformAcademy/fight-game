@@ -36,6 +36,8 @@ setInterval(function() {
 	SocketServer.updatePlayers();
 }, 10);
 
+TournamentCollection.start();
+
 io.on('connection', function(socket) {
 	socket.on('disconnect', function() {	
 		SocketServer.disconnectClient(socket);

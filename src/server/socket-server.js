@@ -172,18 +172,20 @@ SocketServer.deleteObjects = function(session) {
 SocketServer.disconnectClient = function(socket, status) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && session.opponentId !== null) {
-		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
-		if(status == "Victory") {
-			socket.emit(Session.VICTORY);
-			opponentSession.socket.emit(Session.DEFEAT);
-		} else {
-			opponentSession.socket.emit(Session.UNACTIVE);
-		}			
+		if (session.state !== Session.TOURNAMENT_PLAYING) {
+			var opponentSession = SessionCollection.getSessionObject(session.opponentId);
+			if(status == "Victory") {
+				socket.emit(Session.VICTORY);
+				opponentSession.socket.emit(Session.DEFEAT);
+			} else {
+				opponentSession.socket.emit(Session.UNACTIVE);
+			}
+			SocketServer.deleteObjects(opponentSession);
+		}
 	} else {
 		socket.emit(Session.UNACTIVE);
 	}
 	SocketServer.deleteObjects(session);
-	SocketServer.deleteObjects(opponentSession);
 	SessionCollection.printSessions();
 };
 
@@ -445,7 +447,8 @@ SocketServer.updatePlayers = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state === Session.PLAYING) {
+		if(session.state === Session.PLAYING 
+				|| session.state === Session.TOURNAMENT_PLAYING) {
 			var sessionId = session.socket.id;
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			SocketServer.updatePlayer(player);
@@ -457,7 +460,8 @@ SocketServer.updateWorld = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state === Session.PLAYING) {
+		if(session.state === Session.PLAYING 
+				|| session.state === Session.TOURNAMENT_PLAYING) {
 			var player = PlayerCollection.getPlayerObject(session.socket.id);
 			if (player !== undefined) {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());

@@ -3,6 +3,7 @@ var Tournament = require('./tournament');
 var TournamentCollection = {};
 
 TournamentCollection.tournaments = [];
+TournamentCollection.updateInterval = null;
 
 TournamentCollection.createTournament = function () {
 	var tournament = new Tournament({
@@ -28,6 +29,7 @@ TournamentCollection.deleteTournament = function (id) {
 	for (var i = 0; i < tournaments.length; i++) {
 		var tournament = tournaments[i];
 		if (tournament.getId() === id) {
+			console.log('tournament deleted');
 			tournament.stop();
 			tournaments.splice(i, 1);
 			return true;
@@ -71,6 +73,19 @@ TournamentCollection.disconnectSession = function (socket) {
 			return;
 		}
 	}
+};
+
+TournamentCollection.start = function () {
+	TournamentCollection.updateInterval = setInterval(function () {
+		var tournaments = TournamentCollection.tournaments;
+		for (var i = 0; i < tournaments.length; i++) {
+			var tournament = tournaments[i];
+			if (tournament.isEmpty()) {
+				TournamentCollection.deleteTournament(tournament.getId());
+				return;
+			}
+		}
+	}, 1000 / 10);
 };
 
 module.exports = TournamentCollection;

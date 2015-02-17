@@ -13,6 +13,7 @@ Session.UNACTIVE = 'unactive';
 Session.VICTORY = 'victory';
 Session.DEFEAT = 'defeat';
 Session.TOURNAMENT = 'tournament';
+Session.TOURNAMENT_PLAYING = 'tournament-playing';
 
 Session.prototype.socket = function() {
 	return this.socket;
