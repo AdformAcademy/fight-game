@@ -35,8 +35,8 @@ function StartScreen() {
 	});
 
 	this.tournamentButton = new Button({
-		image: './img/start_button.png',
-		hoverImage: './img/start_button_hover.png',
+		image: './img/tournament_button.png',
+		hoverImage: './img/tournament_button_hover.png',
 		location: function() {
 			var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
 			var y = App.canvasObj.getHeight() * 0.5;
