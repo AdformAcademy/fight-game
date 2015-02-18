@@ -9,6 +9,7 @@ var socket = io();
 var obj;
 var Config;
 var SoundCollection;
+var StartScreen;
 
 function EndScreen(status) {
 	App = require('../../app');
@@ -21,7 +22,8 @@ function EndScreen(status) {
 	Background = require('../canvas/background');	
 	Config = require('../config');
 	SoundCollection = require('../sound-collection');
-	
+	StartScreen = require('./start');
+
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
@@ -32,6 +34,33 @@ function EndScreen(status) {
 			return new Point(x, y);
 		}
 	});
+
+	this.backButton = new Button({
+		image: './img/back_button.png',
+		hoverImage: './img/back_button_hover.png',
+		location: function() {
+			var x = Config.progressBarPadding;
+			var y = App.canvasObj.getHeight() - Config.progressBarPadding - this.getActiveImage().height;
+			return new Point(x, y);
+		},
+	});
+
+	this.backButton.onClick(function () {
+		App.screen = new StartScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		obj.dispose();
+	});
+
+	this.backButton.mouseOver(function () {
+		this.setActiveImage(this.getHoverImage());
+		this.hover();
+	});
+
+	this.backButton.mouseLeave(function () {
+		this.setActiveImage(this.getImage());
+		this.hoverLeave();
+	});
+
 	this.endText = new Text(status + '!', 50);
 	if(status == "Victory") {
 		SoundCollection.play('common', 'victory');
@@ -93,12 +122,14 @@ EndScreen.prototype.graphics = function() {
 	obj.startButton.drawButton();
 	obj.endText.draw();
 	obj.challengeText.draw();
+	obj.backButton.drawButton();
 };
 
 EndScreen.prototype.dispose = function() {
 	this.startButton.dispose();
 	this.endText.dispose();
 	this.challengeText.dispose();
+	this.backButton.dispose();
 };
 
 module.exports = EndScreen;

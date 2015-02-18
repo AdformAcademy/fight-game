@@ -40,7 +40,7 @@ var ChooseScreen = function () {
 	this.backButton.onClick(function () {
 		App.screen = new StartScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
-		CharacterChooser.stop()
+		CharacterChooser.stop();
 		obj.dispose();
 	});
 

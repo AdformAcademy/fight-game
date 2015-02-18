@@ -264,7 +264,9 @@ CharacterChooser.update = function() {
 
 CharacterChooser.stop = function() {
 	CharacterChooser.isRunning = false;
-	CharacterChooser.screen.dispose();
+	if(CharacterChooser.screen) {
+		CharacterChooser.screen.dispose();
+	}
 	CharacterChooser.screen = null;
 	CharacterChooser.activeButton = 0;
 	CharacterChooser.buttons = null;

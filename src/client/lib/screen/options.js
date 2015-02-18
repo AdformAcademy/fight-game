@@ -238,7 +238,7 @@ function OptionsScreen () {
 		});
 
 		tempBtn.setId(key);
-		
+
 		obj.ControlChanger[tempBtn.getId()] = {
 			button: tempBtn,
 			text: tempTxt,
