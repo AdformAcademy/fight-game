@@ -4,6 +4,10 @@ var Point;
 var Text;
 var Background;
 var obj;
+var Button;
+var Config;
+var StartScreen;
+var CharacterChooser;
 
 var ChooseScreen = function () {
 	App = require('../../app');
@@ -11,6 +15,10 @@ var ChooseScreen = function () {
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
 	Background = require('../canvas/background');	
+	Button = require('../canvas/button');
+	Config = require('../config');
+	StartScreen = require('./start');
+	CharacterChooser = require('../character-chooser');
 
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.infoText = new Text('Choose character', 30);
@@ -18,6 +26,33 @@ var ChooseScreen = function () {
 	this.infoText.fontType = 'Arial';
 
 	this.buttons = [];
+
+	this.backButton = new Button({
+		image: './img/back_button.png',
+		hoverImage: './img/back_button_hover.png',
+		location: function() {
+			var x = Config.progressBarPadding;
+			var y = App.canvasObj.getHeight() - Config.progressBarPadding - this.getActiveImage().height;
+			return new Point(x, y);
+		},
+	});
+
+	this.backButton.onClick(function () {
+		App.screen = new StartScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		CharacterChooser.stop()
+		obj.dispose();
+	});
+
+	this.backButton.mouseOver(function () {
+		this.setActiveImage(this.getHoverImage());
+		this.hover();
+	});
+
+	this.backButton.mouseLeave(function () {
+		this.setActiveImage(this.getImage());
+		this.hoverLeave();
+	});
 
 	this.fadeValue = 1;
 	this.playerFadeValue = 0;
@@ -62,6 +97,7 @@ ChooseScreen.prototype.graphics = function() {
 	if (obj.chosenPlayer === null) {
 		obj.infoText.draw();
 		obj.drawButtons();
+		obj.backButton.drawButton();
 	} else {
 		obj.chosenPlayer.draw(0, 0);
 	}
@@ -70,6 +106,7 @@ ChooseScreen.prototype.graphics = function() {
 
 ChooseScreen.prototype.dispose = function() {
 	obj.disposeButtons();
+	obj.backButton.dispose();
 };
 
 module.exports = ChooseScreen;

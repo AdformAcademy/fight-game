@@ -231,7 +231,6 @@ function OptionsScreen () {
 		tempBtn.mouseOver(function () {
 			this.setActiveImage(this.getHoverImage());
 			this.hover();
-			console.log(this.location());
 		});
 		tempBtn.mouseLeave(function () {
 			this.setActiveImage(this.getImage());
@@ -239,8 +238,7 @@ function OptionsScreen () {
 		});
 
 		tempBtn.setId(key);
-		console.log(tempBtn.getId());
-
+		
 		obj.ControlChanger[tempBtn.getId()] = {
 			button: tempBtn,
 			text: tempTxt,
