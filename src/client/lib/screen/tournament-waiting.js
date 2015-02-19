@@ -18,15 +18,15 @@ function TournamentWaitingScreen(data) {
 	this.backgroundImage = new Background('./img/tournament_waiting.png');
 	this.waitingText = new Text('Waiting for players, ' + data.pairs + '/8 ready', 30);
 	this.waitingText.color = '#cbcbcb';
-	this.waitingText.fontType = 'Arial';
+	this.waitingText.fontType = 'FSpirit';
 
 	this.waitingText2 = new Text('Game will start in: ' + data.timer, 30);
 	this.waitingText2.color = '#cbcbcb';
-	this.waitingText2.fontType = 'Arial';
+	this.waitingText2.fontType = 'FSpirit';
 
 	this.loadingText = new Text('Loading', 30);
 	this.loadingText.color = '#cbcbcb';
-	this.loadingText.fontType = 'Arial';
+	this.loadingText.fontType = 'FSpirit';
 
 	obj = this;
 
