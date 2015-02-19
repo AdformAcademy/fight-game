@@ -18,15 +18,15 @@ function TournamentWaitingScreen(data) {
 	this.backgroundImage = new Background('./img/tournament_waiting.png');
 	this.waitingText = new Text('Waiting for players, ' + data.pairs + '/8 ready', 30);
 	this.waitingText.color = '#cbcbcb';
-	this.waitingText.fontType = 'Arial';
+	this.waitingText.fontType = 'FSpirit';
 
 	this.waitingText2 = new Text('Game will start in: ' + data.timer, 30);
 	this.waitingText2.color = '#cbcbcb';
-	this.waitingText2.fontType = 'Arial';
+	this.waitingText2.fontType = 'FSpirit';
 
 	this.loadingText = new Text('Loading', 30);
 	this.loadingText.color = '#cbcbcb';
-	this.loadingText.fontType = 'Arial';
+	this.loadingText.fontType = 'FSpirit';
 
 	obj = this;
 
@@ -56,72 +56,7 @@ function TournamentWaitingScreen(data) {
 		var y = App.canvasObj.getHeight() * 0.35;
 		return new Point(x, y);
 	});
-	//console.log(data.id);
-/*
-var spriteImage = new Image();
-spriteImage.src = './img/characters/' + data[character].spriteSheetButton.spriteSheetIntroImage;
-
-*/
-
-
 };
-
-
-/*
-
-TournamentWaitingScreen.createButtons = function (data) {
-	CharacterChooser.data = data;
-	var buttons = [];
-	var startX = App.canvasObj.getWidth() * 0.125;
-	var startY = App.canvasObj.getHeight() * 0.2;
-	var width = 228;
-	var height = 160;
-	var shiftX = 0;
-	var shiftY = 0;
-	var margin = 3;
-	var buttonsInRow = 3;
-	var currentButton = 0;
-	var currentRow = 0;
-
-	for (var character in data) {
-		var x = startX + shiftX + (margin * currentButton);
-		var y = startY + shiftY + (margin * currentRow);
-		
-		var button = new Button({
-			id: data[character].id,
-			useSpriteSheet: true,
-			spriteSheet: new SpriteSheet({
-				image: spriteImage,
-				data: data[character].spriteSheetButton,
-				useScale: true,
-				scaleWidth: width,
-				scaleHeight: height
-			}),
-			location: new Point(x, y),
-			drawBorder: true,
-			borderWidth: 3,
-			borderColor: '#5E5E5E',
-			width: width,
-			height: height
-		});
-
-
-		shiftX += width;
-		currentButton++;
-		if (currentButton + 1 > buttonsInRow) {
-			currentButton = 0;
-			currentRow++;
-			shiftX = 0;
-			shiftY += height;
-		}
-	}
-	return buttons;
-};
-
-
-
-*/
-
 
 TournamentWaitingScreen.prototype.animateLoading = function() {
 	var self = this;

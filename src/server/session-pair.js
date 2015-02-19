@@ -71,37 +71,39 @@ SessionPair.prototype.endGameSession = function (session, message) {
 SessionPair.prototype.selectWinner = function () {
 	var firstSession = this.firstSession;
 	var secondSession = this.secondSession;
-	var firstPlayer = PlayerCollection.getPlayerObject(firstSession.socket.id);
-	var secondPlayer = PlayerCollection.getPlayerObject(secondSession.socket.id);
+	if(firstSession !== null && secondSession !== null){
+		var firstPlayer = PlayerCollection.getPlayerObject(firstSession.socket.id);
+		var secondPlayer = PlayerCollection.getPlayerObject(secondSession.socket.id);
 
-	var firstPlayerHealth = firstPlayer.getLives();
-	var secondPlayerHealth = secondPlayer.getLives();
+		var firstPlayerHealth = firstPlayer.getLives();
+		var secondPlayerHealth = secondPlayer.getLives();
 
-	if (firstPlayerHealth > secondPlayerHealth) {
-		firstSession.addWonFight();
-		this.endGameSession(firstSession, 'You won');
-		firstSession.state = Session.TOURNAMENT;
-		firstSession.opponentId = null;
-		secondSession.socket.emit('message', 'You lost');
-		this.secondSession = null;
-		SocketServer.deleteObjects(secondSession);
-	} else if (firstPlayerHealth < secondPlayerHealth) {
-		secondSession.addWonFight();
-		this.endGameSession(secondSession, 'You won');
-		secondSession.state = Session.TOURNAMENT;
-		secondSession.opponentId = null;
-		firstSession.socket.emit('message', 'You lost');
-		this.firstSession = this.secondSession;
-		this.secondSession = null;
-		SocketServer.deleteObjects(firstSession);
-	} else {
-		firstSession.addWonFight();
-		this.endGameSession(firstSession, 'You won');
-		firstSession.state = Session.TOURNAMENT;
-		firstSession.opponentId = null;
-		secondSession.socket.emit('message', 'You lost');
-		this.secondSession = null;
-		SocketServer.deleteObjects(secondSession);
+		if (firstPlayerHealth > secondPlayerHealth) {
+			firstSession.addWonFight();
+			this.endGameSession(firstSession, 'You won');
+			firstSession.state = Session.TOURNAMENT;
+			firstSession.opponentId = null;
+			secondSession.socket.emit('message', 'You lost');
+			this.secondSession = null;
+			SocketServer.deleteObjects(secondSession);
+		} else if (firstPlayerHealth < secondPlayerHealth) {
+			secondSession.addWonFight();
+			this.endGameSession(secondSession, 'You won');
+			secondSession.state = Session.TOURNAMENT;
+			secondSession.opponentId = null;
+			firstSession.socket.emit('message', 'You lost');
+			this.firstSession = this.secondSession;
+			this.secondSession = null;
+			SocketServer.deleteObjects(firstSession);
+		} else {
+			firstSession.addWonFight();
+			this.endGameSession(firstSession, 'You won');
+			firstSession.state = Session.TOURNAMENT;
+			firstSession.opponentId = null;
+			secondSession.socket.emit('message', 'You lost');
+			this.secondSession = null;
+			SocketServer.deleteObjects(secondSession);
+		}
 	}
 };
 

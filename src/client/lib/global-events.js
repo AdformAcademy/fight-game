@@ -4,6 +4,7 @@ var Client = require('./client');
 var EventCollection = require('./event-collection');
 var Point = require('../../common/point');
 var StartScreen = require('./screen/start');
+var Stage = require('./screen/stage');
 var EndScreen = require('./screen/end');
 var WaitingScreen = require('./screen/waiting');
 var TournamentWaitingScreen = require('./screen/tournament-waiting');
@@ -93,7 +94,8 @@ socket.on('tournament-waiting', function (data) {
 });
 
 socket.on('tournament-progress', function (data) {
-	console.log(data);
+	//console.log(data);
+	Stage.stageTimerUpdate(data);
 });
 
 socket.on('tournament-end-fight', function (data) {
