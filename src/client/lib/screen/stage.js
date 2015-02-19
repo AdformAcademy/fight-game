@@ -15,6 +15,7 @@ function StageScreen() {
 	this.player = App.player;
 	this.opponent = App.opponent;
 	this.parallax = Client.parallax;
+	this.timer = 0;
 
 	this.countDownInterval = null;
 	this.updateInterval = null;
@@ -25,6 +26,16 @@ function StageScreen() {
 		opacity: 1,
 		opacityStep: 0.01
 	};
+
+	this.timerText = new Text(this.timer, 30);
+	this.timerText.color = '#FFFFFF';
+	this.timerText.fontType = 'FSpirit';
+
+	this.timerText.setLocation(function() {
+		var x = Utilities.centerX(obj.timerText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.15;
+		return new Point(x, y);
+	});
 
 	this.countDownText = new Text(3, 50);
 	this.countDownText.setColor('#FFFFFF');
@@ -39,6 +50,12 @@ function StageScreen() {
 	this.doCountDown();
 	this.animateCountDown();
 	Client.start();
+};
+
+StageScreen.stageTimerUpdate = function(data) {
+	this.timer = data.fightTimer;
+	if(obj.timerText !== null)
+	obj.timerText.setText(this.timer);
 };
 
 StageScreen.prototype.doCountDown = function() {
@@ -116,6 +133,7 @@ StageScreen.prototype.graphics = function() {
 	playerEnergyBar.draw();
 	opponentLifebar.draw();
 	opponentEnergyBar.draw();
+	obj.timerText.draw();
 
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();

@@ -62,7 +62,7 @@ Tournament.prototype.startWaitTimer = function () {
 };
 
 Tournament.prototype.isFull = function () {
-	return this.sessionPairs.length === 8;
+	return this.sessionPairs.length === 4;
 };
 
 Tournament.prototype.begin = function () {
@@ -87,7 +87,7 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 10
+		fightTime: 1000
 	});
 
 	this.sessionPairs.push(sessionPair);
