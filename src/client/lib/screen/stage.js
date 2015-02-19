@@ -54,8 +54,8 @@ function StageScreen() {
 
 StageScreen.stageTimerUpdate = function(data) {
 	this.timer = data.fightTimer;
-	if(this.timerText !== null)
-		this.timerText.setText(this.timer);
+	if(obj.timerText !== null)
+	obj.timerText.setText(this.timer);
 };
 
 StageScreen.prototype.doCountDown = function() {
