@@ -19,6 +19,11 @@ var socket = io();
 
 var Client = module.exports = {};
 
+Client.games = {
+	MATCH: 'match',
+	TOURNAMENT: 'tournament'
+};
+
 Client.inputs = [];
 Client.serverData = [];
 Client.inputCounter = 0;
@@ -34,6 +39,7 @@ Client.world = null;
 Client.parallax = null;
 Client.catchingInterpolation = false;
 Client.gameStarted = false;
+Client.gameType = null;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -399,6 +405,14 @@ Client.startGame = function () {
 	Client.gameStarted = true;
 };
 
+Client.setGameType = function (gameType) {
+	Client.gameType = gameType;
+};
+
+Client.getGameType = function () {
+	return Client.gameType;
+};
+
 Client.update = function() {
 	var canvas = App.canvasObj;
 	var physics = App.physics;
@@ -432,7 +446,8 @@ Client.stop = function() {
 	Client.world = null;
 	Client.parallax = null;
 	Client.catchingInterpolation = false;
-	Client.gameStarted = false;	
+	Client.gameStarted = false;
+	Client.gameType = null;	
 };
 
 Client.start = function() {

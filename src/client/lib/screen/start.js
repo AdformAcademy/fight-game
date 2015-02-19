@@ -71,6 +71,7 @@ function StartScreen() {
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
 		CharacterChooser.setSocketTarget('tournament');
+		Client.setGameType(Client.games.TOURNAMENT);
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});
@@ -89,6 +90,7 @@ function StartScreen() {
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
 		CharacterChooser.setSocketTarget('ready');
+		Client.setGameType(Client.games.MATCH);
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});

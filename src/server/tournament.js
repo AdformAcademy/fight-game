@@ -87,7 +87,7 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 1000
+		fightTime: 60
 	});
 
 	this.sessionPairs.push(sessionPair);

@@ -15,7 +15,6 @@ function StageScreen() {
 	this.player = App.player;
 	this.opponent = App.opponent;
 	this.parallax = Client.parallax;
-	this.timer = 0;
 
 	this.countDownInterval = null;
 	this.updateInterval = null;
@@ -27,7 +26,7 @@ function StageScreen() {
 		opacityStep: 0.01
 	};
 
-	this.timerText = new Text(this.timer, 30);
+	this.timerText = new Text(999, 30);
 	this.timerText.color = '#FFFFFF';
 	this.timerText.fontType = 'FSpirit';
 
@@ -52,10 +51,10 @@ function StageScreen() {
 	Client.start();
 };
 
-StageScreen.stageTimerUpdate = function(data) {
-	this.timer = data.fightTimer;
-	if(obj.timerText !== null)
-	obj.timerText.setText(this.timer);
+StageScreen.prototype.stageTimerUpdate = function(data) {
+	if(obj.timerText !== null) {
+		obj.timerText.setText(data.fightTimer);	
+	}
 };
 
 StageScreen.prototype.doCountDown = function() {
@@ -133,7 +132,10 @@ StageScreen.prototype.graphics = function() {
 	playerEnergyBar.draw();
 	opponentLifebar.draw();
 	opponentEnergyBar.draw();
-	obj.timerText.draw();
+	
+	if (Client.getGameType() === Client.games.TOURNAMENT) {
+		obj.timerText.draw();
+	}
 
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();

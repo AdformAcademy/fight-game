@@ -95,7 +95,7 @@ socket.on('tournament-waiting', function (data) {
 
 socket.on('tournament-progress', function (data) {
 	//console.log(data);
-	Stage.stageTimerUpdate(data);
+	App.screen.stageTimerUpdate(data);
 });
 
 socket.on('tournament-end-fight', function (data) {

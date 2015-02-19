@@ -8,7 +8,7 @@ TournamentCollection.updateInterval = null;
 TournamentCollection.createTournament = function () {
 	var tournament = new Tournament({
 		id: TournamentCollection.tournaments.length,
-		tournamentWaitTime: 60
+		tournamentWaitTime: 10
 	});
 	TournamentCollection.tournaments.push(tournament);
 };
