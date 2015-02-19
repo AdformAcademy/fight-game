@@ -6,6 +6,7 @@ var Point = require('../../common/point');
 var StartScreen = require('./screen/start');
 var EndScreen = require('./screen/end');
 var WaitingScreen = require('./screen/waiting');
+var TournamentWaitingScreen = require('./screen/tournament-waiting');
 var Config = require('./config');
 var CharacterChooser = require('./character-chooser');
 var socket = io();
@@ -86,7 +87,9 @@ socket.on('update', function(data) {
 });
 
 socket.on('tournament-waiting', function (data) {
-	console.log(data);
+	App.screen.dispose();
+	App.screen = new TournamentWaitingScreen(data);
+	App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('tournament-progress', function (data) {

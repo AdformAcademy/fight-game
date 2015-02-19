@@ -8,6 +8,7 @@ var fs = require('fs');
 
 var Tournament = function (params) {
 	this.id = params.id;
+	//this.playerIds = [];
 	this.sessionPairs = [];
 	this.tournamentWaitTime = params.tournamentWaitTime;
 	this.tournamentTimer = this.startWaitTimer();
@@ -92,6 +93,7 @@ Tournament.prototype.join = function (session) {
 	this.sessionPairs.push(sessionPair);
 
 	if (this.isFull()) {
+		this.tournamentWaitTime = 1;
 		this.begin();
 	}
 };
@@ -264,7 +266,8 @@ Tournament.prototype.sendUpdateWaiting = function (sessionPair, session) {
 	if (session !== null) {
 		session.socket.emit('tournament-waiting', {
 			timer: this.tournamentWaitTime,
-			pairs: this.sessionPairs.length
+			pairs: this.sessionPairs.length,
+			ids: this.playerIds
 		});
 	}
 };
@@ -296,6 +299,7 @@ Tournament.prototype.sendPairUpdateProgress = function (sessionPair) {
 Tournament.prototype.updateSessions = function () {
 	var sessionPairs = this.sessionPairs;
 	for (var i = 0; i < sessionPairs.length; i++) {
+		//this.playerIds[i] = sessionPairs[i].getFirstSession();
 		var sessionPair = sessionPairs[i];
 		if (!sessionPair.isFighting()) {
 			this.sendPairUpdateWaiting(sessionPair);

@@ -1,6 +1,5 @@
 var Canvas = require('./lib/canvas/canvas');
 var StartScreen = require('./lib/screen/start');
-
 var App = module.exports = {};
 
 App.screen = new StartScreen();

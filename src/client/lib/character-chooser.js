@@ -53,6 +53,17 @@ CharacterChooser.loadWaitingScreen = function (id) {
 	}
 };
 
+CharacterChooser.loadTournamentScreen = function (id) {
+	if (CharacterChooser.isRunning) {
+		socket.emit(CharacterChooser.socketTarget, id);
+		var screen = App.screen;
+		screen.dispose();
+		App.screen = new TournamentWaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		CharacterChooser.stop();
+	}
+};
+
 CharacterChooser.preview = function (id) {
 
 	var movements = [
