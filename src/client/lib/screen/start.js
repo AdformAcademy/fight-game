@@ -5,6 +5,7 @@ var Point;
 var Text;
 var ChooseWaitingScreen;
 var CharacterChooser;
+var Client;
 var Background;
 var socket = io();
 var obj;
@@ -13,6 +14,7 @@ var Config;
 
 function StartScreen() {
 	App = require('../../app');
+	Client = require('../client');
 	Utilities = require('../canvas/utilities');
 	Button = require('../canvas/button');
 	Point = require('../../../common/point');

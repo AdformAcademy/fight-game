@@ -52,8 +52,12 @@ function StageScreen() {
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {
+	var time = data.fightTimer;
 	if(obj.timerText !== null) {
-		obj.timerText.setText(data.fightTimer);	
+		if (time <= 10) {
+			obj.timerText.setColor('#ED1C1C');
+		}
+		obj.timerText.setText(time);	
 	}
 };
 
@@ -132,7 +136,7 @@ StageScreen.prototype.graphics = function() {
 	playerEnergyBar.draw();
 	opponentLifebar.draw();
 	opponentEnergyBar.draw();
-	
+
 	if (Client.getGameType() === Client.games.TOURNAMENT) {
 		obj.timerText.draw();
 	}
