@@ -24,14 +24,14 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 		return;
 	}
 	var opponent = player === this.player ? this.opponent : this.player;
-	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var x = player.getX();
 	var z = player.getZ();
 
-	if (input.key === keys.RIGHT) {
+	if (input.key === actions.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.LEFT) {
+	else if (input.key === actions.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
 
@@ -41,11 +41,14 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 WorldPhysics.prototype.jump = function () {
 	var player = this.player;
     var opponent = this.opponent;
-
     SoundCollection.play('common', 'jump');
-    SoundCollection.play('player', 'jump')
-
+    SoundCollection.play('player', 'jump');
+    var d = new Date();
+	var n1 = d.getTime();
+	var t = 0;
+	console.log(n1);
 	var updateZ = setInterval(function () {
+		 t += 1;
 	    var x = player.getX();
 	    var z = player.getZ();
 	    var opx = opponent.getX();
@@ -55,6 +58,13 @@ WorldPhysics.prototype.jump = function () {
 		speedZ -= Config.playerAcceleration;
 		z -= speedZ;
 		if (z > 0) {
+			var d2 = new Date();
+			var n2 = d2.getTime();
+			console.log(n2);
+			console.log('');
+			console.log(n2-n1);
+			console.log('');
+			console.log(t);
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setJumping(false);
 			clearInterval(updateZ);
@@ -122,6 +132,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var player = this.player;
 	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
@@ -137,21 +148,21 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('kickAnimation');
 	} else if (packet.jumpKey) {
 		playerSprite.setActiveAnimation('jumpAnimation');
-	} else if (packet.key === keys.DEFEND) {
+	} else if (packet.key === actions.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 	if (player.isStanding() && !player.isHiting()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
-				if (packet.key === keys.RIGHT)
+				if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.LEFT)
+				else if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 			else {
-				if (packet.key === keys.LEFT)
+				if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.RIGHT)
+				else if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 		}
@@ -209,11 +220,11 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 };
 
 WorldPhysics.prototype.applyParallax = function (packet) {
-	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	if(!this.player.isHiting()){
-		if (packet.key === keys.RIGHT) {
+		if (packet.key === actions.RIGHT) {
 			this.parallax.moveRight();
-		} else if (packet.key === keys.LEFT) {
+		} else if (packet.key === actions.LEFT) {
 			this.parallax.moveLeft();
 		}
 	}

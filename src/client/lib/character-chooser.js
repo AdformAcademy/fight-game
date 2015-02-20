@@ -264,6 +264,9 @@ CharacterChooser.update = function() {
 
 CharacterChooser.stop = function() {
 	CharacterChooser.isRunning = false;
+	if(CharacterChooser.screen) {
+		CharacterChooser.screen.dispose();
+	}
 	CharacterChooser.screen = null;
 	CharacterChooser.activeButton = 0;
 	CharacterChooser.buttons = null;
@@ -272,10 +275,12 @@ CharacterChooser.stop = function() {
 };
 
 CharacterChooser.start = function() {
-	CharacterChooser.isRunning = true;
-	CharacterChooser.updateInterval = setInterval(function() {
-		CharacterChooser.update();
-	}, 1000 / 30);
+	if(!CharacterChooser.isRunning) {
+		CharacterChooser.isRunning = true;
+		CharacterChooser.updateInterval = setInterval(function() {
+			CharacterChooser.update();
+		}, 1000 / 30);
+	}
 };
 
 module.exports = CharacterChooser;

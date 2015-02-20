@@ -2,20 +2,27 @@ var App;
 var Utilities;
 var EventCollection;
 
-function Button(params) {
+function SwitchButton(params) {
 	App = require('../../app');
 	Utilities = require('./utilities');
 	EventCollection = require('../event-collection');
 
-	if (!params.useSpriteSheet) {
-		this.src = params.image || undefined;
-		this.image = new Image();
-		this.image.src = this.src || '';
-		this.hoverImage = new Image();
-		this.hoverImage.src = params.hoverImage || this.image.src;
-		this.activeImage = this.image;
+	this.states = [];
+
+	for (var key in params.images) {
+		var image = new Image();
+		var imageHover = new Image();
+		image.src = params.images[key].normal;
+		imageHover.src = params.images[key].hover;
+		this.states.push({
+			normalImage: image,
+			hoverImage: imageHover
+		});
 	}
-	this.id = params.id || null;
+
+	this.activeState = params.activeState;
+	this.activeImage = this.states[this.activeState].normalImage;
+
 	this.location = params.location || null;
 	this.onClickEvent = null;
 	this.mouseOverEvent = null;
@@ -23,8 +30,6 @@ function Button(params) {
 	this.mouseEventAdded = false;
 	this.mouseEntered = false;
 	this.visible = true;
-	this.useSpriteSheet = params.useSpriteSheet || false;
-	this.spriteSheet = params.spriteSheet || null;
 	this.drawBorder = params.drawBorder || null;
 	this.borderWidth = params.borderWidth || null;
 	this.borderColor = params.borderColor || 'black';
@@ -32,106 +37,82 @@ function Button(params) {
 	this.height = params.height || null;
 };
 
-Button.prototype.getId = function () {
-	return this.id;
+SwitchButton.prototype.getImage = function(state) {
+	return this.states[state].normalImage;
 };
 
-Button.prototype.setId = function (id) {
-	this.id = id;
+SwitchButton.prototype.setImage = function(state, image) {
+	this.states[state].normalImage = image;
 };
 
-Button.prototype.getImage = function() {
-	return this.image;
+SwitchButton.prototype.getHoverImage = function(state) {
+	return this.states[state].hoverImage;
 };
 
-Button.prototype.setImage = function(image) {
-	this.image = image;
-};
-
-Button.prototype.getHoverImage = function() {
-	return this.hoverImage;
-};
-
-Button.prototype.getActiveImage = function() {
+SwitchButton.prototype.getActiveImage = function() {
 	return this.activeImage;
 };
 
-Button.prototype.setActiveImage = function(activeImage) {
+SwitchButton.prototype.setActiveImage = function(activeImage) {
 	this.activeImage = activeImage;
 };
 
-Button.prototype.buttonWidth = function() {
+SwitchButton.prototype.buttonWidth = function() {
 	return this.activeImage.width;
 };
 
-Button.prototype.buttonHeight = function() {
+SwitchButton.prototype.buttonHeight = function() {
 	return this.activeImage.height;
 };
 
-Button.prototype.setHoverImage = function(image) {
-	this.hoverImage = new Image();
-	this.hoverImage.src = image;
+SwitchButton.prototype.setHoverImage = function(state, image) {
+	this.states[state].hoverImage = new Image();
+	this.states[state].hoverImage.src = image;
 };
 
-Button.prototype.isVisible = function() {
+SwitchButton.prototype.isVisible = function() {
 	return this.visible;
 };
 
-Button.prototype.setVisible = function(visible) {
+SwitchButton.prototype.setVisible = function(visible) {
 	this.visible = visible;
 };
 
-Button.prototype.getLocation = function() {
+SwitchButton.prototype.getLocation = function() {
 	return this.location;
 };
 
-Button.prototype.setLocation = function(location) {
+SwitchButton.prototype.setLocation = function(location) {
 	this.location = location;
 };
 
-Button.prototype.setSpriteSheet = function(spriteSheet) {
-	this.spriteSheet = spriteSheet;
-};
-
-Button.prototype.getSpriteSheet = function() {
-	return this.spriteSheet;
-};
-
-Button.prototype.setUsingSpriteSheet = function(useSpriteSheet) {
-	this.useSpriteSheet = useSpriteSheet;
-};
-
-Button.prototype.usingSpriteSheet = function() {
-	return this.useSpriteSheet;
-};
-
-Button.prototype.setDrawBorder = function (drawBorder) {
+SwitchButton.prototype.setDrawBorder = function (drawBorder) {
 	this.drawBorder = drawBorder;
 };
 
-Button.prototype.borderIsDrawing = function () {
+SwitchButton.prototype.borderIsDrawing = function () {
 	return this.drawBorder;
 };
 
-Button.prototype.getBorderWidth = function () {
+SwitchButton.prototype.getBorderWidth = function () {
 	return this.borderWidth;
 };
 
-Button.prototype.setBorderWidth = function (borderWidth) {
+SwitchButton.prototype.setBorderWidth = function (borderWidth) {
 	if (typeof borderWidth === 'number') {
 		this.borderWidth = borderWidth;
 	}
 };
 
-Button.prototype.getBorderColor = function () {
+SwitchButton.prototype.getBorderColor = function () {
 	return this.borderColor;
 };
 
-Button.prototype.setBorderColor = function (borderColor) {
+SwitchButton.prototype.setBorderColor = function (borderColor) {
 	this.borderColor = borderColor;
 };
 
-Button.prototype.drawButton = function() {
+SwitchButton.prototype.drawButton = function() {
 	var canvas = App.canvasObj.canvas;
 	if (this.visible) {
 		var loc = typeof this.location === 'function' ? this.location() : this.location;
@@ -149,7 +130,7 @@ Button.prototype.drawButton = function() {
 	}
 };
 
-Button.prototype.pointIntersects = function(location) {
+SwitchButton.prototype.pointIntersects = function(location) {
 	var loc = typeof this.location === 'function' ? this.location() : this.location;
 	if (this.visible) {
 		var buttonWidth, buttonHeight;
@@ -170,30 +151,30 @@ Button.prototype.pointIntersects = function(location) {
 	return false;
 };
 
-Button.prototype.executeClick = function() {
+SwitchButton.prototype.executeClick = function() {
 	this.onClickEvent();
 };
 
-Button.prototype.executeMouseOver = function() {
+SwitchButton.prototype.executeMouseOver = function() {
 	if (this.mouseOverEvent !== null && !this.mouseEntered) {
 		this.mouseOverEvent();
 		this.mouseEntered = true;
 	}
 };
 
-Button.prototype.executeMouseLeave = function() {
+SwitchButton.prototype.executeMouseLeave = function() {
 	if (this.mouseLeaveEvent !== null && this.mouseEntered) {
 		this.mouseLeaveEvent();
 	}
 	this.mouseEntered = false;
 };
 
-Button.prototype.onClick = function(event) {
+SwitchButton.prototype.onClick = function(event) {
 	this.onClickEvent = event;
 	EventCollection.addOnClickObject(this);
 };
 
-Button.prototype.mouseOver = function(event) {
+SwitchButton.prototype.mouseOver = function(event) {
 	this.mouseOverEvent = event;
 	if (!this.mouseEventAdded) {
 		EventCollection.addMouseOverObject(this);
@@ -201,7 +182,7 @@ Button.prototype.mouseOver = function(event) {
 	}
 };
 
-Button.prototype.mouseLeave = function(event) {
+SwitchButton.prototype.mouseLeave = function(event) {
 	this.mouseLeaveEvent = event;
 	if (!this.mouseEventAdded) {
 		EventCollection.addMouseOverObject(this);
@@ -209,18 +190,18 @@ Button.prototype.mouseLeave = function(event) {
 	}
 };
 
-Button.prototype.hover = function() {
+SwitchButton.prototype.hover = function() {
 	$('body').css('cursor', 'pointer');
 }
 
-Button.prototype.hoverLeave = function() {
+SwitchButton.prototype.hoverLeave = function() {
 	$('body').css('cursor', 'default');
 }
 
-Button.prototype.dispose = function() {
+SwitchButton.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);
 	EventCollection.removeMouseOverObject(this);
 	this.hoverLeave();
 }
 
-module.exports = Button;
+module.exports = SwitchButton;
