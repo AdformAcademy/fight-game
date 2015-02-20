@@ -86,6 +86,7 @@ SessionPair.prototype.selectWinner = function () {
 			secondSession.socket.emit('message', 'You lost');
 			this.secondSession = null;
 			SocketServer.deleteObjects(secondSession);
+			this.fighting = false;
 		} else if (firstPlayerHealth < secondPlayerHealth) {
 			secondSession.addWonFight();
 			this.endGameSession(secondSession, 'You won');
@@ -95,6 +96,7 @@ SessionPair.prototype.selectWinner = function () {
 			this.firstSession = this.secondSession;
 			this.secondSession = null;
 			SocketServer.deleteObjects(firstSession);
+			this.fighting = false;
 		} else {
 			firstSession.addWonFight();
 			this.endGameSession(firstSession, 'You won');
@@ -103,6 +105,7 @@ SessionPair.prototype.selectWinner = function () {
 			secondSession.socket.emit('message', 'You lost');
 			this.secondSession = null;
 			SocketServer.deleteObjects(secondSession);
+			this.fighting = false;
 		}
 	}
 };

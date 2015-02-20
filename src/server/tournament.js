@@ -143,6 +143,9 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 		map: mapData
 	});
 
+	firstSession.setPlayer(player);
+	secondSession.setPlayer(opponent);
+
 	PlayerCollection.insertPlayer(firstSession.sessionId, player);
 	PlayerCollection.insertPlayer(secondSession.sessionId, opponent);
 
@@ -309,6 +312,44 @@ Tournament.prototype.updateSessions = function () {
 	}
 };
 
+Tournament.prototype.checkPairStates = function () {
+	var sessionPairs = this.sessionPairs;
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+
+		if (!sessionPair.isFighting() || !sessionPair.pairExists()) {
+			continue;
+		}
+		
+		var firstSession = sessionPair.getFirstSession();
+		var secondSession = sessionPair.getSecondSession();
+		var firstPlayer = firstSession.getPlayer();
+		var secondPlayer = secondSession.getPlayer();
+
+		if (firstPlayer.isVictor()) {
+			firstPlayer.setVictor
+			firstSession.addWonFight();
+			sessionPair.endGameSession(firstSession, 'You won');
+			firstSession.state = Session.TOURNAMENT;
+			firstSession.opponentId = null;
+			secondSession.socket.emit('message', 'You lost');
+			sessionPair.setSecondSession(null);
+			sessionPair.setFighting(false);
+			SocketServer.deleteObjects(secondSession);
+		} else if (secondPlayer.isVictor()) {
+			secondSession.addWonFight();
+			sessionPair.endGameSession(secondSession, 'You won');
+			secondSession.state = Session.TOURNAMENT;
+			secondSession.opponentId = null;
+			firstSession.socket.emit('message', 'You lost');
+			sessionPair.setFirstSession(secondSession);
+			sessionPair.setSecondSession(null);
+			sessionPair.setFighting(false);
+			SocketServer.deleteObjects(firstSession);
+		}
+	}
+};
+
 Tournament.prototype.disconnectSession = function (socket) {
 	var sessionPairs = this.sessionPairs;
 	for (var i = 0; i < sessionPairs.length; i++) {
@@ -368,6 +409,7 @@ Tournament.prototype.update = function () {
 	var self = this;
 	var updateTimer = setInterval(function () {
 		self.updateSessions();
+		self.checkPairStates();
 	}, 1000 / 30);
 	return updateTimer;
 };

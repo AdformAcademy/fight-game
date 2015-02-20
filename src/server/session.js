@@ -5,6 +5,7 @@ function Session(socket, opponentId, state) {
 	this.state = state;
 	this.selection = 0;
 	this.wonFights = 0;
+	this.player = null;
 };
 
 Session.READY = 'ready';
@@ -48,6 +49,14 @@ Session.prototype.getWonFights = function () {
 
 Session.prototype.addWonFight = function () {
 	this.wonFights++;
+};
+
+Session.prototype.setPlayer = function (player) {
+	this.player = player;
+};
+
+Session.prototype.getPlayer = function () {
+	return this.player;
 };
 
 Session.prototype.toString = function() {

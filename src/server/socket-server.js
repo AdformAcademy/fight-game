@@ -469,7 +469,7 @@ SocketServer.updateWorld = function() {
 				session.socket.emit('update', data);
 				player.clearSounds();
 				SocketServer.proccessedInputs[opponent.getID()] = [];
-				if(player.isVictor()){
+				if(player.isVictor() && session.state === Session.PLAYING){
 					SocketServer.disconnectClient(session.socket, "Victory");
 				}
 			}
