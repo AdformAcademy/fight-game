@@ -39,6 +39,7 @@ Client.world = null;
 Client.parallax = null;
 Client.catchingInterpolation = false;
 Client.gameStarted = false;
+Client.canMove = false;
 Client.gameType = null;
 
 Client.storeInput = function(input) {
@@ -403,6 +404,7 @@ Client.initializeGame = function (data) {
 
 Client.startGame = function () {
 	Client.gameStarted = true;
+	Client.canMove = true;
 };
 
 Client.setGameType = function (gameType) {
@@ -417,7 +419,7 @@ Client.update = function() {
 	var canvas = App.canvasObj;
 	var physics = App.physics;
 	Client.processServerData();
-	if (Client.gameStarted) {
+	if (Client.gameStarted && Client.canMove) {
 		var packet = Client.processLocalInputs();
 		Client.sendServerUpdate(packet);
 		if (Client.interpolation) {
@@ -447,7 +449,8 @@ Client.stop = function() {
 	Client.parallax = null;
 	Client.catchingInterpolation = false;
 	Client.gameStarted = false;
-	Client.gameType = null;	
+	Client.gameType = null;
+	Client.canMove = false;
 };
 
 Client.start = function() {

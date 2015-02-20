@@ -60,13 +60,21 @@ socket.on('unactive', function() {
 	}
 });
 
-socket.on('message', function (text) {
+socket.on('message', function (data) {
 	if (Client.gameStarted) {
-		Client.stop();
+		App.screen.animateEndText(data.text, data.color);
+		Client.canMove = false;
+		setInterval(function () {
+			Client.stop();
+			App.screen.dispose();
+			App.screen = new EndScreen(data.text);
+			App.canvasObj.setGraphics(App.screen.graphics);
+		}, 5000);	
+	} else {
+		App.screen.dispose();
+		App.screen = new EndScreen(data.text);
+		App.canvasObj.setGraphics(App.screen.graphics);
 	}
-	App.screen.dispose();
-	App.screen = new EndScreen(text);
-	App.canvasObj.setGraphics(App.screen.graphics);
 });
 
 socket.on('victory', function() {
@@ -88,23 +96,29 @@ socket.on('update', function(data) {
 });
 
 socket.on('tournament-waiting', function (data) {
-	App.screen.dispose();
-	App.screen = new TournamentWaitingScreen(data);
-	App.canvasObj.setGraphics(App.screen.graphics);
+	if (!Client.gameStarted) {
+		App.screen.dispose();
+		App.screen = new TournamentWaitingScreen(data);
+		App.canvasObj.setGraphics(App.screen.graphics);
+	}
 });
 
 socket.on('tournament-progress', function (data) {
-	//console.log(data);
-	App.screen.stageTimerUpdate(data);
+	if (Client.gameStarted) {
+		App.screen.stageTimerUpdate(data);
+	}
 });
 
 socket.on('tournament-end-fight', function (data) {
 	if (Client.gameStarted) {
-		Client.stop();
-		App.screen.dispose();
-		App.screen = new WaitingScreen();
-		App.canvasObj.setGraphics(App.screen.graphics);
-		//TODO tournament waiting screen
+		App.screen.animateEndText(data.message);
+		Client.canMove = false;
+		setInterval(function () {
+			Client.stop();
+			App.screen.dispose();
+			App.screen = new WaitingScreen();
+			App.canvasObj.setGraphics(App.screen.graphics);
+		}, 5000);	
 	}
 });
 

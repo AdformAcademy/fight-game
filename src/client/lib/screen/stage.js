@@ -46,6 +46,20 @@ function StageScreen() {
 		var y = App.canvasObj.getHeight() * 0.5;
 		return new Point(x, y);
 	});
+
+
+	this.endText = new Text('', 100);
+	this.endText.setColor('#FFFFFF');
+	this.endText.setFontType('FSpirit');
+	this.endText.visible = false;
+
+	this.endText.setLocation(function() {
+		var x = Utilities.centerX(obj.endText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.5;
+		return new Point(x, y);
+	})
+
+
 	this.doCountDown();
 	this.animateCountDown();
 	Client.start();
@@ -114,6 +128,30 @@ StageScreen.prototype.animateCountDown = function() {
 	}, 1000 / 30);
 };
 
+StageScreen.prototype.animateEndText = function (text, color) {
+	var self = this;
+	this.endText.setText(text);
+	if (color !== undefined) {
+		this.endText.setColor(color);
+	}
+	this.endText.visible = true;
+
+	var textSize = this.endText.getSize();
+	var incrementation = 1;
+
+	var animateInterval = setInterval(function () {
+		incrementation += incrementation * 0.095;
+		textSize -= incrementation;
+
+		self.endText.setSize(textSize);
+		if (textSize < 50) {
+			textSize = 50;
+			self.endText.setSize(textSize);
+			clearInterval(animateInterval);
+		}
+	}, 1000 / 30);
+};
+
 StageScreen.prototype.graphics = function() {
 	var player = obj.player;
 	var opponent= obj.opponent;
@@ -140,6 +178,8 @@ StageScreen.prototype.graphics = function() {
 	if (Client.getGameType() === Client.games.TOURNAMENT) {
 		obj.timerText.draw();
 	}
+
+	obj.endText.draw();
 
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();

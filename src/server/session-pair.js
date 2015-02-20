@@ -65,7 +65,14 @@ SessionPair.prototype.setFighting = function (fighting) {
 };
 
 SessionPair.prototype.endGameSession = function (session, message) {
-	session.socket.emit('tournament-end-fight', message);
+	session.socket.emit('tournament-end-fight', {message: message});
+};
+
+SessionPair.prototype.emitMessage = function (session, message, color) {
+	session.socket.emit('message', {
+		text: message,
+		color: color
+	});
 };
 
 SessionPair.prototype.selectWinner = function () {
@@ -83,7 +90,7 @@ SessionPair.prototype.selectWinner = function () {
 			this.endGameSession(firstSession, 'You won');
 			firstSession.state = Session.TOURNAMENT;
 			firstSession.opponentId = null;
-			secondSession.socket.emit('message', 'You lost');
+			this.emitMessage(secondSession, 'You lost', '#ED1C1C');
 			this.secondSession = null;
 			SocketServer.deleteObjects(secondSession);
 			this.fighting = false;
@@ -92,7 +99,7 @@ SessionPair.prototype.selectWinner = function () {
 			this.endGameSession(secondSession, 'You won');
 			secondSession.state = Session.TOURNAMENT;
 			secondSession.opponentId = null;
-			firstSession.socket.emit('message', 'You lost');
+			this.emitMessage(firstSession, 'You lost', '#ED1C1C');
 			this.firstSession = this.secondSession;
 			this.secondSession = null;
 			SocketServer.deleteObjects(firstSession);
@@ -102,7 +109,7 @@ SessionPair.prototype.selectWinner = function () {
 			this.endGameSession(firstSession, 'You won');
 			firstSession.state = Session.TOURNAMENT;
 			firstSession.opponentId = null;
-			secondSession.socket.emit('message', 'You lost');
+			this.emitMessage(secondSession, 'You lost', '#ED1C1C');
 			this.secondSession = null;
 			SocketServer.deleteObjects(secondSession);
 			this.fighting = false;

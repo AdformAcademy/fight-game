@@ -70,7 +70,7 @@ Tournament.prototype.begin = function () {
 	this.selectPairs();
 	if ((unpickedPair = this.removeUnpickedPair()) !== undefined) {
 		var session = unpickedPair.getFirstSession();
-		session.socket.emit('message', 'Not enough players for tournament');
+		unpickedPair.emitMessage(session, 'Not enough players for tournament', '#ED1C1C');
 		SocketServer.deleteObjects(session);
 	}
 
@@ -87,7 +87,7 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 60
+		fightTime: 10
 	});
 
 	this.sessionPairs.push(sessionPair);
@@ -320,7 +320,7 @@ Tournament.prototype.checkPairStates = function () {
 		if (!sessionPair.isFighting() || !sessionPair.pairExists()) {
 			continue;
 		}
-		
+
 		var firstSession = sessionPair.getFirstSession();
 		var secondSession = sessionPair.getSecondSession();
 		var firstPlayer = firstSession.getPlayer();
@@ -332,7 +332,7 @@ Tournament.prototype.checkPairStates = function () {
 			sessionPair.endGameSession(firstSession, 'You won');
 			firstSession.state = Session.TOURNAMENT;
 			firstSession.opponentId = null;
-			secondSession.socket.emit('message', 'You lost');
+			sessionPair.emitMessage(secondSession, 'You lost', '#ED1C1C');
 			sessionPair.setSecondSession(null);
 			sessionPair.setFighting(false);
 			SocketServer.deleteObjects(secondSession);
@@ -341,7 +341,7 @@ Tournament.prototype.checkPairStates = function () {
 			sessionPair.endGameSession(secondSession, 'You won');
 			secondSession.state = Session.TOURNAMENT;
 			secondSession.opponentId = null;
-			firstSession.socket.emit('message', 'You lost');
+			sessionPair.emitMessage(firstSession, 'You lost', '#ED1C1C');
 			sessionPair.setFirstSession(secondSession);
 			sessionPair.setSecondSession(null);
 			sessionPair.setFighting(false);
