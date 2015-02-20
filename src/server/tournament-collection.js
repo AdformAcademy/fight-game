@@ -42,7 +42,7 @@ TournamentCollection.canJoin = function () {
 	var tournaments = TournamentCollection.tournaments;
 	for (var i = 0; i < tournaments.length; i++) {
 		var tournament = tournaments[i];
-		if (!tournament.isFull()) {
+		if (!tournament.isFull() && !tournament.tournamentBegan) {
 			return true;
 		}
 	}
@@ -56,7 +56,7 @@ TournamentCollection.joinTournament = function (session) {
 	var tournaments = TournamentCollection.tournaments;
 	for (var i = 0; i < tournaments.length; i++) {
 		var tournament = tournaments[i];
-		if (!tournament.isFull()) {
+		if (!tournament.isFull() && !tournament.tournamentBegan) {
 			tournament.join(session);
 			return true;
 		}
