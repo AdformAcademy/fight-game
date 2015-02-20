@@ -7,6 +7,7 @@ Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
+Config.charactersPath = 'src/server/characters_data/';
 
 Config.canvasMaskColor = '#000000';
 Config.quickTapDuration = 300;

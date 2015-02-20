@@ -8,7 +8,8 @@ var fs = require('fs');
 
 var Tournament = function (params) {
 	this.id = params.id;
-	//this.playerIds = [];
+	this.playerIds = [];
+	this.playerData = [];
 	this.sessionPairs = [];
 	this.tournamentWaitTime = params.tournamentWaitTime;
 	this.tournamentTimer = this.startWaitTimer();
@@ -16,6 +17,17 @@ var Tournament = function (params) {
 	this.tournamentBegan = false;
 	this.timeoutVar = null;
 	this.sessionsPrepared = false;
+	Tournament.getPlayerData(this.playerData);
+};
+
+Tournament.getPlayerData = function (playerData){
+	var json = null;
+	var spriteImageSrc = null;
+	for(var i = 1; i <= 6; i++){
+		json = JSON.parse(fs.readFileSync(Config.charactersPath + 'character' + i + '.json', 'utf8'));
+		spriteImageSrc = './img/characters/' + json.spriteSheetButton.spriteSheetIntroImage;
+		playerData.push(spriteImageSrc);
+	}
 };
 
 Tournament.prototype.getId = function () {
@@ -101,6 +113,7 @@ Tournament.prototype.join = function (session) {
 		fightTime: 10
 	});
 
+	this.playerIds.push(sessionPair.getFirstSession().getSelection());
 	this.sessionPairs.push(sessionPair);
 
 	if (this.isFull()) {
@@ -282,7 +295,8 @@ Tournament.prototype.sendUpdateWaiting = function (sessionPair, session) {
 			timer: this.tournamentWaitTime,
 			pairs: this.sessionPairs.length,
 			ids: this.playerIds,
-			started: this.tournamentBegan
+			started: this.tournamentBegan,
+			chars: this.playerData
 		});
 	}
 };
@@ -314,7 +328,6 @@ Tournament.prototype.sendPairUpdateProgress = function (sessionPair) {
 Tournament.prototype.updateSessions = function () {
 	var sessionPairs = this.sessionPairs;
 	for (var i = 0; i < sessionPairs.length; i++) {
-		//this.playerIds[i] = sessionPairs[i].getFirstSession();
 		var sessionPair = sessionPairs[i];
 		if (!sessionPair.isFighting()) {
 			this.sendPairUpdateWaiting(sessionPair);
