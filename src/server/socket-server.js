@@ -438,13 +438,35 @@ SocketServer.updatePlayer = function(player) {
 			}
 		}
 
-		if (player.getLives() <= 0) {
+		if (player.getLives() <= 0 && !player.isDefeated()) {
 			player.Fatality(true);
+			console.log("player now is in fatality");
 		}
 
-		if (player.isFatality() && player.isPunched()) {
-			player.Defeat(true);
-			opponent.Victory(true);
+		if (player.isFatality()) {
+			setTimeout(function () {
+				player.Fatality(false);
+				player.Defeat(true);
+				setTimeout(function () {
+					opponent.Victory(true);
+				}, 1800);
+			}, 6000);
+
+			setTimeout(function() {
+				if (player.isPunched()) {
+					player.Fatality(false);
+					player.Defeat(true);
+					console.log("fatality ends after hit");
+				}
+			}, 1000);
+			console.log("defeated/won");
+		}
+
+		if (player.isDefeated()) {
+			setTimeout(function () {
+				player.Fatality(false);
+				opponent.Victory(true);
+			}, 1800);
 		}
 	}
 };
