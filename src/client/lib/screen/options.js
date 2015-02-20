@@ -99,25 +99,28 @@ function OptionsScreen () {
 	});
 
 	this.buttons.soundsButton.onClick(function () {
-		if(SoundCollection.mute) {
-			SoundCollection.mute = false;
-			this.setActiveImage(this.getImage(0));
-		} else {
-			SoundCollection.mute = true;
-			this.setActiveImage(this.getImage(1));
+		if(!obj.waitingForInput) {
+			if(SoundCollection.mute) {
+				SoundCollection.mute = false;
+				this.setActiveImage(this.getImage(0));
+			} else {
+				SoundCollection.mute = true;
+				this.setActiveImage(this.getImage(1));
+			}
 		}
 	});
 
 	this.buttons.soundsButton.mouseOver(function () {
-		if(SoundCollection.mute) {
-			this.setActiveImage(this.getHoverImage(1));
-		} else {
-			this.setActiveImage(this.getHoverImage(0));
+		if(!obj.waitingForInput) {
+			if(SoundCollection.mute) {
+				this.setActiveImage(this.getHoverImage(1));
+			} else {
+				this.setActiveImage(this.getHoverImage(0));
+			}
+			this.hover();
 		}
-		this.hover();
 	});
 
-	this.buttons.soundsButton.mouseLeave(function () {
 		if(SoundCollection.mute) {
 			this.setActiveImage(this.getImage(1));
 		} else {
@@ -127,14 +130,18 @@ function OptionsScreen () {
 	});
 
 	this.buttons.backButton.onClick(function () {
-		App.screen = new StartScreen();
-		App.canvasObj.setGraphics(App.screen.graphics);
-		obj.dispose();
+		if(!obj.waitingForInput) {
+			App.screen = new StartScreen();
+			App.canvasObj.setGraphics(App.screen.graphics);
+			obj.dispose();
+		}
 	});
 
 	this.buttons.backButton.mouseOver(function () {
-		this.setActiveImage(this.getHoverImage());
-		this.hover();
+		if(!obj.waitingForInput) {
+			this.setActiveImage(this.getHoverImage());
+			this.hover();
+		}
 	});
 
 	this.buttons.backButton.mouseLeave(function () {
@@ -164,7 +171,7 @@ function OptionsScreen () {
 			}(i)
 		});
 
-		tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18)
+		tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18);
 		tempBtnTxt.setColor('#cbcbcb');
 		tempBtnTxt.setFontType('Arial');
 		tempBtnTxt.setLocation(function (ind) {
@@ -195,7 +202,7 @@ function OptionsScreen () {
 					input = InputCollection.getCurrentInput();
 					if(input) {
 						if(obj.keyMap[input] || (48 <= input && input <= 90)) {
-							if(!obj.inputExists(input)) {
+							if(!obj.inputExists(input, Config.keyBindings[button.getId()])) {
 								Config.keyBindings[button.getId()] = input;
 								clearInterval(blinking);
 								obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
@@ -229,8 +236,10 @@ function OptionsScreen () {
 			}
 		});
 		tempBtn.mouseOver(function () {
-			this.setActiveImage(this.getHoverImage());
-			this.hover();
+			if(!obj.waitingForInput) {
+				this.setActiveImage(this.getHoverImage());
+				this.hover();
+			}
 		});
 		tempBtn.mouseLeave(function () {
 			this.setActiveImage(this.getImage());
@@ -285,9 +294,9 @@ OptionsScreen.prototype.keyCodeToString = function(keyCode) {
 		return obj.keyMap[keyCode];
 };
 
-OptionsScreen.prototype.inputExists = function(keyCode) {
+OptionsScreen.prototype.inputExists = function(keyCode, currentKeyCode) {
 	for (var key in Config.controlsLayout) {
-		if(Config.keyBindings[key] === keyCode) {
+		if(Config.keyBindings[key] === keyCode && keyCode !== currentKeyCode) {
 			return true;
 		} 
 	}
