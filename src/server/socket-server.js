@@ -444,6 +444,7 @@ SocketServer.updatePlayer = function(player) {
 		}
 
 		if (player.isFatality()) {
+			player.setDefending(true);
 			setTimeout(function () {
 				player.Fatality(false);
 				player.Defeat(true);
@@ -463,6 +464,7 @@ SocketServer.updatePlayer = function(player) {
 		}
 
 		if (player.isDefeated()) {
+			player.setDefending(true);
 			setTimeout(function () {
 				player.Fatality(false);
 				opponent.Victory(true);

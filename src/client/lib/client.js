@@ -61,7 +61,6 @@ Client.catchUpInterpolation = function () {
 				Client.opponentInputs.shift();
 			}
 		}
-		console.log(bufferSize);
 		if (Client.opponentInputs.length < 1) {
 			Client.catchingInterpolation = false;
 			console.log('END');
@@ -75,7 +74,6 @@ Client.interpolate = function() {
 		var physics = App.physics;
 		var bufferSize = Client.opponentInputs.length;
 		var opponent = App.opponent;
-		console.log('Buffer size: ' + bufferSize);
 		if (bufferSize < 5) {
 			var input = Client.opponentInputs[0];
 			if (input !== undefined) {

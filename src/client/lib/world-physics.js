@@ -128,11 +128,13 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var playerSprite = player.getSpriteSheet();
 
 	if (player.isFatality()) {
+		player.setDefending(true);
 		playerSprite.setActiveAnimation('fatalityAnimation');
 		return;
 	}
 
 	if (player.isDefeated()) {
+		player.setDefending(true);
 		playerSprite.setActiveAnimation('beatenAnimation');
 		return;
 	}
@@ -175,7 +177,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		}
 	}
 
-	if (player.isJumping()) {
+	if (player.isJumping() && !player.isFatality()) {
 		if (packet.punchKey) {
 			playerSprite.setActiveAnimation('jumpPunchAnimation');
 		}
