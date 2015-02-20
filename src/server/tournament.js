@@ -14,6 +14,8 @@ var Tournament = function (params) {
 	this.tournamentTimer = this.startWaitTimer();
 	this.updateTimer = this.update();
 	this.tournamentBegan = false;
+	this.timeoutVar = null;
+	this.sessionsPrepared = false;
 };
 
 Tournament.prototype.getId = function () {
@@ -66,11 +68,17 @@ Tournament.prototype.isFull = function () {
 };
 
 Tournament.prototype.begin = function () {
+	var self = this;
 	var unpickedPair;
 	this.selectPairs();
 	if ((unpickedPair = this.removeUnpickedPair()) !== undefined) {
 		var session = unpickedPair.getFirstSession();
-		unpickedPair.emitMessage(session, 'Not enough players for tournament', '#ED1C1C');
+		if (!this.tournamentBegan) {
+			unpickedPair.emitMessage(session, 'Not enough players for tournament', '#ED1C1C');
+		} else {
+			unpickedPair.emitMessage(session, 'You won a tournament!!', '#16be16');
+		}
+		
 		SocketServer.deleteObjects(session);
 	}
 
@@ -79,7 +87,10 @@ Tournament.prototype.begin = function () {
 		return;
 	}
 
-	this.prepareSessionPairs();
+	this.timeoutVar = setTimeout(function () {
+		self.prepareSessionPairs();
+		self.sessionsPrepared = true;
+	}, 5000);	
 };
 
 Tournament.prototype.join = function (session) {
@@ -270,7 +281,8 @@ Tournament.prototype.sendUpdateWaiting = function (sessionPair, session) {
 		session.socket.emit('tournament-waiting', {
 			timer: this.tournamentWaitTime,
 			pairs: this.sessionPairs.length,
-			ids: this.playerIds
+			ids: this.playerIds,
+			started: this.tournamentBegan
 		});
 	}
 };
@@ -405,9 +417,33 @@ Tournament.prototype.isEmpty = function () {
 	return true;
 };
 
+Tournament.prototype.isFighting = function () {
+	var sessionPairs = this.sessionPairs;
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+		if (sessionPair.isFighting()) {
+			return true;
+		}
+	}
+	return false;
+};
+
+Tournament.prototype.rewokePairs = function () {
+	var self = this;
+	if (this.tournamentBegan && this.sessionsPrepared) {
+		if (!this.isFighting()) {
+			this.timeoutVar = setTimeout(function () {
+				self.sessionsPrepared = false;
+				self.begin();
+			}, 5000);
+		}
+	}
+};
+
 Tournament.prototype.update = function () {
 	var self = this;
 	var updateTimer = setInterval(function () {
+		self.rewokePairs();
 		self.updateSessions();
 		self.checkPairStates();
 	}, 1000 / 30);
@@ -417,6 +453,7 @@ Tournament.prototype.update = function () {
 Tournament.prototype.stop = function () {
 	clearInterval(this.updateTimer);
 	clearInterval(this.tournamentTimer);
+	clearTimeout(this.timeoutVar);
 	this.deleteObjects();
 };
 

@@ -64,15 +64,15 @@ socket.on('message', function (data) {
 	if (Client.gameStarted) {
 		App.screen.animateEndText(data.text, data.color);
 		Client.canMove = false;
-		setInterval(function () {
+		setTimeout(function () {
 			Client.stop();
 			App.screen.dispose();
-			App.screen = new EndScreen(data.text);
+			App.screen = new EndScreen(data.text, data.color);
 			App.canvasObj.setGraphics(App.screen.graphics);
 		}, 5000);	
 	} else {
 		App.screen.dispose();
-		App.screen = new EndScreen(data.text);
+		App.screen = new EndScreen(data.text, data.color);
 		App.canvasObj.setGraphics(App.screen.graphics);
 	}
 });
@@ -113,7 +113,7 @@ socket.on('tournament-end-fight', function (data) {
 	if (Client.gameStarted) {
 		App.screen.animateEndText(data.message);
 		Client.canMove = false;
-		setInterval(function () {
+		setTimeout(function () {
 			Client.stop();
 			App.screen.dispose();
 			App.screen = new WaitingScreen();

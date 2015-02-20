@@ -10,7 +10,7 @@ var obj;
 var Config;
 var SoundCollection;
 
-function EndScreen(status) {
+function EndScreen(status, color) {
 	App = require('../../app');
 	Utilities = require('../canvas/utilities');
 	Button = require('../canvas/button');
@@ -21,6 +21,8 @@ function EndScreen(status) {
 	Background = require('../canvas/background');	
 	Config = require('../config');
 	SoundCollection = require('../sound-collection');
+
+	this.color = color || '#C80000';
 	
 	this.backgroundImage = new Background('./img/waiting_screen_background.png');
 	this.startButton = new Button({
@@ -40,7 +42,7 @@ function EndScreen(status) {
 		if(status == "Defeat") {
 			SoundCollection.play('player', 'death');
 		}
-		this.endText.setColor('#C80000');
+		this.endText.setColor(this.color);
 	}
 	this.endText.setFontType('FSpirit');
 	this.challengeText = new Text('Would you like to try again?', 30);
