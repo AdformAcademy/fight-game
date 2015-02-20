@@ -121,7 +121,7 @@ function OptionsScreen () {
 		}
 	});
 
-	this.button.soundsButton.mouseLeave(function () {
+	this.buttons.soundsButton.mouseLeave(function () {
 		if(SoundCollection.mute) {
 			this.setActiveImage(this.getImage(1));
 		} else {

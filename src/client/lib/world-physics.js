@@ -24,14 +24,14 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 		return;
 	}
 	var opponent = player === this.player ? this.opponent : this.player;
-	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var x = player.getX();
 	var z = player.getZ();
 
-	if (input.key === keys.RIGHT) {
+	if (input.key === actions.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.LEFT) {
+	else if (input.key === actions.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
 
