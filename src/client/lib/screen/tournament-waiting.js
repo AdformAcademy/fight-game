@@ -18,8 +18,7 @@ function TournamentWaitingScreen() {
 	Background = require('../canvas/background');
 	StageScreen = require('./stage');
 
-	this.chars = [];
-	this.Ids = [];
+	this.images = [];
 	this.canvas = App.canvasObj.canvas;
 	this.backgroundImage = new Background('./img/tournament_waiting.png');
 	this.waitingText = new Text('Waiting for players, 0/8 ready', 30);
@@ -43,6 +42,7 @@ function TournamentWaitingScreen() {
 	this.loadingValue = 0;
 	this.dots = 0;
 
+	this.tournamentBegan = false;
 
 	this.waitingText.setLocation(function() {
 		var x = Utilities.centerX(obj.waitingText.getTextWidth());
@@ -64,15 +64,46 @@ function TournamentWaitingScreen() {
 	});
 };
 
-TournamentWaitingScreen.prototype.draw = function (data) {
-	this.Ids = data.ids;
-	this.chars = data.chars;
-	this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
-	this.waitingText2.setText('Game will start in: ' + data.timer);
-	for (var i = 0; i < this.Ids.length; i++) {
+TournamentWaitingScreen.prototype.loadImages = function (data) {
+	for (var i = 0; i < data.ids.length; i++) {
 		var spriteImage = new Image();
-		spriteImage.src = this.chars[this.Ids[i] - 1];
-		this.canvas.drawImage(spriteImage, 0, 0, 164, 164, 50*i, 50*i, 164, 164);
+		spriteImage.src = './img/characters/1KasumiSmallIntro.png';
+		var spriteSheet = new SpriteSheet({
+			image: spriteImage,
+			data: {
+				spriteDimensions: {
+					width: 4160,
+					height: 164,
+					frameWidth: 212
+				},
+				animations: {
+					animation: {
+						name: 'introAnimation',
+						startFrame: 0,
+						frames: 1,
+						speed: 0,
+						order: 'asc'
+					}
+				},
+				defaultAnimation: 'animation'
+			},
+			useScale: true,
+			scaleWidth: 100,
+			scaleHeight: 100
+		});
+		this.images.push(spriteSheet);
+	}
+};
+
+TournamentWaitingScreen.prototype.update = function (data) {
+	if (data.started) {
+		if (!this.tournamentBegan) {
+			this.tournamentBegan = true;
+			this.loadImages(data);
+		}
+	} else {
+		this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
+		this.waitingText2.setText('Game will start in: ' + data.timer);
 	}
 };
 
@@ -105,8 +136,15 @@ TournamentWaitingScreen.prototype.load = function () {
 
 TournamentWaitingScreen.prototype.graphics = function() {
 	obj.backgroundImage.draw();
-	obj.waitingText.draw();
-	obj.waitingText2.draw();
+	if (!obj.tournamentBegan) {
+		obj.waitingText.draw();
+		obj.waitingText2.draw();
+	} else {
+		for (var i = 0; i < obj.images.length; i++) {
+			var image = obj.images[i];
+			image.draw(100, 100);
+		}
+	}
 	if (obj.opponentFound) {
 		obj.loadingText.draw();
 	}

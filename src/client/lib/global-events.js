@@ -96,12 +96,13 @@ socket.on('update', function(data) {
 });
 
 socket.on('tournament-waiting', function (data) {
-	if (!Client.gameStarted) {
+	if (!Client.gameStarted && !(App.screen instanceof TournamentWaitingScreen)) {
+		console.log('ONE TIME');
 		App.screen.dispose();
 		App.screen = new TournamentWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 	}
-	App.screen.draw(data);
+	App.screen.update(data);
 });
 
 socket.on('tournament-progress', function (data) {
