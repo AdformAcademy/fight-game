@@ -17,6 +17,7 @@ var Tournament = function (params) {
 	this.tournamentBegan = false;
 	this.timeoutVar = null;
 	this.sessionsPrepared = false;
+	this.rewoked = false;
 	Tournament.getPlayerData(this.playerData);
 };
 
@@ -82,6 +83,7 @@ Tournament.prototype.isFull = function () {
 Tournament.prototype.begin = function () {
 	var self = this;
 	var unpickedPair;
+
 	this.selectPairs();
 	if ((unpickedPair = this.removeUnpickedPair()) !== undefined) {
 		var session = unpickedPair.getFirstSession();
@@ -110,15 +112,17 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 10
+		fightTime: 60
 	});
 
 	this.playerIds.push(sessionPair.getFirstSession().getSelection());
 	this.sessionPairs.push(sessionPair);
 
 	if (this.isFull()) {
-		this.tournamentWaitTime = 1;
 		this.begin();
+		this.tournamentBegan = true;
+		clearInterval(this.tournamentTimer);
+		this.tournamentWaitTime = 1;
 	}
 };
 
@@ -444,9 +448,11 @@ Tournament.prototype.isFighting = function () {
 Tournament.prototype.rewokePairs = function () {
 	var self = this;
 	if (this.tournamentBegan && this.sessionsPrepared) {
-		if (!this.isFighting()) {
+		if (!this.isFighting() && !this.rewoked) {
+			this.rewoked = true;
 			this.timeoutVar = setTimeout(function () {
 				self.sessionsPrepared = false;
+				self.rewoked = false;
 				self.begin();
 			}, 5000);
 		}
