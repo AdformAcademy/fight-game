@@ -148,7 +148,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('kickAnimation');
 	} else if (packet.jumpKey) {
 		playerSprite.setActiveAnimation('jumpAnimation');
-	} else if (packet.key === keys.DEFEND) {
+	} else if (packet.key === actions.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 	if (player.isStanding() && !player.isHiting()) {
@@ -220,11 +220,11 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 };
 
 WorldPhysics.prototype.applyParallax = function (packet) {
-	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	if(!this.player.isHiting()){
-		if (packet.key === keys.RIGHT) {
+		if (packet.key === actions.RIGHT) {
 			this.parallax.moveRight();
-		} else if (packet.key === keys.LEFT) {
+		} else if (packet.key === actions.LEFT) {
 			this.parallax.moveLeft();
 		}
 	}
