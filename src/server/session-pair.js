@@ -7,7 +7,8 @@ var SessionPair = function (params) {
 	this.firstSession = params.firstSession || null;
 	this.secondSession = params.secondSession || null;
 	this.tournamentId = params.tournamentId || null;
-	this.fightTime = params.fightTime || null;
+	this.initialTime = params.fightTime;
+	this.fightTime = null;
 	this.fightTimer = null;
 	this.fighting = false;
 };
@@ -115,6 +116,11 @@ SessionPair.prototype.selectWinner = function () {
 			this.fighting = false;
 		}
 	}
+};
+
+SessionPair.prototype.resetTimer = function () {
+	this.fightTime = this.initialTime;
+	clearInterval(this.fightTimer);
 };
 
 SessionPair.prototype.startTimer = function () {

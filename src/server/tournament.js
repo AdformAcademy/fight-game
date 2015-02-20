@@ -112,7 +112,7 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 60
+		fightTime: 180
 	});
 
 	this.playerIds.push(sessionPair.getFirstSession().getSelection());
@@ -196,6 +196,7 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 	SocketServer.comboInputs[secondSession.sessionId] = [];
 
 	sessionPair.setFighting(true);
+	sessionPair.resetTimer();
 	sessionPair.startTimer(); // TODO start timer when both players is ready
 
 	firstSession.socket.emit(Session.PLAYING, {
@@ -356,7 +357,7 @@ Tournament.prototype.checkPairStates = function () {
 		var secondPlayer = secondSession.getPlayer();
 
 		if (firstPlayer.isVictor()) {
-			firstPlayer.setVictor
+			firstPlayer.Victory(false);
 			firstSession.addWonFight();
 			sessionPair.endGameSession(firstSession, 'You won');
 			firstSession.state = Session.TOURNAMENT;
@@ -366,6 +367,7 @@ Tournament.prototype.checkPairStates = function () {
 			sessionPair.setFighting(false);
 			SocketServer.deleteObjects(secondSession);
 		} else if (secondPlayer.isVictor()) {
+			secondPlayer.Victory(false);
 			secondSession.addWonFight();
 			sessionPair.endGameSession(secondSession, 'You won');
 			secondSession.state = Session.TOURNAMENT;

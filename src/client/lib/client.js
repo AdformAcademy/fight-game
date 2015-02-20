@@ -449,7 +449,6 @@ Client.stop = function() {
 	Client.parallax = null;
 	Client.catchingInterpolation = false;
 	Client.gameStarted = false;
-	Client.gameType = null;
 	Client.canMove = false;
 };
 
