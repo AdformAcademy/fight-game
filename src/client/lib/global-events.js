@@ -98,9 +98,10 @@ socket.on('update', function(data) {
 socket.on('tournament-waiting', function (data) {
 	if (!Client.gameStarted) {
 		App.screen.dispose();
-		App.screen = new TournamentWaitingScreen(data);
+		App.screen = new TournamentWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 	}
+	App.screen.draw(data);
 });
 
 socket.on('tournament-progress', function (data) {

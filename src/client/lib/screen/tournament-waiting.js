@@ -10,7 +10,7 @@ var fs = require('fs');
 var socket = io();
 var obj;
 
-function TournamentWaitingScreen(data) {
+function TournamentWaitingScreen() {
 	App = require('../../app');
 	Utilities = require('../canvas/utilities');
 	Point = require('../../../common/point');
@@ -18,14 +18,15 @@ function TournamentWaitingScreen(data) {
 	Background = require('../canvas/background');
 	StageScreen = require('./stage');
 
-	this.chars = data.chars;
-	this.Ids = data.ids;
+	this.chars = [];
+	this.Ids = [];
+	this.canvas = App.canvasObj.canvas;
 	this.backgroundImage = new Background('./img/tournament_waiting.png');
-	this.waitingText = new Text('Waiting for players, ' + data.pairs + '/8 ready', 30);
+	this.waitingText = new Text('Waiting for players, 0/8 ready', 30);
 	this.waitingText.color = '#cbcbcb';
 	this.waitingText.fontType = 'FSpirit';
 
-	this.waitingText2 = new Text('Game will start in: ' + data.timer, 30);
+	this.waitingText2 = new Text('Game will start in: 60', 30);
 	this.waitingText2.color = '#cbcbcb';
 	this.waitingText2.fontType = 'FSpirit';
 
@@ -61,15 +62,17 @@ function TournamentWaitingScreen(data) {
 		var y = App.canvasObj.getHeight() * 0.35;
 		return new Point(x, y);
 	});
-
-	TournamentWaitingScreen.drawBrakects(this.Ids, this.chars);
 };
 
-TournamentWaitingScreen.drawBrakects = function (Ids, chars) {
-	for (var i = 0; i < Ids.length; i++) {
+TournamentWaitingScreen.prototype.draw = function (data) {
+	this.Ids = data.ids;
+	this.chars = data.chars;
+	this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
+	this.waitingText2.setText('Game will start in: ' + data.timer);
+	for (var i = 0; i < this.Ids.length; i++) {
 		var spriteImage = new Image();
-		spriteImage.src = chars[Ids[i] - 1];
-		console.log(spriteImage.src);
+		spriteImage.src = this.chars[this.Ids[i] - 1];
+		this.canvas.drawImage(spriteImage, 0, 0, 164, 164, 50*i, 50*i, 164, 164);
 	}
 };
 

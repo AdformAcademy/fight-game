@@ -77,7 +77,7 @@ Tournament.prototype.startWaitTimer = function () {
 };
 
 Tournament.prototype.isFull = function () {
-	return this.sessionPairs.length === 4;
+	return this.sessionPairs.length === 8;
 };
 
 Tournament.prototype.begin = function () {
