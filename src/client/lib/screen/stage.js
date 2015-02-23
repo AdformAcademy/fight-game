@@ -3,6 +3,7 @@ var Utilities;
 var Point;
 var Text;
 var obj;
+var SoundCollection;
 
 function StageScreen() {
 	App = require('../../app');
@@ -12,6 +13,7 @@ function StageScreen() {
 	Text = require('../canvas/text');
 	obj = this;
 
+	SoundCollection = require('../sound-collection');
 	this.player = App.player;
 	this.opponent = App.opponent;
 	this.parallax = Client.parallax;
@@ -63,6 +65,7 @@ function StageScreen() {
 	this.doCountDown();
 	this.animateCountDown();
 	Client.start();
+	SoundCollection.play('common', 'theme');
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {
@@ -154,7 +157,7 @@ StageScreen.prototype.animateEndText = function (text, color) {
 
 StageScreen.prototype.graphics = function() {
 	var player = obj.player;
-	var opponent= obj.opponent;
+	var opponent = obj.opponent;
 	var playerLifeBar = player.getLifeBar();
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();

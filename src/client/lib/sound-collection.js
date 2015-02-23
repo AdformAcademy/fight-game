@@ -7,7 +7,8 @@ SoundCollection.mute = false;
 SoundCollection.sounds = {
 	common: {},
 	player: {},
-	opponent: {}
+	opponent: {},
+	theme: {}
 };
 
 SoundCollection.loadCommonSounds = function (loader, soundsData) {
@@ -25,7 +26,7 @@ SoundCollection.loadCommonSounds = function (loader, soundsData) {
 					loader.load(id);
 				};
 			}(id);
-			sound.src = Config.commonSoundsPath + action + '/' + i + '.wav'; 
+			sound.src = Config.commonSoundsPath + action + '/' + i + '.mp3';
 			commonSounds[action].push(sound);
 		}
 	}
