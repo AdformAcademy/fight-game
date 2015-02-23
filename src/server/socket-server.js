@@ -30,6 +30,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			punched: player.isPunched(),
 			hiting: player.isHiting(),
 			victor: player.isVictor(),
+			fatality: player.isFatality(),
 			defeated: player.isDefeated(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives(),
@@ -41,6 +42,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			z: opponent.getZ(),
 			punched: opponent.isPunched(),
 			victor: opponent.isVictor(),
+			fatality: opponent.isFatality(),
 			defeated: opponent.isDefeated(),
 			sequence: SocketServer.proccessedInputs[opponent.getID()] || [],
 			lives: opponent.getLives(),
@@ -223,9 +225,9 @@ SocketServer.executeInput = function(player, input) {
 			player.setSpeedZ(speedZ);
 			player.setJumping(true);
 			player.useEnergy('jump');
-			physics.jump()
-		opponent.storeSound('common', 'jump');
-		opponent.storeSound('opponent', 'jump');
+			physics.jump();
+			opponent.storeSound('common', 'jump');
+			opponent.storeSound('opponent', 'jump');
 		}
 		else if(player.isJumping() && !player.isPunched() && !player.isDefending()) {
 			var inputs = SocketServer.jumpInputs[player.getID()];
@@ -435,9 +437,38 @@ SocketServer.updatePlayer = function(player) {
 				comboInputs.shift();
 			}
 		}
-		if (player.getLives() <= 0) {
-			player.Defeat(true);
-			opponent.Victory(true);
+
+		if (player.getLives() <= 0 && !player.isDefeated()) {
+			player.Fatality(true);
+			console.log("player now is in fatality");
+		}
+
+		if (player.isFatality()) {
+			player.setDefending(true);
+			setTimeout(function () {
+				player.Fatality(false);
+				player.Defeat(true);
+				setTimeout(function () {
+					opponent.Victory(true);
+				}, 1800);
+			}, 6000);
+
+			setTimeout(function() {
+				if (player.isPunched()) {
+					player.Fatality(false);
+					player.Defeat(true);
+					console.log("fatality ends after hit");
+				}
+			}, 1000);
+			console.log("defeated/won");
+		}
+
+		if (player.isDefeated()) {
+			player.setDefending(true);
+			setTimeout(function () {
+				player.Fatality(false);
+				opponent.Victory(true);
+			}, 1800);
 		}
 	}
 };

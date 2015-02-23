@@ -58,7 +58,11 @@ CharacterChooser.preview = function (id) {
 		'moveRightAnimation',
 		'damageAnimation',
 		'jumpPunchAnimation',
-		'jumpKickAnimation'
+		'jumpKickAnimation',
+		'punchAnimation1',
+		'punchAnimation2',
+		'fatalityAnimation',
+		'beatenAnimation'
 	];
 
 	var screen = App.screen;
