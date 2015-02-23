@@ -58,7 +58,7 @@
 			"moveRightAnimation": {
 				"name": "moveRightAnimation",
 				"startFrame": 19,
-				"frames": 12,
+				"frames": 11,
 				"speed": 0.5,
 				"order": "asc"
 			},
@@ -66,14 +66,14 @@
 				"name": "jumpAnimation",
 				"startFrame": 7,
 				"frames": 12,
-				"speed": 0.5,
+				"speed": 0.45,
 				"order": "asc"
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",
 				"startFrame": 31,
 				"frames": 6,
-				"speed": 0.5,
+				"speed": 0.45,
 				"order": "desc"
 			},
 			"punchAnimation2": {

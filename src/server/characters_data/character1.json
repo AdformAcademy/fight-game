@@ -11,8 +11,8 @@
 	"costs": {
 		"punch": 5,
 		"kick": 8,
-		"punchCombo": 50,
-		"kickCombo": 60,
+		"punchCombo": 30,
+		"kickCombo": 40,
 		"jump": 10
 	},
 	"spriteSheetButton": {
@@ -58,7 +58,7 @@
 			"moveRightAnimation": {
 				"name": "moveRightAnimation",
 				"startFrame": 18,
-				"frames": 9,
+				"frames": 8,
 				"speed": 0.5,
 				"order": "asc"
 			},
@@ -67,7 +67,7 @@
 				"startFrame": 8,
 				"frames": 9,
 				"speed": 0.4,
-				"order": "asc"
+				"order": "desc"
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",

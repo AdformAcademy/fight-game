@@ -64,8 +64,8 @@
 			},
 			"moveRightAnimation": {
 				"name": "moveRightAnimation",
-				"startFrame": 18,
-				"frames": 13,
+				"startFrame": 19,
+				"frames": 11,
 				"speed": 0.35,
 				"order": "asc"
 			},

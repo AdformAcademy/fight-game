@@ -65,7 +65,7 @@
 			"moveRightAnimation": {
 				"name": "moveRightAnimation",
 				"startFrame": 18,
-				"frames": 8,
+				"frames": 7,
 				"speed": 0.5,
 				"order": "asc"
 			},
@@ -94,8 +94,8 @@
 				"name": "jumpKickAnimation",
 				"startFrame": 55,
 				"frames": 12,
-				"speed": 0.6,
-				"order": "asc"
+				"speed": 0.7,
+				"order": "desc"
 			},
 			"runningAnimation": {
 				"name": "runningAnimation",
