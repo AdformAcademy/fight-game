@@ -38,14 +38,14 @@ InputProcessor.prototype.processMovementInputs = function (input) {
 	var size = Config.playerSize;
 	var camera = this.camera;
 
-	if (control.isDown(keys.RIGHT)) {
+	if (control.isDown(keys.RIGHT) && !player.isFatality() && !player.isDefeated()) {
 		if (x < this.world.width - 185 
 				&& Collisions.checkRightCollision(player, opponent, size)
 				&& camera.leftCollision(opponent, size)) {
 			input.key = actions.RIGHT;
 		}
 	}
-	else if (control.isDown(keys.LEFT)) {
+	else if (control.isDown(keys.LEFT) && !player.isFatality() && !player.isDefeated()) {
 		if (x > this.world.left - 135 
 				&& Collisions.checkLeftCollision(player, opponent, size)
 				&& camera.rightCollision(opponent, size)) {
@@ -61,7 +61,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 	var control = InputCollection;
 	var player = this.player;
 	
-	if(!player.isJumping() && !player.isDefending()) {
+	if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 		if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo')) {
 			player.setUsingCombo(true);
 			player.setHiting(true);

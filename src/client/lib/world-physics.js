@@ -66,6 +66,7 @@ WorldPhysics.prototype.jump = function () {
 		player.setSpeedZ(speedZ);
 	}, 1000/30);
 };
+
 WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	var self = this;
 	var player = this.player;
@@ -85,7 +86,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 	}	
 	var updateH = setInterval(function () {
 		t += 30;
-		if (t >= time) {
+		if (t >= time && !player.isFatality()) {
 			if(hit == 1){
 				if(opx < self.world.width - 185){
 					opx += power;
@@ -127,6 +128,18 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
 
+	if (player.isFatality()) {
+		player.setDefending(true);
+		playerSprite.setActiveAnimation('fatalityAnimation');
+		return;
+	}
+
+	if (player.isDefeated()) {
+		player.setDefending(true);
+		playerSprite.setActiveAnimation('beatenAnimation');
+		return;
+	}
+
 	if (packet.kickCombo) {
 		playerSprite.setActiveAnimation('kickComboAnimation');
 	} else if (packet.punchCombo) {
@@ -141,7 +154,8 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	} else if (packet.key === actions.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
-	if (player.isStanding() && !player.isHiting()) {
+
+	if (player.isStanding() && !player.isHiting() && !player.isFatality()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
 				if (packet.key === actions.RIGHT)
@@ -156,14 +170,15 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 		}
-		else if (player.isPunched()) {
+		else if (player.isPunched() && !player.isFatality()) {
 			playerSprite.setActiveAnimation('damageAnimation');
 		}
-		else if (!player.isPunched()) {
+		else if (!player.isPunched() && !player.isFatality()) {
 			playerSprite.setActiveAnimation('standAnimation');
 		}
 	}
-	if (player.isJumping()) {
+
+	if (player.isJumping() && !player.isFatality()) {
 		if (packet.punchKey) {
 			playerSprite.setActiveAnimation('jumpPunchAnimation');
 		}

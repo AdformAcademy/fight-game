@@ -70,7 +70,6 @@ Client.catchUpInterpolation = function () {
 				Client.opponentInputs.shift();
 			}
 		}
-		console.log(bufferSize);
 		if (Client.opponentInputs.length < 1) {
 			Client.catchingInterpolation = false;
 			console.log('END');
@@ -84,7 +83,6 @@ Client.interpolate = function() {
 		var physics = App.physics;
 		var bufferSize = Client.opponentInputs.length;
 		var opponent = App.opponent;
-		console.log('Buffer size: ' + bufferSize);
 		if (bufferSize < 5) {
 			var input = Client.opponentInputs[0];
 			if (input !== undefined) {
@@ -138,6 +136,8 @@ Client.processServerData = function() {
     	var playerEnergyBar = App.player.getEnergyBar();
     	var opponentEnergyBar = App.opponent.getEnergyBar();
     	var sounds = state.player.sounds;
+    	var pFatality = state.player.fatality;
+    	var oFatality = state.opponent.fatality;
 
     	physics.applyCoordinates(App.player, x, null);
     	SoundCollection.playServerSounds(sounds);
@@ -156,9 +156,11 @@ Client.processServerData = function() {
     	App.player.Victory(pVictor);
     	App.player.Defeat(pDefeated);
     	App.player.setHiting(hiting);
+    	App.player.Fatality(pFatality);
     	App.opponent.setPunched(opunched);
     	App.opponent.Victory(oVictor);
     	App.opponent.Defeat(oDefeated);
+    	App.opponent.Fatality(oFatality);
 
     	if (Client.interpolation) {
     		Client.appendOpponentInputs(state.opponent.sequence);

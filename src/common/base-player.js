@@ -11,11 +11,13 @@ var BasePlayer = function () {
 	this.punched = 0;
 	this.won = false;
 	this.lost = false;
+	this.fatality = false;
 };
 
 BasePlayer.prototype.Victory = function(status) {
 	this.won = status;
 };
+
 BasePlayer.prototype.isVictor = function() {
 	return this.won == true;
 };
@@ -23,8 +25,17 @@ BasePlayer.prototype.isVictor = function() {
 BasePlayer.prototype.Defeat = function(status) {
 	this.lost = status;
 };
+
 BasePlayer.prototype.isDefeated = function() {
 	return this.lost == true;
+};
+
+BasePlayer.prototype.Fatality = function(status) {
+	this.fatality = status;
+};
+
+BasePlayer.prototype.isFatality = function() {
+	return this.fatality == true;
 };
 
 BasePlayer.prototype.getZ = function () {

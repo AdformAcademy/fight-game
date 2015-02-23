@@ -143,14 +143,14 @@
 				"name": "fatalityAnimation",
 				"startFrame": 154,
 				"frames": 3,
-				"speed": 0.3,
+				"speed": 0.15,
 				"order": "asc"
 			},
 			"beatenAnimation": {
 				"name": "beatenAnimation",
 				"startFrame": 157,
 				"frames": 13,
-				"speed": 0.3,
+				"speed": 0.24,
 				"order": "desc"
 			},
 			"introAnimation": {
