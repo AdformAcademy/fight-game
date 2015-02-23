@@ -40,6 +40,9 @@ InputCollection.onKeyup = function(event) {
 		var interval = currentPressTime - pastPressTime;
 		if (interval < Config.quickTapDuration) {
 			InputCollection.quickTaps[event.keyCode] = true;
+			setTimeout(function () {
+				InputCollection.quickTaps[event.keyCode] = false;
+			}, interval);
 		}
 	}
 	InputCollection.pressTimes[event.keyCode] = currentPressTime;
