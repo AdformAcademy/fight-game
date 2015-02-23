@@ -178,8 +178,14 @@ SocketServer.disconnectClient = function(socket, status) {
 		if (session.state !== Session.TOURNAMENT_PLAYING) {
 			var opponentSession = SessionCollection.getSessionObject(session.opponentId);
 			if(status == "Victory") {
-				socket.emit(Session.VICTORY);
-				opponentSession.socket.emit(Session.DEFEAT);
+				session.socket.emit('message', {
+					text: 'You won',
+					color: '#16be16'
+				});
+				opponentSession.socket.emit('message', {
+					text: 'You lost',
+					color: '#ED1C1C'
+				});
 			} else {
 				opponentSession.socket.emit(Session.UNACTIVE);
 			}
