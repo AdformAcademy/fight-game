@@ -158,6 +158,7 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 		z: Config.firstSpawnLocation.z,
 		characterData: playerData,
 		characterId: playerSelection,
+		energyCosts: playerData.costs,
 		map: mapData
 	});
 
@@ -168,6 +169,7 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 		z: Config.secondSpawnLocation.z,
 		characterData: opponentData,
 		characterId: opponentSelection,
+		energyCosts: opponentData.costs,
 		map: mapData
 	});
 

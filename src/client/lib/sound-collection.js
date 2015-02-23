@@ -2,6 +2,8 @@ var Config = require('./config');
 
 var SoundCollection = {};
 
+SoundCollection.mute = false;
+
 SoundCollection.sounds = {
 	common: {},
 	player: {},
@@ -78,17 +80,21 @@ SoundCollection.load = function (loader, soundsData, playerData, opponentData) {
 };
 
 SoundCollection.play = function (sounds, action) {
-	var soundsPack = SoundCollection.sounds[sounds][action];
-	var index = Math.floor(Math.random() * soundsPack.length);
-	if(soundsPack[index] !== undefined) {
-		soundsPack[index].play();
+	if(!SoundCollection.mute) {
+		var soundsPack = SoundCollection.sounds[sounds][action];
+		var index = Math.floor(Math.random() * soundsPack.length);
+		if(soundsPack[index] !== undefined) {
+			soundsPack[index].play();
+		}
 	}
 };
 
 SoundCollection.playServerSounds = function (soundData) {
-	if (soundData !== undefined) {
-		for (var i in soundData) {
-			SoundCollection.play(soundData[i].packet, soundData[i].sound);
+	if(!SoundCollection.mute) {
+		if (soundData !== undefined) {
+			for (var i in soundData) {
+				SoundCollection.play(soundData[i].packet, soundData[i].sound);
+			}
 		}
 	}
 }

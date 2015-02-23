@@ -42,6 +42,10 @@ describe('SoundCollection', function () {
 		expect(SoundCollection.sounds.opponent).toBeDefined();
 	});
 
+	it('should define mute variable', function () {
+		expect(SoundCollection.mute).toBeDefined();
+	});
+
 	it('should define loadCommonSounds function', function () {
 		expect(SoundCollection.loadCommonSounds).toBeDefined();
 	});

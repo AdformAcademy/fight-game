@@ -8,6 +8,8 @@ Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
+Config.actions = BaseConfig.actions;
+
 Config.screenWidth = 900;
 Config.playerDefenceMultiplier = 0.2;
 Config.playerEnergyIncrement = 0.1;

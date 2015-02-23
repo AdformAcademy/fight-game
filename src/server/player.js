@@ -15,6 +15,7 @@ var Player = function (params) {
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = params.characterData.maxEnergy / 2;
+  this.energyCosts = params.energyCosts;
   this.characterId = params.characterId || 1;
   this.map = params.map;
   this.sounds = [];
@@ -93,6 +94,10 @@ Player.prototype.increaseEnergy = function () {
   if(this.energy > this.maxEnergy) {
     this.energy = this.maxEnergy;
   }
+};
+
+Player.prototype.hasEnoughEnergy = function(action) {
+  return this.energy >= this.energyCosts[action];
 };
 
 Player.prototype.setCharacterId = function (id) {
