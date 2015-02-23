@@ -102,7 +102,9 @@ socket.on('tournament-waiting', function (data) {
 		App.screen = new TournamentWaitingScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
 	}
-	App.screen.update(data);
+	if (App.screen instanceof TournamentWaitingScreen) {
+		App.screen.update(data);
+	}
 });
 
 socket.on('tournament-progress', function (data) {
