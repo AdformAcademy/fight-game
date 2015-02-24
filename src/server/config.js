@@ -14,6 +14,10 @@ Config.screenWidth = 900;
 Config.playerDefenceMultiplier = 0.2;
 Config.playerEnergyIncrement = 0.1;
 
+Config.tournamentFightTimer = 180;
+Config.tournamentWaitTimer = 60;
+Config.tournamentLenght = 8;
+
 Config.firstSpawnLocation = {
 	x: 590,
 	z: 0

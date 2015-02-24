@@ -33,6 +33,10 @@ function TournamentWaitingScreen() {
 	this.loadingText.color = '#cbcbcb';
 	this.loadingText.fontType = 'FSpirit';
 
+	this.versusText = new Text('VS', 80);
+	this.versusText.color = '#cbcbcb';
+	this.versusText.fontType = 'FSpirit';
+
 	obj = this;
 
 	this.animateInterval = null;
@@ -43,6 +47,12 @@ function TournamentWaitingScreen() {
 	this.dots = 0;
 
 	this.tournamentBegan = false;
+
+	this.versusText.setLocation(function() {
+		var x = Utilities.centerX(obj.versusText.getTextWidth());
+		var y = App.canvasObj.getHeight() * 0.6;
+		return new Point(x, y);
+	});
 
 	this.waitingText.setLocation(function() {
 		var x = Utilities.centerX(obj.waitingText.getTextWidth());
@@ -59,7 +69,7 @@ function TournamentWaitingScreen() {
 	var centerX = Utilities.centerX(this.loadingText.getTextWidth());
 	this.loadingText.setLocation(function() {
 		var x = centerX;
-		var y = App.canvasObj.getHeight() * 0.35;
+		var y = App.canvasObj.getHeight() * 0.2;
 		return new Point(x, y);
 	});
 };
@@ -67,7 +77,8 @@ function TournamentWaitingScreen() {
 TournamentWaitingScreen.prototype.loadImages = function (data) {
 	for (var i = 0; i < data.ids.length; i++) {
 		var spriteImage = new Image();
-		spriteImage.src = './img/characters/1KasumiSmallIntro.png';
+		console.log(data.chars[data.ids[i]-1]);
+		spriteImage.src = data.chars[data.ids[i]-1];
 		var spriteSheet = new SpriteSheet({
 			image: spriteImage,
 			data: {
@@ -140,9 +151,13 @@ TournamentWaitingScreen.prototype.graphics = function() {
 		obj.waitingText.draw();
 		obj.waitingText2.draw();
 	} else {
+		obj.versusText.draw();
 		for (var i = 0; i < obj.images.length; i++) {
 			var image = obj.images[i];
-			image.draw(100, 100);
+			if(i < obj.images.length/2)
+				image.draw(150, 100*(i+1));
+			else
+				image.draw(550, 100*(i-3));
 		}
 	}
 	if (obj.opponentFound) {

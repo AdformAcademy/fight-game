@@ -77,7 +77,7 @@ Tournament.prototype.startWaitTimer = function () {
 };
 
 Tournament.prototype.isFull = function () {
-	return this.sessionPairs.length === 8;
+	return this.sessionPairs.length === Config.tournamentLenght;
 };
 
 Tournament.prototype.begin = function () {
@@ -112,7 +112,7 @@ Tournament.prototype.join = function (session) {
 		id: this.sessionPairs.length,
 		firstSession: session,
 		tournamentId: this.id,
-		fightTime: 180
+		fightTime: Config.tournamentFightTimer
 	});
 
 	this.playerIds.push(sessionPair.getFirstSession().getSelection());

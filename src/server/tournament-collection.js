@@ -1,4 +1,5 @@
 var Tournament = require('./tournament');
+var Config = require('./config');
 
 var TournamentCollection = {};
 
@@ -8,7 +9,7 @@ TournamentCollection.updateInterval = null;
 TournamentCollection.createTournament = function () {
 	var tournament = new Tournament({
 		id: TournamentCollection.tournaments.length,
-		tournamentWaitTime: 10
+		tournamentWaitTime: Config.tournamentWaitTimer
 	});
 	TournamentCollection.tournaments.push(tournament);
 };
