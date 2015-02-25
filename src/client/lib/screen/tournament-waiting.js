@@ -48,12 +48,6 @@ function TournamentWaitingScreen() {
 
 	this.tournamentBegan = false;
 
-	this.versusText.setLocation(function() {
-		var x = Utilities.centerX(obj.versusText.getTextWidth());
-		var y = App.canvasObj.getHeight() * 0.6;
-		return new Point(x, y);
-	});
-
 	this.waitingText.setLocation(function() {
 		var x = Utilities.centerX(obj.waitingText.getTextWidth());
 		var y = App.canvasObj.getHeight() * 0.1;
@@ -90,10 +84,10 @@ TournamentWaitingScreen.prototype.loadImages = function (data) {
 				animations: {
 					animation: {
 						name: 'introAnimation',
-						startFrame: 0,
+						startFrame: 2,
 						frames: 1,
 						speed: 0,
-						order: 'asc'
+						order: 'dsc'
 					}
 				},
 				defaultAnimation: 'animation'
@@ -151,13 +145,18 @@ TournamentWaitingScreen.prototype.graphics = function() {
 		obj.waitingText.draw();
 		obj.waitingText2.draw();
 	} else {
+		obj.versusText.setLocation(function() {
+		var x = Utilities.centerX(obj.versusText.getTextWidth());
+		var y = obj.images.length/2 * 50 + 150;
+		return new Point(x, y);
+	});
 		obj.versusText.draw();
 		for (var i = 0; i < obj.images.length; i++) {
 			var image = obj.images[i];
-			if(i < obj.images.length/2)
-				image.draw(150, 100*(i+1));
+			if(i % 2 == 0)
+				image.draw(250, 50*(i+1) + 50);
 			else
-				image.draw(550, 100*(i-3));
+				image.draw(550, 50*(i) + 50);
 		}
 	}
 	if (obj.opponentFound) {

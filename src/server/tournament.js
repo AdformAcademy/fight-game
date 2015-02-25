@@ -83,6 +83,7 @@ Tournament.prototype.isFull = function () {
 Tournament.prototype.begin = function () {
 	var self = this;
 	var unpickedPair;
+	var sessionPairs = this.sessionPairs;
 
 	this.selectPairs();
 	if ((unpickedPair = this.removeUnpickedPair()) !== undefined) {
@@ -107,6 +108,17 @@ Tournament.prototype.begin = function () {
 	}, 5000);	
 };
 
+Tournament.prototype.updatePlayerIds = function(sessionPairs) {
+	this.playerIds = [];
+	for (var i = 0; i < sessionPairs.length; i++) {
+		var sessionPair = sessionPairs[i];
+		if(sessionPair.getFirstSession() !== null && sessionPair.getSecondSession() !== null){
+			this.playerIds.push(sessionPair.getFirstSession().getSelection());
+			this.playerIds.push(sessionPair.getSecondSession().getSelection());
+		}
+	}
+}
+
 Tournament.prototype.join = function (session) {
 	var sessionPair = new SessionPair({
 		id: this.sessionPairs.length,
@@ -115,7 +127,6 @@ Tournament.prototype.join = function (session) {
 		fightTime: Config.tournamentFightTimer
 	});
 
-	this.playerIds.push(sessionPair.getFirstSession().getSelection());
 	this.sessionPairs.push(sessionPair);
 
 	if (this.isFull()) {
@@ -334,6 +345,7 @@ Tournament.prototype.sendPairUpdateProgress = function (sessionPair) {
 
 Tournament.prototype.updateSessions = function () {
 	var sessionPairs = this.sessionPairs;
+	this.updatePlayerIds(sessionPairs);
 	for (var i = 0; i < sessionPairs.length; i++) {
 		var sessionPair = sessionPairs[i];
 		if (!sessionPair.isFighting()) {

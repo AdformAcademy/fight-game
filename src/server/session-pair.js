@@ -70,10 +70,12 @@ SessionPair.prototype.endGameSession = function (session, message) {
 };
 
 SessionPair.prototype.emitMessage = function (session, message, color) {
-	session.socket.emit('message', {
-		text: message,
-		color: color
-	});
+	if(session !== null){
+		session.socket.emit('message', {
+			text: message,
+			color: color
+		});
+	}
 };
 
 SessionPair.prototype.selectWinner = function () {
