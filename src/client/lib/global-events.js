@@ -43,7 +43,9 @@ $(window).mousemove(function(event) {
 });
 
 socket.on('playing', function(data) {
-	Client.initializeGame(data);
+	if (!Client.gameStarted) {
+		Client.initializeGame(data);
+	}
 });
 
 socket.on('choose-character', function (data) {

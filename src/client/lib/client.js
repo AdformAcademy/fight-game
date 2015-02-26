@@ -455,8 +455,10 @@ Client.stop = function() {
 };
 
 Client.start = function() {
-	Client.isRunning = true;
-	Client.updateWorldInterval = setInterval(function() {
-		Client.update();
-	}, 1000 / 30);
+	if (!Client.isRunning) {
+		Client.isRunning = true;
+		Client.updateWorldInterval = setInterval(function() {
+			Client.update();
+		}, 1000 / 30);
+	}
 };

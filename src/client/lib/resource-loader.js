@@ -3,6 +3,10 @@ var ResourceLoader = function (event) {
 	this.resources = [];
 	this.globalId = 0;
 	this.eventTriggered = false;
+	var self = this;
+	setTimeout(function () {
+		self.triggerEvent();
+	}, 5000);
 };
 
 ResourceLoader.prototype.append = function (resource) {

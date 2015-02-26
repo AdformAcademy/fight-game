@@ -3,6 +3,7 @@ var Utilities;
 var Point;
 var Text;
 var obj;
+var Client;
 var SoundCollection;
 
 function StageScreen() {
