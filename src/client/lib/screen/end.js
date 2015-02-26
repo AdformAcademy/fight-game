@@ -51,7 +51,7 @@ function EndScreen(status, color) {
 		hoverImage: './img/tournament_button_hover.png',
 		location: function() {
 			var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
-			var y = App.canvasObj.getHeight() * 0.5;
+			var y = App.canvasObj.getHeight() * 0.52;
 			return new Point(x, y);
 		}
 	});
@@ -70,12 +70,6 @@ function EndScreen(status, color) {
 	this.backButton.mouseLeave(function () {
 		this.setActiveImage(this.getImage());
 		this.hoverLeave();
-	});
-
-	this.tournamentButton.setLocation(function() {
-		var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
-		var y = App.canvasObj.getHeight() * 0.5;
-		return new Point(x, y);
 	});
 
 	this.tournamentButton.onClick(function() {

@@ -47,7 +47,7 @@ function StartScreen() {
 		hoverImage: './img/tournament_button_hover.png',
 		location: function() {
 			var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
-			var y = App.canvasObj.getHeight() * 0.5;
+			var y = App.canvasObj.getHeight() * 0.52;
 			return new Point(x, y);
 		}
 	});
@@ -65,18 +65,6 @@ function StartScreen() {
 	this.startText.setColor('#cbcbcb');
 	this.startText.setFontType('FSpirit');
 	obj = this;
-
-	this.tournamentButton.setLocation(function() {
-		var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
-		var y = App.canvasObj.getHeight() * 0.5;
-		return new Point(x, y);
-	});
-
-	this.startButton.setLocation(function() {
-		var x = Utilities.centerX(obj.startButton.getActiveImage().width);
-		var y = App.canvasObj.getHeight() * 0.4;
-		return new Point(x, y);
-	});
 
 	this.startText.setLocation(function() {
 		var x = Utilities.centerX(obj.startText.getTextWidth());
