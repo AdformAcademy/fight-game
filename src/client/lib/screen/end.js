@@ -46,6 +46,16 @@ function EndScreen(status, color) {
 		},
 	});
 
+	this.tournamentButton = new Button({
+		image: './img/tournament_button.png',
+		hoverImage: './img/tournament_button_hover.png',
+		location: function() {
+			var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
+			var y = App.canvasObj.getHeight() * 0.5;
+			return new Point(x, y);
+		}
+	});
+
 	this.backButton.onClick(function () {
 		App.screen = new StartScreen();
 		App.canvasObj.setGraphics(App.screen.graphics);
@@ -60,6 +70,31 @@ function EndScreen(status, color) {
 	this.backButton.mouseLeave(function () {
 		this.setActiveImage(this.getImage());
 		this.hoverLeave();
+	});
+
+	this.tournamentButton.setLocation(function() {
+		var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
+		var y = App.canvasObj.getHeight() * 0.5;
+		return new Point(x, y);
+	});
+
+	this.tournamentButton.onClick(function() {
+		socket.emit('choose', '');
+		App.screen = new ChooseWaitingScreen();
+		CharacterChooser.setSocketTarget('tournament');
+		Client.setGameType(Client.games.TOURNAMENT);
+		App.canvasObj.setGraphics(App.screen.graphics);
+		obj.dispose();
+	});
+
+	this.tournamentButton.mouseOver(function() {
+		obj.tournamentButton.setActiveImage(obj.tournamentButton.getHoverImage());
+		obj.tournamentButton.hover();
+	});
+
+	this.tournamentButton.mouseLeave(function() {
+		obj.tournamentButton.setActiveImage(obj.tournamentButton.getImage());
+		obj.tournamentButton.hoverLeave();
 	});
 
 	this.endText = new Text(status + '!', 50);
@@ -121,6 +156,7 @@ EndScreen.prototype.graphics = function() {
 	obj.handleControls();
 	obj.backgroundImage.draw();
 	obj.startButton.drawButton();
+	obj.tournamentButton.drawButton();
 	obj.endText.draw();
 	obj.challengeText.draw();
 	obj.backButton.drawButton();
@@ -131,6 +167,7 @@ EndScreen.prototype.dispose = function() {
 	this.endText.dispose();
 	this.challengeText.dispose();
 	this.backButton.dispose();
+	this.tournamentButton.dispose();
 };
 
 module.exports = EndScreen;
