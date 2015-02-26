@@ -124,6 +124,8 @@ Client.processServerData = function() {
     	var hiting = state.player.hiting;
     	var pVictor = state.player.victor;
     	var pDefeated = state.player.defeated;
+    	var pDefending = state.player.defending;
+    	var pMoving = state.player.moving;
     	var ox = state.opponent.x;
     	var opunched = state.opponent.punched;
     	var oVictor = state.opponent.victor;
@@ -155,6 +157,8 @@ Client.processServerData = function() {
     	App.player.setPunched(ppunched);
     	App.player.Victory(pVictor);
     	App.player.Defeat(pDefeated);
+    	App.player.setDefending(pDefending);
+    	App.player.isMoving(pMoving);
     	App.player.setHiting(hiting);
     	App.player.Fatality(pFatality);
     	App.opponent.setPunched(opunched);
@@ -193,7 +197,8 @@ Client.processLocalInputs = function () {
 		}
 	}
 	physics.updatePlayerAnimation(packet);
-	physics.applyParallax(packet);
+	if(player.isMoving())
+		physics.applyParallax(packet);
 	return packet;
 };
 

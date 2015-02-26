@@ -179,8 +179,7 @@ InputProcessor.prototype.processInputs = function() {
 		this.processComboInputs(input);
 		this.processActionInputs(input);
 	}
-	if(!player.isHiting() && !player.isPunched() 
-			&& !player.isDefending() || player.isJumping()) {
+	if(!player.isHiting() && !player.isPunched() && !player.isDefending() || player.isJumping()) {
 		this.processMovementInputs(input);
 	}
 	this.inputCounter++;

@@ -2,7 +2,7 @@
 	"id": 2,
 	"lives": 100,
 	"damage": {
-		"punch": 3,
+		"punch": 30,
 		"kick": 7,
 		"punchCombo": 14,
 		"kickCombo": 18
