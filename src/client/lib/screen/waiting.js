@@ -4,6 +4,7 @@ var Point;
 var Text;
 var Background;
 var StageScreen;
+var Config;
 var obj;
 
 function WaitingScreen() {
@@ -13,6 +14,7 @@ function WaitingScreen() {
 	Text = require('../canvas/text');
 	Background = require('../canvas/background');
 	StageScreen = require('./stage');
+	Config = require('../config');
 
 	this.backgroundImage = new Background('./img/background.png');
 	this.waitingText = new Text('Waiting for opponent...', 30);

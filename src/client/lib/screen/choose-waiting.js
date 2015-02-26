@@ -4,6 +4,7 @@ var Button;
 var Point;
 var Text;
 var Background;
+var Config;
 var socket = io();
 var obj;
 
@@ -12,7 +13,8 @@ var ChooseWaitingScreen = function () {
 	Utilities = require('../canvas/utilities');
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
-	Background = require('../canvas/background');	
+	Background = require('../canvas/background');
+	Config = require('../config');
 
 	this.backgroundImage = new Background('./img/background.png');
 	this.loadingText = new Text('Loading', 30);
