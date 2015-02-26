@@ -413,7 +413,7 @@ Tournament.prototype.disconnectSession = function (socket) {
 				sessionPair.setFirstSession(secondSession);
 				sessionPair.setSecondSession(null);
 				sessionPair.endGameSession(secondSession, 
-					'You won fight because your opponent disconnected');
+					'Opponent disconnected, you won!');
 				secondSession.state = Session.TOURNAMENT;
 				secondSession.opponentId = null;
 			} else {
@@ -425,7 +425,7 @@ Tournament.prototype.disconnectSession = function (socket) {
 			if (firstSession !== null) {
 				firstSession.addWonFight();
 				sessionPair.endGameSession(firstSession, 
-					'You won fight because your opponent disconnected');
+					'Opponent disconnected, you won!');
 				firstSession.state = Session.TOURNAMENT;
 				firstSession.opponentId = null;
 			}
