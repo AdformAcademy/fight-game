@@ -141,6 +141,22 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 	var firstSession = sessionPair.getFirstSession();
 	var secondSession = sessionPair.getSecondSession();
 
+	if (firstSession === null) {
+		sessionPair.emitMessage(secondSession, 
+			'Not enough players for tournament', '#ED1C1C');
+		SocketServer.deleteObjects(secondSession);
+		this.deleteSessionPair(sessionPair.getId());
+		return;
+	}
+
+	if (secondSession === null) {
+		sessionPair.emitMessage(firstSession, 
+			'Not enough players for tournament', '#ED1C1C');
+		SocketServer.deleteObjects(firstSession);
+		this.deleteSessionPair(sessionPair.getId());
+		return;
+	}
+
 	firstSession.opponentId = secondSession.sessionId;
 	firstSession.state = Session.TOURNAMENT_PLAYING;
 	secondSession.opponentId = firstSession.sessionId;
