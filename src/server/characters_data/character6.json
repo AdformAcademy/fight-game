@@ -21,7 +21,6 @@
 			"width": 4160,
 			"height": 164,
 			"frameWidth": 212,
-			"frameHeight": 164,
 			"frameHeight": 164
 		},
 		"animations": {
@@ -30,7 +29,8 @@
 				"startFrame": 0,
 				"frames": 10,
 				"speed": 0.2,
-				"order": "asc"
+				"order": "asc",
+				"row": 0
 			}
 		},
 		"defaultAnimation": "animation"
@@ -168,7 +168,7 @@
 				"name": "beatenAnimation",
 				"startFrame": 66,
 				"frames": 10,
-				"speed": 0.17,
+				"speed": 0.16,
 				"order": "desc",
 				"row": 1
 			}
