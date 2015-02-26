@@ -2,7 +2,7 @@
 	"id": 4,
 	"lives": 100,
 	"damage": {
-		"punch": 5,
+		"punch": 50,
 		"kick": 8,
 		"punchCombo": 18,
 		"kickCombo": 20
@@ -20,7 +20,8 @@
 			"spriteDimensions": {
 			"width": 3200,
 			"height": 164,
-			"frameWidth": 212
+			"frameWidth": 212,
+			"frameHeight": 164
 		},
 		"animations": {
 			"animation": {
@@ -28,7 +29,8 @@
 				"startFrame": 0,
 				"frames": 10,
 				"speed": 0.2,
-				"order": "asc"
+				"order": "asc",
+				"row": 0
 			}
 		},
 		"defaultAnimation": "animation"
@@ -36,9 +38,10 @@
 	"spriteSheetData": {
 		"spriteSheetImage": "character4.png",
 		"spriteDimensions": {
-			"width": 43200,
+			"width": 19520,
 			"height": 224,
-			"frameWidth": 320
+			"frameWidth": 320,
+			"frameHeight": 224
 		},
 		"animations": {
 			"damageAnimation": {
@@ -46,112 +49,128 @@
 				"startFrame": 0,
 				"frames": 7,
 				"speed": 0.4,
-				"order": "asc"
+				"order": "asc",
+				"row": 0
 			},
 			"jumpAnimation": {
 				"name": "jumpAnimation",
 				"startFrame": 7,
 				"frames": 11,
 				"speed": 0.4,
-				"order": "asc"
+				"order": "asc",
+				"row": 0
 			},
 			"moveLeftAnimation": {
 				"name": "moveLeftAnimation",
 				"startFrame": 18,
 				"frames": 13,
 				"speed": 0.35,
-				"order": "desc"
+				"order": "desc",
+				"row": 0
 			},
 			"moveRightAnimation": {
 				"name": "moveRightAnimation",
-				"startFrame": 18,
-				"frames": 13,
+				"startFrame": 19,
+				"frames": 11,
 				"speed": 0.35,
-				"order": "asc"
+				"order": "asc",
+				"row": 0
 			},
 			"punchAnimation1": {
 				"name": "punchAnimation1",
 				"startFrame": 31,
 				"frames": 7,
 				"speed": 0.6,
-				"order": "desc"
-			},
-			"punchAnimation2": {
-				"name": "punchAnimation2",
-				"startFrame": 38,
-				"frames": 12,
-				"speed": 0.6,
-				"order": "desc"
-			},
-			"standAnimation": {
-				"name": "standAnimation",
-				"startFrame": 50,
-				"frames": 10,
-				"speed": 0.2,
-				"order": "asc"
-			},
-			"jumpKickAnimation": {
-				"name": "jumpKickAnimation",
-				"startFrame": 60,
-				"frames": 6,
-				"speed": 0.3,
-				"order": "asc"
-			},
-			"runningAnimation": {
-				"name": "runningAnimation",
-				"startFrame": 0,
-				"frames": 1,
-				"speed": 0.35,
-				"order": "asc"
+				"order": "desc",
+				"row": 0
 			},
 			"jumpPunchAnimation": {
 				"name": "jumpPunchAnimation",
 				"startFrame": 31,
 				"frames": 7,
 				"speed": 0.5,
-				"order": "desc"
+				"order": "desc",
+				"row": 0
+			},
+			"punchAnimation2": {
+				"name": "punchAnimation2",
+				"startFrame": 38,
+				"frames": 12,
+				"speed": 0.6,
+				"order": "desc",
+				"row": 0
+			},
+			"standAnimation": {
+				"name": "standAnimation",
+				"startFrame": 50,
+				"frames": 10,
+				"speed": 0.2,
+				"order": "asc",
+				"row": 0
 			},
 			"kickAnimation": {
 				"name": "kickAnimation",
-				"startFrame": 60,
+				"startFrame": 0,
 				"frames": 6,
 				"speed": 0.4,
-				"order": "desc"
+				"order": "desc",
+				"row": 1
+			},
+			"jumpKickAnimation": {
+				"name": "jumpKickAnimation",
+				"startFrame": 0,
+				"frames": 6,
+				"speed": 0.3,
+				"order": "asc",
+				"row": 1
+			},
+			"runningAnimation": {
+				"name": "runningAnimation",
+				"startFrame": 0,
+				"frames": 1,
+				"speed": 0.35,
+				"order": "asc",
+				"row": 1
 			},
 			"punchComboAnimation": {
 				"name": "punchComboAnimation",
-				"startFrame": 66,
+				"startFrame": 6,
 				"frames": 20,
 				"speed": 0.6,
-				"order": "asc"
+				"order": "asc",
+				"row": 1
 			},
 			"defendAnimation": {
 				"name": "defendAnimation",
-				"startFrame": 86,
+				"startFrame": 26,
 				"frames": 1,
 				"speed": 0.2,
-				"order": "asc"
+				"order": "asc",
+				"row": 1
 			},
 			"kickComboAnimation": {
 				"name": "kickComboAnimation",
-				"startFrame": 87,
+				"startFrame": 27,
 				"frames": 14,
 				"speed": 0.7,
-				"order": "asc"
+				"order": "asc",
+				"row": 1
 			},
 			"fatalityAnimation": {
 				"name": "fatalityAnimation",
-				"startFrame": 101,
+				"startFrame": 41,
 				"frames": 7,
 				"speed": 0.3,
-				"order": "asc"
+				"order": "asc",
+				"row": 1
 			},
 			"beatenAnimation": {
 				"name": "beatenAnimation",
-				"startFrame": 108,
+				"startFrame": 48,
 				"frames": 13,
 				"speed": 0.23,
-				"order": "desc"
+				"order": "desc",
+				"row": 1
 			}
 		},
 		"defaultAnimation": "standAnimation"
