@@ -20,7 +20,7 @@ function TournamentWaitingScreen() {
 
 	this.images = [];
 	this.canvas = App.canvasObj.canvas;
-	this.backgroundImage = new Background('./img/tournament_waiting.png');
+	this.backgroundImage = new Background('./img/background.png');
 	this.waitingText = new Text('Waiting for players, 0/8 ready', 30);
 	this.waitingText.color = '#cbcbcb';
 	this.waitingText.fontType = 'FSpirit';

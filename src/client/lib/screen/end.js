@@ -25,7 +25,7 @@ function EndScreen(status, color) {
 	StartScreen = require('./start');
 	this.color = color || '#C80000';
 	
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.backgroundImage = new Background('./img/background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
 		hoverImage: './img/start_button_hover.png',

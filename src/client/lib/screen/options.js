@@ -30,7 +30,7 @@ function OptionsScreen () {
 	this.Text = {};
 	this.buttons = {};
 
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.backgroundImage = new Background('./img/background.png');
 
 	this.Text.titleText = new Text('Options', 30);
 	this.Text.titleText.setColor('#cbcbcb');

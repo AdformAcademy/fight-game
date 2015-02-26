@@ -14,7 +14,7 @@ var ChooseWaitingScreen = function () {
 	Text = require('../canvas/text');
 	Background = require('../canvas/background');	
 
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.backgroundImage = new Background('./img/background.png');
 	this.loadingText = new Text('Loading', 30);
 	this.loadingText.color = '#cbcbcb';
 	this.loadingText.fontType = 'FSpirit';

@@ -20,7 +20,7 @@ var ChooseScreen = function () {
 	StartScreen = require('./start');
 	CharacterChooser = require('../character-chooser');
 
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.backgroundImage = new Background('./img/background.png');
 	this.infoText = new Text('Choose character', 30);
 	this.infoText.color = '#cbcbcb';
 	this.infoText.fontType = 'FSpirit';
