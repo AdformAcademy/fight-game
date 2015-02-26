@@ -33,15 +33,15 @@ function OptionsScreen () {
 	this.backgroundImage = new Background('./img/background.png');
 
 	this.Text.titleText = new Text('Options', 30);
-	this.Text.titleText.setColor('#cbcbcb');
+	this.Text.titleText.setColor(Config.fontColor);
 	this.Text.titleText.setFontType('Arial');
 
 	this.Text.soundsText = new Text('Sounds:', 24);
-	this.Text.soundsText.setColor('#cbcbcb');
+	this.Text.soundsText.setColor(Config.fontColor);
 	this.Text.soundsText.setFontType('Arial');
 
 	this.Text.controlsText = new Text('Controls:', 24);
-	this.Text.controlsText.setColor('#cbcbcb');
+	this.Text.controlsText.setColor(Config.fontColor);
 	this.Text.controlsText.setFontType('Arial');
 
 	obj = this;
@@ -173,7 +173,7 @@ function OptionsScreen () {
 		});
 
 		tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18);
-		tempBtnTxt.setColor('#cbcbcb');
+		tempBtnTxt.setColor(Config.fontColor);
 		tempBtnTxt.setFontType('Arial');
 		tempBtnTxt.setLocation(function (ind) {
 			return function () {
@@ -184,7 +184,7 @@ function OptionsScreen () {
 		}(i));
 
 		tempTxt = new Text(layout[key], 18);
-		tempTxt.setColor('#cbcbcb');
+		tempTxt.setColor(Config.fontColor);
 		tempTxt.setFontType('Arial');
 		tempTxt.setLocation(function (ind) {
 			return function () {
@@ -212,7 +212,7 @@ function OptionsScreen () {
 							} else {
 								obj.ControlChanger[button.getId()].buttonText.setColor('#ff5555');
 								setTimeout(function () {
-									obj.ControlChanger[button.getId()].buttonText.setColor('#cbcbcb');
+									obj.ControlChanger[button.getId()].buttonText.setColor(Config.fontColor);
 								}, 300);
 							}
 						} else if (input === Config.keyBindings.ESCAPE) {

@@ -103,7 +103,7 @@ function EndScreen(status, color) {
 	}
 	this.endText.setFontType('FSpirit');
 	this.challengeText = new Text('Would you like to try again?', 30);
-	this.challengeText.setColor('#cbcbcb');
+	this.challengeText.setColor(Config.fontColor);
 	this.challengeText.setFontType('FSpirit');
 	
 	obj = this;

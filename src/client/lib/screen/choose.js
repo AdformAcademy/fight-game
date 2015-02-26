@@ -22,7 +22,7 @@ var ChooseScreen = function () {
 
 	this.backgroundImage = new Background('./img/background.png');
 	this.infoText = new Text('Choose character', 30);
-	this.infoText.color = '#cbcbcb';
+	this.infoText.color = Config.fontColor;
 	this.infoText.fontType = 'FSpirit';
 
 	this.buttons = [];

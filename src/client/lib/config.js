@@ -11,6 +11,7 @@ Config.charactersPath = 'src/server/characters_data/';
 Config.actions = BaseConfig.actions;
 
 Config.canvasMaskColor = '#000000';
+Config.fontColor = '#cbcbcb';
 Config.quickTapDuration = 300;
 
 Config.progressBarPadding = 10;

@@ -62,7 +62,7 @@ function StartScreen() {
 		}
 	});
 	this.startText = new Text('Are you ready to begin a fight?', 30);
-	this.startText.setColor('#cbcbcb');
+	this.startText.setColor(Config.fontColor);
 	this.startText.setFontType('FSpirit');
 	obj = this;
 

@@ -22,19 +22,19 @@ function TournamentWaitingScreen() {
 	this.canvas = App.canvasObj.canvas;
 	this.backgroundImage = new Background('./img/background.png');
 	this.waitingText = new Text('Waiting for players, 0/8 ready', 30);
-	this.waitingText.color = '#cbcbcb';
+	this.waitingText.color = Config.fontColor;
 	this.waitingText.fontType = 'FSpirit';
 
 	this.waitingText2 = new Text('Game will start in: 60', 30);
-	this.waitingText2.color = '#cbcbcb';
+	this.waitingText2.color = Config.fontColor;
 	this.waitingText2.fontType = 'FSpirit';
 
 	this.loadingText = new Text('Loading', 30);
-	this.loadingText.color = '#cbcbcb';
+	this.loadingText.color = Config.fontColor;
 	this.loadingText.fontType = 'FSpirit';
 
 	this.versusText = new Text('VS', 80);
-	this.versusText.color = '#cbcbcb';
+	this.versusText.color = Config.fontColor;
 	this.versusText.fontType = 'FSpirit';
 
 	obj = this;

@@ -16,7 +16,7 @@ var ChooseWaitingScreen = function () {
 
 	this.backgroundImage = new Background('./img/background.png');
 	this.loadingText = new Text('Loading', 30);
-	this.loadingText.color = '#cbcbcb';
+	this.loadingText.color = Config.fontColor;
 	this.loadingText.fontType = 'FSpirit';
 	this.loadingValue = 0;
 	this.dots = 0;
