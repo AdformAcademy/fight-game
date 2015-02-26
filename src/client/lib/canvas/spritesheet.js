@@ -24,7 +24,7 @@ var SpriteSheet = function (params) {
 };
 
 SpriteSheet.prototype.getSpriteSheetHeight = function () {
-	return this.dimensions.height;
+	return this.dimensions.frameHeight;
 };
 
 SpriteSheet.prototype.getSpriteSheetWidth = function () {
@@ -120,13 +120,14 @@ SpriteSheet.prototype.draw = function(x, y) {
 	this.canvas.scale(scale, 1);
 	if (!this.scale) {
 		frameWidth = this.dimensions.frameWidth;
-		frameHeight = this.dimensions.height;
+		frameHeight = this.dimensions.frameHeight;
 	} else {
 		frameWidth = this.scaleWidth;
 		frameHeight = this.scaleHeight;
 	}
+
 	this.canvas.drawImage(this.image, this.currentFrame * this.dimensions.frameWidth, 
-		0, this.dimensions.frameWidth, this.dimensions.height, 
+		(this.activeAnimation.row * 224), this.dimensions.frameWidth, this.dimensions.frameHeight, 
 		scaleX, y, frameWidth, frameHeight);
 	this.canvas.restore();
 };
