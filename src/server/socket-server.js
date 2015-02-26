@@ -31,6 +31,8 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			victor: player.isVictor(),
 			fatality: player.isFatality(),
 			defeated: player.isDefeated(),
+			defending: player.isDefending(),
+			moving: player.isMoving(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives(),
 			energy: player.getEnergy(),
@@ -359,17 +361,18 @@ SocketServer.executeInput = function(player, input) {
 			}
 		}
 	}
+	var oldX = x;
 	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()) {
 		if(!player.isDefending()) {
 			if(input.key === actions.LEFT) {
-				if(x > map.dimensions.left - 135  
-					&& Collisions.checkLeftCollision(player, opponent, size))
+				if(x > map.dimensions.left - 135 && Collisions.checkLeftCollision(player, opponent, size)){
 					x -= Config.playerMoveSpeed;
+				}
 			}
 			else if(input.key === actions.RIGHT) {	 
-				if(x < map.dimensions.width - 185
-					&& Collisions.checkRightCollision(player, opponent, size))
+				if(x < map.dimensions.width - 185 && Collisions.checkRightCollision(player, opponent, size)){
 					x += Config.playerMoveSpeed;
+				}
 			}
 		}
 		if (input.key === actions.DEFEND) {
@@ -378,6 +381,10 @@ SocketServer.executeInput = function(player, input) {
 			player.setDefending(false);
 		}
 	}
+	if(oldX == x)
+		player.setMoving(false);
+	else
+		player.setMoving(true);
 	player.setX(x);
 	player.setCurrentAnimation(input.animationName);
 };

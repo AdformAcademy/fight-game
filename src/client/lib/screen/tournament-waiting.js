@@ -145,11 +145,12 @@ TournamentWaitingScreen.prototype.graphics = function() {
 		obj.waitingText.draw();
 		obj.waitingText2.draw();
 	} else {
+		console.log('test-------------------------------------------' + obj.images.length);
 		obj.versusText.setLocation(function() {
-		var x = Utilities.centerX(obj.versusText.getTextWidth());
-		var y = obj.images.length/2 * 50 + 150;
-		return new Point(x, y);
-	});
+			var x = Utilities.centerX(obj.versusText.getTextWidth());
+			var y = obj.images.length/2 * 50 + 150;
+			return new Point(x, y);
+		});
 		obj.versusText.draw();
 		for (var i = 0; i < obj.images.length; i++) {
 			var image = obj.images[i];
