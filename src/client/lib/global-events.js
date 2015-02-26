@@ -66,6 +66,7 @@ socket.on('message', function (data) {
 	if (Client.gameStarted) {
 		App.screen.animateEndText(data.text, data.color);
 		Client.canMove = false;
+		Client.gameStarted = false;
 		setTimeout(function () {
 			Client.stop();
 			App.screen.dispose();
