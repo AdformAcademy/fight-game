@@ -168,7 +168,7 @@
 				"name": "beatenAnimation",
 				"startFrame": 48,
 				"frames": 13,
-				"speed": 0.23,
+				"speed": 0.22,
 				"order": "desc",
 				"row": 1
 			}

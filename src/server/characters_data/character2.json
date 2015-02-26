@@ -167,8 +167,8 @@
 			"beatenAnimation": {
 				"name": "beatenAnimation",
 				"startFrame": 65,
-				"frames": 14,
-				"speed": 0.25,
+				"frames": 13,
+				"speed": 0.23,
 				"order": "desc",
 				"row": 1
 			}
