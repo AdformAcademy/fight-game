@@ -4,7 +4,7 @@ var ResourceLoader = function (event) {
 	this.globalId = 0;
 	this.eventTriggered = false;
 	var self = this;
-	setTimeout(function () {
+	this.timeoutInterval = setTimeout(function () {
 		self.triggerEvent();
 	}, 30000);
 };
@@ -37,6 +37,7 @@ ResourceLoader.prototype.triggerEvent = function () {
 	if (!this.eventTriggered) {
 		this.event();
 		this.eventTriggered = true;
+		clearTimeout(this.timeoutInterval);
 	}
 };
 
