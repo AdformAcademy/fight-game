@@ -6,7 +6,7 @@ var ResourceLoader = function (event) {
 	var self = this;
 	setTimeout(function () {
 		self.triggerEvent();
-	}, 5000);
+	}, 30000);
 };
 
 ResourceLoader.prototype.append = function (resource) {
