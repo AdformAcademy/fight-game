@@ -74,11 +74,11 @@ function EndScreen(status, color) {
 
 	this.tournamentButton.onClick(function() {
 		socket.emit('choose', '');
+		obj.dispose();
 		App.screen = new ChooseWaitingScreen();
 		CharacterChooser.setSocketTarget('tournament');
 		Client.setGameType(Client.games.TOURNAMENT);
 		App.canvasObj.setGraphics(App.screen.graphics);
-		obj.dispose();
 	});
 
 	this.tournamentButton.mouseOver(function() {
@@ -121,12 +121,12 @@ function EndScreen(status, color) {
 	});
 
 	this.startButton.onClick(function() {
+		obj.dispose();
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
 		CharacterChooser.setSocketTarget('ready');
 		Client.setGameType(Client.games.MATCH);
 		App.canvasObj.setGraphics(App.screen.graphics);
-		obj.dispose();
 	});
 
 	this.startButton.mouseOver(function() {
