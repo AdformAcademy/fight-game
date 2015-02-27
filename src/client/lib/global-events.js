@@ -11,6 +11,7 @@ var TournamentWaitingScreen = require('./screen/tournament-waiting');
 var Config = require('./config');
 var CharacterChooser = require('./character-chooser');
 var socket = io();
+var SoundCollection = require('./sound-collection');
 
 var GlobalEvents = {};
 
@@ -72,16 +73,19 @@ socket.on('message', function (data) {
 			App.screen.dispose();
 			App.screen = new EndScreen(data.text, data.color);
 			App.canvasObj.setGraphics(App.screen.graphics);
+			SoundCollection.stopSound('common', 'theme');
 		}, 5000);	
 	} else {
 		App.screen.dispose();
 		App.screen = new EndScreen(data.text, data.color);
 		App.canvasObj.setGraphics(App.screen.graphics);
+		SoundCollection.stopSound('common', 'theme');
 	}
 });
 
 socket.on('victory', function() {
 	Client.stop();
+	SoundCollection.stopSound('common', 'theme');
 	App.screen.dispose();
 	App.screen = new EndScreen('Victory');
 	App.canvasObj.setGraphics(App.screen.graphics);
@@ -89,6 +93,7 @@ socket.on('victory', function() {
 
 socket.on('defeat', function() {
 	Client.stop();
+	SoundCollection.stopSound('common', 'theme');
 	App.screen.dispose();
 	App.screen = new EndScreen('Defeat');
 	App.canvasObj.setGraphics(App.screen.graphics);

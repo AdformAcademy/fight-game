@@ -24,7 +24,7 @@ function EndScreen(status, color) {
 	SoundCollection = require('../sound-collection');
 	StartScreen = require('./start');
 	this.color = color || '#C80000';
-	
+
 	this.backgroundImage = new Background('./img/background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
