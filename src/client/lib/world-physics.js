@@ -67,7 +67,7 @@ WorldPhysics.prototype.jump = function () {
 	}, 1000/30);
 };
 
-WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
+WorldPhysics.prototype.hit = function (time, size, power, heightDifference, combo) {
 	var self = this;
 	var player = this.player;
 	var opponent = this.opponent;
@@ -113,7 +113,9 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 			}
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setHiting(false);
-			player.setUsingCombo(false);
+			if(combo) {
+				player.setUsingCombo(false);
+			}
 			clearInterval(updateH);
 		}
 	}, 1000/30);
