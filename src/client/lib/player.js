@@ -5,6 +5,7 @@ var Config = require('./config');
 function Player(params) {
 	App = require('../app');
 	this.name = params.name;
+	this.data = params.data;
 	this.location = params.location;
 	this.z = params.z;
 	this.spritesheet = params.spriteSheet;
@@ -23,6 +24,10 @@ Player.prototype.getName = function () {
 
 Player.prototype.setName = function (name) {
 	this.name = name;
+};
+
+Player.prototype.getData = function () {
+	return this.data;
 };
 
 Player.prototype.getSpriteSheet = function() {

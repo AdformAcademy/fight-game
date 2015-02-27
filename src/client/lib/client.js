@@ -258,6 +258,7 @@ Client.initializeGame = function (data) {
 
 	App.player = new Player({
 		name: data.player.data.name,
+		data: data.player.data,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {
@@ -311,6 +312,7 @@ Client.initializeGame = function (data) {
 
 	App.opponent = new Player({
 		name: data.opponent.data.name,
+		data: data.opponent.data,
 		location: data.opponent.x,
 		z: data.opponent.y,
 		groundHeight: function () {
@@ -450,6 +452,7 @@ Client.initializeTraining = function (data) {
 
 	App.player = new Player({
 		name: data.player.data.name,
+		data: data.player.data,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {
@@ -503,6 +506,7 @@ Client.initializeTraining = function (data) {
 
 	App.opponent = new Player({
 		name: data.player.data.name,
+		data: data.player.data,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {

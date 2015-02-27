@@ -5,6 +5,7 @@ var Text;
 var obj;
 var Client;
 var SoundCollection;
+var SpriteSheet;
 
 function StageScreen() {
 	App = require('../../app');
@@ -12,12 +13,71 @@ function StageScreen() {
 	Point = require('../../../common/point');
 	Client = require('../client');
 	Text = require('../canvas/text');
+	SpriteSheet = require('../canvas/spritesheet');
 	obj = this;
 
 	SoundCollection = require('../sound-collection');
 	this.player = App.player;
 	this.opponent = App.opponent;
 	this.parallax = Client.parallax;
+
+	var playerImagePath = this.player.getData().spriteSheetButton.spriteSheetIntroImage;
+	var pimage = new Image();
+	pimage.src = './img/characters/' + playerImagePath;
+	this.playerImage = new SpriteSheet({
+		image: pimage,
+		data: {
+			spriteDimensions: {
+				width: 4160,
+				height: 164,
+				frameWidth: 212,
+				frameHeight: 164
+			},
+			animations: {
+				animation: {
+					name: 'introAnimation',
+					startFrame: 7,
+					frames: 1,
+					speed: 0,
+					order: 'dsc',
+					row: 0
+				}
+			},
+			defaultAnimation: 'animation'
+		},
+		useScale: true,
+		scaleWidth: 65,
+		scaleHeight: 65
+	});
+
+	var opponentImagePath = this.opponent.getData().spriteSheetButton.spriteSheetIntroImage;
+	var oimage = new Image();
+	oimage.src = './img/characters/' + opponentImagePath;
+	this.opponentImage = new SpriteSheet({
+		image: oimage,
+		data: {
+			spriteDimensions: {
+				width: 4160,
+				height: 164,
+				frameWidth: 212,
+				frameHeight: 164
+			},
+			animations: {
+				animation: {
+					name: 'introAnimation',
+					startFrame: 7,
+					frames: 1,
+					speed: 0,
+					order: 'dsc',
+					row: 0
+				}
+			},
+			defaultAnimation: 'animation'
+		},
+		useScale: true,
+		scaleWidth: 65,
+		scaleHeight: 65
+	});
 
 	this.playerName = new Text(this.player.getName(), 20);
 	this.playerName.setColor('#FFFFFF');
@@ -188,6 +248,14 @@ StageScreen.prototype.graphics = function() {
 	var opponentEnergyBar = opponent.getEnergyBar();
 	var xView = Client.camera.xView;
 	var yView = Client.camera.yView;
+
+	var playerImageLocation = playerEnergyBar.getLocation();
+	var pImageX = playerImageLocation.getX();
+	var pImageY = playerImageLocation.getY() + 60;
+
+	var opponentImageLocation = opponentEnergyBar.getLocation();
+	var oImageX = opponentImageLocation.getX();
+	var oImageY = opponentImageLocation.getY() + 60;
 	
 	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {
@@ -210,6 +278,9 @@ StageScreen.prototype.graphics = function() {
 
 	obj.playerName.draw();
 	obj.opponentName.draw();
+
+	obj.playerImage.draw(pImageX, pImageY);
+	obj.opponentImage.draw(oImageX, oImageY);
 
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();
