@@ -10,6 +10,7 @@ var Player = function (params) {
   this.location = params.location;
   this.z = params.z || 0;
   this.maxLives = params.characterData.lives;
+  this.movementSpeed = params.characterData.movementSpeed;
   this.lives = params.characterData.lives;
   this.damage = params.characterData.damage;
   this.costs = params.characterData.costs;

@@ -1,6 +1,7 @@
 {
 	"id": 3,
 	"lives": 100,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 40,
 		"kick": 5,

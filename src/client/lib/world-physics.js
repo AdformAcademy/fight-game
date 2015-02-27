@@ -29,10 +29,10 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 	var z = player.getZ();
 
 	if (input.key === actions.RIGHT) {
-		x += Config.playerMoveSpeed;
+		x += Config.playerMoveSpeed * player.getMovementSpeed();
 	}
 	else if (input.key === actions.LEFT) {
-		x -= Config.playerMoveSpeed;
+		x -= Config.playerMoveSpeed * player.getMovementSpeed();
 	}
 
 	this.applyCoordinates(player, x, z);
