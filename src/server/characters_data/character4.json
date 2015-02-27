@@ -1,5 +1,6 @@
 {
 	"id": 4,
+	"name": "Wyler",
 	"lives": 100,
 	"damage": {
 		"punch": 50,

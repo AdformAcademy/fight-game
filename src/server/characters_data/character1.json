@@ -1,5 +1,6 @@
 {
 	"id": 1,
+	"name": "Kasumi",
 	"lives": 100,
 	"damage": {
 		"punch": 30,
