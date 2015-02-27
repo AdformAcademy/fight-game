@@ -69,7 +69,6 @@ TrainingScreen.prototype.animate = function() {
 	}, 1000 / 30);
 };
 
-
 TrainingScreen.prototype.graphics = function() {
 	var player = obj.player;
 	var opponent = obj.opponent;

@@ -123,6 +123,8 @@ function EndScreen(status, color) {
 	this.startButton.onClick(function() {
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
+		CharacterChooser.setSocketTarget('ready');
+		Client.setGameType(Client.games.MATCH);
 		App.canvasObj.setGraphics(App.screen.graphics);
 		obj.dispose();
 	});
