@@ -46,6 +46,10 @@ socket.on('playing', function(data) {
 	if (!Client.gameStarted) {
 		Client.initializeGame(data);
 	} else {
+		App.screen.dispose();
+		App.screen = new WaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		App.screen.load('Opponent found');
 		Client.stop();
 		Client.initializeGame(data);
 	}
