@@ -87,11 +87,11 @@ WaitingScreen.prototype.animateLoading = function() {
 	}, 1000 / 30);
 };
 
-WaitingScreen.prototype.load = function () {
+WaitingScreen.prototype.load = function (text) {
 	this.opponentFound = true;
 	this.animating = false;
 	this.globalAlpha = 1;
-	this.waitingText.setText('Opponent found');
+	this.waitingText.setText(text);
 	clearInterval(this.animateInterval);
 	this.animateLoading();
 };

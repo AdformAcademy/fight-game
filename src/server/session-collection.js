@@ -11,7 +11,8 @@ SessionCollection.getSessionObject = function(sessionId) {
 SessionCollection.getAvailableSession = function() {
   for (var key in SessionCollection.list) {
     var sesObj = SessionCollection.list[key];
-    if (sesObj.state === Session.READY) {
+    if (sesObj.state === Session.READY 
+        || sesObj.state === Session.TRAINING) {
       return sesObj;
     }
   }

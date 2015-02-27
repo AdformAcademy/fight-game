@@ -56,7 +56,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 SocketServer.prepareClient = function (socket, selection) {
 	if (!SessionCollection.sessionExists(socket.id)) {
 		var targetSession = SessionCollection.getAvailableSession();
-		SessionCollection.createSession(socket, selection);
+		var ses = SessionCollection.createSession(socket, selection);
 		console.log(socket.id + ' is ready');
 		if (targetSession !== undefined) {
 			var session = SessionCollection.getSessionObject(socket.id);
@@ -157,8 +157,47 @@ SocketServer.prepareClient = function (socket, selection) {
 				map: mapData,
 				soundsData: commonSoundsData
 			});
+		} else {
+			SocketServer.prepareWaiting(ses);
 		}
 	}
+};
+
+SocketServer.prepareWaiting = function (session) {
+
+	session.state = Session.TRAINING;
+
+	var playerSelection = session.getSelection();
+	var playerData = JSON.parse(
+		fs.readFileSync(Config.charactersPath + 
+			'character' + playerSelection + '.json', 'utf8'));
+	var randomMap = Math.floor(Math.random() * 3) + 1;
+	var mapData = JSON.parse(
+		fs.readFileSync('src/server/maps/map' + randomMap +'.json', 'utf8'));
+	var commonSoundsData = JSON.parse(
+		fs.readFileSync(Config.soundsDataFile, 'utf8'));
+
+	var player = new Player({
+		id: session.sessionId,
+		opponentId: session.opponentId,
+		location: Config.firstSpawnLocation.x,
+		z: Config.firstSpawnLocation.z,
+		characterData: playerData,
+		characterId: playerSelection,
+		energyCosts: playerData.costs,
+		map: mapData
+	});
+
+	session.socket.emit('training', {
+		player: {
+			x: player.getX(),
+			y: player.getZ(),
+			data: playerData,
+			energyCosts: playerData.costs,
+		},
+		map: mapData,
+		soundsData: commonSoundsData
+	});
 };
 
 SocketServer.deleteObjects = function(session) {

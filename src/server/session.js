@@ -9,6 +9,7 @@ function Session(socket, opponentId, state) {
 };
 
 Session.READY = 'ready';
+Session.TRAINING = 'training';
 Session.PLAYING = 'playing';
 Session.UNACTIVE = 'unactive';
 Session.VICTORY = 'victory';

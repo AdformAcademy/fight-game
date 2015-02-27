@@ -45,6 +45,9 @@ $(window).mousemove(function(event) {
 socket.on('playing', function(data) {
 	if (!Client.gameStarted) {
 		Client.initializeGame(data);
+	} else {
+		Client.stop();
+		Client.initializeGame(data);
 	}
 });
 
@@ -125,6 +128,13 @@ socket.on('tournament-end-fight', function (data) {
 			App.screen = new WaitingScreen();
 			App.canvasObj.setGraphics(App.screen.graphics);
 		}, 5000);	
+	}
+});
+
+socket.on('training', function (data) {
+	if (!Client.gameStarted) {
+		Client.isTraining = true;
+		Client.initializeTraining(data);
 	}
 });
 
