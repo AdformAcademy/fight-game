@@ -7,8 +7,7 @@ SoundCollection.mute = false;
 SoundCollection.sounds = {
 	common: {},
 	player: {},
-	opponent: {},
-	theme: {}
+	opponent: {}
 };
 
 SoundCollection.loadCommonSounds = function (loader, soundsData) {
@@ -107,5 +106,16 @@ SoundCollection.clear = function () {
 		}
 	}
 };
+
+SoundCollection.stopSound = function (sounds, action) {
+	if(!SoundCollection.mute) {
+		var sound = SoundCollection.sounds[sounds][action];
+		var index = Math.floor(Math.random() * sound.length);
+		if(sound[index] !== undefined) {
+			sound[index].pause();
+			sound[index].currentTime = 0;
+		}
+	}
+}
 
 module.exports = SoundCollection;
