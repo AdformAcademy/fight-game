@@ -19,6 +19,30 @@ function StageScreen() {
 	this.opponent = App.opponent;
 	this.parallax = Client.parallax;
 
+	this.playerName = new Text(this.player.getName(), 20);
+	this.playerName.setColor('#FFFFFF');
+	this.playerName.setFontType('FSpirit');
+
+	this.playerName.setLocation(function() {
+		var player = App.player;
+		var energybar = player.getEnergyBar();
+		var location = energybar.getLocation();
+		var y = location.getY() + 50;
+		return new Point(location.getX(), y);
+	});
+
+	this.opponentName = new Text(this.opponent.getName(), 20);
+	this.opponentName.setColor('#FFFFFF');
+	this.opponentName.setFontType('FSpirit');
+
+	this.opponentName.setLocation(function() {
+		var opponent = App.opponent;
+		var energybar = opponent.getEnergyBar();
+		var location = energybar.getLocation();
+		var y = location.getY() + 50;
+		return new Point(location.getX(), y);
+	});
+
 	this.countDownInterval = null;
 	this.updateInterval = null;
 	this.countAnimation = {
@@ -49,7 +73,6 @@ function StageScreen() {
 		var y = App.canvasObj.getHeight() * 0.5;
 		return new Point(x, y);
 	});
-
 
 	this.endText = new Text('', 100);
 	this.endText.setColor('#FFFFFF');
@@ -184,6 +207,9 @@ StageScreen.prototype.graphics = function() {
 	}
 
 	obj.endText.draw();
+
+	obj.playerName.draw();
+	obj.opponentName.draw();
 
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();

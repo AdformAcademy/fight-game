@@ -257,6 +257,7 @@ Client.initializeGame = function (data) {
 	var LBY = Config.progressBarPadding;
 
 	App.player = new Player({
+		name: data.player.data.name,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {
@@ -309,6 +310,7 @@ Client.initializeGame = function (data) {
 	});
 
 	App.opponent = new Player({
+		name: data.opponent.data.name,
 		location: data.opponent.x,
 		z: data.opponent.y,
 		groundHeight: function () {
@@ -447,6 +449,7 @@ Client.initializeTraining = function (data) {
 	var LBY = Config.progressBarPadding;
 
 	App.player = new Player({
+		name: data.player.data.name,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {
@@ -499,6 +502,7 @@ Client.initializeTraining = function (data) {
 	});
 
 	App.opponent = new Player({
+		name: data.player.data.name,
 		location: data.player.x,
 		z: data.player.y,
 		groundHeight: function () {
