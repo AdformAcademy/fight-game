@@ -42,7 +42,7 @@ InputCollection.onKeyup = function(event) {
 			InputCollection.quickTaps[event.keyCode] = true;
 			setTimeout(function () {
 				InputCollection.quickTaps[event.keyCode] = false;
-			}, interval);
+			}, 1000);
 		}
 	}
 	InputCollection.pressTimes[event.keyCode] = currentPressTime;
