@@ -194,6 +194,9 @@ SocketServer.prepareWaiting = function (session) {
 			data: playerData,
 			energyCosts: playerData.costs,
 		},
+		opponent: {
+			x: Config.secondSpawnLocation.x
+		},
 		map: mapData,
 		soundsData: commonSoundsData
 	});

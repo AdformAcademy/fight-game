@@ -505,7 +505,7 @@ Client.initializeTraining = function (data) {
 	App.opponent = new Player({
 		name: data.player.data.name,
 		data: data.player.data,
-		location: data.player.x,
+		location: data.opponent.x,
 		z: data.player.y,
 		groundHeight: function () {
 			return canvas.getHeight() * (mapData.groundHeight / 100);
