@@ -96,11 +96,11 @@ BasePlayer.prototype.usingCombo = function () {
 };
 
 BasePlayer.prototype.setHiting = function (hiting) {
-	this.hit = hiting;
+	this.hiting = hiting;
 };
 
 BasePlayer.prototype.isHiting = function() {
-	return this.hit == true;
+	return this.hiting == true;
 };
 
 BasePlayer.prototype.setDefending = function (defending) {
