@@ -243,9 +243,10 @@ SocketServer.executeInput = function(player, input) {
 	if(player.isPunched() == 0){
 		if(!player.isJumping() && !player.isDefending()){
 			if (input.kickCombo && player.hasEnoughEnergy('kickCombo')) {
-				if (!player.isHiting()) {
+				if (!player.usingCombo()) {
 					console.log('kick combo');
 					player.setHiting(true);
+					player.setUsingCombo(true);
 					var hit = WorldPhysics.hit(player, opponent, "kickCombo", 600, 80, 15, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboKick');
@@ -264,9 +265,10 @@ SocketServer.executeInput = function(player, input) {
 				}
 			}
 			if (input.punchCombo && player.hasEnoughEnergy('punchCombo')) {
-				if (!player.isHiting()) {
+				if (!player.usingCombo()) {
 					console.log('punch combo');
 					player.setHiting(true);
+					player.setUsingCombo(true);
 					var hit = WorldPhysics.hit(player, opponent, "punchCombo",800, 65, 0, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboPunch');

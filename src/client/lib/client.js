@@ -121,7 +121,6 @@ Client.processServerData = function() {
     	var state = Client.serverData[i];
     	var x = state.player.x;
     	var ppunched = state.player.punched;
-    	var hiting = state.player.hiting;
     	var pVictor = state.player.victor;
     	var pDefeated = state.player.defeated;
     	var ox = state.opponent.x;
@@ -155,7 +154,6 @@ Client.processServerData = function() {
     	App.player.setPunched(ppunched);
     	App.player.Victory(pVictor);
     	App.player.Defeat(pDefeated);
-    	App.player.setHiting(hiting);
     	App.player.Fatality(pFatality);
     	App.opponent.setPunched(opunched);
     	App.opponent.Victory(oVictor);

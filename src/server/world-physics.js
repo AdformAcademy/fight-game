@@ -77,6 +77,9 @@ WorldPhysics.hit = function (player, opponent, damage, time, size, power, height
 				}
 			}
 			player.setHiting(false);
+			if(damage === 'punchCombo' || damage === 'kickCombo') {
+				player.setUsingCombo(false);
+			}
 			clearInterval(updateH);
 		}
 	}, 1000/30);
