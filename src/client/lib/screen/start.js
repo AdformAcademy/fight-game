@@ -14,6 +14,7 @@ var InputCollection;
 var Config;
 var SoundCollection;
 var OptionsScreen;
+var UpdateHandler;
 
 function StartScreen() {
 	App = require('../../app');
@@ -30,8 +31,14 @@ function StartScreen() {
 	Config = require('../config');
 	SoundCollection = require('../sound-collection');
 	OptionsScreen = require('./options');
+	UpdateHandler = require('../utils/update-handler');
 	
 	this.backgroundImage = new Background('./img/background.png');
+
+	var handler = new UpdateHandler(function () {
+		console.log('SOME UPDATE');
+	}, 100);
+
 	this.startButton = new Button({
 		image: './img/start_button.png',
 		hoverImage: './img/start_button_hover.png',
@@ -39,6 +46,15 @@ function StartScreen() {
 			var x = Utilities.centerX(obj.startButton.getActiveImage().width);
 			var y = App.canvasObj.getHeight() * 0.4;
 			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			handler.start();
+		},
+		touchEndEvent: function () {
+			handler.stop();
+		},
+		touchResetEvent: function () {
+			handler.stop();
 		}
 	});
 
