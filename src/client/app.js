@@ -8,4 +8,8 @@ App.player = null;
 App.opponent = null;
 App.physics = null;
 
+App.isTouchDevice = function () {
+	return Modernizr.touch;
+};
+
 require('./lib/global-events');

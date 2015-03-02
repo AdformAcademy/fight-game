@@ -158,6 +158,23 @@ function StageScreen() {
 	this.animateCountDown();
 	Client.start();
 	SoundCollection.play('common', 'theme');
+
+	if (App.isTouchDevice()) {
+		this.loadTouchControls();
+		console.log('touch controls');
+	}
+};
+
+StageScreen.prototype.loadTouchControls = function () {
+
+};
+
+StageScreen.prototype.drawTouchControls = function () {
+
+};
+
+StageScreen.prototype.disposeTouchControls = function () {
+
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {
@@ -296,6 +313,10 @@ StageScreen.prototype.graphics = function() {
 	obj.playerImage.draw(pImageX, pImageY);
 	obj.opponentImage.draw(oImageX, oImageY);
 
+	if (App.isTouchDevice()) {
+		obj.drawTouchControls();
+	}
+
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();
 		App.canvasObj.canvas.globalAlpha = obj.countAnimation.opacity;
@@ -316,6 +337,9 @@ StageScreen.prototype.dispose = function() {
 	obj.player.getLifeBar().dispose();
 	obj.opponent.getLifeBar().dispose();
 	obj.disposeCountDown();
+	if (App.isTouchDevice()) {
+		obj.disposeTouchControls();
+	}
 };
 
 module.exports = StageScreen;
