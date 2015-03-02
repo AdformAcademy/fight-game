@@ -6,6 +6,10 @@ var obj;
 var Client;
 var SoundCollection;
 var SpriteSheet;
+var Button;
+var UpdateHandler;
+var Config;
+var InputCollection;
 
 function StageScreen() {
 	App = require('../../app');
@@ -14,6 +18,10 @@ function StageScreen() {
 	Client = require('../client');
 	Text = require('../canvas/text');
 	SpriteSheet = require('../canvas/spritesheet');
+	Button = require('../canvas/button');
+	UpdateHandler = require('../utils/update-handler');
+	Config = require('../config');
+	InputCollection = require('../input-collection');
 	obj = this;
 
 	SoundCollection = require('../sound-collection');
@@ -161,20 +169,84 @@ function StageScreen() {
 
 	if (App.isTouchDevice()) {
 		this.loadTouchControls();
-		console.log('touch controls');
 	}
 };
 
 StageScreen.prototype.loadTouchControls = function () {
 
+	var keys = Config.keyBindings;
+
+	var moveLeftHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.LEFT
+		});
+	}, 1000 / 30);
+
+	var moveRightHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.RIGHT
+		});
+	}, 1000 / 30);
+
+	this.moveLeftButton = new Button({
+		image: './img/controls/left.png',
+		hoverImage: './img/controls/left.png',
+		location: function() {
+			var x = App.canvasObj.getWidth() * 0.1;
+			var y = App.canvasObj.getHeight() * 0.9;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			moveLeftHandler.start();
+		},
+		touchEndEvent: function () {
+			moveLeftHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.LEFT
+			});
+		},
+		touchResetEvent: function () {
+			moveLeftHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.LEFT
+			});
+		}
+	});
+
+	this.moveRightButton = new Button({
+		image: './img/controls/right.png',
+		hoverImage: './img/controls/right.png',
+		location: function() {
+			var x = App.canvasObj.getWidth() * 0.9;
+			var y = App.canvasObj.getHeight() * 0.9;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			moveRightHandler.start();
+		},
+		touchEndEvent: function () {
+			moveRightHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.RIGHT
+			});
+		},
+		touchResetEvent: function () {
+			moveRightHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.RIGHT
+			});
+		}
+	});
 };
 
 StageScreen.prototype.drawTouchControls = function () {
-
+	this.moveLeftButton.drawButton();
+	this.moveRightButton.drawButton();
 };
 
 StageScreen.prototype.disposeTouchControls = function () {
-
+	this.moveLeftButton.dispose();
+	this.moveRightButton.dispose();
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {
