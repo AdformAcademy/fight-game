@@ -25,9 +25,13 @@ function TournamentWaitingScreen() {
 	this.waitingText.color = Config.fontColor;
 	this.waitingText.fontType = 'FSpirit';
 
-	this.waitingText2 = new Text('Game will start in: 60', 30);
+	this.waitingText2 = new Text('Game will start in: ', 30);
 	this.waitingText2.color = Config.fontColor;
 	this.waitingText2.fontType = 'FSpirit';
+
+	this.timeLeftText = new Text('', 30);
+	this.timeLeftText.color = Config.fontColor;
+	this.timeLeftText.fontType = 'FSpirit';
 
 	this.loadingText = new Text('Loading', 30);
 	this.loadingText.color = Config.fontColor;
@@ -55,7 +59,14 @@ function TournamentWaitingScreen() {
 	});
 
 	this.waitingText2.setLocation(function() {
-		var x = Utilities.centerX(obj.waitingText2.getTextWidth());
+		var x = Utilities.centerX(obj.waitingText2.getTextWidth()) - 10;
+		var y = App.canvasObj.getHeight() * 0.2;
+		return new Point(x, y);
+	});
+
+	this.timeLeftText.setLocation(function() {
+		var x = Utilities.centerX(obj.waitingText2.getTextWidth()) 
+			+ obj.waitingText2.getTextWidth();
 		var y = App.canvasObj.getHeight() * 0.2;
 		return new Point(x, y);
 	});
@@ -108,7 +119,7 @@ TournamentWaitingScreen.prototype.update = function (data) {
 		}
 	} else {
 		this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
-		this.waitingText2.setText('Game will start in: ' + data.timer);
+		this.timeLeftText.setText(data.timer);
 	}
 };
 
@@ -144,6 +155,7 @@ TournamentWaitingScreen.prototype.graphics = function() {
 	if (!obj.tournamentBegan) {
 		obj.waitingText.draw();
 		obj.waitingText2.draw();
+		obj.timeLeftText.draw();
 	} else {
 		console.log('test-------------------------------------------' + obj.images.length);
 		obj.versusText.setLocation(function() {
