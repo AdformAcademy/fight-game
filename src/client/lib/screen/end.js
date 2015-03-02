@@ -10,6 +10,8 @@ var obj;
 var Config;
 var SoundCollection;
 var StartScreen;
+var CharacterChooser;
+var Client;
 
 function EndScreen(status, color) {
 	App = require('../../app');
@@ -23,6 +25,8 @@ function EndScreen(status, color) {
 	Config = require('../config');
 	SoundCollection = require('../sound-collection');
 	StartScreen = require('./start');
+	CharacterChooser = require('../character-chooser');
+	Client = require('../client');
 	this.color = color || '#C80000';
 
 	this.backgroundImage = new Background('./img/background.png');
