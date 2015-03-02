@@ -15,7 +15,7 @@ var Rectangle = require('./canvas/rectangle');
 var Camera = require('./canvas/camera');
 var Parallax = require('./canvas/parallax');
 var Pattern = require('./canvas/pattern');
-var ResourceLoader = require('./resource-loader');
+var ResourceLoader = require('./utils/resource-loader');
 var socket = io();
 
 var Client = module.exports = {};
