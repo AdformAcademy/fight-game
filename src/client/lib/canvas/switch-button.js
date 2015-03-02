@@ -35,6 +35,11 @@ function SwitchButton(params) {
 	this.borderColor = params.borderColor || 'black';
 	this.width = params.width || null;
 	this.height = params.height || null;
+
+	this.touched = false;
+	this.touchStartEvent = params.touchStartEvent;
+	this.touchEndEvent = params.touchEndEvent;
+	this.touchResetEvent = params.touchResetEvent;
 };
 
 SwitchButton.prototype.getImage = function(state) {
@@ -197,6 +202,29 @@ SwitchButton.prototype.hover = function() {
 SwitchButton.prototype.hoverLeave = function() {
 	$('body').css('cursor', 'default');
 }
+
+SwitchButton.prototype.resetTouch = function () {
+	this.touched = false;
+	if (typeof this.touchResetEvent === 'function') {
+		this.touchResetEvent();
+	}
+};
+
+SwitchButton.prototype.touchStart = function () {
+	this.touched = true;
+	if (typeof this.touchStartEvent === 'function') {
+		this.touchStartEvent();
+	}
+};
+
+SwitchButton.prototype.touchEnd = function () {
+	if (this.touched) {
+		this.touched = false;
+		if (typeof this.touchEndEvent === 'function') {
+			this.touchEndEvent();
+		}
+	}
+};
 
 SwitchButton.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);

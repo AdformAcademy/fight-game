@@ -30,6 +30,11 @@ function Button(params) {
 	this.borderColor = params.borderColor || 'black';
 	this.width = params.width || null;
 	this.height = params.height || null;
+
+	this.touched = false;
+	this.touchStartEvent = params.touchStartEvent;
+	this.touchEndEvent = params.touchEndEvent;
+	this.touchResetEvent = params.touchResetEvent;
 };
 
 Button.prototype.getId = function () {
@@ -211,11 +216,34 @@ Button.prototype.mouseLeave = function(event) {
 
 Button.prototype.hover = function() {
 	$('body').css('cursor', 'pointer');
-}
+};
 
 Button.prototype.hoverLeave = function() {
 	$('body').css('cursor', 'default');
-}
+};
+
+Button.prototype.resetTouch = function () {
+	this.touched = false;
+	if (typeof this.touchResetEvent === 'function') {
+		this.touchResetEvent();
+	}
+};
+
+Button.prototype.touchStart = function () {
+	this.touched = true;
+	if (typeof this.touchStartEvent === 'function') {
+		this.touchStartEvent();
+	}
+};
+
+Button.prototype.touchEnd = function () {
+	if (this.touched) {
+		this.touched = false;
+		if (typeof this.touchEndEvent === 'function') {
+			this.touchEndEvent();
+		}
+	}
+};
 
 Button.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);
