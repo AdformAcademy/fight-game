@@ -88,7 +88,11 @@ function StageScreen() {
 		var energybar = player.getEnergyBar();
 		var location = energybar.getLocation();
 		var y = location.getY() + 50;
-		return new Point(location.getX(), y);
+		if (location.getX() <= 200) {
+			return new Point(location.getX(), y);
+		} else {
+			return new Point(location.getX() + 110, y);
+		}
 	});
 
 	this.opponentName = new Text(this.opponent.getName(), 20);
@@ -100,7 +104,11 @@ function StageScreen() {
 		var energybar = opponent.getEnergyBar();
 		var location = energybar.getLocation();
 		var y = location.getY() + 50;
-		return new Point(location.getX(), y);
+		if (location.getX() <= 200) {
+			return new Point(location.getX(), y);
+		} else {
+			return new Point(location.getX() + 110, y);
+		}
 	});
 
 	this.countDownInterval = null;
@@ -278,6 +286,12 @@ StageScreen.prototype.graphics = function() {
 
 	obj.playerName.draw();
 	obj.opponentName.draw();
+
+	if (playerImageLocation.getX() <= 100) {
+		oImageX += 115;
+	} else if (opponentImageLocation.getX() <= 100) {
+		pImageX += 115;
+	}
 
 	obj.playerImage.draw(pImageX, pImageY);
 	obj.opponentImage.draw(oImageX, oImageY);
