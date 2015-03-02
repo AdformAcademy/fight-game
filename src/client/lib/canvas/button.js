@@ -35,6 +35,9 @@ function Button(params) {
 	this.touchStartEvent = params.touchStartEvent;
 	this.touchEndEvent = params.touchEndEvent;
 	this.touchResetEvent = params.touchResetEvent;
+	if (this.touchStartEvent !== undefined) {
+		EventCollection.addTouchObject(this);
+	}
 };
 
 Button.prototype.getId = function () {
@@ -248,7 +251,9 @@ Button.prototype.touchEnd = function () {
 Button.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);
 	EventCollection.removeMouseOverObject(this);
+	EventCollection.removeTouchObject(this);
 	this.hoverLeave();
+	this.resetTouch();
 }
 
 module.exports = Button;

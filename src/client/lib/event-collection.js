@@ -4,6 +4,7 @@ var EventCollection = {};
 
 EventCollection.clickList = [];
 EventCollection.mouseOverList = [];
+EventCollection.touchList = [];
 
 EventCollection.addOnClickObject = function(obj) {
 	EventCollection.clickList.push(obj);
@@ -11,6 +12,10 @@ EventCollection.addOnClickObject = function(obj) {
 
 EventCollection.addMouseOverObject = function(obj) {
 	EventCollection.mouseOverList.push(obj);
+};
+
+EventCollection.addTouchObject = function (obj) {
+	EventCollection.touchList.push(obj);
 };
 
 EventCollection.removeOnClickObject = function(obj) {
@@ -26,6 +31,15 @@ EventCollection.removeMouseOverObject = function(obj) {
 	for (var key in EventCollection.mouseOverList) {
 		if (EventCollection.mouseOverList[key] === obj) {
 			delete EventCollection.mouseOverList[key];
+			return;
+		}
+	}
+};
+
+EventCollection.removeTouchObject = function(obj) {
+	for (var key in EventCollection.touchList) {
+		if (EventCollection.touchList[key] === obj) {
+			delete EventCollection.touchList[key];
 			return;
 		}
 	}

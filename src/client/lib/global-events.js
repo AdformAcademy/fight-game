@@ -28,10 +28,10 @@ $(window).bind('touchstart', function(event) {
 	var x = event.originalEvent.touches[0].pageX;
 	var y = event.originalEvent.touches[0].pageY;
 	var location = new Point(x, y);
-	for (var key in EventCollection.clickList) {
-		EventCollection.clickList[key].resetTouch();
-		if (EventCollection.clickList[key].pointIntersects(location)) {
-	  		EventCollection.clickList[key].touchStart();
+	for (var key in EventCollection.touchList) {
+		EventCollection.touchList[key].resetTouch();
+		if (EventCollection.touchList[key].pointIntersects(location)) {
+	  		EventCollection.touchList[key].touchStart();
 		}
 	}
 });
@@ -44,11 +44,11 @@ $(window).bind('touchend', function(event) {
 	var x = GlobalEvents.lastMove.originalEvent.touches[0].pageX;
 	var y = GlobalEvents.lastMove.originalEvent.touches[0].pageY;
 	var location = new Point(x, y);
-	for (var key in EventCollection.clickList) {
-		if (EventCollection.clickList[key].pointIntersects(location)) {
-	  		EventCollection.clickList[key].touchEnd();
+	for (var key in EventCollection.touchList) {
+		if (EventCollection.touchList[key].pointIntersects(location)) {
+	  		EventCollection.touchList[key].touchEnd();
 		}
-		EventCollection.clickList[key].resetTouch();
+		EventCollection.touchList[key].resetTouch();
 	}
 });
 

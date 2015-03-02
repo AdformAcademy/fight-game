@@ -40,6 +40,9 @@ function SwitchButton(params) {
 	this.touchStartEvent = params.touchStartEvent;
 	this.touchEndEvent = params.touchEndEvent;
 	this.touchResetEvent = params.touchResetEvent;
+	if (this.touchStartEvent !== undefined) {
+		EventCollection.addTouchObject(this);
+	}
 };
 
 SwitchButton.prototype.getImage = function(state) {
@@ -229,7 +232,9 @@ SwitchButton.prototype.touchEnd = function () {
 SwitchButton.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);
 	EventCollection.removeMouseOverObject(this);
+	EventCollection.removeTouchObject(this);
 	this.hoverLeave();
+	this.resetTouch();
 }
 
 module.exports = SwitchButton;
