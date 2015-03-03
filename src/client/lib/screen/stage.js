@@ -173,7 +173,7 @@ function StageScreen() {
 };
 
 StageScreen.prototype.loadTouchControls = function () {
-
+	var self = this;
 	var keys = Config.keyBindings;
 
 	var moveLeftHandler = new UpdateHandler(function () {
@@ -188,12 +188,20 @@ StageScreen.prototype.loadTouchControls = function () {
 		});
 	}, 1000 / 30);
 
+	var defendHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.DEFEND
+		});
+	}, 1000 / 30);
+
 	this.moveLeftButton = new Button({
 		image: './img/controls/left.png',
 		hoverImage: './img/controls/left.png',
 		location: function() {
-			var x = App.canvasObj.getWidth() * 0.1;
-			var y = App.canvasObj.getHeight() * 0.9;
+			var height = self.moveLeftButton.getActiveImage().height;
+			var width = self.moveLeftButton.getActiveImage().width;
+			var x = App.canvasObj.getWidth() * 0.04;
+			var y = App.canvasObj.getHeight() * 0.95 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -217,8 +225,10 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/right.png',
 		hoverImage: './img/controls/right.png',
 		location: function() {
+			var height = self.moveLeftButton.getActiveImage().height;
+			var width = self.moveLeftButton.getActiveImage().width;
 			var x = App.canvasObj.getWidth() * 0.9;
-			var y = App.canvasObj.getHeight() * 0.9;
+			var y = App.canvasObj.getHeight() * 0.95 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -237,16 +247,134 @@ StageScreen.prototype.loadTouchControls = function () {
 			});
 		}
 	});
+
+	this.defendButton = new Button({
+		image: './img/controls/defend.png',
+		hoverImage: './img/controls/defend.png',
+		location: function() {
+			var relativeHeight = self.moveLeftButton.getActiveImage().height;
+			var relativeWidth = self.moveLeftButton.getActiveImage().width;
+			var location = self.moveLeftButton.getLocation();
+
+			var x = (location.getX() + relativeWidth) + 10;
+			var y = location.getY() - relativeHeight * 0.6;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			defendHandler.start();
+		},
+		touchEndEvent: function () {
+			defendHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.DEFEND
+			});
+		},
+		touchResetEvent: function () {
+			defendHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.DEFEND
+			});
+		}
+	});
+
+	this.jumpButton = new Button({
+		image: './img/controls/jump.png',
+		hoverImage: './img/controls/jump.png',
+		location: function() {
+			var relativeHeight = self.moveRightButton.getActiveImage().height;
+			var width = self.jumpButton.getActiveImage().width;
+			var location = self.moveRightButton.getLocation();
+
+			var x = (location.getX() - width) - 10;
+			var y = location.getY() - relativeHeight * 0.6;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			InputCollection.onKeydown({
+				keyCode: keys.JUMP
+			});
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.JUMP
+			});
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.JUMP] = false;
+		}
+	});
+
+	this.punchButton = new Button({
+		image: './img/controls/punch.png',
+		hoverImage: './img/controls/punch.png',
+		location: function() {
+			var relativeHeight = self.moveLeftButton.getActiveImage().height;
+			var location = self.moveLeftButton.getLocation();
+
+			var x = location.getX() - 25;
+			var y = location.getY() - relativeHeight;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			console.log('PUNCH TOUCH');
+			InputCollection.onKeydown({
+				keyCode: keys.PUNCH
+			});
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.PUNCH
+			});
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.PUNCH] = false;
+		}
+	});
+
+	this.kickButton = new Button({
+		image: './img/controls/kick.png',
+		hoverImage: './img/controls/kick.png',
+		location: function() {
+			var relativeHeight = self.moveRightButton.getActiveImage().height;
+			var location = self.moveRightButton.getLocation();
+
+			var x = location.getX() + 25;
+			var y = location.getY() - relativeHeight;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			console.log('KICK TOUCH');
+			InputCollection.onKeydown({
+				keyCode: keys.KICK
+			});
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.KICK
+			});
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.KICK] = false;
+		}
+	});
 };
 
 StageScreen.prototype.drawTouchControls = function () {
 	this.moveLeftButton.drawButton();
 	this.moveRightButton.drawButton();
+	this.defendButton.drawButton();
+	this.jumpButton.drawButton();
+	this.punchButton.drawButton();
+	this.kickButton.drawButton();
 };
 
 StageScreen.prototype.disposeTouchControls = function () {
 	this.moveLeftButton.dispose();
 	this.moveRightButton.dispose();
+	this.defendButton.dispose();
+	this.jumpButton.dispose();
+	this.punchButton.dispose();
+	this.kickButton.dispose();
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {

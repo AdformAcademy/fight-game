@@ -90,7 +90,7 @@ Button.prototype.setVisible = function(visible) {
 };
 
 Button.prototype.getLocation = function() {
-	return this.location;
+	return typeof this.location === 'function' ? this.location() : this.location;
 };
 
 Button.prototype.setLocation = function(location) {
