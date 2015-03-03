@@ -9,11 +9,11 @@
 	"groundHeight": 81.8,
 	"patterns": {
 		"1": {
-			"speed": 7.0,
+			"speed": 6.0,
 			"top": 0
 		},
 		"2": {
-			"speed": 5.5,
+			"speed": 4.5,
 			"top": 36.3
 		},
 		"3": {
