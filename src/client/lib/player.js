@@ -14,12 +14,21 @@ function Player(params) {
 	this.energyCosts = params.energyCosts;
 	this.groundHeight = params.groundHeight;
 	this.depth = 0;
+	this.speed;
 };
 
 Player.prototype = new BasePlayer();
 
 Player.prototype.getName = function () {
 	return this.name;
+};
+
+Player.prototype.getSpeed = function (action) {
+  return this.speed[action];
+};
+
+Player.prototype.setSpeed = function (speed) {
+  return this.speed = speed;
 };
 
 Player.prototype.setName = function (name) {

@@ -12,6 +12,7 @@ var Player = function (params) {
   this.maxLives = params.characterData.lives;
   this.lives = params.characterData.lives;
   this.damage = params.characterData.damage;
+  this.speed = params.characterData.speed;
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = params.characterData.maxEnergy / 2;
@@ -63,6 +64,14 @@ Player.prototype.getDamage = function (action) {
   return this.damage[action];
 };
 
+Player.prototype.getSpeed = function (action) {
+  return this.speed[action];
+};
+
+Player.prototype.getSpeedArray = function (action) {
+  return this.speed;
+};
+
 Player.prototype.getEnergy = function () {
   return this.energy;
 };
@@ -90,7 +99,10 @@ Player.prototype.addEnergy = function (action) {
 };
 
 Player.prototype.increaseEnergy = function () {
-  this.energy += Config.playerEnergyIncrement;
+  if (this.defending == true)
+    this.energy += Config.playerEnergyIncrement*0.5;
+  else
+    this.energy += Config.playerEnergyIncrement;
   if(this.energy > this.maxEnergy) {
     this.energy = this.maxEnergy;
   }

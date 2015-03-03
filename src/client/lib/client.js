@@ -127,6 +127,7 @@ Client.processServerData = function() {
     	var pDefeated = state.player.defeated;
     	var pDefending = state.player.defending;
     	var pMoving = state.player.moving;
+    	var pSpeed = state.player.speed;
     	var ox = state.opponent.x;
     	var opunched = state.opponent.punched;
     	var oVictor = state.opponent.victor;
@@ -161,6 +162,7 @@ Client.processServerData = function() {
     	App.player.setDefending(pDefending);
     	App.player.setMoving(pMoving);
     	App.player.Fatality(pFatality);
+    	App.player.setSpeed(pSpeed);
     	App.opponent.setPunched(opunched);
     	App.opponent.Victory(oVictor);
     	App.opponent.Defeat(oDefeated);

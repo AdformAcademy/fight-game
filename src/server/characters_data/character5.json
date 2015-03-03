@@ -3,18 +3,24 @@
 	"name": "Karman",
 	"lives": 100,
 	"damage": {
-		"punch": 30,
+		"punch": 7,
 		"kick": 6,
-		"punchCombo": 13,
-		"kickCombo": 15
+		"punchCombo": 25,
+		"kickCombo": 25
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 4,
+		"punch": 8.75,
 		"kick": 6,
-		"punchCombo": 40,
-		"kickCombo": 45,
+		"punchCombo": 31.25,
+		"kickCombo": 25,
 		"jump": 8
+	},
+	"speed": {
+		"punch": 583.333,
+		"kick": 600,
+		"punchCombo": 1388,
+		"kickCombo": 1666
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "5KarmanSmallIntro.png",
@@ -49,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 8,
-				"speed": 0.5,
+				"speed": 0.2,
 				"order": "asc",
 				"row": 0
 			},

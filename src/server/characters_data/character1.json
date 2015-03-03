@@ -3,18 +3,24 @@
 	"name": "Kasumi",
 	"lives": 100,
 	"damage": {
-		"punch": 30,
+		"punch": 4,
 		"kick": 5,
-		"punchCombo": 12,
-		"kickCombo": 15
+		"punchCombo": 20,
+		"kickCombo": 20
 	},
 	"maxEnergy": 100,
 	"costs": {
 		"punch": 5,
-		"kick": 8,
-		"punchCombo": 30,
-		"kickCombo": 40,
+		"kick": 5,
+		"punchCombo": 25,
+		"kickCombo": 20,
 		"jump": 10
+	},
+	"speed": {
+		"punch": 333.333,
+		"kick": 500,
+		"punchCombo": 1111,
+		"kickCombo": 1333
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "1KasumiSmallIntro.png",
@@ -57,7 +63,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 8,
-				"speed": 0.4,
+				"speed": 0.2,
 				"order": "asc",
 				"row": 0
 			},

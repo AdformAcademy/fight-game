@@ -62,7 +62,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 
 	if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 		if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
-			var hit = physics.hit(300, 65, 5, 60);
+			var hit = physics.hit(player.getSpeed("punch"), 65, 5, 60);
 			player.setHiting(true);
 			input.punchKey = true;
 				if(hit != 0) {
@@ -74,7 +74,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 		}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
 			player.setHiting(true);
-			var hit = physics.hit(400, 80, 10, 60);
+			var hit = physics.hit(player.getSpeed("kick"), 80, 10, 60);
 			input.kickKey = true;
 				if(hit != 0) {
 					SoundCollection.play('player', 'kick');
@@ -87,7 +87,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
 
 		player.setHiting(true);
-		var hit = physics.hit(780, 65, 5, 120);
+		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120);
 		input.punchKey = true;
 
 		if(hit != 0) {
@@ -99,7 +99,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping() && player.hasEnoughEnergy('kick')) {
 		player.setHiting(true);
-		var hit = physics.hit(780, 80, 10, 120);
+		var hit = physics.hit(player.getSpeed("kick"), 80, 10, 120);
 		input.kickKey = true;
 
 		if(hit != 0) {
@@ -122,7 +122,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 		if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 			player.setUsingCombo(true);
 			player.setHiting(true);
-			var hit = physics.hit(600, 80, 15, 60, true);
+			var hit = physics.hit(player.getSpeed("kickCombo"), 80, 15, 60, true);
 			input.kickCombo = true;
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboKick');
@@ -138,7 +138,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 		if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 			player.setUsingCombo(true);
 			player.setHiting(true);
-			var hit = physics.hit(800, 65, 0, 60, true);
+			var hit = physics.hit(player.getSpeed("punchCombo"), 65, 0, 60, true);
 			input.punchCombo = true;
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboPunch');

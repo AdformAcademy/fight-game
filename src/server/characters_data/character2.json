@@ -3,18 +3,24 @@
 	"name": "Robert",
 	"lives": 100,
 	"damage": {
-		"punch": 30,
-		"kick": 7,
-		"punchCombo": 14,
-		"kickCombo": 18
+		"punch": 6,
+		"kick": 8,
+		"punchCombo": 25,
+		"kickCombo": 30
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 5,
+		"punch": 7.5,
 		"kick": 8,
-		"punchCombo": 55,
-		"kickCombo": 65,
+		"punchCombo": 31.25,
+		"kickCombo": 30,
 		"jump": 12
+	},
+	"speed": {
+		"punch": 500,
+		"kick": 800,
+		"punchCombo": 1388,
+		"kickCombo": 2000
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "2RobertSmallIntro.png",
@@ -49,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 0.5,
+				"speed": 0.2,
 				"order": "asc",
 				"row": 0
 			},

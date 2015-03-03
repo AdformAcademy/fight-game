@@ -3,18 +3,24 @@
 	"name": "Wyler",
 	"lives": 100,
 	"damage": {
-		"punch": 50,
-		"kick": 8,
-		"punchCombo": 18,
-		"kickCombo": 20
+		"punch": 10,
+		"kick": 10,
+		"punchCombo": 33,
+		"kickCombo": 33
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 10,
-		"kick": 15,
-		"punchCombo": 60,
-		"kickCombo": 70,
+		"punch": 12.5,
+		"kick": 10,
+		"punchCombo": 41.25,
+		"kickCombo": 33,
 		"jump": 20
+	},
+	"speed": {
+		"punch": 833.333,
+		"kick": 1000,
+		"punchCombo": 1833,
+		"kickCombo": 2200
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "4WylerSmallIntro.png",
@@ -49,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 0.4,
+				"speed": 0.2,
 				"order": "asc",
 				"row": 0
 			},
