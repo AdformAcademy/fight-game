@@ -228,9 +228,9 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 
 WorldPhysics.prototype.applyParallax = function (packet) {
 	var actions = Config.actions;
-	if (packet.key === actions.RIGHT) {
+	if (packet.key === actions.RIGHT && !this.animating) {
 		this.parallax.moveRight();
-	} else if (packet.key === actions.LEFT) {
+	} else if (packet.key === actions.LEFT && !this.animating) {
 		this.parallax.moveLeft();
 	}
 };
@@ -261,8 +261,9 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 	var camera = this.camera;
 	var currentAlign = this.camera.getObjectAlign();
 	var currentAmount = amount;
-	var addition = currentAmount > currentAlign ? 10 : -10;
+	var addition = currentAmount > currentAlign ? Config.parallaxAddition : -Config.parallaxAddition;
 	var animate = setInterval(function () {
+		console.log(currentAlign);
 		currentAlign += addition;
 		if (currentAmount > currentAlign && addition < 0 
 				|| currentAmount < currentAlign && addition > 0) {
