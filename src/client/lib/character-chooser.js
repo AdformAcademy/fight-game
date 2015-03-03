@@ -159,6 +159,7 @@ CharacterChooser.choose = function (id) {
 			CharacterChooser.loadChosenCharacter(id);
 		}
 	}, 1000 / 30);
+	screen.dispose();
 };
 
 CharacterChooser.handleControls = function () {
