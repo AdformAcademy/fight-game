@@ -3,6 +3,11 @@
     src: url('/fonts/fightspirit.ttf');
 }
 
+@font-face {
+    font-family: 'FSpirit';
+    src: url('/fonts/fightspirit.eot');
+}
+
 html, body {
 	background-color:#000000;
 }
