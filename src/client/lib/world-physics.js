@@ -133,6 +133,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	if (player.isFatality()) {
 		player.setDefending(true);
 		playerSprite.setActiveAnimation('fatalityAnimation');
+		if (player.isPunched()){
+			SoundCollection.play('common', 'fatality');
+		}
 		return;
 	}
 
