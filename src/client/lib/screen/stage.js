@@ -281,9 +281,9 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/jump.png',
 		hoverImage: './img/controls/jump.png',
 		location: function() {
-			var relativeHeight = self.punchButton.getActiveImage().height;
+			var relativeHeight = self.kickButton.getActiveImage().height;
 			var width = self.jumpButton.getActiveImage().width;
-			var location = self.punchButton.getLocation();
+			var location = self.kickButton.getLocation();
 
 			var x = (location.getX() - width) - 5;
 			var y = location.getY() - relativeHeight * 0.6;
@@ -308,10 +308,11 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/punch.png',
 		hoverImage: './img/controls/punch.png',
 		location: function() {
-			var height = self.punchButton.getActiveImage().height;
-			var width = self.punchButton.getActiveImage().width;
-			var x = App.canvasObj.getWidth() * 0.88;
-			var y = App.canvasObj.getHeight() * 0.97 - height;
+			var relativeHeight = self.kickButton.getActiveImage().height;
+			var location = self.kickButton.getLocation();
+
+			var x = location.getX();
+			var y = location.getY() - relativeHeight - 10;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -333,11 +334,10 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/kick.png',
 		hoverImage: './img/controls/kick.png',
 		location: function() {
-			var relativeHeight = self.punchButton.getActiveImage().height;
-			var location = self.punchButton.getLocation();
-
-			var x = location.getX();
-			var y = location.getY() - relativeHeight - 10;
+			var height = self.kickButton.getActiveImage().height;
+			var width = self.kickButton.getActiveImage().width;
+			var x = App.canvasObj.getWidth() * 0.88;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
