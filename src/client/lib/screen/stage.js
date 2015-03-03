@@ -225,10 +225,11 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/right.png',
 		hoverImage: './img/controls/right.png',
 		location: function() {
-			var height = self.moveLeftButton.getActiveImage().height;
-			var width = self.moveLeftButton.getActiveImage().width;
-			var x = App.canvasObj.getWidth() * 0.9;
-			var y = App.canvasObj.getHeight() * 0.97 - height;
+			var relativeWidth = self.moveLeftButton.getActiveImage().width;
+			var location = self.moveLeftButton.getLocation();
+
+			var x = location.getX() + relativeWidth + 20;
+			var y = location.getY();
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -253,11 +254,10 @@ StageScreen.prototype.loadTouchControls = function () {
 		hoverImage: './img/controls/defend.png',
 		location: function() {
 			var relativeHeight = self.moveLeftButton.getActiveImage().height;
-			var relativeWidth = self.moveLeftButton.getActiveImage().width;
 			var location = self.moveLeftButton.getLocation();
 
-			var x = (location.getX() + relativeWidth) + 10;
-			var y = location.getY() - relativeHeight * 0.6;
+			var x = location.getX() - 25;
+			var y = location.getY() - relativeHeight;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -281,11 +281,11 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/jump.png',
 		hoverImage: './img/controls/jump.png',
 		location: function() {
-			var relativeHeight = self.moveRightButton.getActiveImage().height;
+			var relativeHeight = self.punchButton.getActiveImage().height;
 			var width = self.jumpButton.getActiveImage().width;
-			var location = self.moveRightButton.getLocation();
+			var location = self.punchButton.getLocation();
 
-			var x = (location.getX() - width) - 10;
+			var x = (location.getX() - width) - 5;
 			var y = location.getY() - relativeHeight * 0.6;
 			return new Point(x, y);
 		},
@@ -308,11 +308,10 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/punch.png',
 		hoverImage: './img/controls/punch.png',
 		location: function() {
-			var relativeHeight = self.moveLeftButton.getActiveImage().height;
-			var location = self.moveLeftButton.getLocation();
-
-			var x = location.getX() - 25;
-			var y = location.getY() - relativeHeight;
+			var height = self.punchButton.getActiveImage().height;
+			var width = self.punchButton.getActiveImage().width;
+			var x = App.canvasObj.getWidth() * 0.88;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -334,11 +333,11 @@ StageScreen.prototype.loadTouchControls = function () {
 		image: './img/controls/kick.png',
 		hoverImage: './img/controls/kick.png',
 		location: function() {
-			var relativeHeight = self.moveRightButton.getActiveImage().height;
-			var location = self.moveRightButton.getLocation();
+			var relativeHeight = self.punchButton.getActiveImage().height;
+			var location = self.punchButton.getLocation();
 
 			var x = location.getX();
-			var y = location.getY() - relativeHeight;
+			var y = location.getY() - relativeHeight - 10;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
