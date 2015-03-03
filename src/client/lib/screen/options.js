@@ -40,10 +40,6 @@ function OptionsScreen () {
 	this.Text.soundsText.setColor(Config.fontColor);
 	this.Text.soundsText.setFontType('Arial');
 
-	this.Text.controlsText = new Text('Controls:', 24);
-	this.Text.controlsText.setColor(Config.fontColor);
-	this.Text.controlsText.setFontType('Arial');
-
 	obj = this;
 
 	this.Text.soundsText.setLocation(function() {
@@ -55,12 +51,6 @@ function OptionsScreen () {
 	this.Text.titleText.setLocation(function() {
 		var x = Utilities.centerX(obj.Text.titleText.getTextWidth());
 		var y = App.canvasObj.getHeight() * 0.2;
-		return new Point(x, y);
-	});
-
-	this.Text.controlsText.setLocation(function() {
-		var x = App.canvasObj.getWidth() * 0.3;
-		var y = App.canvasObj.getHeight() * 0.5;
 		return new Point(x, y);
 	});
 
@@ -150,112 +140,124 @@ function OptionsScreen () {
 		this.hoverLeave();
 	});
 
-	this.keyMap = Config.keyMap;
-	var layout = Config.controlsLayout;
-	var tableData = Config.controlsTable;
-	this.ControlChanger = {};
+	if (!App.isTouchDevice()) {
+		this.Text.controlsText = new Text('Controls:', 24);
+		this.Text.controlsText.setColor(Config.fontColor);
+		this.Text.controlsText.setFontType('Arial');
 
-	var i = 0;
-
-	for (var key in layout) {
-		var tempTxt, tempBtn, tempBtnTxt;
-
-		tempBtn = new Button({
-			image: './img/control_button.png',
-			hoverImage: './img/control_button_hover.png',
-			location: function (ind) {
-				return function () {
-					var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth);
-					var y = App.canvasObj.getHeight() * (tableData.tableStart + (ind % 3) * tableData.rowHeight);
-					return new Point(x, y);
-				}
-			}(i)
+		this.Text.controlsText.setLocation(function() {
+			var x = App.canvasObj.getWidth() * 0.3;
+			var y = App.canvasObj.getHeight() * 0.5;
+			return new Point(x, y);
 		});
 
-		tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18);
-		tempBtnTxt.setColor(Config.fontColor);
-		tempBtnTxt.setFontType('Arial');
-		tempBtnTxt.setLocation(function (ind) {
-			return function () {
-				var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth) + (tempBtn.getActiveImage().width - this.getTextWidth()) / 2;
-				var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
-				return new Point(x, y);
-			}
-		}(i));
+		this.keyMap = Config.keyMap;
+		var layout = Config.controlsLayout;
+		var tableData = Config.controlsTable;
+		this.ControlChanger = {};
 
-		tempTxt = new Text(layout[key], 18);
-		tempTxt.setColor(Config.fontColor);
-		tempTxt.setFontType('Arial');
-		tempTxt.setLocation(function (ind) {
-			return function () {
-				var x = App.canvasObj.getWidth() * (0.15 + Math.floor(ind / 3) * 0.35);
-				var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
-				return new Point(x, y);
-			}
-		}(i));
+		var i = 0;
 
-		tempBtn.onClick(function () {
-			if(!obj.waitingForInput) {
-				var button = this;
-				obj.waitingForInput = true;
-				var input;
-				var handleInputs = setInterval (function(){
-					input = InputCollection.getCurrentInput();
-					if(input) {
-						if(obj.keyMap[input] || (48 <= input && input <= 90)) {
-							if(!obj.inputExists(input, Config.keyBindings[button.getId()])) {
-								Config.keyBindings[button.getId()] = input;
+		for (var key in layout) {
+			var tempTxt, tempBtn, tempBtnTxt;
+
+			tempBtn = new Button({
+				image: './img/control_button.png',
+				hoverImage: './img/control_button_hover.png',
+				location: function (ind) {
+					return function () {
+						var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth);
+						var y = App.canvasObj.getHeight() * (tableData.tableStart + (ind % 3) * tableData.rowHeight);
+						return new Point(x, y);
+					}
+				}(i)
+			});
+
+			tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18);
+			tempBtnTxt.setColor(Config.fontColor);
+			tempBtnTxt.setFontType('Arial');
+			tempBtnTxt.setLocation(function (ind) {
+				return function () {
+					var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth) + (tempBtn.getActiveImage().width - this.getTextWidth()) / 2;
+					var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
+					return new Point(x, y);
+				}
+			}(i));
+
+			tempTxt = new Text(layout[key], 18);
+			tempTxt.setColor(Config.fontColor);
+			tempTxt.setFontType('Arial');
+			tempTxt.setLocation(function (ind) {
+				return function () {
+					var x = App.canvasObj.getWidth() * (0.15 + Math.floor(ind / 3) * 0.35);
+					var y = App.canvasObj.getHeight() * (tableData.tableStart + ((ind % 3) + 0.5) * tableData.rowHeight);
+					return new Point(x, y);
+				}
+			}(i));
+
+			tempBtn.onClick(function () {
+				if(!obj.waitingForInput) {
+					var button = this;
+					obj.waitingForInput = true;
+					var input;
+					var handleInputs = setInterval (function(){
+						input = InputCollection.getCurrentInput();
+						if(input) {
+							if(obj.keyMap[input] || (48 <= input && input <= 90)) {
+								if(!obj.inputExists(input, Config.keyBindings[button.getId()])) {
+									Config.keyBindings[button.getId()] = input;
+									clearInterval(blinking);
+									obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
+									obj.waitingForInput = false;
+									clearInterval(handleInputs);
+								} else {
+									obj.ControlChanger[button.getId()].buttonText.setColor('#ff5555');
+									setTimeout(function () {
+										obj.ControlChanger[button.getId()].buttonText.setColor(Config.fontColor);
+									}, 300);
+								}
+							} else if (input === Config.keyBindings.ESCAPE) {
 								clearInterval(blinking);
 								obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
 								obj.waitingForInput = false;
 								clearInterval(handleInputs);
-							} else {
-								obj.ControlChanger[button.getId()].buttonText.setColor('#ff5555');
-								setTimeout(function () {
-									obj.ControlChanger[button.getId()].buttonText.setColor(Config.fontColor);
-								}, 300);
 							}
-						} else if (input === Config.keyBindings.ESCAPE) {
-							clearInterval(blinking);
-							obj.ControlChanger[button.getId()].buttonText.setText(obj.keyCodeToString(Config.keyBindings[button.getId()]));
-							obj.waitingForInput = false;
-							clearInterval(handleInputs);
 						}
-					}
-				}, 1000 / 30);
-				var state = 0;
-				obj.ControlChanger[button.getId()].buttonText.setText('');
-				var blinking = setInterval (function () {
-					state++;
-					state %= 2;
-					if(state == 1) {
-						obj.ControlChanger[button.getId()].buttonText.setText('_');
-					} else {
-						obj.ControlChanger[button.getId()].buttonText.setText('');
-					}
-				}, 200);
-			}
-		});
-		tempBtn.mouseOver(function () {
-			if(!obj.waitingForInput) {
-				this.setActiveImage(this.getHoverImage());
-				this.hover();
-			}
-		});
-		tempBtn.mouseLeave(function () {
-			this.setActiveImage(this.getImage());
-			this.hoverLeave();
-		});
+					}, 1000 / 30);
+					var state = 0;
+					obj.ControlChanger[button.getId()].buttonText.setText('');
+					var blinking = setInterval (function () {
+						state++;
+						state %= 2;
+						if(state == 1) {
+							obj.ControlChanger[button.getId()].buttonText.setText('_');
+						} else {
+							obj.ControlChanger[button.getId()].buttonText.setText('');
+						}
+					}, 200);
+				}
+			});
+			tempBtn.mouseOver(function () {
+				if(!obj.waitingForInput) {
+					this.setActiveImage(this.getHoverImage());
+					this.hover();
+				}
+			});
+			tempBtn.mouseLeave(function () {
+				this.setActiveImage(this.getImage());
+				this.hoverLeave();
+			});
 
-		tempBtn.setId(key);
+			tempBtn.setId(key);
 
-		obj.ControlChanger[tempBtn.getId()] = {
-			button: tempBtn,
-			text: tempTxt,
-			buttonText: tempBtnTxt
-		};
+			obj.ControlChanger[tempBtn.getId()] = {
+				button: tempBtn,
+				text: tempTxt,
+				buttonText: tempBtnTxt
+			};
 
-		i++;
+			i++;
+		}
 	}
 };
 
@@ -267,10 +269,12 @@ OptionsScreen.prototype.graphics = function () {
 	for (var key in obj.Text) {
 		obj.Text[key].draw();
 	}
-	for (var key in obj.ControlChanger) {
-		obj.ControlChanger[key].button.drawButton();
-		obj.ControlChanger[key].text.draw();
-		obj.ControlChanger[key].buttonText.draw();
+	if (!App.isTouchDevice()) {
+		for (var key in obj.ControlChanger) {
+			obj.ControlChanger[key].button.drawButton();
+			obj.ControlChanger[key].text.draw();
+			obj.ControlChanger[key].buttonText.draw();
+		}
 	}
 };
 
@@ -281,10 +285,12 @@ OptionsScreen.prototype.dispose = function () {
 	for (var key in obj.Text) {
 		obj.Text[key].dispose();
 	}
-	for (var key in obj.ControlChanger) {
-		obj.ControlChanger[key].button.dispose();
-		obj.ControlChanger[key].text.dispose();
-		obj.ControlChanger[key].buttonText.dispose();
+	if (!App.isTouchDevice()) {
+		for (var key in obj.ControlChanger) {
+			obj.ControlChanger[key].button.dispose();
+			obj.ControlChanger[key].text.dispose();
+			obj.ControlChanger[key].buttonText.dispose();
+		}
 	}
 };
 
