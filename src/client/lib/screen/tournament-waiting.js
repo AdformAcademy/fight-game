@@ -82,23 +82,24 @@ function TournamentWaitingScreen() {
 TournamentWaitingScreen.prototype.loadImages = function (data) {
 	for (var i = 0; i < data.ids.length; i++) {
 		var spriteImage = new Image();
-		console.log(data.chars[data.ids[i]-1]);
-		spriteImage.src = data.chars[data.ids[i]-1];
+		spriteImage.src = data.chars[data.ids[i].selection-1];
 		var spriteSheet = new SpriteSheet({
 			image: spriteImage,
 			data: {
 				spriteDimensions: {
 					width: 4160,
 					height: 164,
-					frameWidth: 212
+					frameWidth: 212,
+					frameHeight: 164
 				},
 				animations: {
 					animation: {
 						name: 'introAnimation',
-						startFrame: 2,
+						startFrame: data.ids[i].session,
 						frames: 1,
 						speed: 0,
-						order: 'dsc'
+						order: 'asc',
+						row: 0
 					}
 				},
 				defaultAnimation: 'animation'
@@ -108,6 +109,10 @@ TournamentWaitingScreen.prototype.loadImages = function (data) {
 			scaleHeight: 100
 		});
 		this.images.push(spriteSheet);
+		if(data.ids[i].session == 1 && data.ids[i+1].session == 1){
+			spriteSheet = null;
+			this.images.push(spriteSheet);
+		}
 	}
 };
 
@@ -120,6 +125,8 @@ TournamentWaitingScreen.prototype.update = function (data) {
 	} else {
 		this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
 		this.timeLeftText.setText(data.timer);
+		// Update user choices
+		// data.chars data.Ids
 	}
 };
 
@@ -157,19 +164,27 @@ TournamentWaitingScreen.prototype.graphics = function() {
 		obj.waitingText2.draw();
 		obj.timeLeftText.draw();
 	} else {
-		console.log('test-------------------------------------------' + obj.images.length);
 		obj.versusText.setLocation(function() {
 			var x = Utilities.centerX(obj.versusText.getTextWidth());
 			var y = obj.images.length/2 * 50 + 150;
 			return new Point(x, y);
 		});
 		obj.versusText.draw();
-		for (var i = 0; i < obj.images.length; i++) {
+		if(obj.images.length == 3){
+			var image = obj.images[0];
+			image.draw(250, 100);
+			var image = obj.images[2];
+			image.draw(550, 100);
+		}
+		else
+		console.log(obj.images);
+		for (var i = 0; i < obj.images.length; i+=2) {
 			var image = obj.images[i];
-			if(i % 2 == 0)
-				image.draw(250, 50*(i+1) + 50);
-			else
-				image.draw(550, 50*(i) + 50);
+			if(image.animations.animation.startFrame == 1)
+				image.draw(250, 50*(i+2));
+			var image = obj.images[i+1];
+			if(image != null && image.animations.animation.startFrame == 2)
+				image.draw(550, 50*(i+2));
 		}
 	}
 	if (obj.opponentFound) {

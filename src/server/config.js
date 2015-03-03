@@ -16,7 +16,7 @@ Config.playerEnergyIncrement = 0.1;
 
 Config.tournamentFightTimer = 180;
 Config.tournamentWaitTimer = 60;
-Config.tournamentLenght = 8;
+Config.tournamentLenght = 4;
 
 Config.firstSpawnLocation = {
 	x: 590,

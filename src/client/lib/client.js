@@ -159,7 +159,7 @@ Client.processServerData = function() {
     	App.player.Victory(pVictor);
     	App.player.Defeat(pDefeated);
     	App.player.setDefending(pDefending);
-    	App.player.isMoving(pMoving);
+    	App.player.setMoving(pMoving);
     	App.player.Fatality(pFatality);
     	App.opponent.setPunched(opunched);
     	App.opponent.Victory(oVictor);

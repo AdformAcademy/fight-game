@@ -203,7 +203,7 @@ SocketServer.prepareWaiting = function (session) {
 };
 
 SocketServer.deleteObjects = function(session) {
-	if (session !== undefined) {
+	if (session !== undefined && session !== null) {
 		SessionCollection.deleteSession(session.sessionId);
 		PlayerCollection.deletePlayer(session.sessionId);
 		delete SocketServer.inputs[session.sessionId];

@@ -112,9 +112,19 @@ Tournament.prototype.updatePlayerIds = function(sessionPairs) {
 	this.playerIds = [];
 	for (var i = 0; i < sessionPairs.length; i++) {
 		var sessionPair = sessionPairs[i];
-		if(sessionPair.getFirstSession() !== null && sessionPair.getSecondSession() !== null){
-			this.playerIds.push(sessionPair.getFirstSession().getSelection());
-			this.playerIds.push(sessionPair.getSecondSession().getSelection());
+		if(sessionPair.getFirstSession() !== null){
+			var data1 = {
+				selection: sessionPair.getFirstSession().getSelection(),
+				session: 1
+			};
+			this.playerIds.push(data1);
+		}
+		if(sessionPair.getSecondSession() !== null){
+			var data2 = {
+				selection: sessionPair.getSecondSession().getSelection(),
+				session: 2
+			};
+			this.playerIds.push(data2);
 		}
 	}
 }
