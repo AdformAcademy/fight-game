@@ -25,6 +25,7 @@ $(window).keyup(function (event) {
 });
 
 $(window).bind('touchstart', function(event) {
+	GlobalEvents.lastMove = event;
 	var x = event.originalEvent.touches[0].pageX;
 	var y = event.originalEvent.touches[0].pageY;
 	var location = new Point(x, y);
