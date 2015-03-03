@@ -176,6 +176,7 @@ StageScreen.prototype.doCountDown = function() {
 		var oldVal = countAnimation.numbers;
 		if (oldVal <= 0) {
 			obj.countDownText.setText('FIGHT!!!');
+			SoundCollection.playByIndex('common', 'countdown', oldVal);
 			if (oldVal === -1) {
 				obj.disposeCountDown();
 				Client.startGame();
@@ -192,9 +193,16 @@ StageScreen.prototype.doCountDown = function() {
 StageScreen.prototype.animateCountDown = function() {
 	var self = this;
 	var oldValue = self.countDownText.getText();
+	var number = -1;
 	self.animatingCountDown = true;
 	this.updateInterval = setInterval(function () {
 		var currentValue = self.countDownText.getText();
+
+		if (number !== currentValue) {
+			number = currentValue;
+			SoundCollection.playByIndex('common', 'countdown', number);
+		}
+
 		if (!self.animatingCountDown) {
 			clearInterval(self.updateInterval);
 			return;

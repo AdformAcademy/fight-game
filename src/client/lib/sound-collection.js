@@ -118,4 +118,13 @@ SoundCollection.stopSound = function (sounds, action) {
 	}
 }
 
+SoundCollection.playByIndex = function (sounds, action, index) {
+	if(!SoundCollection.mute) {
+		var soundsPack = SoundCollection.sounds[sounds][action];
+		if(soundsPack[index] !== undefined) {
+			soundsPack[index].play();
+		}
+	}
+}
+
 module.exports = SoundCollection;

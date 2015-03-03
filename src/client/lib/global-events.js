@@ -80,18 +80,21 @@ socket.on('message', function (data) {
 			App.screen.dispose();
 			App.screen = new EndScreen(data.text, data.color);
 			App.canvasObj.setGraphics(App.screen.graphics);
+			SoundCollection.stopSound('common', 'countdown');
 			SoundCollection.stopSound('common', 'theme');
 		}, 5000);	
 	} else {
 		App.screen.dispose();
 		App.screen = new EndScreen(data.text, data.color);
 		App.canvasObj.setGraphics(App.screen.graphics);
+		SoundCollection.stopSound('common', 'countdown');
 		SoundCollection.stopSound('common', 'theme');
 	}
 });
 
 socket.on('victory', function() {
 	Client.stop();
+	SoundCollection.stopSound('common', 'countdown');
 	SoundCollection.stopSound('common', 'theme');
 	App.screen.dispose();
 	App.screen = new EndScreen('Victory');
@@ -100,6 +103,7 @@ socket.on('victory', function() {
 
 socket.on('defeat', function() {
 	Client.stop();
+	SoundCollection.stopSound('common', 'countdown');
 	SoundCollection.stopSound('common', 'theme');
 	App.screen.dispose();
 	App.screen = new EndScreen('Defeat');
