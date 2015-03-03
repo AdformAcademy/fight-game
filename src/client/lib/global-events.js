@@ -30,15 +30,26 @@ $(window).bind('touchstart', function(event) {
 	var y = event.originalEvent.touches[0].pageY;
 	var location = new Point(x, y);
 	for (var key in EventCollection.touchList) {
-		EventCollection.touchList[key].resetTouch();
 		if (EventCollection.touchList[key].pointIntersects(location)) {
 	  		EventCollection.touchList[key].touchStart();
+		} else {
+			EventCollection.touchList[key].resetTouch();
 		}
 	}
 });
 
 $(window).bind('touchmove', function(event) {
 	GlobalEvents.lastMove = event;
+	var x = event.originalEvent.touches[0].pageX;
+	var y = event.originalEvent.touches[0].pageY;
+	var location = new Point(x, y);
+	for (var key in EventCollection.touchList) {
+		if (EventCollection.touchList[key].pointIntersects(location) && !EventCollection.touchList[key].touched) {
+			EventCollection.touchList[key].touchStart();
+		} else if (!EventCollection.touchList[key].pointIntersects(location)) {
+			EventCollection.touchList[key].resetTouch();
+		}
+	}
 });
 
 $(window).bind('touchend', function(event) {
