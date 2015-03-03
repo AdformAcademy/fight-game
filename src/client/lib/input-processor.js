@@ -124,6 +124,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 			player.setHiting(true);
 			var hit = physics.hit(600, 80, 15, 60, true);
 			input.kickCombo = true;
+			player.setUsingKickCombo(true);
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboKick');
 				SoundCollection.play('player', 'kick');
@@ -134,12 +135,13 @@ InputProcessor.prototype.processComboInputs = function (input) {
 			}
 		}
 	}
-	if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo') && !player.usingCombo()) {
+	if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
 		if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 			player.setUsingCombo(true);
 			player.setHiting(true);
 			var hit = physics.hit(800, 65, 0, 60, true);
 			input.punchCombo = true;
+			player.setUsingPunchCombo(true);
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboPunch');
 				SoundCollection.play('player', 'punch');
