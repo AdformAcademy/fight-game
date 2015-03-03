@@ -90,7 +90,7 @@ TrainingScreen.prototype.loadTouchControls = function () {
 
 	this.moveLeftButton = new Button({
 		image: './img/controls/left.png',
-		hoverImage: './img/controls/left.png',
+		hoverImage: './img/controls/left_hover.png',
 		location: function() {
 			var height = self.moveLeftButton.getActiveImage().height;
 			var width = self.moveLeftButton.getActiveImage().width;
@@ -100,24 +100,27 @@ TrainingScreen.prototype.loadTouchControls = function () {
 		},
 		touchStartEvent: function () {
 			moveLeftHandler.start();
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			moveLeftHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.LEFT
 			});
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getImage());
 		},
 		touchResetEvent: function () {
 			moveLeftHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.LEFT
 			});
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getImage());
 		}
 	});
 
 	this.moveRightButton = new Button({
 		image: './img/controls/right.png',
-		hoverImage: './img/controls/right.png',
+		hoverImage: './img/controls/right_hover.png',
 		location: function() {
 			var relativeWidth = self.moveLeftButton.getActiveImage().width;
 			var location = self.moveLeftButton.getLocation();
@@ -128,24 +131,27 @@ TrainingScreen.prototype.loadTouchControls = function () {
 		},
 		touchStartEvent: function () {
 			moveRightHandler.start();
+			self.moveRightButton.setActiveImage(self.moveRightButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			moveRightHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.RIGHT
 			});
+			self.moveRightButton.setActiveImage(self.moveRightButton.getImage());
 		},
 		touchResetEvent: function () {
 			moveRightHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.RIGHT
 			});
+			self.moveRightButton.setActiveImage(self.moveRightButton.getImage());
 		}
 	});
 
 	this.defendButton = new Button({
 		image: './img/controls/defend.png',
-		hoverImage: './img/controls/defend.png',
+		hoverImage: './img/controls/defend_hover.png',
 		location: function() {
 			var relativeHeight = self.moveLeftButton.getActiveImage().height;
 			var location = self.moveLeftButton.getLocation();
@@ -156,24 +162,27 @@ TrainingScreen.prototype.loadTouchControls = function () {
 		},
 		touchStartEvent: function () {
 			defendHandler.start();
+			self.defendButton.setActiveImage(self.defendButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			defendHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.DEFEND
 			});
+			self.defendButton.setActiveImage(self.defendButton.getImage());
 		},
 		touchResetEvent: function () {
 			defendHandler.stop();
 			InputCollection.onKeyup({
 				keyCode: keys.DEFEND
 			});
+			self.defendButton.setActiveImage(self.defendButton.getImage());
 		}
 	});
 
 	this.jumpButton = new Button({
 		image: './img/controls/jump.png',
-		hoverImage: './img/controls/jump.png',
+		hoverImage: './img/controls/jump_hover.png',
 		location: function() {
 			var relativeHeight = self.kickButton.getActiveImage().height;
 			var width = self.jumpButton.getActiveImage().width;
@@ -187,20 +196,23 @@ TrainingScreen.prototype.loadTouchControls = function () {
 			InputCollection.onKeydown({
 				keyCode: keys.JUMP
 			});
+			self.jumpButton.setActiveImage(self.jumpButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			InputCollection.onKeyup({
 				keyCode: keys.JUMP
 			});
+			self.jumpButton.setActiveImage(self.jumpButton.getImage());
 		},
 		touchResetEvent: function () {
 			InputCollection.pressed[keys.JUMP] = false;
+			self.jumpButton.setActiveImage(self.jumpButton.getImage());
 		}
 	});
 
 	this.punchButton = new Button({
 		image: './img/controls/punch.png',
-		hoverImage: './img/controls/punch.png',
+		hoverImage: './img/controls/punch_hover.png',
 		location: function() {
 			var relativeHeight = self.kickButton.getActiveImage().height;
 			var location = self.kickButton.getLocation();
@@ -213,20 +225,23 @@ TrainingScreen.prototype.loadTouchControls = function () {
 			InputCollection.onKeydown({
 				keyCode: keys.PUNCH
 			});
+			self.punchButton.setActiveImage(self.punchButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			InputCollection.onKeyup({
 				keyCode: keys.PUNCH
 			});
+			self.punchButton.setActiveImage(self.punchButton.getImage());
 		},
 		touchResetEvent: function () {
 			InputCollection.pressed[keys.PUNCH] = false;
+			self.punchButton.setActiveImage(self.punchButton.getImage());
 		}
 	});
 
 	this.kickButton = new Button({
 		image: './img/controls/kick.png',
-		hoverImage: './img/controls/kick.png',
+		hoverImage: './img/controls/kick_hover.png',
 		location: function() {
 			var height = self.kickButton.getActiveImage().height;
 			var width = self.kickButton.getActiveImage().width;
@@ -238,14 +253,17 @@ TrainingScreen.prototype.loadTouchControls = function () {
 			InputCollection.onKeydown({
 				keyCode: keys.KICK
 			});
+			self.kickButton.setActiveImage(self.kickButton.getHoverImage());
 		},
 		touchEndEvent: function () {
 			InputCollection.onKeyup({
 				keyCode: keys.KICK
 			});
+			self.kickButton.setActiveImage(self.kickButton.getImage());
 		},
 		touchResetEvent: function () {
 			InputCollection.pressed[keys.KICK] = false;
+			self.kickButton.setActiveImage(self.kickButton.getImage());
 		}
 	});
 };
