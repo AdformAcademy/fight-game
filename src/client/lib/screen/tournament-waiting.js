@@ -19,6 +19,7 @@ function TournamentWaitingScreen() {
 	StageScreen = require('./stage');
 
 	this.images = [];
+	this.Ids;
 	this.canvas = App.canvasObj.canvas;
 	this.backgroundImage = new Background('./img/background.png');
 	this.waitingText = new Text('Waiting for players, 0/8 ready', 30);
@@ -80,9 +81,9 @@ function TournamentWaitingScreen() {
 };
 
 TournamentWaitingScreen.prototype.loadImages = function (data) {
-	for (var i = 0; i < data.ids.length; i++) {
+	for (var i = 0; i < data.chars.length; i++) {
 		var spriteImage = new Image();
-		spriteImage.src = data.chars[data.ids[i].selection-1];
+		spriteImage.src = data.chars[i];
 		var spriteSheet = new SpriteSheet({
 			image: spriteImage,
 			data: {
@@ -95,7 +96,7 @@ TournamentWaitingScreen.prototype.loadImages = function (data) {
 				animations: {
 					animation: {
 						name: 'introAnimation',
-						startFrame: data.ids[i].session,
+						startFrame: 0,
 						frames: 1,
 						speed: 0,
 						order: 'asc',
@@ -109,10 +110,6 @@ TournamentWaitingScreen.prototype.loadImages = function (data) {
 			scaleHeight: 100
 		});
 		this.images.push(spriteSheet);
-		if(data.ids[i].session == 1 && data.ids[i+1].session == 1){
-			spriteSheet = null;
-			this.images.push(spriteSheet);
-		}
 	}
 };
 
@@ -125,9 +122,8 @@ TournamentWaitingScreen.prototype.update = function (data) {
 	} else {
 		this.waitingText.setText('Waiting for players, ' + data.pairs + '/8 ready');
 		this.timeLeftText.setText(data.timer);
-		// Update user choices
-		// data.chars data.Ids
 	}
+	this.Ids = data.ids;
 };
 
 TournamentWaitingScreen.prototype.animateLoading = function() {
@@ -164,28 +160,25 @@ TournamentWaitingScreen.prototype.graphics = function() {
 		obj.waitingText2.draw();
 		obj.timeLeftText.draw();
 	} else {
+		var extraY = 0;
+		for (var i = 0; i < obj.Ids.length; i++) {
+			if(obj.Ids[i].session == 1){
+				var image = obj.images[obj.Ids[i].selection - 1];
+				image.draw(250, 50*(i+2) + extraY);
+			}
+			if(obj.Ids[i+1] != null && obj.Ids[i+1].session == 2){
+				var image = obj.images[obj.Ids[i+1].selection - 1];
+				image.draw(550, 50*(i+2) + extraY);
+				i++
+			}
+			else extraY += 50;
+		}
 		obj.versusText.setLocation(function() {
 			var x = Utilities.centerX(obj.versusText.getTextWidth());
-			var y = obj.images.length/2 * 50 + 150;
+			var y = obj.Ids.length/2 * 50 + 150 + extraY/2;
 			return new Point(x, y);
 		});
 		obj.versusText.draw();
-		if(obj.images.length == 3){
-			var image = obj.images[0];
-			image.draw(250, 100);
-			var image = obj.images[2];
-			image.draw(550, 100);
-		}
-		else
-		console.log(obj.images);
-		for (var i = 0; i < obj.images.length; i+=2) {
-			var image = obj.images[i];
-			if(image.animations.animation.startFrame == 1)
-				image.draw(250, 50*(i+2));
-			var image = obj.images[i+1];
-			if(image != null && image.animations.animation.startFrame == 2)
-				image.draw(550, 50*(i+2));
-		}
 	}
 	if (obj.opponentFound) {
 		obj.loadingText.draw();
