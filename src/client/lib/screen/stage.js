@@ -201,7 +201,7 @@ StageScreen.prototype.loadTouchControls = function () {
 			var height = self.moveLeftButton.getActiveImage().height;
 			var width = self.moveLeftButton.getActiveImage().width;
 			var x = App.canvasObj.getWidth() * 0.04;
-			var y = App.canvasObj.getHeight() * 0.95 - height;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -228,7 +228,7 @@ StageScreen.prototype.loadTouchControls = function () {
 			var height = self.moveLeftButton.getActiveImage().height;
 			var width = self.moveLeftButton.getActiveImage().width;
 			var x = App.canvasObj.getWidth() * 0.9;
-			var y = App.canvasObj.getHeight() * 0.95 - height;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
@@ -316,7 +316,6 @@ StageScreen.prototype.loadTouchControls = function () {
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
-			console.log('PUNCH TOUCH');
 			InputCollection.onKeydown({
 				keyCode: keys.PUNCH
 			});
@@ -338,12 +337,11 @@ StageScreen.prototype.loadTouchControls = function () {
 			var relativeHeight = self.moveRightButton.getActiveImage().height;
 			var location = self.moveRightButton.getLocation();
 
-			var x = location.getX() + 25;
+			var x = location.getX();
 			var y = location.getY() - relativeHeight;
 			return new Point(x, y);
 		},
 		touchStartEvent: function () {
-			console.log('KICK TOUCH');
 			InputCollection.onKeydown({
 				keyCode: keys.KICK
 			});

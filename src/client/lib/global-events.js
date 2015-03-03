@@ -180,6 +180,8 @@ socket.on('training', function (data) {
 $(window).load(function () {
 	App.canvasObj.setGraphics(App.screen.graphics);
 	App.canvasObj.draw();
+
+	$(window).scrollTop($('#window').offset().top);
 });
 
 module.exports = GlobalEvents;
