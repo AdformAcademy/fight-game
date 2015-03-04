@@ -289,7 +289,6 @@ WorldPhysics.prototype.shakeCamera = function (strength, length, slowDownSpeed) 
 		var strengthValue = strength;
 		var decreaseValue = 0.1;
 		var updateInterval = setInterval(function () {
-			console.log(self.camera.yView);
 			self.camera.additionalYView = strengthValue;
 			strengthValue = -strengthValue;
 			if (strengthValue > 0) {
@@ -310,7 +309,6 @@ WorldPhysics.prototype.shakeCamera = function (strength, length, slowDownSpeed) 
 				}
 			}
 			decreaseValue *= slowDownSpeed || 1.05;
-			
 		}, 1000 / 30);
 
 		timeoutInterval = setTimeout(function () {
