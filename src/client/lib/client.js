@@ -44,6 +44,7 @@ Client.canMove = false;
 Client.gameType = null;
 Client.isTraining = false;
 Client.defeat = false;
+Client.initializeType = 0;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -222,6 +223,7 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
+	Client.initializeType = 1;
 	var loader = new ResourceLoader(function () {
 		App.screen.dispose();
 		App.screen = new StageScreen();
@@ -426,10 +428,13 @@ Client.initializeGame = function (data) {
 };
 
 Client.initializeTraining = function (data) {
+	Client.initializeType = 2;
 	var loader = new ResourceLoader(function () {
-		App.screen.dispose();
-		App.screen = new TrainingScreen();
-		App.canvasObj.setGraphics(App.screen.graphics);
+		if (Client.initializeType == 2) {
+			App.screen.dispose();
+			App.screen = new TrainingScreen();
+			App.canvasObj.setGraphics(App.screen.graphics);
+		}
 	});
 	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
@@ -676,6 +681,7 @@ Client.stop = function() {
 	Client.canMove = false;
 	Client.isTraining = false;
 	Client.defeat = false;
+	Client.initializeType = 0;
 };
 
 Client.start = function() {
