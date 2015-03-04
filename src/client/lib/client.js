@@ -43,6 +43,7 @@ Client.gameStarted = false;
 Client.canMove = false;
 Client.gameType = null;
 Client.isTraining = false;
+Client.defeat = false;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -155,6 +156,11 @@ Client.processServerData = function() {
 
 		if (hitByCombo) {
 			physics.shakeCamera(3, 5000, 1.02);
+		}
+
+		if ((pDefeated || oDefeated) && !Client.defeat) {
+			physics.shakeCamera(8, 5000, 1.09);
+			Client.defeat = true;
 		}
     	
     	playerEnergyBar.store(state.player.energy);
@@ -669,6 +675,7 @@ Client.stop = function() {
 	Client.gameStarted = false;
 	Client.canMove = false;
 	Client.isTraining = false;
+	Client.defeat = false;
 };
 
 Client.start = function() {
