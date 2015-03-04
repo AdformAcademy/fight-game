@@ -486,8 +486,8 @@ StageScreen.prototype.graphics = function() {
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();
 	var opponentEnergyBar = opponent.getEnergyBar();
-	var xView = Client.camera.xView;
-	var yView = Client.camera.yView;
+	var xView = Client.camera.getXView();
+	var yView = Client.camera.getYView();
 
 	var playerImageLocation = playerEnergyBar.getLocation();
 	var pImageX = playerImageLocation.getX();

@@ -304,8 +304,8 @@ TrainingScreen.prototype.animate = function() {
 TrainingScreen.prototype.graphics = function() {
 	var player = obj.player;
 	var opponent = obj.opponent;
-	var xView = Client.camera.xView;
-	var yView = Client.camera.yView;
+	var xView = Client.camera.getXView();
+	var yView = Client.camera.getYView();
 	
 	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {

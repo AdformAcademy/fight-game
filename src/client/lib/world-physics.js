@@ -10,6 +10,7 @@ var WorldPhysics = function(params) {
 	this.camera = params.camera;
 	this.animating = false;
 	this.oldAnimatingValue = -1;
+	this.cameraShaking = false;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -278,6 +279,46 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 			self.animating = false;
 		}
 	}, 1000 / 30);
+};
+
+WorldPhysics.prototype.shakeCamera = function (strength, length, slowDownSpeed) {
+	if (!this.cameraShaking) {
+		this.cameraShaking = true;
+		var self = this;
+		var timeoutInterval = null;
+		var strengthValue = strength;
+		var decreaseValue = 0.1;
+		var updateInterval = setInterval(function () {
+			console.log(self.camera.yView);
+			self.camera.additionalYView = strengthValue;
+			strengthValue = -strengthValue;
+			if (strengthValue > 0) {
+				strengthValue -= decreaseValue;
+				if (strengthValue < 0) {
+					clearInterval(updateInterval);
+					clearInterval(timeoutInterval);
+					self.camera.additionalYView = 0;
+					self.cameraShaking = false;
+				}
+			} else if (strengthValue < 0) {
+				strengthValue += decreaseValue;
+				if (strengthValue > 0) {
+					clearInterval(updateInterval);
+					clearInterval(timeoutInterval);
+					self.camera.additionalYView = 0;
+					self.cameraShaking = false;
+				}
+			}
+			decreaseValue *= slowDownSpeed || 1.05;
+			
+		}, 1000 / 30);
+
+		timeoutInterval = setTimeout(function () {
+			clearInterval(updateInterval);
+			self.cameraShaking = false;
+			self.camera.additionalYView = 0;
+		}, length);
+	}
 };
 
 module.exports = WorldPhysics;
