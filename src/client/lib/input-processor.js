@@ -129,6 +129,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				SoundCollection.play('player', 'comboKick');
 				SoundCollection.play('player', 'kick');
 				SoundCollection.play('opponent', 'hit');
+				physics.shakeCamera(3, 5000, 1.02);
 			} else {
 				SoundCollection.play('player', 'comboKick');
 				SoundCollection.play('common', 'miss');
@@ -146,6 +147,7 @@ InputProcessor.prototype.processComboInputs = function (input) {
 				SoundCollection.play('player', 'comboPunch');
 				SoundCollection.play('player', 'punch');
 				SoundCollection.play('opponent', 'hit');
+				physics.shakeCamera(3, 5000, 1.02);
 			} else {
 				SoundCollection.play('player', 'comboPunch');
 				SoundCollection.play('common', 'miss');

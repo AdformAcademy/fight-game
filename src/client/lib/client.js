@@ -141,6 +141,7 @@ Client.processServerData = function() {
     	var sounds = state.player.sounds;
     	var pFatality = state.player.fatality;
     	var oFatality = state.opponent.fatality;
+    	var hitByCombo = state.player.hitcombo;
 
     	physics.applyCoordinates(App.player, x, null);
     	SoundCollection.playServerSounds(sounds);
@@ -151,6 +152,10 @@ Client.processServerData = function() {
     	if (opunched) {
     		opponentLifeBar.store(state.opponent.lives);
     	}
+
+		if (hitByCombo) {
+			physics.shakeCamera(3, 5000, 1.02);
+		}
     	
     	playerEnergyBar.store(state.player.energy);
     	opponentEnergyBar.store(state.opponent.energy);

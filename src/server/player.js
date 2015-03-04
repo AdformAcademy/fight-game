@@ -19,6 +19,7 @@ var Player = function (params) {
   this.characterId = params.characterId || 1;
   this.map = params.map;
   this.sounds = [];
+  this.hitByCombo = false;
 };
 
 Player.prototype = new BasePlayer();
@@ -130,6 +131,18 @@ Player.prototype.clearSounds = function() {
 Player.prototype.getSounds = function () {
   return this.sounds;
 }
+
+Player.prototype.setHitByCombo = function (state) {
+  this.hitByCombo = state;
+};
+
+Player.prototype.isHitByCombo = function () {
+  return this.hitByCombo;
+};
+
+Player.prototype.clearStates = function () {
+  this.hitByCombo = false;
+};
 
 Player.prototype.toPacket = function() {
   return {
