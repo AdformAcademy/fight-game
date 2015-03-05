@@ -11,7 +11,8 @@ SessionCollection.getSessionObject = function(sessionId) {
 SessionCollection.getAvailableSession = function() {
   for (var key in SessionCollection.list) {
     var sesObj = SessionCollection.list[key];
-    if (sesObj.state === Session.READY) {
+    if (sesObj.state === Session.READY 
+        || sesObj.state === Session.TRAINING) {
       return sesObj;
     }
   }
@@ -22,8 +23,9 @@ SessionCollection.sessionExists = function(sessionId) {
   return SessionCollection.list[sessionId] !== undefined;
 };
 
-SessionCollection.createSession = function(socket, selection) {
-  var sesObj = new Session(socket, null, Session.READY);
+SessionCollection.createSession = function(socket, selection, state) {
+  state = state === undefined ? Session.READY : state;
+  var sesObj = new Session(socket, null, state);
   sesObj.setSelection(selection);
   SessionCollection.list[socket.id] = sesObj;
   return sesObj;

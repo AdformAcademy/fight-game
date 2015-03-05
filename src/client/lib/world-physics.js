@@ -1,6 +1,7 @@
 var Config = require('./config');
 var Collisions = require('../../common/collisions');
 var SoundCollection = require('./sound-collection');
+var ParticleCollection = require('./canvas/particle-collection');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
@@ -24,14 +25,14 @@ WorldPhysics.prototype.applyInput = function(player, input) {
 		return;
 	}
 	var opponent = player === this.player ? this.opponent : this.player;
-	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var x = player.getX();
 	var z = player.getZ();
 
-	if (input.key === keys.RIGHT) {
+	if (input.key === actions.RIGHT) {
 		x += Config.playerMoveSpeed;
 	}
-	else if (input.key === keys.LEFT) {
+	else if (input.key === actions.LEFT) {
 		x -= Config.playerMoveSpeed;
 	}
 
@@ -43,7 +44,7 @@ WorldPhysics.prototype.jump = function () {
     var opponent = this.opponent;
 
     SoundCollection.play('common', 'jump');
-    SoundCollection.play('player', 'jump')
+    SoundCollection.play('player', 'jump');
 
 	var updateZ = setInterval(function () {
 	    var x = player.getX();
@@ -67,7 +68,7 @@ WorldPhysics.prototype.jump = function () {
 	}, 1000/30);
 };
 
-WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
+WorldPhysics.prototype.hit = function (time, size, power, heightDifference, combo) {
 	var self = this;
 	var player = this.player;
 	var opponent = this.opponent;
@@ -84,6 +85,14 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 		hit = 2;
 		opponent.setPunched(2);
 	}	
+
+	if(hit) {
+		ParticleCollection.triggerParticle(opponent, 'blood', player.getX() > opponent.getX());
+		if(combo) {
+			ParticleCollection.triggerParticle(opponent, 'flash', player.getX() > opponent.getX());
+		}
+	}
+
 	var updateH = setInterval(function () {
 		t += 30;
 		if (t >= time && !player.isFatality()) {
@@ -113,7 +122,9 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 			}
 			player.getSpriteSheet().setActiveAnimation('standAnimation');
 			player.setHiting(false);
-			player.setUsingCombo(false);
+			if(combo) {
+				player.setUsingCombo(false);
+			}
 			clearInterval(updateH);
 		}
 	}, 1000/30);
@@ -123,6 +134,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference) {
 
 WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	var keys = Config.keyBindings;
+	var actions = Config.actions;
 	var player = this.player;
 	var opponent = this.opponent;
 	var playerSprite = player.getSpriteSheet();
@@ -130,6 +142,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 	if (player.isFatality()) {
 		player.setDefending(true);
 		playerSprite.setActiveAnimation('fatalityAnimation');
+		if (player.isPunched()){
+			SoundCollection.play('common', 'fatality');
+		}
 		return;
 	}
 
@@ -150,22 +165,22 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('kickAnimation');
 	} else if (packet.jumpKey) {
 		playerSprite.setActiveAnimation('jumpAnimation');
-	} else if (packet.key === keys.DEFEND) {
+	} else if (packet.key === actions.DEFEND) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 
 	if (player.isStanding() && !player.isHiting() && !player.isFatality()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
-				if (packet.key === keys.RIGHT)
+				if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.LEFT)
+				else if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 			else {
-				if (packet.key === keys.LEFT)
+				if (packet.key === actions.LEFT)
 					playerSprite.setActiveAnimation('moveLeftAnimation');
-				else if (packet.key === keys.RIGHT)
+				else if (packet.key === actions.RIGHT)
 					playerSprite.setActiveAnimation('moveRightAnimation');
 			}
 		}
@@ -224,13 +239,11 @@ WorldPhysics.prototype.updatePlayersDepth = function () {
 };
 
 WorldPhysics.prototype.applyParallax = function (packet) {
-	var keys = Config.keyBindings;
-	if(!this.player.isHiting()){
-		if (packet.key === keys.RIGHT) {
-			this.parallax.moveRight();
-		} else if (packet.key === keys.LEFT) {
-			this.parallax.moveLeft();
-		}
+	var actions = Config.actions;
+	if (packet.key === actions.RIGHT && !this.animating) {
+		this.parallax.moveRight();
+	} else if (packet.key === actions.LEFT && !this.animating) {
+		this.parallax.moveLeft();
 	}
 };
 
@@ -260,7 +273,7 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 	var camera = this.camera;
 	var currentAlign = this.camera.getObjectAlign();
 	var currentAmount = amount;
-	var addition = currentAmount > currentAlign ? 10 : -10;
+	var addition = currentAmount > currentAlign ? Config.parallaxAddition : -Config.parallaxAddition;
 	var animate = setInterval(function () {
 		currentAlign += addition;
 		if (currentAmount > currentAlign && addition < 0 

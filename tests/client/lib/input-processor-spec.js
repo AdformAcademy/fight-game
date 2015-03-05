@@ -2,6 +2,7 @@
 
 var InputProcessor = require('../../../src/client/lib/input-processor.js');
 var InputCollection = require('../../../src/client/lib/input-collection.js');
+
 var Config = require('../../../src/client/lib/config.js');
 var Player = require('../../../src/client/lib/player.js');
 var Point = require('../../../src/common/point.js');
@@ -140,7 +141,7 @@ describe('InputProcessor', function () {
 	it('should assign \'true\' to \'input.kickKey\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.KICK});
 
-		inputProcessor.processComboInputs(blankInput);
+		inputProcessor.processHitInputs(blankInput);
 		expect(blankInput.kickKey).toBe(true);
 	});
 
@@ -162,7 +163,7 @@ describe('InputProcessor', function () {
 		var input = inputProcessor.processInputs();
 		var inputMock = {
 			id: 0,
-			key: Config.keyBindings.LEFT,
+			key: Config.actions.LEFT,
 			jumpKey: true,
 			punchKey: true,
 			kickKey: false,

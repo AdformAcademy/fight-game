@@ -1,23 +1,61 @@
 var ProgressBar = require('./progress-bar');
 
 var LifeBar = function (params) {
+	var loader = params.loader;
+
+	var id = loader.append();
 	this.healthVeryHighMask = new Image();
 	this.healthVeryHighMask.src = './img/health/very-high.png';
+	this.healthVeryHighMask.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	this.healthHighMask = new Image();
 	this.healthHighMask.src = './img/health/high.png';
+	this.healthHighMask.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	this.healthNormalMask = new Image();
 	this.healthNormalMask.src = './img/health/normal.png';
+	this.healthNormalMask.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	this.healthLowMask = new Image();
 	this.healthLowMask.src = './img/health/low.png';
+	this.healthLowMask.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	this.healthVeryLowMask = new Image();
 	this.healthVeryLowMask.src = './img/health/very-low.png';
+	this.healthVeryLowMask.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
+	id = loader.append();
 	this.leftMaskImage = new Image();
 	this.leftMaskImage.src = './img/health/used.png';
+	this.leftMaskImage.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 
 	this.params = {
 		location: params.location,

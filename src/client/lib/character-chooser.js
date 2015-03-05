@@ -18,6 +18,11 @@ CharacterChooser.activeButton = 0;
 CharacterChooser.buttons = null;
 CharacterChooser.data = null;
 CharacterChooser.choosenPlayer = null;
+CharacterChooser.socketTarget = null;
+
+CharacterChooser.setSocketTarget = function (target) {
+	CharacterChooser.socketTarget = target;
+};
 
 CharacterChooser.resetUnactiveButton = function (index) {
 	var button = CharacterChooser.buttons[index];
@@ -38,12 +43,25 @@ CharacterChooser.updateActiveButton = function () {
 };
 
 CharacterChooser.loadWaitingScreen = function (id) {
-	socket.emit('ready', id);
-	var screen = App.screen;
-	screen.dispose();
-	App.screen = new WaitingScreen();
-	App.canvasObj.setGraphics(App.screen.graphics);
-	CharacterChooser.stop();
+	if (CharacterChooser.isRunning) {
+		socket.emit(CharacterChooser.socketTarget, id);
+		var screen = App.screen;
+		screen.dispose();
+		App.screen = new WaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		CharacterChooser.stop();
+	}
+};
+
+CharacterChooser.loadTournamentScreen = function (id) {
+	if (CharacterChooser.isRunning) {
+		socket.emit(CharacterChooser.socketTarget, id);
+		var screen = App.screen;
+		screen.dispose();
+		App.screen = new TournamentWaitingScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		CharacterChooser.stop();
+	}
 };
 
 CharacterChooser.preview = function (id) {
@@ -95,7 +113,7 @@ CharacterChooser.loadChosenCharacter = function (id) {
 	var canvas = App.canvasObj;
 	var image = new Image();
 	var screen = App.screen;
-	image.src = './img/' + spriteSheetData.spriteSheetImage;
+	image.src = './img/characters/' + spriteSheetData.spriteSheetImage;
 	image.onload = function () {
 		var playerSprite = new SpriteSheet({
 			image: image,
@@ -268,6 +286,9 @@ CharacterChooser.update = function() {
 
 CharacterChooser.stop = function() {
 	CharacterChooser.isRunning = false;
+	if(CharacterChooser.screen) {
+		CharacterChooser.screen.dispose();
+	}
 	CharacterChooser.screen = null;
 	CharacterChooser.activeButton = 0;
 	CharacterChooser.buttons = null;
@@ -276,10 +297,12 @@ CharacterChooser.stop = function() {
 };
 
 CharacterChooser.start = function() {
-	CharacterChooser.isRunning = true;
-	CharacterChooser.updateInterval = setInterval(function() {
-		CharacterChooser.update();
-	}, 1000 / 30);
+	if(!CharacterChooser.isRunning) {
+		CharacterChooser.isRunning = true;
+		CharacterChooser.updateInterval = setInterval(function() {
+			CharacterChooser.update();
+		}, 1000 / 30);
+	}
 };
 
 module.exports = CharacterChooser;

@@ -15,9 +15,11 @@ var Player = function (params) {
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = params.characterData.maxEnergy / 2;
+  this.energyCosts = params.energyCosts;
   this.characterId = params.characterId || 1;
   this.map = params.map;
   this.sounds = [];
+  this.particles = [];
 };
 
 Player.prototype = new BasePlayer();
@@ -95,6 +97,10 @@ Player.prototype.increaseEnergy = function () {
   }
 };
 
+Player.prototype.hasEnoughEnergy = function(action) {
+  return this.energy >= this.energyCosts[action];
+};
+
 Player.prototype.setCharacterId = function (id) {
   this.characterId = id;
 };
@@ -110,6 +116,18 @@ Player.prototype.getMap = function () {
 Player.prototype.setMap = function (map) {
   this.map = map;
 };
+
+Player.prototype.storeParticle = function(particle) {
+  this.particles.push(particle);
+};
+
+Player.prototype.clearParticles = function() {
+  this.particles = [];
+};
+
+Player.prototype.getParticles = function () {
+  return this.particles;
+}
 
 Player.prototype.storeSound = function(packet, sound) {
   this.sounds.push({

@@ -8,6 +8,7 @@ var BasePlayer = function () {
 	this.hiting = false;
 	this.combo = false;
 	this.defending = false;
+	this.moving = false;
 	this.punched = 0;
 	this.won = false;
 	this.lost = false;
@@ -95,11 +96,11 @@ BasePlayer.prototype.usingCombo = function () {
 };
 
 BasePlayer.prototype.setHiting = function (hiting) {
-	this.hit = hiting;
+	this.hiting = hiting;
 };
 
 BasePlayer.prototype.isHiting = function() {
-	return this.hit == true;
+	return this.hiting == true;
 };
 
 BasePlayer.prototype.setDefending = function (defending) {
@@ -108,6 +109,14 @@ BasePlayer.prototype.setDefending = function (defending) {
 
 BasePlayer.prototype.isDefending = function () {
 	return this.defending == true;
+};
+
+BasePlayer.prototype.setMoving = function (moving) {
+	this.moving = moving;
+};
+
+BasePlayer.prototype.isMoving = function () {
+	return this.moving == true;
 };
 
 BasePlayer.prototype.setPunched = function (punched) {

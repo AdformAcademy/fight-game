@@ -19,7 +19,6 @@ SocketServer.jumpInputs = [];
 SocketServer.punchInputs = [];
 SocketServer.kickInputs = [];
 SocketServer.comboInputs = [];
-
 SocketServer.sounds = [];
 
 SocketServer.prepareSocketData = function(player, opponent, socket) {
@@ -28,14 +27,16 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			x: player.getX(),
 			z: player.getZ(),
 			punched: player.isPunched(),
-			hiting: player.isHiting(),
 			victor: player.isVictor(),
 			fatality: player.isFatality(),
 			defeated: player.isDefeated(),
+			defending: player.isDefending(),
+			moving: player.isMoving(),
 			input: player.getLastProcessedInput(),
 			lives: player.getLives(),
 			energy: player.getEnergy(),
-			sounds: player.getSounds()
+			sounds: player.getSounds(),
+			particles: player.getParticles()
 		},
 		opponent: {
 			x: opponent.getX(),
@@ -55,7 +56,7 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 SocketServer.prepareClient = function (socket, selection) {
 	if (!SessionCollection.sessionExists(socket.id)) {
 		var targetSession = SessionCollection.getAvailableSession();
-		SessionCollection.createSession(socket, selection);
+		var ses = SessionCollection.createSession(socket, selection);
 		console.log(socket.id + ' is ready');
 		if (targetSession !== undefined) {
 			var session = SessionCollection.getSessionObject(socket.id);
@@ -67,6 +68,14 @@ SocketServer.prepareClient = function (socket, selection) {
 
 			var playerSelection = session.getSelection();
 			var opponentSelection = targetSession.getSelection();
+
+			var particlesData = JSON.parse(fs.readFileSync(Config.particlesDataFile, 'utf8'));
+			var particlesSpriteSheetData = {};
+
+			for(var key in particlesData) {
+				particlesSpriteSheetData[particlesData[key]] = 
+					JSON.parse(fs.readFileSync(Config.particlesPath + particlesData[key] + '.json', 'utf8'));
+			}
 
 			var playerData = JSON.parse(
 				fs.readFileSync(Config.charactersPath + 
@@ -89,6 +98,7 @@ SocketServer.prepareClient = function (socket, selection) {
 				z: Config.firstSpawnLocation.z,
 				characterData: playerData,
 				characterId: playerSelection,
+				energyCosts: playerData.costs,
 				map: mapData
 			});
 			var opponent = new Player({
@@ -98,6 +108,7 @@ SocketServer.prepareClient = function (socket, selection) {
 				z: Config.secondSpawnLocation.z,
 				characterData: opponentData,
 				characterId: opponentSelection,
+				energyCosts: opponentData.costs,
 				map: mapData
 			});
 
@@ -136,7 +147,8 @@ SocketServer.prepareClient = function (socket, selection) {
 					energyCosts: opponentData.costs,
 				},
 				map: mapData,
-				soundsData: commonSoundsData
+				soundsData: commonSoundsData,
+				particlesData: particlesSpriteSheetData
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
@@ -152,14 +164,57 @@ SocketServer.prepareClient = function (socket, selection) {
 					energyCosts: opponentData.costs,
 				},
 				map: mapData,
-				soundsData: commonSoundsData
+				soundsData: commonSoundsData,
+				particlesData: particlesSpriteSheetData
 			});
+		} else {
+			SocketServer.prepareWaiting(ses);
 		}
 	}
 };
 
+SocketServer.prepareWaiting = function (session) {
+
+	session.state = Session.TRAINING;
+
+	var playerSelection = session.getSelection();
+	var playerData = JSON.parse(
+		fs.readFileSync(Config.charactersPath + 
+			'character' + playerSelection + '.json', 'utf8'));
+	var randomMap = Math.floor(Math.random() * 3) + 1;
+	var mapData = JSON.parse(
+		fs.readFileSync('src/server/maps/map' + randomMap +'.json', 'utf8'));
+	var commonSoundsData = JSON.parse(
+		fs.readFileSync(Config.soundsDataFile, 'utf8'));
+
+	var player = new Player({
+		id: session.sessionId,
+		opponentId: session.opponentId,
+		location: Config.firstSpawnLocation.x,
+		z: Config.firstSpawnLocation.z,
+		characterData: playerData,
+		characterId: playerSelection,
+		energyCosts: playerData.costs,
+		map: mapData
+	});
+
+	session.socket.emit('training', {
+		player: {
+			x: player.getX(),
+			y: player.getZ(),
+			data: playerData,
+			energyCosts: playerData.costs,
+		},
+		opponent: {
+			x: Config.secondSpawnLocation.x
+		},
+		map: mapData,
+		soundsData: commonSoundsData
+	});
+};
+
 SocketServer.deleteObjects = function(session) {
-	if (session !== undefined) {
+	if (session !== undefined && session !== null) {
 		SessionCollection.deleteSession(session.sessionId);
 		PlayerCollection.deletePlayer(session.sessionId);
 		delete SocketServer.inputs[session.sessionId];
@@ -174,18 +229,26 @@ SocketServer.deleteObjects = function(session) {
 SocketServer.disconnectClient = function(socket, status) {
 	var session = SessionCollection.getSessionObject(socket.id);
 	if (session !== undefined && session.opponentId !== null) {
-		var opponentSession = SessionCollection.getSessionObject(session.opponentId);
-		if(status == "Victory") {
-			socket.emit(Session.VICTORY);
-			opponentSession.socket.emit(Session.DEFEAT);
-		} else {
-			opponentSession.socket.emit(Session.UNACTIVE);
-		}			
+		if (session.state !== Session.TOURNAMENT_PLAYING) {
+			var opponentSession = SessionCollection.getSessionObject(session.opponentId);
+			if(status == "Victory") {
+				session.socket.emit('message', {
+					text: 'You won',
+					color: '#16be16'
+				});
+				opponentSession.socket.emit('message', {
+					text: 'You lost',
+					color: '#ED1C1C'
+				});
+			} else {
+				opponentSession.socket.emit(Session.UNACTIVE);
+			}
+			SocketServer.deleteObjects(opponentSession);
+		}
 	} else {
 		socket.emit(Session.UNACTIVE);
 	}
 	SocketServer.deleteObjects(session);
-	SocketServer.deleteObjects(opponentSession);
 	SessionCollection.printSessions();
 };
 
@@ -205,6 +268,7 @@ SocketServer.clearSounds = function() {
 
 SocketServer.executeInput = function(player, input) {
 	var key = Config.keyBindings;
+	var actions = Config.actions;
 	var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
 
 	var x = player.getX();
@@ -214,18 +278,12 @@ SocketServer.executeInput = function(player, input) {
     var size = Config.playerSize;
     var map = player.getMap();
 
-    var physics = new WorldPhysics({
-			player: player,
-			opponent: opponent
-	});
-
     if (input.jumpKey) {
-		if(!player.isJumping() && !player.isPunched() && !player.isDefending()) {
+		if(!player.isJumping() && !player.isPunched() && !player.isDefending() && player.hasEnoughEnergy('jump')) {
 			speedZ = Config.playerJumpSpeed;
 			player.setSpeedZ(speedZ);
 			player.setJumping(true);
 			player.useEnergy('jump');
-			physics.jump();
 			opponent.storeSound('common', 'jump');
 			opponent.storeSound('opponent', 'jump');
 		}
@@ -245,11 +303,12 @@ SocketServer.executeInput = function(player, input) {
 	
 	if(player.isPunched() == 0){
 		if(!player.isJumping() && !player.isDefending()){
-			if (input.kickCombo) {
-				if (!player.isHiting()) {
+			if (input.kickCombo && player.hasEnoughEnergy('kickCombo')) {
+				if (!player.usingCombo()) {
 					console.log('kick combo');
+					player.setUsingCombo(true);
 					player.setHiting(true);
-					var hit = WorldPhysics.hit(player, "kickCombo", 600, 80, 15, 60);
+					var hit = WorldPhysics.hit(player, opponent, "kickCombo", 600, 80, 15, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboKick');
 						opponent.storeSound('common', 'miss');
@@ -266,11 +325,12 @@ SocketServer.executeInput = function(player, input) {
 					inputs.push(input);
 				}
 			}
-			if (input.punchCombo) {
-				if (!player.isHiting()) {
+			if (input.punchCombo && player.hasEnoughEnergy('punchCombo')) {
+				if (!player.usingCombo()) {
 					console.log('punch combo');
 					player.setHiting(true);
-					var hit = WorldPhysics.hit(player, "punchCombo",800, 65, 0, 60);
+					player.setUsingCombo(true);
+					var hit = WorldPhysics.hit(player, opponent, "punchCombo",800, 65, 0, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboPunch');
 						opponent.storeSound('common', 'miss');
@@ -287,10 +347,10 @@ SocketServer.executeInput = function(player, input) {
 					inputs.push(input);
 				}
 			}
-			if (input.kickKey) {
+			if (input.kickKey && player.hasEnoughEnergy('kick')) {
 				if (!player.isHiting()) {
 					player.setHiting(true);
-				var hit = WorldPhysics.hit(player, "kick", 400, 80, 10, 60);
+				var hit = WorldPhysics.hit(player, opponent, "kick", 400, 80, 10, 60);
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
 				} else {
@@ -306,10 +366,10 @@ SocketServer.executeInput = function(player, input) {
 					inputs.push(input);
 				}
 			}
-			if(input.punchKey) {
+			if(input.punchKey && player.hasEnoughEnergy('punch')) {
 				if (!player.isHiting()) {
 					player.setHiting(true);
-				var hit = WorldPhysics.hit(player, "punch", 300, 65, 5, 60);
+				var hit = WorldPhysics.hit(player, opponent, "punch", 300, 65, 5, 60);
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
 				} else {
@@ -327,11 +387,11 @@ SocketServer.executeInput = function(player, input) {
 			}
 		}
 		if (player.isJumping()) {
-			if (input.punchKey) {
+			if (input.punchKey && player.hasEnoughEnergy('punch')) {
 				if (!player.isHiting()) {
 					console.log("Jumping and punching");
 					player.setHiting(true);
-					var hit = WorldPhysics.hit(player, "punch", 780, 65, 5, 120);
+					var hit = WorldPhysics.hit(player, opponent, "punch", 780, 65, 5, 120);
 				}
 				if (hit === 0) {
 					opponent.storeSound('common', 'miss');
@@ -341,11 +401,11 @@ SocketServer.executeInput = function(player, input) {
 				}
 					}
 			}
-			else if (input.kickKey) {
+			else if (input.kickKey && player.hasEnoughEnergy('kick')) {
 				if (!player.isHiting()) {
 					console.log("Jumping and kicking");
 					player.setHiting(true);
-					var hit = WorldPhysics.hit(player, "kick", 780, 85, 10, 120);
+					var hit = WorldPhysics.hit(player, opponent, "kick", 780, 85, 10, 120);
 				}
 			if (hit === 0) {
 				opponent.storeSound('common', 'miss');
@@ -355,25 +415,30 @@ SocketServer.executeInput = function(player, input) {
 			}
 		}
 	}
+	var oldX = x;
 	if(!player.isHiting() && player.isPunched() == 0 || player.isJumping()) {
 		if(!player.isDefending()) {
-			if(input.key === key.LEFT) {
-				if(x > map.dimensions.left - 135  
-					&& Collisions.checkLeftCollision(player, opponent, size))
+			if(input.key === actions.LEFT) {
+				if(x > map.dimensions.left - 135 && Collisions.checkLeftCollision(player, opponent, size)){
 					x -= Config.playerMoveSpeed;
+				}
 			}
-			else if(input.key === key.RIGHT) {	 
-				if(x < map.dimensions.width - 185
-					&& Collisions.checkRightCollision(player, opponent, size))
+			else if(input.key === actions.RIGHT) {	 
+				if(x < map.dimensions.width - 185 && Collisions.checkRightCollision(player, opponent, size)){
 					x += Config.playerMoveSpeed;
+				}
 			}
 		}
-		if (input.key === key.DEFEND) {
+		if (input.key === actions.DEFEND) {
 			player.setDefending(true);
 		} else {
 			player.setDefending(false);
 		}
 	}
+	if(oldX == x)
+		player.setMoving(false);
+	else
+		player.setMoving(true);
 	player.setX(x);
 	player.setCurrentAnimation(input.animationName);
 };
@@ -389,6 +454,10 @@ SocketServer.processPlayerInputs = function(player) {
 	return input;
 };
 
+SocketServer.updatePlayerPhysics = function(player, opponent) {
+	WorldPhysics.jump(player, opponent);
+};
+
 SocketServer.updatePlayer = function(player) {
 	if (player !== undefined) {
 		var sessionId = player.getID();
@@ -401,6 +470,7 @@ SocketServer.updatePlayer = function(player) {
 		player.increaseEnergy();
 
 		if (input !== undefined) {
+			SocketServer.updatePlayerPhysics(player, opponent);
 			player.setLastProcessedInput(input);
 			var packet = player.toPacket();
 			SocketServer.proccessedInputs[sessionId].push(packet);
@@ -477,7 +547,8 @@ SocketServer.updatePlayers = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state === Session.PLAYING) {
+		if(session.state === Session.PLAYING 
+				|| session.state === Session.TOURNAMENT_PLAYING) {
 			var sessionId = session.socket.id;
 			var player = PlayerCollection.getPlayerObject(sessionId);
 			SocketServer.updatePlayer(player);
@@ -489,15 +560,17 @@ SocketServer.updateWorld = function() {
 	var collection = SessionCollection.getCollection();
 	for (var key in collection) {
 		var session = collection[key];
-		if(session.state === Session.PLAYING) {
+		if(session.state === Session.PLAYING 
+				|| session.state === Session.TOURNAMENT_PLAYING) {
 			var player = PlayerCollection.getPlayerObject(session.socket.id);
 			if (player !== undefined) {
 				var opponent = PlayerCollection.getPlayerObject(player.getOpponentId());
-				var data = SocketServer.prepareSocketData(player, opponent);	
+				var data = SocketServer.prepareSocketData(player, opponent);
 				session.socket.emit('update', data);
 				player.clearSounds();
+				player.clearParticles();
 				SocketServer.proccessedInputs[opponent.getID()] = [];
-				if(player.isVictor()){
+				if(player.isVictor() && session.state === Session.PLAYING){
 					SocketServer.disconnectClient(session.socket, "Victory");
 				}
 			}

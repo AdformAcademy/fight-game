@@ -9,8 +9,11 @@ var socket = io();
 var obj;
 var Config;
 var SoundCollection;
+var StartScreen;
+var CharacterChooser;
+var Client;
 
-function EndScreen(status) {
+function EndScreen(status, color) {
 	App = require('../../app');
 	Utilities = require('../canvas/utilities');
 	Button = require('../canvas/button');
@@ -21,8 +24,12 @@ function EndScreen(status) {
 	Background = require('../canvas/background');	
 	Config = require('../config');
 	SoundCollection = require('../sound-collection');
-	
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	StartScreen = require('./start');
+	CharacterChooser = require('../character-chooser');
+	Client = require('../client');
+	this.color = color || '#C80000';
+
+	this.backgroundImage = new Background('./img/background.png');
 	this.startButton = new Button({
 		image: './img/start_button.png',
 		hoverImage: './img/start_button_hover.png',
@@ -32,6 +39,62 @@ function EndScreen(status) {
 			return new Point(x, y);
 		}
 	});
+
+	this.backButton = new Button({
+		image: './img/back_button.png',
+		hoverImage: './img/back_button_hover.png',
+		location: function() {
+			var x = Config.progressBarPadding;
+			var y = App.canvasObj.getHeight() - Config.progressBarPadding - this.getActiveImage().height;
+			return new Point(x, y);
+		},
+	});
+
+	this.tournamentButton = new Button({
+		image: './img/tournament_button.png',
+		hoverImage: './img/tournament_button_hover.png',
+		location: function() {
+			var x = Utilities.centerX(obj.tournamentButton.getActiveImage().width);
+			var y = App.canvasObj.getHeight() * 0.52;
+			return new Point(x, y);
+		}
+	});
+
+	this.backButton.onClick(function () {
+		App.screen = new StartScreen();
+		App.canvasObj.setGraphics(App.screen.graphics);
+		obj.dispose();
+	});
+
+	this.backButton.mouseOver(function () {
+		this.setActiveImage(this.getHoverImage());
+		this.hover();
+	});
+
+	this.backButton.mouseLeave(function () {
+		this.setActiveImage(this.getImage());
+		this.hoverLeave();
+	});
+
+	this.tournamentButton.onClick(function() {
+		socket.emit('choose', '');
+		obj.dispose();
+		App.screen = new ChooseWaitingScreen();
+		CharacterChooser.setSocketTarget('tournament');
+		Client.setGameType(Client.games.TOURNAMENT);
+		App.canvasObj.setGraphics(App.screen.graphics);
+	});
+
+	this.tournamentButton.mouseOver(function() {
+		obj.tournamentButton.setActiveImage(obj.tournamentButton.getHoverImage());
+		obj.tournamentButton.hover();
+	});
+
+	this.tournamentButton.mouseLeave(function() {
+		obj.tournamentButton.setActiveImage(obj.tournamentButton.getImage());
+		obj.tournamentButton.hoverLeave();
+	});
+
 	this.endText = new Text(status + '!', 50);
 	if(status == "Victory") {
 		SoundCollection.play('common', 'victory');
@@ -40,12 +103,12 @@ function EndScreen(status) {
 		if(status == "Defeat") {
 			SoundCollection.play('player', 'death');
 		}
-		this.endText.setColor('#C80000');
+		this.endText.setColor(this.color);
 	}
-	this.endText.setFontType('Arial');
+	this.endText.setFontType('FSpirit');
 	this.challengeText = new Text('Would you like to try again?', 30);
-	this.challengeText.setColor('#cbcbcb');
-	this.challengeText.setFontType('Arial');
+	this.challengeText.setColor(Config.fontColor);
+	this.challengeText.setFontType('FSpirit');
 	
 	obj = this;
 
@@ -62,10 +125,12 @@ function EndScreen(status) {
 	});
 
 	this.startButton.onClick(function() {
+		obj.dispose();
 		socket.emit('choose', '');
 		App.screen = new ChooseWaitingScreen();
+		CharacterChooser.setSocketTarget('ready');
+		Client.setGameType(Client.games.MATCH);
 		App.canvasObj.setGraphics(App.screen.graphics);
-		obj.dispose();
 	});
 
 	this.startButton.mouseOver(function() {
@@ -91,14 +156,18 @@ EndScreen.prototype.graphics = function() {
 	obj.handleControls();
 	obj.backgroundImage.draw();
 	obj.startButton.drawButton();
+	obj.tournamentButton.drawButton();
 	obj.endText.draw();
 	obj.challengeText.draw();
+	obj.backButton.drawButton();
 };
 
 EndScreen.prototype.dispose = function() {
 	this.startButton.dispose();
 	this.endText.dispose();
 	this.challengeText.dispose();
+	this.backButton.dispose();
+	this.tournamentButton.dispose();
 };
 
 module.exports = EndScreen;

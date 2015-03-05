@@ -6,6 +6,7 @@ InputCollection.pressed = {};
 InputCollection.pressTimes = {};
 InputCollection.quickTaps = {};
 InputCollection.keysPressed = {};
+InputCollection.currentKey = null;
 
 InputCollection.isDown = function (keyCode) {
 	return InputCollection.pressed[keyCode];
@@ -29,6 +30,7 @@ InputCollection.isPressed = function (keyCode) {
 
 InputCollection.onKeydown = function(event) {
 	InputCollection.pressed[event.keyCode] = true;
+	InputCollection.currentKey = event.keyCode;
 };
 
 InputCollection.onKeyup = function(event) {
@@ -43,6 +45,11 @@ InputCollection.onKeyup = function(event) {
 	InputCollection.pressTimes[event.keyCode] = currentPressTime;
 	InputCollection.keysPressed[event.keyCode] = true;
 	delete InputCollection.pressed[event.keyCode];
+	InputCollection.currentKey = null;
 };
+
+InputCollection.getCurrentInput = function() {
+	return InputCollection.currentKey;
+}
 
 module.exports = InputCollection;

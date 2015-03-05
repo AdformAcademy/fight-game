@@ -8,9 +8,9 @@ function Button(params) {
 	EventCollection = require('../event-collection');
 
 	if (!params.useSpriteSheet) {
-		this.src = params.image;
+		this.src = params.image || undefined;
 		this.image = new Image();
-		this.image.src = this.src;
+		this.image.src = this.src || '';
 		this.hoverImage = new Image();
 		this.hoverImage.src = params.hoverImage || this.image.src;
 		this.activeImage = this.image;

@@ -4,6 +4,8 @@ var Config = require('./config');
 
 function Player(params) {
 	App = require('../app');
+	this.name = params.name;
+	this.data = params.data;
 	this.location = params.location;
 	this.z = params.z;
 	this.spritesheet = params.spriteSheet;
@@ -15,6 +17,18 @@ function Player(params) {
 };
 
 Player.prototype = new BasePlayer();
+
+Player.prototype.getName = function () {
+	return this.name;
+};
+
+Player.prototype.setName = function (name) {
+	this.name = name;
+};
+
+Player.prototype.getData = function () {
+	return this.data;
+};
 
 Player.prototype.getSpriteSheet = function() {
 	return this.spritesheet;
@@ -46,12 +60,12 @@ Player.prototype.hasEnoughEnergy = function(action) {
 	return this.energyBar.getCurrentValue() >= this.energyCosts[action];
 };
 
-Player.prototype.setLifeBar = function(lifeBar) {
-	this.lifeBar = lifeBar;
-};
-
 Player.prototype.setEnergyBar = function(energyBar) {
 	this.energyBar = energyBar;
+};
+
+Player.prototype.setLifeBar = function(lifeBar) {
+	this.lifeBar = lifeBar;
 };
 
 Player.prototype.update = function() {
