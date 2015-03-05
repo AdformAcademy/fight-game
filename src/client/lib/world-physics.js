@@ -88,6 +88,9 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 
 	if(hit) {
 		ParticleCollection.triggerParticle(opponent, 'blood', player.getX() > opponent.getX());
+		if(combo) {
+			ParticleCollection.triggerParticle(opponent, 'flash', player.getX() > opponent.getX());
+		}
 	}
 
 	var updateH = setInterval(function () {

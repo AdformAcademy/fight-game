@@ -22,6 +22,7 @@ ParticleCollection.load = function (loader, data) {
 			image: spriteImage,
 			data: data[key]
 		};
+		particles[key].data.defaultAnimation = Math.floor(Math.random() * 2);
 	}
 };
 
@@ -30,16 +31,14 @@ ParticleCollection.triggerParticle = function (player, particle, flip) {
 	var particleSpriteWidth = ParticleCollection.particles[particle].data.spriteDimensions.frameWidth;
 	ParticleCollection.drawEvents.push({
 		position: {
-			x: player.getX() + (playerSpriteWidth - particleSpriteWidth) * (0.5 + ((flip ? -1 : 1) * 0.15)),
-			z: player.getZ() + player.groundHeight() - player.getSpriteSheet().getSpriteSheetHeight() * 0.75
+			x: player.getX() + (playerSpriteWidth - particleSpriteWidth) * (0.5 + ((flip ? -1 : 1) * 0.2)),
+			z: player.getZ() + player.groundHeight() - player.getSpriteSheet().getSpriteSheetHeight() * (Math.random() * 0.2 + 0.6)
 		},
 		spriteSheet: new SpriteSheet({
 			image: ParticleCollection.particles[particle].image,
 			data: ParticleCollection.particles[particle].data
 		})
 	});
-
-
 
 	var lastElementNumber = ParticleCollection.drawEvents.length - 1;
 	var spriteSheet = ParticleCollection.drawEvents[lastElementNumber].spriteSheet;

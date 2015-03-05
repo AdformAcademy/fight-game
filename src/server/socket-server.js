@@ -306,8 +306,8 @@ SocketServer.executeInput = function(player, input) {
 			if (input.kickCombo && player.hasEnoughEnergy('kickCombo')) {
 				if (!player.usingCombo()) {
 					console.log('kick combo');
-					player.setHiting(true);
 					player.setUsingCombo(true);
+					player.setHiting(true);
 					var hit = WorldPhysics.hit(player, opponent, "kickCombo", 600, 80, 15, 60);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboKick');
