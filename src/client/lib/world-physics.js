@@ -76,6 +76,8 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 	var x = player.getX();
     var opx = opponent.getX();
 
+    console.log(time);
+
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(2);
@@ -85,7 +87,7 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 		opponent.setPunched(2);
 	}	
 	var updateH = setInterval(function () {
-		t += 30;
+		t += 15;
 		if (t >= time && !player.isFatality()) {
 			if(hit == 1){
 				if(opx < self.world.width - 185){
@@ -111,14 +113,14 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 					opponent.setPunched(0);
 				}
 			}
-			player.getSpriteSheet().setActiveAnimation('standAnimation');
-			player.setHiting(false);
+			//player.getSpriteSheet().setActiveAnimation('standAnimation');
+			//player.setHiting(false);
 			if(combo) {
 				player.setUsingCombo(false);
 			}
 			clearInterval(updateH);
 		}
-	}, 1000/30);
+	}, 1000/60);
 
 	return hit;
 };

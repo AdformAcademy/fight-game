@@ -12,7 +12,7 @@ Config.actions = BaseConfig.actions;
 
 Config.screenWidth = 900;
 Config.playerDefenceMultiplier = 0.2;
-Config.playerEnergyIncrement = 0.1;
+Config.playerEnergyIncrement = 0.3;
 
 Config.tournamentFightTimer = 180;
 Config.tournamentWaitTimer = 60;

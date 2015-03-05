@@ -1,12 +1,12 @@
 {
 	"id": 3,
 	"name": "Ryo",
-	"lives": 100,
+	"lives": 150,
 	"damage": {
-		"punch": 8,
-		"kick": 7,
-		"punchCombo": 30,
-		"kickCombo": 25
+		"punch": 6,
+		"kick": 5.25,
+		"punchCombo": 22.5,
+		"kickCombo": 18.75
 	},
 	"maxEnergy": 100,
 	"costs": {
@@ -17,10 +17,10 @@
 		"jump": 12
 	},
 	"speed": {
-		"punch": 666.667,
-		"kick": 700,
-		"punchCombo": 1666,
-		"kickCombo": 1666
+		"punch": 500,
+		"kick": 525,
+		"punchCombo": 1250,
+		"kickCombo": 1250
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "3RyoSmallIntro.png",
@@ -55,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 0.2,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 0
 			},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 34,
 				"frames": 5,
-				"speed": 0.5,
+				"speed": 0.28,
 				"order": "asc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 39,
 				"frames": 6,
-				"speed": 0.5,
+				"speed": 0.34,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 6,
 				"frames": 10,
-				"speed": 0.7,
+				"speed": 0.54,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 16,
 				"frames": 17,
-				"speed": 0.6,
+				"speed": 0.39,
 				"order": "asc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 34,
 				"frames": 15,
-				"speed": 0.8,
+				"speed": 0.34,
 				"order": "asc",
 				"row": 1
 			},

@@ -1,12 +1,12 @@
 {
 	"id": 4,
 	"name": "Wyler",
-	"lives": 100,
+	"lives": 150,
 	"damage": {
-		"punch": 10,
-		"kick": 10,
-		"punchCombo": 33,
-		"kickCombo": 33
+		"punch": 7.5,
+		"kick": 7.5,
+		"punchCombo": 24.75,
+		"kickCombo": 24.75
 	},
 	"maxEnergy": 100,
 	"costs": {
@@ -17,10 +17,10 @@
 		"jump": 20
 	},
 	"speed": {
-		"punch": 833.333,
-		"kick": 1000,
-		"punchCombo": 1833,
-		"kickCombo": 2200
+		"punch": 625,
+		"kick": 750,
+		"punchCombo": 1375,
+		"kickCombo": 1650
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "4WylerSmallIntro.png",
@@ -55,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 0.2,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 0
 			},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 31,
 				"frames": 7,
-				"speed": 0.6,
+				"speed": 0.32,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "jumpPunchAnimation",
 				"startFrame": 31,
 				"frames": 7,
-				"speed": 0.5,
+				"speed": 0.32,
 				"order": "desc",
 				"row": 0
 			},
@@ -119,7 +119,7 @@
 				"name": "kickAnimation",
 				"startFrame": 0,
 				"frames": 6,
-				"speed": 0.4,
+				"speed": 0.23,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 6,
 				"frames": 20,
-				"speed": 0.6,
+				"speed": 0.41,
 				"order": "asc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 27,
 				"frames": 14,
-				"speed": 0.7,
+				"speed": 0.24,
 				"order": "asc",
 				"row": 1
 			},

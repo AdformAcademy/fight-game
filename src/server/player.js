@@ -99,7 +99,11 @@ Player.prototype.addEnergy = function (action) {
 };
 
 Player.prototype.increaseEnergy = function () {
-  if (this.defending == true)
+  if(this.hiting == true)
+    this.energy += Config.playerEnergyIncrement*0;
+  else if(this.defending == true)
+    this.energy += Config.playerEnergyIncrement*0.25;
+  else if(this.moving == true || this.jumping == true)
     this.energy += Config.playerEnergyIncrement*0.5;
   else
     this.energy += Config.playerEnergyIncrement;

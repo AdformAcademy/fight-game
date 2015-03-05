@@ -62,8 +62,8 @@ InputProcessor.prototype.processHitInputs = function (input) {
 
 	if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 		if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
-			var hit = physics.hit(player.getSpeed("punch"), 65, 5, 60);
 			player.setHiting(true);
+			var hit = physics.hit(player.getSpeed("punch"), 65, 5, 60);
 			input.punchKey = true;
 				if(hit != 0) {
 					SoundCollection.play('player', 'punch');
@@ -85,7 +85,6 @@ InputProcessor.prototype.processHitInputs = function (input) {
 		}
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
-
 		player.setHiting(true);
 		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120);
 		input.punchKey = true;

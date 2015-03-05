@@ -1,12 +1,12 @@
 {
 	"id": 2,
 	"name": "Robert",
-	"lives": 100,
+	"lives": 150,
 	"damage": {
-		"punch": 6,
-		"kick": 8,
-		"punchCombo": 25,
-		"kickCombo": 30
+		"punch": 4.5,
+		"kick": 6,
+		"punchCombo": 18.75,
+		"kickCombo": 22.5
 	},
 	"maxEnergy": 100,
 	"costs": {
@@ -17,10 +17,10 @@
 		"jump": 12
 	},
 	"speed": {
-		"punch": 500,
-		"kick": 800,
-		"punchCombo": 1388,
-		"kickCombo": 2000
+		"punch": 375,
+		"kick": 600,
+		"punchCombo": 1041,
+		"kickCombo": 1500
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "2RobertSmallIntro.png",
@@ -55,7 +55,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 7,
-				"speed": 0.2,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 0
 			},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 30,
 				"frames": 6,
-				"speed": 0.45,
+				"speed": 0.46,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 37,
 				"frames": 5,
-				"speed": 0.5,
+				"speed": 0.38,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 7,
 				"frames": 12,
-				"speed": 0.65,
+				"speed": 0.57,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 19,
 				"frames": 21,
-				"speed": 0.7,
+				"speed": 0.57,
 				"order": "desc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 41,
 				"frames": 20,
-				"speed": 0.7,
+				"speed": 0.38,
 				"order": "desc",
 				"row": 1
 			},

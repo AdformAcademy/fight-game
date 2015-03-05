@@ -1,12 +1,12 @@
 {
 	"id": 6,
 	"name": "Jin",
-	"lives": 100,
+	"lives": 150,
 	"damage": {
-		"punch": 5,
-		"kick": 9,
-		"punchCombo": 25,
-		"kickCombo": 28
+		"punch": 3.75,
+		"kick": 6.75,
+		"punchCombo": 18.75,
+		"kickCombo": 21
 	},
 	"maxEnergy": 100,
 	"costs": {
@@ -17,10 +17,10 @@
 		"jump": 8
 	},
 	"speed": {
-		"punch": 416.666,
-		"kick": 900,
-		"punchCombo": 1388,
-		"kickCombo": 1866
+		"punch": 312.5,
+		"kick": 675,
+		"punchCombo": 1041,
+		"kickCombo": 1400
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "6JinSmallIntro.png",
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 29,
 				"frames": 7,
-				"speed": 0.8,
+				"speed": 0.64,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 36,
 				"frames": 8,
-				"speed": 0.8,
+				"speed": 0.73,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 9,
 				"frames": 13,
-				"speed": 0.7,
+				"speed": 0.55,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 22,
 				"frames": 18,
-				"speed": 0.65,
+				"speed": 0.49,
 				"order": "asc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 41,
 				"frames": 17,
-				"speed": 0.5,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 1
 			},

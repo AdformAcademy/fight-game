@@ -35,6 +35,8 @@ WorldPhysics.hit = function (player, opponent, damage, time, size, power, height
     var opx = opponent.getX();
     var map = player.getMap();
 
+    console.log(time);
+
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
 		opponent.setPunched(1);
@@ -50,7 +52,7 @@ WorldPhysics.hit = function (player, opponent, damage, time, size, power, height
 		player.useEnergy(damage);
 
 	var updateH = setInterval (function () {
-		t += 30;
+		t += 15;
 		if(t >= time) {
 			if(hit == 1){
 				if(opx < map.dimensions.width - 185){
@@ -82,7 +84,7 @@ WorldPhysics.hit = function (player, opponent, damage, time, size, power, height
 			}
 			clearInterval(updateH);
 		}
-	}, 1000/30);
+	}, 1000/60);
 
 	return hit;
 };

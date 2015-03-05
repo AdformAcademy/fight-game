@@ -1,12 +1,12 @@
 {
 	"id": 1,
 	"name": "Kasumi",
-	"lives": 100,
+	"lives": 150,
 	"damage": {
-		"punch": 4,
-		"kick": 5,
-		"punchCombo": 20,
-		"kickCombo": 20
+		"punch": 3,
+		"kick": 3.75,
+		"punchCombo": 15,
+		"kickCombo": 15
 	},
 	"maxEnergy": 100,
 	"costs": {
@@ -17,10 +17,10 @@
 		"jump": 10
 	},
 	"speed": {
-		"punch": 333.333,
-		"kick": 500,
-		"punchCombo": 1111,
-		"kickCombo": 1333
+		"punch": 250,
+		"kick": 375,
+		"punchCombo": 833,
+		"kickCombo": 1000
 	},
 	"spriteSheetButton": {
 		"spriteSheetIntroImage": "1KasumiSmallIntro.png",
@@ -63,7 +63,7 @@
 				"name": "damageAnimation",
 				"startFrame": 0,
 				"frames": 8,
-				"speed": 0.2,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 27,
 				"frames": 8,
-				"speed": 0.6,
+				"speed": 0.91,
 				"order": "asc",
 				"row": 0
 			},
@@ -103,7 +103,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 35,
 				"frames": 6,
-				"speed": 0.5,
+				"speed": 0.68,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 10,
 				"frames": 19,
-				"speed": 0.8,
+				"speed": 1.45,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 29,
 				"frames": 18,
-				"speed": 0.5,
+				"speed": 0.62,
 				"order": "asc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 48,
 				"frames": 15,
-				"speed": 0.5,
+				"speed": 0.43,
 				"order": "asc",
 				"row": 1
 			},
