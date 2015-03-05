@@ -23,6 +23,10 @@ var SpriteSheet = function (params) {
 	this.scaleHeight = params.scaleHeight || null;
 };
 
+SpriteSheet.prototype.getDimensions = function () {
+	return this.dimensions;
+};
+
 SpriteSheet.prototype.getSpriteSheetHeight = function () {
 	return this.dimensions.frameHeight;
 };

@@ -6,6 +6,7 @@ var obj;
 var Client;
 var SoundCollection;
 var SpriteSheet;
+var ParticleCollection;
 
 function StageScreen() {
 	App = require('../../app');
@@ -14,6 +15,7 @@ function StageScreen() {
 	Client = require('../client');
 	Text = require('../canvas/text');
 	SpriteSheet = require('../canvas/spritesheet');
+	ParticleCollection = require('../canvas/particle-collection');
 	obj = this;
 
 	SoundCollection = require('../sound-collection');
@@ -275,9 +277,11 @@ StageScreen.prototype.graphics = function() {
 	
 	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {
+		ParticleCollection.draw(xView, yView);
 		player.draw(xView, yView);
 		opponent.draw(xView, yView);
 	} else {
+		ParticleCollection.draw(xView, yView);
 		opponent.draw(xView, yView);
 		player.draw(xView, yView);
 	}

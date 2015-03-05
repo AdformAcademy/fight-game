@@ -28,5 +28,7 @@ Config.secondSpawnLocation = {
 };
 Config.charactersPath = 'src/server/characters_data/';
 Config.soundsDataFile = 'src/server/common-sound-data.json';
+Config.particlesPath = 'src/server/particles_data/';
+Config.particlesDataFile = 'src/server/particles-data.json';
 
 module.exports = Config;

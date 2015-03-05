@@ -19,6 +19,7 @@ var Player = function (params) {
   this.characterId = params.characterId || 1;
   this.map = params.map;
   this.sounds = [];
+  this.particles = [];
 };
 
 Player.prototype = new BasePlayer();
@@ -115,6 +116,18 @@ Player.prototype.getMap = function () {
 Player.prototype.setMap = function (map) {
   this.map = map;
 };
+
+Player.prototype.storeParticle = function(particle) {
+  this.particles.push(particle);
+};
+
+Player.prototype.clearParticles = function() {
+  this.particles = [];
+};
+
+Player.prototype.getParticles = function () {
+  return this.particles;
+}
 
 Player.prototype.storeSound = function(packet, sound) {
   this.sounds.push({

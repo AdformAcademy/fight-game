@@ -11,7 +11,7 @@
 			"name": "0",
 			"startFrame": 0,
 			"frames": 5,
-			"speed": 0.4,
+			"speed": 1,
 			"order": "asc",
 			"row": 0
 		},
@@ -19,7 +19,7 @@
 			"name": "1",
 			"startFrame": 5,
 			"frames": 6,
-			"speed": 0.4,
+			"speed": 1,
 			"order": "asc",
 			"row": 0
 		},
@@ -27,7 +27,7 @@
 			"name": "2",
 			"startFrame": 11,
 			"frames": 6,
-			"speed": 0.4,
+			"speed": 1,
 			"order": "asc",
 			"row": 0
 		}
