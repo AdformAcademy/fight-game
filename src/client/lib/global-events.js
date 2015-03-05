@@ -65,7 +65,7 @@ socket.on('unactive', function() {
 	if (Client.gameStarted) {
 		Client.stop();
 		App.screen.dispose();
-		App.screen = new EndScreen('Connection lost');
+		App.screen = new EndScreen('Opponent disconnected');
 		App.canvasObj.setGraphics(App.screen.graphics);
 	}
 });
