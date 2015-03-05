@@ -23,7 +23,7 @@ Config.energyBarHeight = 20;
 Config.commonSoundsPath = './audio/common/';
 Config.characterSoundsPath = './audio/character';
 
-Config.parallaxAddition = 20;
+Config.parallaxAddition = 10;
 
 Config.controlsLayout = {
 	LEFT: 'Move left',
