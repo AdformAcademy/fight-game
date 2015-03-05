@@ -91,7 +91,8 @@ describe('InputProcessor', function () {
 		InputCollection.keysPressed = {};
 		App.physics = {
 			hit: function () {},
-			jump: function () {}
+			jump: function () {},
+			shakeCamera: function () {}
 		}
 		SoundCollection.sounds = {
 			common: {
