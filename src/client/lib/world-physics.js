@@ -10,6 +10,7 @@ var WorldPhysics = function(params) {
 	this.camera = params.camera;
 	this.animating = false;
 	this.oldAnimatingValue = -1;
+	this.training = params.training;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -71,12 +72,11 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 	var self = this;
 	var player = this.player;
 	var opponent = this.opponent;
+	var training = this.training;
 	var t = 0;
 	var hit = 0;
 	var x = player.getX();
     var opx = opponent.getX();
-
-    console.log(time);
 
 	if(Collisions.checkPunchCollisionLeft(player, opponent, size, heightDifference)){
 		hit = 1;
@@ -115,6 +115,11 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 			}
 			if(combo) {
 				player.setUsingCombo(false);
+			}
+			if(training == true && !combo)
+			{
+				console.log(time);
+				player.setHiting(false);
 			}
 			clearInterval(updateH);
 		}
@@ -266,7 +271,6 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 	var currentAmount = amount;
 	var addition = currentAmount > currentAlign ? Config.parallaxAddition : -Config.parallaxAddition;
 	var animate = setInterval(function () {
-		console.log(currentAlign);
 		currentAlign += addition;
 		if (currentAmount > currentAlign && addition < 0 
 				|| currentAmount < currentAlign && addition > 0) {

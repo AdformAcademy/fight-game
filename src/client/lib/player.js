@@ -14,7 +14,7 @@ function Player(params) {
 	this.energyCosts = params.energyCosts;
 	this.groundHeight = params.groundHeight;
 	this.depth = 0;
-	this.speed;
+	this.speed = params.speed;
 };
 
 Player.prototype = new BasePlayer();

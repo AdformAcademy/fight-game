@@ -202,8 +202,7 @@ Client.processLocalInputs = function () {
 		}
 	}
 	physics.updatePlayerAnimation(packet);
-	if(player.isMoving())
-		physics.applyParallax(packet);
+	physics.applyParallax(packet);
 	return packet;
 };
 
@@ -412,7 +411,8 @@ Client.initializeGame = function (data) {
 		opponent: App.opponent,
 		world: Client.world,
 		parallax: Client.parallax,
-		camera: Client.camera
+		camera: Client.camera,
+		training: Client.isTraining
 	});
 
 	App.screen.load('Opponent found');
@@ -456,6 +456,7 @@ Client.initializeTraining = function (data) {
 		name: data.player.data.name,
 		data: data.player.data,
 		location: data.player.x,
+		speed: data.player.data.speed,
 		z: data.player.y,
 		groundHeight: function () {
 			return canvas.getHeight() * (mapData.groundHeight / 100);
@@ -606,7 +607,8 @@ Client.initializeTraining = function (data) {
 		opponent: App.opponent,
 		world: Client.world,
 		parallax: Client.parallax,
-		camera: Client.camera
+		camera: Client.camera,
+		training: Client.isTraining
 	});
 
 	App.screen.load('');
