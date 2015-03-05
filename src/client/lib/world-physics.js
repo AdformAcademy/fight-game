@@ -113,8 +113,6 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 					opponent.setPunched(0);
 				}
 			}
-			//player.getSpriteSheet().setActiveAnimation('standAnimation');
-			//player.setHiting(false);
 			if(combo) {
 				player.setUsingCombo(false);
 			}

@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 30,
 				"frames": 6,
-				"speed": 0.46,
+				"speed": 0.27,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 37,
 				"frames": 5,
-				"speed": 0.38,
+				"speed": 0.22,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 7,
 				"frames": 12,
-				"speed": 0.57,
+				"speed": 0.33,
 				"order": "desc",
 				"row": 1
 			},
@@ -143,7 +143,7 @@
 				"name": "punchComboAnimation",
 				"startFrame": 19,
 				"frames": 21,
-				"speed": 0.57,
+				"speed": 0.60,
 				"order": "desc",
 				"row": 1
 			},
@@ -159,7 +159,7 @@
 				"name": "kickComboAnimation",
 				"startFrame": 41,
 				"frames": 20,
-				"speed": 0.38,
+				"speed": 0.4,
 				"order": "desc",
 				"row": 1
 			},
