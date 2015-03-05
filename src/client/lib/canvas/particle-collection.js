@@ -1,11 +1,18 @@
 var Config = require('../config');
 var SpriteSheet = require('./spritesheet');
-var Client = require('../client');
-
 var ParticleCollection = {};
 
 ParticleCollection.particles = {};
 ParticleCollection.drawEvents = [];
+ParticleCollection.enabled = false;
+
+ParticleCollection.enable = function () {
+	ParticleCollection.enabled = true;
+};
+
+ParticleCollection.disable = function () {
+	ParticleCollection.enabled = false;
+};
 
 ParticleCollection.load = function (loader, data) {
 	var particles = ParticleCollection.particles;
@@ -28,7 +35,7 @@ ParticleCollection.load = function (loader, data) {
 };
 
 ParticleCollection.triggerParticle = function (player, particle, flip) {
-	if(Client.gameStarted) {
+	if(ParticleCollection.enabled) {
 		var playerSpriteWidth = player.getSpriteSheet().getDimensions().frameWidth;
 		var particleSpriteWidth = ParticleCollection.particles[particle].data.spriteDimensions.frameWidth;
 		ParticleCollection.drawEvents.push({

@@ -12,6 +12,7 @@ var Config = require('./config');
 var CharacterChooser = require('./character-chooser');
 var socket = io();
 var SoundCollection = require('./sound-collection');
+var ParticleCollection = require('./canvas/particle-collection');
 
 var GlobalEvents = {};
 
@@ -46,6 +47,7 @@ $(window).mousemove(function(event) {
 socket.on('playing', function(data) {
 	if (!Client.gameStarted) {
 		Client.initializeGame(data);
+		ParticleCollection.enable();
 	} else {
 		App.screen.dispose();
 		App.screen = new WaitingScreen();
@@ -53,6 +55,7 @@ socket.on('playing', function(data) {
 		App.screen.load('Opponent found');
 		Client.stop();
 		Client.initializeGame(data);
+		ParticleCollection.enable();
 	}
 });
 
@@ -148,6 +151,7 @@ socket.on('training', function (data) {
 	if (!Client.gameStarted) {
 		Client.isTraining = true;
 		Client.initializeTraining(data);
+		ParticleCollection.disable();
 	}
 });
 
