@@ -1,5 +1,6 @@
 var Config = require('../config');
 var SpriteSheet = require('./spritesheet');
+var Client = require('../client');
 
 var ParticleCollection = {};
 
@@ -27,25 +28,28 @@ ParticleCollection.load = function (loader, data) {
 };
 
 ParticleCollection.triggerParticle = function (player, particle, flip) {
-	var playerSpriteWidth = player.getSpriteSheet().getDimensions().frameWidth;
-	var particleSpriteWidth = ParticleCollection.particles[particle].data.spriteDimensions.frameWidth;
-	ParticleCollection.drawEvents.push({
-		position: {
-			x: player.getX() + (playerSpriteWidth - particleSpriteWidth) * (0.5 + ((flip ? -1 : 1) * 0.2)),
-			z: player.getZ() + player.groundHeight() - player.getSpriteSheet().getSpriteSheetHeight() * (Math.random() * 0.2 + 0.6)
-		},
-		spriteSheet: new SpriteSheet({
-			image: ParticleCollection.particles[particle].image,
-			data: ParticleCollection.particles[particle].data
-		})
-	});
+	if(Client.gameStarted) {
+		var playerSpriteWidth = player.getSpriteSheet().getDimensions().frameWidth;
+		var particleSpriteWidth = ParticleCollection.particles[particle].data.spriteDimensions.frameWidth;
+		ParticleCollection.drawEvents.push({
+			position: {
+				x: player.getX() + (playerSpriteWidth - particleSpriteWidth) * (0.5 + ((flip ? -1 : 1) * 0.2)),
+				z: player.getZ() + player.groundHeight() - player.getSpriteSheet().getSpriteSheetHeight() * (Math.random() * 0.2 + 0.6)
+			},
+			spriteSheet: new SpriteSheet({
+				image: ParticleCollection.particles[particle].image,
+				data: ParticleCollection.particles[particle].data,
+				oneshot: true
+			})
+		});
 
-	var lastElementNumber = ParticleCollection.drawEvents.length - 1;
-	var spriteSheet = ParticleCollection.drawEvents[lastElementNumber].spriteSheet;
-	spriteSheet.flipAnimation(flip);
-	setTimeout(function () {
-		delete ParticleCollection.drawEvents[lastElementNumber];
-	}, spriteSheet.getAnimation(spriteSheet.getCurrentAnimation()).frames * 1000 / 30);
+		var lastElementNumber = ParticleCollection.drawEvents.length - 1;
+		var spriteSheet = ParticleCollection.drawEvents[lastElementNumber].spriteSheet;
+		spriteSheet.flipAnimation(flip);
+		setTimeout(function () {
+			delete ParticleCollection.drawEvents[lastElementNumber];
+		}, spriteSheet.getAnimation(spriteSheet.getCurrentAnimation()).frames * 1000 / 30);
+	}
 };
 
 ParticleCollection.update = function () {
