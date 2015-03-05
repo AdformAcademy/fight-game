@@ -203,8 +203,7 @@ Client.processLocalInputs = function () {
 		}
 	}
 	physics.updatePlayerAnimation(packet);
-	if(player.isMoving())
-		physics.applyParallax(packet);
+	physics.applyParallax(packet);
 	return packet;
 };
 
