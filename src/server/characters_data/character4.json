@@ -3,22 +3,22 @@
 	"name": "Wyler",
 	"lives": 150,
 	"damage": {
-		"punch": 7.5,
-		"kick": 7.5,
+		"punch": 6,
+		"kick": 6.5,
 		"punchCombo": 24.75,
 		"kickCombo": 24.75
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 12.5,
-		"kick": 10,
+		"punch": 10,
+		"kick": 8.66,
 		"punchCombo": 41.25,
 		"kickCombo": 33,
 		"jump": 20
 	},
 	"speed": {
-		"punch": 625,
-		"kick": 750,
+		"punch": 500,
+		"kick": 650,
 		"punchCombo": 1375,
 		"kickCombo": 1650
 	},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 31,
 				"frames": 7,
-				"speed": 0.18,
+				"speed": 0.28,
 				"order": "desc",
 				"row": 0
 			},
@@ -103,7 +103,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 38,
 				"frames": 12,
-				"speed": 0.6,
+				"speed": 0.38,
 				"order": "desc",
 				"row": 0
 			},
@@ -111,7 +111,7 @@
 				"name": "standAnimation",
 				"startFrame": 50,
 				"frames": 10,
-				"speed": 0.2,
+				"speed": 0.3,
 				"order": "asc",
 				"row": 0
 			},
@@ -119,7 +119,7 @@
 				"name": "kickAnimation",
 				"startFrame": 0,
 				"frames": 6,
-				"speed": 0.13,
+				"speed": 0.2,
 				"order": "desc",
 				"row": 1
 			},

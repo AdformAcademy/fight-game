@@ -3,22 +3,22 @@
 	"name": "Ryo",
 	"lives": 150,
 	"damage": {
-		"punch": 6,
-		"kick": 5.25,
+		"punch": 5,
+		"kick": 4,
 		"punchCombo": 22.5,
 		"kickCombo": 18.75
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 10,
-		"kick": 7,
+		"punch": 8.33,
+		"kick": 5.33,
 		"punchCombo": 37.5,
 		"kickCombo": 25,
 		"jump": 12
 	},
 	"speed": {
-		"punch": 500,
-		"kick": 525,
+		"punch": 333,
+		"kick": 400,
 		"punchCombo": 1250,
 		"kickCombo": 1250
 	},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 34,
 				"frames": 5,
-				"speed": 0.17,
+				"speed": 0.27,
 				"order": "asc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 39,
 				"frames": 6,
-				"speed": 0.2,
+				"speed": 0.3,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 6,
 				"frames": 10,
-				"speed": 0.32,
+				"speed": 0.4,
 				"order": "desc",
 				"row": 1
 			},

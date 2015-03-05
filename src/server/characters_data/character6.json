@@ -3,22 +3,22 @@
 	"name": "Jin",
 	"lives": 150,
 	"damage": {
-		"punch": 3.75,
-		"kick": 6.75,
+		"punch": 4,
+		"kick": 5.5,
 		"punchCombo": 18.75,
 		"kickCombo": 21
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 6.25,
-		"kick": 9,
+		"punch": 6.66,
+		"kick": 7.33,
 		"punchCombo": 31.25,
 		"kickCombo": 28,
 		"jump": 8
 	},
 	"speed": {
-		"punch": 312.5,
-		"kick": 675,
+		"punch": 333,
+		"kick": 550,
 		"punchCombo": 1041,
 		"kickCombo": 1400
 	},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 29,
 				"frames": 7,
-				"speed": 0.37,
+				"speed": 0.38,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 36,
 				"frames": 8,
-				"speed": 0.42,
+				"speed": 0.4,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 9,
 				"frames": 13,
-				"speed": 0.32,
+				"speed": 0.4,
 				"order": "desc",
 				"row": 1
 			},

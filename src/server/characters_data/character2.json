@@ -3,22 +3,22 @@
 	"name": "Robert",
 	"lives": 150,
 	"damage": {
-		"punch": 4.5,
-		"kick": 6,
+		"punch": 4,
+		"kick": 4,
 		"punchCombo": 18.75,
 		"kickCombo": 22.5
 	},
 	"maxEnergy": 100,
 	"costs": {
-		"punch": 7.5,
-		"kick": 8,
+		"punch": 6.66,
+		"kick": 5.33,
 		"punchCombo": 31.25,
 		"kickCombo": 30,
 		"jump": 12
 	},
 	"speed": {
-		"punch": 375,
-		"kick": 600,
+		"punch": 291,
+		"kick": 400,
 		"punchCombo": 1041,
 		"kickCombo": 1500
 	},
@@ -87,7 +87,7 @@
 				"name": "punchAnimation1",
 				"startFrame": 30,
 				"frames": 6,
-				"speed": 0.27,
+				"speed": 0.32,
 				"order": "desc",
 				"row": 0
 			},
@@ -95,7 +95,7 @@
 				"name": "punchAnimation2",
 				"startFrame": 37,
 				"frames": 5,
-				"speed": 0.22,
+				"speed": 0.35,
 				"order": "asc",
 				"row": 0
 			},
@@ -135,7 +135,7 @@
 				"name": "kickAnimation",
 				"startFrame": 7,
 				"frames": 12,
-				"speed": 0.33,
+				"speed": 0.4,
 				"order": "desc",
 				"row": 1
 			},
