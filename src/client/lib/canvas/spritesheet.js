@@ -7,6 +7,8 @@ var SpriteSheet = function (params) {
 	this.data = params.data;
 	this.animations = this.data.animations;
 	this.dimensions = this.data.spriteDimensions;
+	this.oneshot = params.oneshot || false;
+	this.passed = false;
 
 	this.activeAnimation = this.animations[this.data.defaultAnimation];
 	this.order = this.activeAnimation.order;
@@ -21,6 +23,10 @@ var SpriteSheet = function (params) {
 	this.scale = params.useScale || false;
 	this.scaleWidth = params.scaleWidth || null;
 	this.scaleHeight = params.scaleHeight || null;
+};
+
+SpriteSheet.prototype.getDimensions = function () {
+	return this.dimensions;
 };
 
 SpriteSheet.prototype.getSpriteSheetHeight = function () {
@@ -102,34 +108,38 @@ SpriteSheet.prototype.update = function() {
 	if (activeAnimation.order === 'asc') {
 		if (this.activeFrameIndex > activeAnimation.startFrame + activeAnimation.frames) {
 			this.activeFrameIndex = this.startFrame;
+			this.passed = true;
 		}
 		this.currentFrame = Math.floor(this.activeFrameIndex);
 	} else {
 		if (this.activeFrameIndex < activeAnimation.startFrame) {
 			this.activeFrameIndex = this.startFrame;
+			this.passed = true;
 		}
 		this.currentFrame = Math.ceil(this.activeFrameIndex);
 	}
 };
 
 SpriteSheet.prototype.draw = function(x, y) {
-	var scaleX = this.flipH ? this.dimensions.frameWidth * -1 - x : x;
-	var scale = this.flipH ? -1 : 1;
-	var frameWidth, frameHeight; 
-	this.canvas.save();
-	this.canvas.scale(scale, 1);
-	if (!this.scale) {
-		frameWidth = this.dimensions.frameWidth;
-		frameHeight = this.dimensions.frameHeight;
-	} else {
-		frameWidth = this.scaleWidth;
-		frameHeight = this.scaleHeight;
-	}
+	if(this.oneshot && !this.passed || !this.oneshot) {
+		var scaleX = this.flipH ? this.dimensions.frameWidth * -1 - x : x;
+		var scale = this.flipH ? -1 : 1;
+		var frameWidth, frameHeight; 
+		this.canvas.save();
+		this.canvas.scale(scale, 1);
+		if (!this.scale) {
+			frameWidth = this.dimensions.frameWidth;
+			frameHeight = this.dimensions.frameHeight;
+		} else {
+			frameWidth = this.scaleWidth;
+			frameHeight = this.scaleHeight;
+		}
 
-	this.canvas.drawImage(this.image, this.currentFrame * this.dimensions.frameWidth, 
-		(this.activeAnimation.row * 224), this.dimensions.frameWidth, this.dimensions.frameHeight, 
-		scaleX, y, frameWidth, frameHeight);
-	this.canvas.restore();
+		this.canvas.drawImage(this.image, this.currentFrame * this.dimensions.frameWidth, 
+			(this.activeAnimation.row * 224), this.dimensions.frameWidth, this.dimensions.frameHeight, 
+			scaleX, y, frameWidth, frameHeight);
+		this.canvas.restore();
+	}
 };
 
 module.exports = SpriteSheet;

@@ -1,6 +1,7 @@
 var Player = require('./player');
 var Collisions = require('../common/collisions');
 var Config = require('./config');
+
 var WorldPhysics = {};
 
 WorldPhysics.jump = function(player, opponent) {
@@ -47,6 +48,10 @@ WorldPhysics.hit = function (player, opponent, damage, time, size, power, height
 	}
 	if(hit) {
 		opponent.dealDamage(player.getDamage(damage));
+		opponent.storeParticle('blood');
+		if(player.usingCombo()) {
+			opponent.storeParticle('flash');
+		}
 	}
 	else
 		player.useEnergy(damage);

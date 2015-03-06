@@ -142,7 +142,7 @@ describe('InputProcessor', function () {
 	it('should assign \'true\' to \'input.kickKey\'', function () {
 		InputCollection.onKeydown({keyCode: Config.keyBindings.KICK});
 
-		inputProcessor.processComboInputs(blankInput);
+		inputProcessor.processHitInputs(blankInput);
 		expect(blankInput.kickKey).toBe(true);
 	});
 

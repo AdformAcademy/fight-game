@@ -7,6 +7,7 @@ var Client;
 var SoundCollection;
 var SpriteSheet;
 var Button;
+var ParticleCollection;
 var UpdateHandler;
 var Config;
 var InputCollection;
@@ -19,6 +20,7 @@ function StageScreen() {
 	Text = require('../canvas/text');
 	SpriteSheet = require('../canvas/spritesheet');
 	Button = require('../canvas/button');
+	ParticleCollection = require('../canvas/particle-collection');
 	UpdateHandler = require('../utils/update-handler');
 	Config = require('../config');
 	InputCollection = require('../input-collection');
@@ -507,9 +509,11 @@ StageScreen.prototype.graphics = function() {
 	
 	obj.parallax.draw();
 	if (player.getDepth() > opponent.getDepth()) {
+		ParticleCollection.draw(xView, yView);
 		player.draw(xView, yView);
 		opponent.draw(xView, yView);
 	} else {
+		ParticleCollection.draw(xView, yView);
 		opponent.draw(xView, yView);
 		player.draw(xView, yView);
 	}

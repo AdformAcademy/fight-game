@@ -38,7 +38,8 @@ SocketServer.prepareSocketData = function(player, opponent, socket) {
 			lives: player.getLives(),
 			energy: player.getEnergy(),
 			speed: player.getSpeedArray(),
-			sounds: player.getSounds()
+			sounds: player.getSounds(),
+			particles: player.getParticles()
 		},
 		opponent: {
 			x: opponent.getX(),
@@ -70,6 +71,14 @@ SocketServer.prepareClient = function (socket, selection) {
 
 			var playerSelection = session.getSelection();
 			var opponentSelection = targetSession.getSelection();
+
+			var particlesData = JSON.parse(fs.readFileSync(Config.particlesDataFile, 'utf8'));
+			var particlesSpriteSheetData = {};
+
+			for(var key in particlesData) {
+				particlesSpriteSheetData[particlesData[key]] = 
+					JSON.parse(fs.readFileSync(Config.particlesPath + particlesData[key] + '.json', 'utf8'));
+			}
 
 			var playerData = JSON.parse(
 				fs.readFileSync(Config.charactersPath + 
@@ -141,7 +150,8 @@ SocketServer.prepareClient = function (socket, selection) {
 					energyCosts: opponentData.costs,
 				},
 				map: mapData,
-				soundsData: commonSoundsData
+				soundsData: commonSoundsData,
+				particlesData: particlesSpriteSheetData
 			});
 			targetSession.socket.emit(Session.PLAYING, {
 				player: {
@@ -157,7 +167,8 @@ SocketServer.prepareClient = function (socket, selection) {
 					energyCosts: opponentData.costs,
 				},
 				map: mapData,
-				soundsData: commonSoundsData
+				soundsData: commonSoundsData,
+				particlesData: particlesSpriteSheetData
 			});
 		} else {
 			SocketServer.prepareWaiting(ses);
@@ -296,9 +307,9 @@ SocketServer.executeInput = function(player, input) {
 		if(!player.isJumping() && !player.isDefending()){
 			if (input.kickCombo && player.hasEnoughEnergy('kickCombo')) {
 				if (!player.usingCombo()) {
-					player.setHiting(true);
 					player.setUsingCombo(true);
 					var hit = WorldPhysics.hit(player, opponent, "kickCombo", player.getSpeed("kickCombo"), 80, 15, 60);
+					player.setHiting(true);
 					if (hit === 0) {
 						opponent.storeSound('opponent', 'comboKick');
 						opponent.storeSound('common', 'miss');
@@ -553,6 +564,7 @@ SocketServer.updateWorld = function() {
 				session.socket.emit('update', data);
 				player.clearSounds();
 				player.clearStates();
+				player.clearParticles();
 				SocketServer.proccessedInputs[opponent.getID()] = [];
 				if(player.isVictor() && session.state === Session.PLAYING){
 					SocketServer.disconnectClient(session.socket, "Victory");

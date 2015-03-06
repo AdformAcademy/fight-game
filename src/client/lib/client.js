@@ -8,6 +8,7 @@ var EnergyBar = require('./canvas/energy-bar');
 var InputCollection = require('./input-collection');
 var InputProcessor = require('./input-processor');
 var SoundCollection = require('./sound-collection');
+var ParticleCollection = require('./canvas/particle-collection');
 var WorldPhysics = require('./world-physics');
 var StageScreen = require('./screen/stage');
 var TrainingScreen = require('./screen/training');
@@ -150,6 +151,10 @@ Client.processServerData = function() {
     	physics.applyCoordinates(App.player, x, null);
     	SoundCollection.playServerSounds(sounds);
 
+    	for (var key in state.player.particles) {
+    		ParticleCollection.triggerParticle(App.player, state.player.particles[key], App.player.getX() < App.opponent.getX());
+    	}
+
     	if (ppunched) {
     		playerLifeBar.store(state.player.lives);
     	}
@@ -257,6 +262,7 @@ Client.initializeGame = function (data) {
 
 	SoundCollection.clear();
 	SoundCollection.load(loader, data.soundsData, data.player.data, data.opponent.data);
+	ParticleCollection.load(loader, data.particlesData);
 
 	var buildSprite = function(image, spriteSheetData) {
 		return new SpriteSheet({
@@ -665,7 +671,8 @@ Client.update = function() {
 
 	physics.flipPlayerSpritesheets();
 	physics.updatePlayersDepth();
-	physics.updateViewport();	
+	physics.updateViewport();
+	ParticleCollection.update();	
 
 	Client.camera.update();
 };

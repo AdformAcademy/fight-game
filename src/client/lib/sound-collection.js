@@ -46,7 +46,7 @@ SoundCollection.loadPlayerSounds = function (loader, data) {
 					loader.load(id);
 				};
 			}(id);
-			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.wav';
+			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.MP3';
 			playerSounds[action].push(sound);
 		}
 	}
@@ -67,7 +67,7 @@ SoundCollection.loadOpponentSounds = function (loader, data) {
 					loader.load(id);
 				};
 			}(id);
-			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.wav';
+			sound.src = Config.characterSoundsPath + data.id + '/' + action + '/' + i + '.MP3';
 			opponentSounds[action].push(sound);
 		}
 	}

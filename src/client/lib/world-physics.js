@@ -1,6 +1,7 @@
 var Config = require('./config');
 var Collisions = require('../../common/collisions');
 var SoundCollection = require('./sound-collection');
+var ParticleCollection = require('./canvas/particle-collection');
 
 var WorldPhysics = function(params) {
 	this.player = params.player;
@@ -87,6 +88,14 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 		hit = 2;
 		opponent.setPunched(2);
 	}	
+
+	if(hit) {
+		ParticleCollection.triggerParticle(opponent, 'blood', player.getX() > opponent.getX());
+		if(combo) {
+			ParticleCollection.triggerParticle(opponent, 'flash', player.getX() > opponent.getX());
+		}
+	}
+
 	var updateH = setInterval(function () {
 		t += 15;
 		if (t >= time && !player.isFatality()) {
