@@ -233,9 +233,12 @@ Client.sendServerUpdate = function (packet) {
 Client.initializeGame = function (data) {
 	Client.initializeType = 1;
 	var loader = new ResourceLoader(function () {
-		App.screen.dispose();
-		App.screen = new StageScreen();
-		App.canvasObj.setGraphics(App.screen.graphics);
+		if (Client.initializeType === 1) {
+			App.screen.dispose();
+			App.screen = new StageScreen();
+			App.canvasObj.setGraphics(App.screen.graphics);
+			Client.isTraining = false;
+		}
 	});
 	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
@@ -441,7 +444,7 @@ Client.initializeGame = function (data) {
 Client.initializeTraining = function (data) {
 	Client.initializeType = 2;
 	var loader = new ResourceLoader(function () {
-		if (Client.initializeType == 2) {
+		if (Client.initializeType === 2) {
 			App.screen.dispose();
 			App.screen = new TrainingScreen();
 			App.canvasObj.setGraphics(App.screen.graphics);
