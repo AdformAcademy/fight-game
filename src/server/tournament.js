@@ -175,6 +175,14 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 	var playerSelection = firstSession.getSelection();
 	var opponentSelection = secondSession.getSelection();
 
+	var particlesData = JSON.parse(fs.readFileSync(Config.particlesDataFile, 'utf8'));
+	var particlesSpriteSheetData = {};
+
+	for(var key in particlesData) {
+		particlesSpriteSheetData[particlesData[key]] = 
+			JSON.parse(fs.readFileSync(Config.particlesPath + particlesData[key] + '.json', 'utf8'));
+	}
+
 	var playerData = JSON.parse(
 		fs.readFileSync(Config.charactersPath + 
 			'character' + playerSelection + '.json', 'utf8'));
@@ -252,7 +260,8 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 			energyCosts: opponentData.costs,
 		},
 		map: mapData,
-		soundsData: commonSoundsData
+		soundsData: commonSoundsData,
+		particlesData: particlesSpriteSheetData
 	});
 
 	secondSession.socket.emit(Session.PLAYING, {
@@ -269,7 +278,8 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 			energyCosts: opponentData.costs,
 		},
 		map: mapData,
-		soundsData: commonSoundsData
+		soundsData: commonSoundsData,
+		particlesData: particlesSpriteSheetData
 	});
 };
 
