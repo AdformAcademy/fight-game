@@ -34,11 +34,11 @@ function OptionsScreen () {
 
 	this.Text.titleText = new Text('Options', 30);
 	this.Text.titleText.setColor(Config.fontColor);
-	this.Text.titleText.setFontType('Arial');
+	this.Text.titleText.setFontType('FSpirit');
 
 	this.Text.soundsText = new Text('Sounds:', 24);
 	this.Text.soundsText.setColor(Config.fontColor);
-	this.Text.soundsText.setFontType('Arial');
+	this.Text.soundsText.setFontType('FSpirit');
 
 	obj = this;
 
@@ -143,7 +143,7 @@ function OptionsScreen () {
 	if (!App.isTouchDevice()) {
 		this.Text.controlsText = new Text('Controls:', 24);
 		this.Text.controlsText.setColor(Config.fontColor);
-		this.Text.controlsText.setFontType('Arial');
+		this.Text.controlsText.setFontType('FSpirit');
 
 		this.Text.controlsText.setLocation(function() {
 			var x = App.canvasObj.getWidth() * 0.3;
@@ -175,7 +175,7 @@ function OptionsScreen () {
 
 			tempBtnTxt = new Text(obj.keyCodeToString(Config.keyBindings[key]), 18);
 			tempBtnTxt.setColor(Config.fontColor);
-			tempBtnTxt.setFontType('Arial');
+			tempBtnTxt.setFontType('FSpirit');
 			tempBtnTxt.setLocation(function (ind) {
 				return function () {
 					var x = App.canvasObj.getWidth() * (0.5 + Math.floor(ind / 3) * tableData.columnWidth - tableData.buttonWidth) + (tempBtn.getActiveImage().width - this.getTextWidth()) / 2;
@@ -186,7 +186,7 @@ function OptionsScreen () {
 
 			tempTxt = new Text(layout[key], 18);
 			tempTxt.setColor(Config.fontColor);
-			tempTxt.setFontType('Arial');
+			tempTxt.setFontType('FSpirit');
 			tempTxt.setLocation(function (ind) {
 				return function () {
 					var x = App.canvasObj.getWidth() * (0.15 + Math.floor(ind / 3) * 0.35);
