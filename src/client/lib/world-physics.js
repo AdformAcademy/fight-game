@@ -125,8 +125,6 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 			}
 			if(combo) {
 				player.setUsingCombo(false);
-				player.setUsingKickCombo(false);
-				player.setUsingPunchCombo(false);
 			}
 			if(training == true && !combo)
 			{
@@ -162,9 +160,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		return;
 	}
 
-	if (player.isUsingKickCombo()) {
+	if (packet.kickCombo) {
 		playerSprite.setActiveAnimation('kickComboAnimation');
-	} else if (player.isUsingPunchCombo()) {
+	} else if (packet.punchCombo) {
 		playerSprite.setActiveAnimation('punchComboAnimation');
 	} else if (packet.punchKey) {
 		var punchNumber = Math.ceil(Math.random() * 2);
@@ -177,7 +175,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 
-	if (player.isStanding() && !player.isHiting() && !player.isFatality() && !player.usingCombo()) {
+	if (player.isStanding() && !player.isHiting() && !player.isFatality()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
 				if (packet.key === actions.RIGHT)

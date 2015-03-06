@@ -15,8 +15,6 @@ function Player(params) {
 	this.groundHeight = params.groundHeight;
 	this.depth = 0;
 	this.speed = params.speed;
-	this.kickCombo = false;
-	this.punchCombo = false;
 };
 
 Player.prototype = new BasePlayer();
@@ -65,22 +63,6 @@ Player.prototype.getLifeBar = function() {
 
 Player.prototype.getEnergyBar = function() {
 	return this.energyBar;
-};
-
-Player.prototype.setUsingKickCombo = function (kickCombo) {
-	this.kickCombo = kickCombo;
-};
-
-Player.prototype.setUsingPunchCombo = function (punchCombo) {
-	this.punchCombo = punchCombo;
-};
-
-Player.prototype.isUsingKickCombo = function () {
-	return this.kickCombo;
-};
-
-Player.prototype.isUsingPunchCombo = function () {
-	return this.punchCombo;
 };
 
 Player.prototype.hasEnoughEnergy = function(action) {
