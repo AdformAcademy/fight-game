@@ -6,6 +6,10 @@ var obj;
 var Client;
 var SoundCollection;
 var SpriteSheet;
+var Button;
+var UpdateHandler;
+var Config;
+var InputCollection;
 
 function StageScreen() {
 	App = require('../../app');
@@ -14,6 +18,10 @@ function StageScreen() {
 	Client = require('../client');
 	Text = require('../canvas/text');
 	SpriteSheet = require('../canvas/spritesheet');
+	Button = require('../canvas/button');
+	UpdateHandler = require('../utils/update-handler');
+	Config = require('../config');
+	InputCollection = require('../input-collection');
 	obj = this;
 
 	SoundCollection = require('../sound-collection');
@@ -158,6 +166,230 @@ function StageScreen() {
 	this.animateCountDown();
 	Client.start();
 	SoundCollection.play('common', 'theme');
+
+	if (App.isTouchDevice()) {
+		this.loadTouchControls();
+	}
+};
+
+StageScreen.prototype.loadTouchControls = function () {
+	var self = this;
+	var keys = Config.keyBindings;
+
+	var moveLeftHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.LEFT
+		});
+	}, 1000 / 30);
+
+	var moveRightHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.RIGHT
+		});
+	}, 1000 / 30);
+
+	var defendHandler = new UpdateHandler(function () {
+		InputCollection.onKeydown({
+			keyCode: keys.DEFEND
+		});
+	}, 1000 / 30);
+
+	this.moveLeftButton = new Button({
+		image: './img/controls/left.png',
+		hoverImage: './img/controls/left_hover.png',
+		location: function() {
+			var height = self.moveLeftButton.getActiveImage().height;
+			var width = self.moveLeftButton.getActiveImage().width;
+			var x = App.canvasObj.getWidth() * 0.04;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			moveLeftHandler.start();
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			moveLeftHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.LEFT
+			});
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getImage());
+		},
+		touchResetEvent: function () {
+			moveLeftHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.LEFT
+			});
+			self.moveLeftButton.setActiveImage(self.moveLeftButton.getImage());
+		}
+	});
+
+	this.moveRightButton = new Button({
+		image: './img/controls/right.png',
+		hoverImage: './img/controls/right_hover.png',
+		location: function() {
+			var relativeWidth = self.moveLeftButton.getActiveImage().width;
+			var location = self.moveLeftButton.getLocation();
+
+			var x = location.getX() + relativeWidth + 20;
+			var y = location.getY();
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			moveRightHandler.start();
+			self.moveRightButton.setActiveImage(self.moveRightButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			moveRightHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.RIGHT
+			});
+			self.moveRightButton.setActiveImage(self.moveRightButton.getImage());
+		},
+		touchResetEvent: function () {
+			moveRightHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.RIGHT
+			});
+			self.moveRightButton.setActiveImage(self.moveRightButton.getImage());
+		}
+	});
+
+	this.defendButton = new Button({
+		image: './img/controls/defend.png',
+		hoverImage: './img/controls/defend_hover.png',
+		location: function() {
+			var relativeHeight = self.moveLeftButton.getActiveImage().height;
+			var location = self.moveLeftButton.getLocation();
+
+			var x = location.getX() - 25;
+			var y = location.getY() - relativeHeight;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			defendHandler.start();
+			self.defendButton.setActiveImage(self.defendButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			defendHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.DEFEND
+			});
+			self.defendButton.setActiveImage(self.defendButton.getImage());
+		},
+		touchResetEvent: function () {
+			defendHandler.stop();
+			InputCollection.onKeyup({
+				keyCode: keys.DEFEND
+			});
+			self.defendButton.setActiveImage(self.defendButton.getImage());
+		}
+	});
+
+	this.jumpButton = new Button({
+		image: './img/controls/jump.png',
+		hoverImage: './img/controls/jump_hover.png',
+		location: function() {
+			var relativeHeight = self.kickButton.getActiveImage().height;
+			var width = self.jumpButton.getActiveImage().width;
+			var location = self.kickButton.getLocation();
+
+			var x = (location.getX() - width) - 5;
+			var y = location.getY() - relativeHeight * 0.6;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			InputCollection.onKeydown({
+				keyCode: keys.JUMP
+			});
+			self.jumpButton.setActiveImage(self.jumpButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.JUMP
+			});
+			self.jumpButton.setActiveImage(self.jumpButton.getImage());
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.JUMP] = false;
+			self.jumpButton.setActiveImage(self.jumpButton.getImage());
+		}
+	});
+
+	this.punchButton = new Button({
+		image: './img/controls/punch.png',
+		hoverImage: './img/controls/punch_hover.png',
+		location: function() {
+			var relativeHeight = self.kickButton.getActiveImage().height;
+			var location = self.kickButton.getLocation();
+
+			var x = location.getX();
+			var y = location.getY() - relativeHeight - 10;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			InputCollection.onKeydown({
+				keyCode: keys.PUNCH
+			});
+			self.punchButton.setActiveImage(self.punchButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.PUNCH
+			});
+			self.punchButton.setActiveImage(self.punchButton.getImage());
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.PUNCH] = false;
+			self.punchButton.setActiveImage(self.punchButton.getImage());
+		}
+	});
+
+	this.kickButton = new Button({
+		image: './img/controls/kick.png',
+		hoverImage: './img/controls/kick_hover.png',
+		location: function() {
+			var height = self.kickButton.getActiveImage().height;
+			var width = self.kickButton.getActiveImage().width;
+			var x = App.canvasObj.getWidth() * 0.88;
+			var y = App.canvasObj.getHeight() * 0.97 - height;
+			return new Point(x, y);
+		},
+		touchStartEvent: function () {
+			InputCollection.onKeydown({
+				keyCode: keys.KICK
+			});
+			self.kickButton.setActiveImage(self.kickButton.getHoverImage());
+		},
+		touchEndEvent: function () {
+			InputCollection.onKeyup({
+				keyCode: keys.KICK
+			});
+			self.kickButton.setActiveImage(self.kickButton.getImage());
+		},
+		touchResetEvent: function () {
+			InputCollection.pressed[keys.KICK] = false;
+			self.kickButton.setActiveImage(self.kickButton.getImage());
+		}
+	});
+};
+
+StageScreen.prototype.drawTouchControls = function () {
+	this.moveLeftButton.drawButton();
+	this.moveRightButton.drawButton();
+	this.defendButton.drawButton();
+	this.jumpButton.drawButton();
+	this.punchButton.drawButton();
+	this.kickButton.drawButton();
+};
+
+StageScreen.prototype.disposeTouchControls = function () {
+	this.moveLeftButton.dispose();
+	this.moveRightButton.dispose();
+	this.defendButton.dispose();
+	this.jumpButton.dispose();
+	this.punchButton.dispose();
+	this.kickButton.dispose();
 };
 
 StageScreen.prototype.stageTimerUpdate = function(data) {
@@ -262,8 +494,8 @@ StageScreen.prototype.graphics = function() {
 	var opponentLifebar = opponent.getLifeBar();
 	var playerEnergyBar = player.getEnergyBar();
 	var opponentEnergyBar = opponent.getEnergyBar();
-	var xView = Client.camera.xView;
-	var yView = Client.camera.yView;
+	var xView = Client.camera.getXView();
+	var yView = Client.camera.getYView();
 
 	var playerImageLocation = playerEnergyBar.getLocation();
 	var pImageX = playerImageLocation.getX();
@@ -304,6 +536,10 @@ StageScreen.prototype.graphics = function() {
 	obj.playerImage.draw(pImageX, pImageY);
 	obj.opponentImage.draw(oImageX, oImageY);
 
+	if (App.isTouchDevice()) {
+		obj.drawTouchControls();
+	}
+
 	if (obj.animatingCountDown) {
 		App.canvasObj.canvas.save();
 		App.canvasObj.canvas.globalAlpha = obj.countAnimation.opacity;
@@ -324,6 +560,9 @@ StageScreen.prototype.dispose = function() {
 	obj.player.getLifeBar().dispose();
 	obj.opponent.getLifeBar().dispose();
 	obj.disposeCountDown();
+	if (App.isTouchDevice()) {
+		obj.disposeTouchControls();
+	}
 };
 
 module.exports = StageScreen;

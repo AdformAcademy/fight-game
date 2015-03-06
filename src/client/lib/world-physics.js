@@ -11,6 +11,7 @@ var WorldPhysics = function(params) {
 	this.animating = false;
 	this.oldAnimatingValue = -1;
 	this.training = params.training;
+	this.cameraShaking = false;
 };
 
 WorldPhysics.prototype.applyCoordinates = function(player, x, z) {
@@ -115,6 +116,8 @@ WorldPhysics.prototype.hit = function (time, size, power, heightDifference, comb
 			}
 			if(combo) {
 				player.setUsingCombo(false);
+				player.setUsingKickCombo(false);
+				player.setUsingPunchCombo(false);
 			}
 			if(training == true && !combo)
 			{
@@ -150,9 +153,9 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		return;
 	}
 
-	if (packet.kickCombo) {
+	if (player.isUsingKickCombo()) {
 		playerSprite.setActiveAnimation('kickComboAnimation');
-	} else if (packet.punchCombo) {
+	} else if (player.isUsingPunchCombo()) {
 		playerSprite.setActiveAnimation('punchComboAnimation');
 	} else if (packet.punchKey) {
 		var punchNumber = Math.ceil(Math.random() * 2);
@@ -165,7 +168,7 @@ WorldPhysics.prototype.updatePlayerAnimation = function (packet) {
 		playerSprite.setActiveAnimation('defendAnimation');
 	}
 
-	if (player.isStanding() && !player.isHiting() && !player.isFatality()) {
+	if (player.isStanding() && !player.isHiting() && !player.isFatality() && !player.usingCombo()) {
 		if (packet.key !== 0) {
 			if(player.getX() < opponent.getX()) {
 				if (packet.key === actions.RIGHT)
@@ -284,6 +287,44 @@ WorldPhysics.prototype.animateViewportChange = function (amount) {
 			self.animating = false;
 		}
 	}, 1000 / 30);
+};
+
+WorldPhysics.prototype.shakeCamera = function (strength, length, slowDownSpeed) {
+	if (!this.cameraShaking) {
+		this.cameraShaking = true;
+		var self = this;
+		var timeoutInterval = null;
+		var strengthValue = strength;
+		var decreaseValue = 0.1;
+		var updateInterval = setInterval(function () {
+			self.camera.additionalYView = strengthValue;
+			strengthValue = -strengthValue;
+			if (strengthValue > 0) {
+				strengthValue -= decreaseValue;
+				if (strengthValue < 0) {
+					clearInterval(updateInterval);
+					clearInterval(timeoutInterval);
+					self.camera.additionalYView = 0;
+					self.cameraShaking = false;
+				}
+			} else if (strengthValue < 0) {
+				strengthValue += decreaseValue;
+				if (strengthValue > 0) {
+					clearInterval(updateInterval);
+					clearInterval(timeoutInterval);
+					self.camera.additionalYView = 0;
+					self.cameraShaking = false;
+				}
+			}
+			decreaseValue *= slowDownSpeed || 1.05;
+		}, 1000 / 30);
+
+		timeoutInterval = setTimeout(function () {
+			clearInterval(updateInterval);
+			self.cameraShaking = false;
+			self.camera.additionalYView = 0;
+		}, length);
+	}
 };
 
 module.exports = WorldPhysics;

@@ -1,6 +1,7 @@
 @font-face {
     font-family: 'FSpirit';
-    src: url('/fonts/fightspirit.ttf');
+	src: url('/fonts/fightspirit.eot');
+    src: url('/fonts/fightspirit.ttf') format('truetype');
 }
 
 html, body {

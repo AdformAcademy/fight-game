@@ -15,7 +15,7 @@ var Rectangle = require('./canvas/rectangle');
 var Camera = require('./canvas/camera');
 var Parallax = require('./canvas/parallax');
 var Pattern = require('./canvas/pattern');
-var ResourceLoader = require('./resource-loader');
+var ResourceLoader = require('./utils/resource-loader');
 var socket = io();
 
 var Client = module.exports = {};
@@ -43,6 +43,8 @@ Client.gameStarted = false;
 Client.canMove = false;
 Client.gameType = null;
 Client.isTraining = false;
+Client.defeat = false;
+Client.initializeType = 0;
 
 Client.storeInput = function(input) {
 	Client.inputs.push(input);
@@ -143,6 +145,7 @@ Client.processServerData = function() {
     	var sounds = state.player.sounds;
     	var pFatality = state.player.fatality;
     	var oFatality = state.opponent.fatality;
+    	var hitByCombo = state.player.hitcombo;
 
     	physics.applyCoordinates(App.player, x, null);
     	SoundCollection.playServerSounds(sounds);
@@ -153,6 +156,15 @@ Client.processServerData = function() {
     	if (opunched) {
     		opponentLifeBar.store(state.opponent.lives);
     	}
+
+		if (hitByCombo) {
+			physics.shakeCamera(3, 5000, 1.02);
+		}
+
+		if ((pDefeated || oDefeated) && !Client.defeat) {
+			physics.shakeCamera(8, 5000, 1.09);
+			Client.defeat = true;
+		}
     	
     	playerEnergyBar.store(state.player.energy);
     	opponentEnergyBar.store(state.opponent.energy);
@@ -214,6 +226,7 @@ Client.sendServerUpdate = function (packet) {
 };
 
 Client.initializeGame = function (data) {
+	Client.initializeType = 1;
 	var loader = new ResourceLoader(function () {
 		App.screen.dispose();
 		App.screen = new StageScreen();
@@ -419,10 +432,13 @@ Client.initializeGame = function (data) {
 };
 
 Client.initializeTraining = function (data) {
+	Client.initializeType = 2;
 	var loader = new ResourceLoader(function () {
-		App.screen.dispose();
-		App.screen = new TrainingScreen();
-		App.canvasObj.setGraphics(App.screen.graphics);
+		if (Client.initializeType == 2) {
+			App.screen.dispose();
+			App.screen = new TrainingScreen();
+			App.canvasObj.setGraphics(App.screen.graphics);
+		}
 	});
 	var canvas = App.canvasObj;
 	var playerSpriteData = data.player.data.spriteSheetData;
@@ -670,6 +686,8 @@ Client.stop = function() {
 	Client.gameStarted = false;
 	Client.canMove = false;
 	Client.isTraining = false;
+	Client.defeat = false;
+	Client.initializeType = 0;
 };
 
 Client.start = function() {
