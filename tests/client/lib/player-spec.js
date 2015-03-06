@@ -13,7 +13,8 @@ describe('Player', function () {
 		player,
 		mockLifeBar,
 		mockEnergyBar,
-		mockEnergyCosts;
+		mockEnergyCosts,
+		mockSpeed;
 
 	beforeEach(function() {
 		container = $('<div id="container"></div>');
@@ -25,6 +26,12 @@ describe('Player', function () {
 			'punch': 7,
 			'kick': 8,
 			'jump': 5
+		};
+		mockSpeed = {
+			'punch': 250,
+			'kick': 375,
+			'punchCombo': 833,
+			'kickCombo': 1000
 		};
 		mockLifeBar = {};
 		mockEnergyBar = {
@@ -40,12 +47,32 @@ describe('Player', function () {
 			spriteSheet: spritesheetMock,
 			lifeBar: mockLifeBar,
 			energyBar: mockEnergyBar,
-			energyCosts: mockEnergyCosts
+			energyCosts: mockEnergyCosts,
+			speed: mockSpeed
 		});
 	});
 
 	afterEach(function() {
 		body.empty();
+	});
+	
+	it('should define getSpeed method', function () {
+		expect(player.getSpeed).toBeDefined();
+	});
+
+	it('should define setSpeed method', function () {
+		expect(player.setSpeed).toBeDefined();
+	});
+
+	it('should get value 1000', function() {
+		var speed = {
+			'punch': 250,
+			'kick': 375,
+			'punchCombo': 833,
+			'kickCombo': 1000
+		};
+		player.setSpeed(speed);
+		expect(player.getSpeed('kickCombo')).toBe(1000);
 	});
 
 	it('should define getSpriteSheet method', function () {

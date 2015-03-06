@@ -29,6 +29,13 @@ describe('InputProcessor', function () {
 			kickCombo: 0,
 			punchCombo: 0,
 			jump: 0
+		},
+		speed: {
+			'kick': 0,
+			'punch': 0,
+			'kickCombo': 0,
+			'punchCombo': 0,
+			'jump': 0
 		}
 	};
 	var opponentParamsMock = {
