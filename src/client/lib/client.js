@@ -56,7 +56,6 @@ Client.storeServerData = function(data) {
 };
 
 Client.catchUpInterpolation = function () {
-	console.log('Cathing up');
 	Client.catchingInterpolation = true;
 	var physics = App.physics;
 	var opponent = App.opponent;
@@ -77,7 +76,6 @@ Client.catchUpInterpolation = function () {
 		}
 		if (Client.opponentInputs.length < 1) {
 			Client.catchingInterpolation = false;
-			console.log('END');
 			clearInterval(update);
 		}
 	}, 1000 / 35);
