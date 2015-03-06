@@ -63,7 +63,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
 		if (control.isDown(keys.PUNCH) && player.hasEnoughEnergy('punch')) {
 			player.setHiting(true);
-			var hit = physics.hit(player.getSpeed("punch"), 65, 5, 60);
+			var hit = physics.hit(player.getSpeed("punch"), 65, 5, 60, false);
 			input.punchKey = true;
 				if(hit != 0) {
 					SoundCollection.play('player', 'punch');
@@ -74,7 +74,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 		}
 		else if(control.isDown(keys.KICK) && player.hasEnoughEnergy('kick')) {
 			player.setHiting(true);
-			var hit = physics.hit(player.getSpeed("kick"), 80, 10, 60);
+			var hit = physics.hit(player.getSpeed("kick"), 80, 10, 60, false);
 			input.kickKey = true;
 				if(hit != 0) {
 					SoundCollection.play('player', 'kick');
@@ -86,7 +86,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
 		player.setHiting(true);
-		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120);
+		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120, player.isUsingCombo());
 		input.punchKey = true;
 
 		if(hit != 0) {
@@ -98,7 +98,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping() && player.hasEnoughEnergy('kick')) {
 		player.setHiting(true);
-		var hit = physics.hit(player.getSpeed("kick"), 80, 10, 120);
+		var hit = physics.hit(player.getSpeed("kick"), 80, 10, 120, player.isUsingCombo());
 		input.kickKey = true;
 
 		if(hit != 0) {
@@ -119,11 +119,10 @@ InputProcessor.prototype.processComboInputs = function (input) {
 
 	if (control.quickTapped(keys.KICK) && player.hasEnoughEnergy('kickCombo') && !player.usingCombo()) {
 		if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
-			player.setUsingCombo(true);
 			player.setHiting(true);
+			player.setUsingCombo(true);
 			var hit = physics.hit(player.getSpeed("kickCombo"), 80, 15, 60, true);
 			input.kickCombo = true;
-			player.setUsingKickCombo(true);
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboKick');
 				SoundCollection.play('player', 'kick');
@@ -135,13 +134,12 @@ InputProcessor.prototype.processComboInputs = function (input) {
 			}
 		}
 	}
-	if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo')) {
+	if (control.quickTapped(keys.PUNCH) && player.hasEnoughEnergy('punchCombo') && !player.usingCombo()) {
 		if(!player.isJumping() && !player.isDefending() && !player.isFatality()) {
-			player.setUsingCombo(true);
 			player.setHiting(true);
+			player.setUsingCombo(true);
 			var hit = physics.hit(player.getSpeed("punchCombo"), 65, 0, 60, true);
 			input.punchCombo = true;
-			player.setUsingPunchCombo(true);
 			if(hit != 0) {
 				SoundCollection.play('player', 'comboPunch');
 				SoundCollection.play('player', 'punch');
