@@ -86,7 +86,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	}
 	else if (control.isDown(keys.PUNCH) && player.isJumping() && player.hasEnoughEnergy('punch')) {
 		player.setHiting(true);
-		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120, player.isUsingCombo());
+		var hit = physics.hit(player.getSpeed("punch"), 65, 5, 120, false);
 		input.punchKey = true;
 
 		if(hit != 0) {
@@ -98,7 +98,7 @@ InputProcessor.prototype.processHitInputs = function (input) {
 	}
 	else if (control.isDown(keys.KICK) && player.isJumping() && player.hasEnoughEnergy('kick')) {
 		player.setHiting(true);
-		var hit = physics.hit(player.getSpeed("kick"), 80, 10, 120, player.isUsingCombo());
+		var hit = physics.hit(player.getSpeed("kick"), 80, 10, 120, false);
 		input.kickKey = true;
 
 		if(hit != 0) {
