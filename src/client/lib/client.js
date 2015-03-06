@@ -262,7 +262,7 @@ Client.initializeGame = function (data) {
 
 	SoundCollection.clear();
 	SoundCollection.load(loader, data.soundsData, data.player.data, data.opponent.data);
-	ParticleColelction.clear();
+	ParticleCollection.clear();
 	ParticleCollection.load(loader, data.particlesData);
 
 	var buildSprite = function(image, spriteSheetData) {
