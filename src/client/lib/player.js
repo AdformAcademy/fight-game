@@ -9,6 +9,7 @@ function Player(params) {
 	this.location = params.location;
 	this.z = params.z;
 	this.spritesheet = params.spriteSheet;
+	this.movementSpeed = params.movementSpeed;
 	this.lifeBar = params.lifeBar;
 	this.energyBar = params.energyBar;
 	this.energyCosts = params.energyCosts;

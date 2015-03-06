@@ -204,7 +204,8 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 		characterData: playerData,
 		characterId: playerSelection,
 		energyCosts: playerData.costs,
-		map: mapData
+		map: mapData,
+		movementSpeed: playerData.movementSpeed
 	});
 
 	var opponent = new Player({
@@ -215,7 +216,8 @@ Tournament.prototype.prepareSessionPair = function (sessionPair) {
 		characterData: opponentData,
 		characterId: opponentSelection,
 		energyCosts: opponentData.costs,
-		map: mapData
+		map: mapData,
+		movementSpeed: opponentData.movementSpeed
 	});
 
 	firstSession.setPlayer(player);

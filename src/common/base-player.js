@@ -2,6 +2,7 @@ var BasePlayer = function () {
 	this.location = null;
 	this.z = 0;
 	this.speedZ = 0;
+	this.movementSpeed = 1.0;
 	this.jumping = false;
 	this.punching = false;
 	this.kicking = false;
@@ -53,6 +54,14 @@ BasePlayer.prototype.getX = function () {
 
 BasePlayer.prototype.setX = function (x) {
 	this.location = x;
+};
+
+BasePlayer.prototype.getMovementSpeed = function () {
+	return this.movementSpeed;
+};
+
+BasePlayer.prototype.setMovementSpeed = function (movementSpeed) {
+	this.movementSpeed = movementSpeed;
 };
 
 BasePlayer.prototype.getSpeedZ = function () {

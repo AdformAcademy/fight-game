@@ -2,6 +2,7 @@
 	"id": 6,
 	"name": "Jin",
 	"lives": 150,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 4,
 		"kick": 5.5,

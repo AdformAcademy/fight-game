@@ -102,7 +102,8 @@ SocketServer.prepareClient = function (socket, selection) {
 				characterData: playerData,
 				characterId: playerSelection,
 				energyCosts: playerData.costs,
-				map: mapData
+				map: mapData,
+				movementSpeed: playerData.movementSpeed
 			});
 			var opponent = new Player({
 				id: targetSession.sessionId,
@@ -112,7 +113,8 @@ SocketServer.prepareClient = function (socket, selection) {
 				characterData: opponentData,
 				characterId: opponentSelection,
 				energyCosts: opponentData.costs,
-				map: mapData
+				map: mapData,
+				movementSpeed: opponentData.movementSpeed
 			});
 
 			PlayerCollection.insertPlayer(session.sessionId, player);
@@ -418,12 +420,12 @@ SocketServer.executeInput = function(player, input) {
 		if(!player.isDefending()) {
 			if(input.key === actions.LEFT) {
 				if(x > map.dimensions.left - 135 && Collisions.checkLeftCollision(player, opponent, size)){
-					x -= Config.playerMoveSpeed;
+					x -= Config.playerMoveSpeed * player.getMovementSpeed();
 				}
 			}
 			else if(input.key === actions.RIGHT) {	 
 				if(x < map.dimensions.width - 185 && Collisions.checkRightCollision(player, opponent, size)){
-					x += Config.playerMoveSpeed;
+					x += Config.playerMoveSpeed * player.getMovementSpeed();
 				}
 			}
 		}

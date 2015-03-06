@@ -2,6 +2,7 @@
 	"id": 2,
 	"name": "Robert",
 	"lives": 150,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 4,
 		"kick": 4,

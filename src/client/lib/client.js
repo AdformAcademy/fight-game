@@ -285,6 +285,7 @@ Client.initializeGame = function (data) {
 		data: data.player.data,
 		location: data.player.x,
 		z: data.player.y,
+		movementSpeed: data.player.data.movementSpeed,
 		groundHeight: function () {
 			return canvas.getHeight() * (mapData.groundHeight / 100);
 		},
@@ -339,6 +340,7 @@ Client.initializeGame = function (data) {
 		data: data.opponent.data,
 		location: data.opponent.x,
 		z: data.opponent.y,
+		movementSpeed: data.opponent.data.movementSpeed,
 		groundHeight: function () {
 			return canvas.getHeight() * (mapData.groundHeight / 100);
 		},

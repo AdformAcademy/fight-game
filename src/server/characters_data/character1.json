@@ -2,6 +2,7 @@
 	"id": 1,
 	"name": "Kasumi",
 	"lives": 150,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 3,
 		"kick": 3.75,

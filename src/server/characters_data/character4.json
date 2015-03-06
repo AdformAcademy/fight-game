@@ -2,6 +2,7 @@
 	"id": 4,
 	"name": "Wyler",
 	"lives": 150,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 6,
 		"kick": 6.5,

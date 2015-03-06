@@ -2,6 +2,7 @@
 	"id": 3,
 	"name": "Ryo",
 	"lives": 150,
+	"movementSpeed": 1.0,
 	"damage": {
 		"punch": 5,
 		"kick": 4,
