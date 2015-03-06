@@ -15,7 +15,7 @@ Config.playerDefenceMultiplier = 0.2;
 Config.playerEnergyIncrement = 0.3;
 
 Config.tournamentFightTimer = 180;
-Config.tournamentWaitTimer = 60;
+Config.tournamentWaitTimer = 30;
 Config.tournamentLenght = 8;
 
 Config.firstSpawnLocation = {
