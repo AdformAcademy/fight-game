@@ -26,7 +26,8 @@ describe('SpriteSheet', function () {
 			"spriteDimensions": {
 				"width": 19840,
 				"height": 224,
-				"frameWidth": 320
+				"frameWidth": 320,
+				"frameHeight": 224,
 			},
 			"animations": {
 				"standAnimation": {

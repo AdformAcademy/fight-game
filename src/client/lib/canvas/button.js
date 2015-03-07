@@ -8,9 +8,9 @@ function Button(params) {
 	EventCollection = require('../event-collection');
 
 	if (!params.useSpriteSheet) {
-		this.src = params.image;
+		this.src = params.image || undefined;
 		this.image = new Image();
-		this.image.src = this.src;
+		this.image.src = this.src || '';
 		this.hoverImage = new Image();
 		this.hoverImage.src = params.hoverImage || this.image.src;
 		this.activeImage = this.image;
@@ -30,6 +30,14 @@ function Button(params) {
 	this.borderColor = params.borderColor || 'black';
 	this.width = params.width || null;
 	this.height = params.height || null;
+
+	this.touched = false;
+	this.touchStartEvent = params.touchStartEvent;
+	this.touchEndEvent = params.touchEndEvent;
+	this.touchResetEvent = params.touchResetEvent;
+	if (this.touchStartEvent !== undefined) {
+		EventCollection.addTouchObject(this);
+	}
 };
 
 Button.prototype.getId = function () {
@@ -82,7 +90,7 @@ Button.prototype.setVisible = function(visible) {
 };
 
 Button.prototype.getLocation = function() {
-	return this.location;
+	return typeof this.location === 'function' ? this.location() : this.location;
 };
 
 Button.prototype.setLocation = function(location) {
@@ -211,16 +219,41 @@ Button.prototype.mouseLeave = function(event) {
 
 Button.prototype.hover = function() {
 	$('body').css('cursor', 'pointer');
-}
+};
 
 Button.prototype.hoverLeave = function() {
 	$('body').css('cursor', 'default');
-}
+};
+
+Button.prototype.resetTouch = function () {
+	this.touched = false;
+	if (typeof this.touchResetEvent === 'function') {
+		this.touchResetEvent();
+	}
+};
+
+Button.prototype.touchStart = function () {
+	this.touched = true;
+	if (typeof this.touchStartEvent === 'function') {
+		this.touchStartEvent();
+	}
+};
+
+Button.prototype.touchEnd = function () {
+	if (this.touched) {
+		this.touched = false;
+		if (typeof this.touchEndEvent === 'function') {
+			this.touchEndEvent();
+		}
+	}
+};
 
 Button.prototype.dispose = function() {
 	EventCollection.removeOnClickObject(this);
 	EventCollection.removeMouseOverObject(this);
+	EventCollection.removeTouchObject(this);
 	this.hoverLeave();
+	this.resetTouch();
 }
 
 module.exports = Button;

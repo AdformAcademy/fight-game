@@ -21,6 +21,10 @@ describe('EnergyBar', function () {
 		canvas = $('<canvas id="window" width="900" height="550"></canvas>');
 		container.append(canvas);
 		paramsMock = {
+			loader: {
+				append: function () {},
+				load: function () {}
+			},
 			location: 'locationMock',
 			width: 1,
 			heigth: 1,

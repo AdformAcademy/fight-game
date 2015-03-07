@@ -24,8 +24,10 @@ Parallax.prototype.moveRight = function () {
 };
 
 Parallax.prototype.draw = function () {
+	var xView = this.camera.getXView();
+	var yView = this.camera.getYView();
 	for (var i = 0; i < this.patterns.length; i++) {
-		this.patterns[i].draw(this.camera.xView, this.camera.yView);
+		this.patterns[i].draw(xView, yView);
 	}
 };
 

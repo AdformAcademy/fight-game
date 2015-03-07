@@ -12,12 +12,16 @@ var Player = function (params) {
   this.maxLives = params.characterData.lives;
   this.lives = params.characterData.lives;
   this.damage = params.characterData.damage;
+  this.speed = params.characterData.speed;
   this.costs = params.characterData.costs;
   this.maxEnergy = params.characterData.maxEnergy;
   this.energy = params.characterData.maxEnergy / 2;
+  this.energyCosts = params.energyCosts;
   this.characterId = params.characterId || 1;
   this.map = params.map;
   this.sounds = [];
+  this.hitByCombo = false;
+  this.particles = [];
 };
 
 Player.prototype = new BasePlayer();
@@ -62,6 +66,14 @@ Player.prototype.getDamage = function (action) {
   return this.damage[action];
 };
 
+Player.prototype.getSpeed = function (action) {
+  return this.speed[action];
+};
+
+Player.prototype.getSpeedArray = function (action) {
+  return this.speed;
+};
+
 Player.prototype.getEnergy = function () {
   return this.energy;
 };
@@ -89,10 +101,21 @@ Player.prototype.addEnergy = function (action) {
 };
 
 Player.prototype.increaseEnergy = function () {
-  this.energy += Config.playerEnergyIncrement;
+  if(this.hiting == true)
+    this.energy += Config.playerEnergyIncrement*0;
+  else if(this.defending == true)
+    this.energy += Config.playerEnergyIncrement*0.25;
+  else if(this.moving == true || this.jumping == true)
+    this.energy += Config.playerEnergyIncrement*0.5;
+  else
+    this.energy += Config.playerEnergyIncrement;
   if(this.energy > this.maxEnergy) {
     this.energy = this.maxEnergy;
   }
+};
+
+Player.prototype.hasEnoughEnergy = function(action) {
+  return this.energy >= this.energyCosts[action];
 };
 
 Player.prototype.setCharacterId = function (id) {
@@ -111,6 +134,18 @@ Player.prototype.setMap = function (map) {
   this.map = map;
 };
 
+Player.prototype.storeParticle = function(particle) {
+  this.particles.push(particle);
+};
+
+Player.prototype.clearParticles = function() {
+  this.particles = [];
+};
+
+Player.prototype.getParticles = function () {
+  return this.particles;
+}
+
 Player.prototype.storeSound = function(packet, sound) {
   this.sounds.push({
     packet: packet,
@@ -125,6 +160,18 @@ Player.prototype.clearSounds = function() {
 Player.prototype.getSounds = function () {
   return this.sounds;
 }
+
+Player.prototype.setHitByCombo = function (state) {
+  this.hitByCombo = state;
+};
+
+Player.prototype.isHitByCombo = function () {
+  return this.hitByCombo;
+};
+
+Player.prototype.clearStates = function () {
+  this.hitByCombo = false;
+};
 
 Player.prototype.toPacket = function() {
   return {

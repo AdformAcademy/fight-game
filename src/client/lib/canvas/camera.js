@@ -20,6 +20,8 @@ var Camera = function (params) {
     this.following = false;
     this.viewportRect = new Rectangle(this.xView, this.yView, this.wView, this.hView);             
     this.worldRect = params.worldRect;
+    this.additionalXView = 0;
+    this.additionalYView = 0;
 }
 
 Camera.prototype.follow = function (gameObject, xDeadZone, yDeadZone, align) {
@@ -87,6 +89,14 @@ Camera.prototype.leftCollision = function (player, playerWidth) {
 
 Camera.prototype.rightCollision = function (player, playerWidth) {
     return this.xView + this.wView >= player.getX() + playerWidth * 5;
+};
+
+Camera.prototype.getXView = function () {
+    return this.xView + this.additionalXView;
+};
+
+Camera.prototype.getYView = function () {
+    return this.yView + this.additionalYView;
 };
 
 module.exports = Camera;

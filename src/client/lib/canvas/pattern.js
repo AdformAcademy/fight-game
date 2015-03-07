@@ -1,11 +1,18 @@
 var App;
 
-var Pattern = function (y, speed, image) {
+var Pattern = function (loader, y, speed, image) {
+	var loader = loader;
+	var id = loader.append();
 	App = require('../../app');
 	this.y = y;
 	this.x = 0;
 	this.speed = speed;
 	this.image = new Image();
+	this.image.onload = function (id) {
+		return function () {
+			loader.load(id);
+		};
+	}(id);
 	this.image.src = image;
 };
 

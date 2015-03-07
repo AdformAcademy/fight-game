@@ -7,7 +7,10 @@ describe('Pattern', function () {
 	var pattern;
 
 	beforeEach(function() {
-		pattern = new Pattern(function () {
+		pattern = new Pattern({
+			append: function () {},
+			load: function () {}
+		}, function () {
 			return 400;
 		}, 5.5, 'img/test.png');
 	});

@@ -8,9 +8,15 @@ Config.playerAcceleration = BaseConfig.playerAcceleration;
 Config.playerJumpSpeed = BaseConfig.playerJumpSpeed;
 Config.playerSize = BaseConfig.playerSize;
 Config.keyBindings = BaseConfig.keyBindings;
+Config.actions = BaseConfig.actions;
+
 Config.screenWidth = 900;
 Config.playerDefenceMultiplier = 0.2;
-Config.playerEnergyIncrement = 0.1;
+Config.playerEnergyIncrement = 0.3;
+
+Config.tournamentFightTimer = 180;
+Config.tournamentWaitTimer = 30;
+Config.tournamentLenght = 8;
 
 Config.firstSpawnLocation = {
 	x: 590,
@@ -22,5 +28,7 @@ Config.secondSpawnLocation = {
 };
 Config.charactersPath = 'src/server/characters_data/';
 Config.soundsDataFile = 'src/server/common-sound-data.json';
+Config.particlesPath = 'src/server/particles_data/';
+Config.particlesDataFile = 'src/server/particles-data.json';
 
 module.exports = Config;

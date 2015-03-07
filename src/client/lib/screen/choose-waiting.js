@@ -4,6 +4,7 @@ var Button;
 var Point;
 var Text;
 var Background;
+var Config;
 var socket = io();
 var obj;
 
@@ -12,12 +13,13 @@ var ChooseWaitingScreen = function () {
 	Utilities = require('../canvas/utilities');
 	Point = require('../../../common/point');
 	Text = require('../canvas/text');
-	Background = require('../canvas/background');	
+	Background = require('../canvas/background');
+	Config = require('../config');
 
-	this.backgroundImage = new Background('./img/waiting_screen_background.png');
+	this.backgroundImage = new Background('./img/background.png');
 	this.loadingText = new Text('Loading', 30);
-	this.loadingText.color = '#cbcbcb';
-	this.loadingText.fontType = 'Arial';
+	this.loadingText.color = Config.fontColor;
+	this.loadingText.fontType = 'FSpirit';
 	this.loadingValue = 0;
 	this.dots = 0;
 	this.loaded = false;
